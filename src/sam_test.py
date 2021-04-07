@@ -40,7 +40,7 @@ def moon_test():
     sam = SAM(name='MoonTest',
               similarity_threshold=0.75,
               anomaly_threshold_factor=3.0,
-              similarity_decay=0.1,
+              similarity_ema_alpha=0.1,
               learn_rate_decay=0.3,
               prune_threshold=0.01,
               prune_neurons=False)
@@ -96,7 +96,7 @@ def swiss_roll_test():
     sam = SAM(name='SwissTest',
               similarity_threshold=0.75,
               anomaly_threshold_factor=3.0,
-              similarity_decay=0.1,
+              similarity_ema_alpha=0.1,
               learn_rate_decay=0.3,
               prune_threshold=0.01,
               prune_neurons=False)
@@ -172,7 +172,7 @@ def colours_test():
         sam = SAM(name=client,
                   similarity_threshold=0.75,
                   anomaly_threshold_factor=3.0,
-                  similarity_decay=0.1,
+                  similarity_ema_alpha=0.1,
                   learn_rate_decay=0.3,
                   prune_threshold=0.01,
                   prune_neurons=False)
@@ -188,8 +188,6 @@ def colours_test():
                 pors.append(por)
 
         sams[client]['por'] = pors
-
-        #ng.calc_communities()
 
         plot_pors(pors=pors)
 

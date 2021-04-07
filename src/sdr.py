@@ -1,9 +1,12 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 from copy import deepcopy
+import cython
 
-
+@cython.cclass
 class SDR(object):
+    encodings = cython.declare(dict, visibility='public')
+    properties = cython.declare(dict, visibility='public')
 
     def __init__(self, sdr=None, enc_type=None, value=None, enc_properties=None, encoder=None, bit_weight=1.0):
 
@@ -21,7 +24,10 @@ class SDR(object):
         elif enc_type is not None and value is not None and encoder is not None:
             self.add_encoding(enc_type=enc_type, value=value, encoder=encoder, enc_properties=enc_properties, bit_weight=bit_weight)
 
-    def get_max_distance(self, search_types=None):
+    def get_max_distance(self, search_types: set = None) -> float:
+
+        enc_type: str
+        dist: float
 
         dist = sum([self.properties[enc_type]['encoder'].n_bits
                     for enc_type in self.properties
@@ -29,11 +35,16 @@ class SDR(object):
 
         return dist
 
-    def remove_prefix(self, enc_type_prefix):
+    def remove_prefix(self, enc_type_prefix: str):
+        enc_type: str
+
         self.encodings = {enc_type.replace(enc_type_prefix, ''): self.encodings[enc_type] for enc_type in self.encodings}
         self.properties = {enc_type.replace(enc_type_prefix, ''): self.properties[enc_type] for enc_type in self.properties}
 
-    def copy(self, sdr, enc_type_prefix=None):
+    def copy(self, sdr, enc_type_prefix: str = None):
+        enc_type: str
+        prop: str
+
         if enc_type_prefix is not None:
             self.encodings = {f'{enc_type_prefix}_{enc_type}': deepcopy(sdr.encodings[enc_type]) for enc_type in sdr.encodings}
             self.properties = {f'{enc_type_prefix}_{enc_type}': {prop: sdr.properties[enc_type][prop] for prop in sdr.properties[enc_type]} for enc_type in sdr.properties}
@@ -41,29 +52,37 @@ class SDR(object):
             self.encodings = deepcopy(sdr.encodings)
             self.properties = {enc_type: {prop: sdr.properties[enc_type][prop] for prop in sdr.properties[enc_type]} for enc_type in sdr.properties}
 
-    def add_encoding(self, enc_type, value, encoder, enc_properties=None, bit_weight=1.0):
+    def add_encoding(self, enc_type: str, value, encoder, enc_properties: dict = None, bit_weight: float = 1.0):
+
+        bit: int
+        prop: str
+
         if enc_properties is not None:
             self.properties[enc_type] = {prop: enc_properties[prop] for prop in enc_properties}
 
         self.properties[enc_type] = {'encoder': encoder}
 
         enc = encoder.encode(value)
-        self.encodings[enc_type] = {e: bit_weight for e in enc}
+        self.encodings[enc_type] = {bit: bit_weight for bit in enc}
 
-    def get_enc_types(self):
+    def get_enc_types(self) -> set:
         return set(self.encodings.keys())
 
-    def get_enc_properties(self, enc_type):
+    def get_enc_properties(self, enc_type: str) -> dict:
         if enc_type in self.properties:
             return self.properties[enc_type]
         else:
             return {}
 
-    def decode(self):
+    def decode(self) -> dict:
+        enc_type: str
         dec = {enc_type: self.properties[enc_type]['encoder'].decode(self.encodings[enc_type]) for enc_type in self.encodings}
         return dec
 
-    def to_dict(self, decode=False):
+    def to_dict(self, decode: bool = False) -> dict:
+        enc_type: str
+        prop: str
+
         if decode:
             d_sdr = {'encodings': self.decode()}
         else:
@@ -71,7 +90,12 @@ class SDR(object):
         d_sdr['properties'] = {enc_type: {prop: self.properties[enc_type][prop] for prop in self.properties[enc_type]} for enc_type in self.properties}
         return d_sdr
 
-    def overlap(self, sdr, search_types=None):
+    def overlap(self, sdr, search_types: set = None) -> dict:
+
+        enc_type: str
+        enc_types: set
+        por: dict
+        bit: int
 
         # get the filtered intersection of enc_types to compare
         #
@@ -87,8 +111,8 @@ class SDR(object):
 
         por = {'overlap': 0, 'norm_overlap': 0.0}
 
-        por['enc_types'] = {enc_type: sum([min(self.encodings[enc_type][b], sdr.encodings[enc_type][b])
-                                           for b in set(self.encodings[enc_type].keys()) & set(sdr.encodings[enc_type].keys())])
+        por['enc_types'] = {enc_type: sum([min(self.encodings[enc_type][bit], sdr.encodings[enc_type][bit])
+                                           for bit in set(self.encodings[enc_type].keys()) & set(sdr.encodings[enc_type].keys())])
                             for enc_type in enc_types}
 
         por['overlap'] = sum([por['enc_types'][enc_type] for enc_type in por['enc_types']])
@@ -98,7 +122,10 @@ class SDR(object):
 
         return por
 
-    def distance(self, sdr, search_types=None):
+    def distance(self, sdr, search_types: set = None) -> dict:
+
+        por: dict
+
         por = self.overlap(sdr=sdr, search_types=search_types)
         por['max_distance'] = max(self.get_max_distance(search_types=search_types), sdr.get_max_distance(search_types=search_types))
         por['distance'] = por['max_distance'] - por['overlap']
@@ -109,7 +136,14 @@ class SDR(object):
 
         return por
 
-    def learn(self, sdr, learn_rate=1.0, learn_types=None, prune=0.01):
+    def learn(self, sdr, learn_rate: float =1.0, learn_types: set = None, prune: float = 0.01):
+
+        enc_type: str
+        enc_types: set
+        por: dict
+        bits: set
+        bit: int
+        prop: str
 
         # if this sdr is empty then learn at fastest rate
         #
@@ -166,7 +200,13 @@ class SDR(object):
                 del self.encodings[enc_type]
                 del self.properties[enc_type]
 
-    def merge(self, sdr, weight=1.0, enc_type_prefix=None):
+    def merge(self, sdr, weight: float = 1.0, enc_type_prefix: str = None):
+        enc_type: str
+        enc_types: set
+        por: dict
+        bit: int
+        prop: str
+
         for enc_type in sdr.encodings:
 
             if enc_type_prefix is not None:
