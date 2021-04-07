@@ -11,6 +11,7 @@ from src.sam_viz import plot_sam, plot_pors
 
 
 def colours_test():
+    import time
     colours = {'RED': {'r': 255, 'b': 0, 'g': 0},
                'ORANGE': {'r': 255, 'b': 129, 'g': 0},
                'YELLOW': {'r': 255, 'b': 233, 'g': 0},
@@ -75,12 +76,14 @@ def colours_test():
                                              learn_types={'r', 'g', 'b', 'label'},
                                              create_temporal=True)
 
+        start_time = time.time()
         for cycle in range(n_cycles):
             for t_idx in range(len(training_graphs[client])):
                 por = domains[client]['fabric'].train(sdrs={client: training_graphs[client][t_idx][1]},
                                                       ref_id=str(t_idx))
                 pors.append(por)
-
+        end_time = time.time()
+        print((end_time-start_time) / (n_cycles + len(training_graphs[client])))
         domains[client]['pors'] = pors
 
         plot_pors(pors=pors, name=client)
