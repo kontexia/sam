@@ -42,10 +42,10 @@ class SDR(object):
             self.properties = {enc_type: {prop: sdr.properties[enc_type][prop] for prop in sdr.properties[enc_type]} for enc_type in sdr.properties}
 
     def add_encoding(self, enc_type, value, encoder, enc_properties=None, bit_weight=1.0):
-        self.properties[enc_type] = {'encoder': encoder}
         if enc_properties is not None:
-            for prop in enc_properties:
-                self.properties[enc_type][prop] = enc_properties[prop]
+            self.properties[enc_type] = {prop: enc_properties[prop] for prop in enc_properties}
+
+        self.properties[enc_type] = {'encoder': encoder}
 
         enc = encoder.encode(value)
         self.encodings[enc_type] = {e: bit_weight for e in enc}
@@ -85,17 +85,13 @@ class SDR(object):
         else:
             enc_types = set(self.encodings.keys()) & set(sdr.encodings.keys())
 
-        por = {'overlap': 0, 'norm_overlap': 0.0, 'enc_types': {}}
+        por = {'overlap': 0, 'norm_overlap': 0.0}
 
-        for enc_type in enc_types:
-            self_bits = set(self.encodings[enc_type].keys())
-            sdr_bits = set(sdr.encodings[enc_type].keys())
+        por['enc_types'] = {enc_type: sum([min(self.encodings[enc_type][b], sdr.encodings[enc_type][b])
+                                           for b in set(self.encodings[enc_type].keys()) & set(sdr.encodings[enc_type].keys())])
+                            for enc_type in enc_types}
 
-            # sum the overlapping bit weights
-            #
-            por['enc_types'][enc_type] = sum([min(self.encodings[enc_type][b], sdr.encodings[enc_type][b]) for b in self_bits & sdr_bits])
-
-            por['overlap'] += por['enc_types'][enc_type]
+        por['overlap'] = sum([por['enc_types'][enc_type] for enc_type in por['enc_types']])
 
         if len(enc_types) > 0:
             por['norm_overlap'] = por['overlap'] / len(enc_types)
@@ -194,15 +190,16 @@ class SDR(object):
 
 if __name__ == '__main__':
     from src.numeric_encoder import NumericEncoder
+    import time
 
     encoder = NumericEncoder(min_step=1,
-                             n_bits=4,
-                             enc_size=100,
+                             n_bits=40,
+                             enc_size=2048,
                              seed=12345)
 
     sdr_1 = SDR(enc_type='volume', value=100, encoder=encoder)
 
-    sdr_2 = SDR(enc_type='volume', value=110, encoder=encoder)
+    sdr_2 = SDR(enc_type='volume', value=210, encoder=encoder)
 
     d = sdr_1.distance(sdr_2)
 
@@ -210,7 +207,7 @@ if __name__ == '__main__':
 
     m_dist = sdr_1.get_max_distance()
 
-    sdr_3 = SDR()
+    sdr_3 = SDR(sdr=sdr_2)
 
     sdr_3.learn(sdr_1, learn_rate=0.7, prune=0.01)
 
@@ -228,7 +225,11 @@ if __name__ == '__main__':
 
     sdr_3.learn(sdr_4, learn_rate=0.7, prune=0.01)
 
-    d_4 = sdr_1.distance(sdr=sdr_3)
+    start_time = time.time()
+    for i in range(1000):
+        d_4 = sdr_1.distance(sdr=sdr_3)
+    end_time = time.time()
+    print((end_time - start_time)/1000)
 
     sdr_3.learn(sdr_4, learn_rate=0.7, prune=0.01)
 
