@@ -6,7 +6,7 @@ from src.sam import SAM
 from src.sdr import SDR
 from src.numeric_encoder import NumericEncoder
 from src.string_encoder import StringEncoder
-from src.sam_viz import plot_sam, plot_pors, plot_pors_v2
+from src.sam_viz import plot_sam, plot_pors
 
 from sklearn.datasets import make_moons, make_swiss_roll
 import json
@@ -39,8 +39,8 @@ def moon_test():
 
     sam = SAM(name='MoonTest',
               similarity_threshold=0.75,
-              anomaly_threshold_factor=4.0,
-              error_decay=0.1,
+              anomaly_threshold_factor=3.0,
+              similarity_decay=0.1,
               learn_rate_decay=0.3,
               prune_threshold=0.01,
               prune_neurons=False)
@@ -95,8 +95,8 @@ def swiss_roll_test():
 
     sam = SAM(name='SwissTest',
               similarity_threshold=0.75,
-              anomaly_threshold_factor=4.0,
-              error_decay=0.1,
+              anomaly_threshold_factor=3.0,
+              similarity_decay=0.1,
               learn_rate_decay=0.3,
               prune_threshold=0.01,
               prune_neurons=False)
@@ -172,7 +172,7 @@ def colours_test():
         sam = SAM(name=client,
                   similarity_threshold=0.75,
                   anomaly_threshold_factor=3.0,
-                  error_decay=0.2,
+                  similarity_decay=0.1,
                   learn_rate_decay=0.3,
                   prune_threshold=0.01,
                   prune_neurons=False)
@@ -191,7 +191,7 @@ def colours_test():
 
         #ng.calc_communities()
 
-        plot_pors_v2(pors=pors)
+        plot_pors(pors=pors)
 
         sam_dict = sam.to_dict(decode=True)
 
@@ -211,13 +211,7 @@ def colours_test():
 
 
 if __name__ == '__main__':
-    # category_experiments()
-
-    # number_experiments()
-
-    # colours_fabric_test()
 
     colours_test()
     #moon_test()
     #swiss_roll_test()
-    #square_test()

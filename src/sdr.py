@@ -14,8 +14,7 @@ class SDR(object):
         # note don't copy encoder just take reference
         #
         if sdr is not None:
-            self.encodings = deepcopy(sdr.encodings)
-            self.properties = {enc_type: {prop: sdr.properties[enc_type][prop] for prop in sdr.properties[enc_type]} for enc_type in sdr.properties}
+            self.copy(sdr=sdr)
 
         # else process a new value
         #
@@ -29,6 +28,18 @@ class SDR(object):
                     if search_types is None or enc_type in search_types])
 
         return dist
+
+    def remove_prefix(self, enc_type_prefix):
+        self.encodings = {enc_type.replace(enc_type_prefix, ''): self.encodings[enc_type] for enc_type in self.encodings}
+        self.properties = {enc_type.replace(enc_type_prefix, ''): self.properties[enc_type] for enc_type in self.properties}
+
+    def copy(self, sdr, enc_type_prefix=None):
+        if enc_type_prefix is not None:
+            self.encodings = {f'{enc_type_prefix}_{enc_type}': deepcopy(sdr.encodings[enc_type]) for enc_type in sdr.encodings}
+            self.properties = {f'{enc_type_prefix}_{enc_type}': {prop: sdr.properties[enc_type][prop] for prop in sdr.properties[enc_type]} for enc_type in sdr.properties}
+        else:
+            self.encodings = deepcopy(sdr.encodings)
+            self.properties = {enc_type: {prop: sdr.properties[enc_type][prop] for prop in sdr.properties[enc_type]} for enc_type in sdr.properties}
 
     def add_encoding(self, enc_type, value, encoder, enc_properties=None, bit_weight=1.0):
         self.properties[enc_type] = {'encoder': encoder}
@@ -88,42 +99,6 @@ class SDR(object):
 
         if len(enc_types) > 0:
             por['norm_overlap'] = por['overlap'] / len(enc_types)
-
-        return por
-
-    def distance_v1(self, sdr, search_types=None):
-
-        if search_types is not None:
-            enc_types = ({enc_type
-                          for enc_type in self.encodings.keys()
-                          if enc_type in search_types} |
-                         {enc_type
-                          for enc_type in sdr.encodings.keys()
-                          if enc_type in search_types})
-        else:
-            enc_types = set(self.encodings.keys()) | set(sdr.encodings.keys())
-
-        por = {'distance': 0, 'norm_distance': 0.0, 'enc_types': {}}
-
-        for enc_type in enc_types:
-            if enc_type in self.encodings and enc_type in sdr.encodings:
-                self_bits = set(self.encodings[enc_type].keys())
-                sdr_bits = set(sdr.encodings[enc_type].keys())
-
-                por['enc_types'][enc_type] = sum([abs(self.encodings[enc_type][b] - sdr.encodings[enc_type][b]) for b in self_bits & sdr_bits])
-                por['enc_types'][enc_type] += sum([self.encodings[enc_type][b] for b in self_bits - sdr_bits])
-                por['enc_types'][enc_type] += sum([sdr.encodings[enc_type][b] for b in sdr_bits - self_bits])
-
-                por['distance'] += por['enc_types'][enc_type]
-            elif enc_type in self.encodings:
-                por['enc_types'][enc_type] = sum([self.encodings[enc_type][b] for b in self.encodings[enc_type]])
-                por['distance'] += por['enc_types'][enc_type]
-            else:
-                por['enc_types'][enc_type] = sum([sdr.encodings[enc_type][b] for b in sdr.encodings[enc_type]])
-                por['distance'] += por['enc_types'][enc_type]
-
-        if len(enc_types) > 0:
-            por['norm_distance'] = por['distance'] / len(enc_types)
 
         return por
 
@@ -195,11 +170,11 @@ class SDR(object):
                 del self.encodings[enc_type]
                 del self.properties[enc_type]
 
-    def merge(self, sdr, weight=1.0, enc_type_postfix=None):
+    def merge(self, sdr, weight=1.0, enc_type_prefix=None):
         for enc_type in sdr.encodings:
 
-            if enc_type_postfix is not None:
-                self_enc_type = f'{enc_type}_{enc_type_postfix}'
+            if enc_type_prefix is not None:
+                self_enc_type = f'{enc_type_prefix}_{enc_type}'
             else:
                 self_enc_type = enc_type
 

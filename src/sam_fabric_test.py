@@ -7,7 +7,7 @@ from src.numeric_encoder import NumericEncoder
 from src.string_encoder import StringEncoder
 from src.sam_fabric import SAMFabric
 
-from src.sam_viz import plot_sam, plot_pors, plot_pors_v2
+from src.sam_viz import plot_sam, plot_pors
 
 
 def colours_test():
@@ -60,27 +60,20 @@ def colours_test():
         domains[client] = {'fabric': SAMFabric(domain=client,
                                                assoc_similarity_threshold=0.75,
                                                assoc_anomaly_threshold_factor=3.0,
-                                               assoc_error_decay=0.2,
-                                               assoc_learn_rate_decay=0.3,
-                                               assoc_prune_threshold=0.01,
-                                               assoc_prune_neurons=False,
                                                temporal_similarity_threshold=0.75,
                                                temporal_anomaly_threshold_factor=3.0,
-                                               temporal_error_decay=0.3,
-                                               temporal_learn_rate_decay=0.3,
-                                               temporal_prune_threshold=0.01,
-                                               temporal_prune_neurons=False,
+                                               similarity_ema_alpha=0.1,
+                                               learn_rate_decay=0.3,
+                                               prune_threshold=0.01,
+                                               prune_neurons=False,
                                                )}
 
         domains[client]['fabric'].create_sam(name=client,
                                              similarity_threshold=0.75,
                                              anomaly_threshold_factor=3.0,
-                                             error_decay=0.2,
-                                             learn_rate_decay=0.3,
-                                             prune_threshold=0.01,
-                                             prune_neurons=False,
                                              search_types={'r', 'g', 'b'},
-                                             learn_types={'r', 'g', 'b', 'label'})
+                                             learn_types={'r', 'g', 'b', 'label'},
+                                             create_temporal=True)
 
         for cycle in range(n_cycles):
             for t_idx in range(len(training_graphs[client])):
@@ -90,10 +83,8 @@ def colours_test():
 
         domains[client]['pors'] = pors
 
-        #ng.calc_communities()
-
-        plot_pors_v2(pors=pors, name=client)
-        plot_pors_v2(pors=pors, name=f'{client}_temporal')
+        plot_pors(pors=pors, name=client)
+        plot_pors(pors=pors, name=f'temporal_{client}')
 
         sam_dict = domains[client]['fabric'].sams[client]['sam'].to_dict(decode=True)
 
@@ -106,6 +97,11 @@ def colours_test():
                  raw_data=cycle_data,
                  xyz_types=['r', 'g', 'b'],
                  colour_nodes=None)
+
+        start_idx = 50
+        por_qry = domains[client]['fabric'].query_temporal(context_sdrs=[{client: training_graphs[client][q_idx][1]} for q_idx in range(start_idx, start_idx + 4)])
+        actual_sdr = por_qry[f'temporal_{client}']['sdr'].to_dict(decode=True)
+        target_sdr = training_graphs[client][start_idx + 4][1].to_dict(decode=True)
 
         print(f'finished {client}')
 

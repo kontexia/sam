@@ -2,7 +2,7 @@
 # -*- encoding: utf-8 -*-
 
 from src.sdr import SDR
-from typing import Optional, Set, Tuple
+from typing import Optional, Tuple
 from copy import deepcopy
 
 
@@ -11,13 +11,13 @@ class SAM(object):
                  name,
                  similarity_threshold: float = 0.75,
                  anomaly_threshold_factor: float = 4.0,
-                 error_decay: float = 0.1,
+                 similarity_ema_alpha: float = 0.1,
                  learn_rate_decay: float = 0.3,
                  prune_threshold: float = 0.01,
                  prune_neurons: bool = False):
         self.name = name
         self.anomaly_threshold_factor: float = anomaly_threshold_factor
-        self.error_decay = error_decay
+        self.similarity_ema_alpha = similarity_ema_alpha
         self.learn_rate_decay = learn_rate_decay
         self.anomaly_threshold: float = 0.0
         self.anomalies: dict = {}
@@ -26,9 +26,9 @@ class SAM(object):
         self.update_id: int = 0
         self.next_neuron_id: int = 0
         self.last_bmu_key: Optional[str] = None
-        self.ema_error: Optional[float] = None
+        self.ema_similarity: Optional[float] = None
         self.ema_variance: float = 0.0
-        self.motif_threshold: float = 0.0
+        self.motif_threshold: float = 1.0
         self.motifs: dict = {}
         self.prune_neurons: bool = prune_neurons
         self.updated: bool = True
@@ -44,7 +44,7 @@ class SAM(object):
                                     'uid': neuron_key,
                                     'sdr': sdr,
                                     'created': update_id,
-                                    'ema_error': None,
+                                    'ema_similarity': None,
                                     'n_bmu': 1,
                                     'last_bmu': update_id,
                                     'n_runner_up': 0,
@@ -59,14 +59,14 @@ class SAM(object):
 
     def to_dict(self, decode: bool = False) -> dict:
         d_sam = {'name': self.name,
-                 'error_decay': self.error_decay,
+                 'similarity_ema_alpha': self.similarity_ema_alpha,
                  'similarity_threshold': self.similarity_threshold,
                  'learn_rate_decay': self.learn_rate_decay,
                  'prune_threshold': self.prune_threshold,
                  'update_id': self.update_id,
                  'next_neuron_id': self.next_neuron_id,
                  'last_bmu_key': self.last_bmu_key,
-                 'ema_error': self.ema_error,
+                 'ema_similarity': self.ema_similarity,
                  'ema_variance': self.ema_variance,
                  'anomaly_threshold_factor': self.anomaly_threshold_factor,
                  'anomaly_threshold': self.anomaly_threshold,
@@ -83,37 +83,37 @@ class SAM(object):
 
         return d_sam
 
-    def update_gas_error(self, bmu_key: str, bmu_distance: float, ref_id: str, new_neuron: bool = False) -> Tuple[bool, bool]:
+    def update_similarity(self, bmu_key: str, bmu_similarity: float, ref_id: str, new_neuron: bool = False) -> Tuple[bool, bool]:
 
         # update the ema error and variance using the slow_alpha
         #
-        if self.ema_error is None:
-            self.ema_error = bmu_distance
+        if self.ema_similarity is None:
+            self.ema_similarity = bmu_similarity
         else:
-            self.ema_error += (bmu_distance - self.ema_error) * self.error_decay
+            self.ema_similarity += (bmu_similarity - self.ema_similarity) * self.similarity_ema_alpha
 
-        self.ema_variance += (pow((bmu_distance - self.ema_error), 2) - self.ema_variance) * self.error_decay
+        self.ema_variance += (pow((bmu_similarity - self.ema_similarity), 2) - self.ema_variance) * self.similarity_ema_alpha
 
         # record breaches of anomaly threshold
         #
-        report: dict = {'bmu_key': bmu_key, 'mapped': self.update_id, 'error': bmu_distance, 'ref_id': ref_id}
+        report: dict = {'bmu_key': bmu_key, 'mapped': self.update_id, 'similarity': bmu_similarity, 'ref_id': ref_id}
         anomaly = False
         motif = False
 
         # determine if anomaly or motif detected
         #
-        if bmu_distance > self.anomaly_threshold and new_neuron:
+        if bmu_similarity < self.anomaly_threshold and new_neuron:
             self.anomalies[str(self.update_id)] = report
             anomaly = True
-        elif self.motif_threshold is not None and bmu_distance <= self.motif_threshold:
+        elif self.motif_threshold is not None and bmu_similarity >= self.motif_threshold:
             self.motifs[str(self.update_id)] = report
             motif = True
 
         # update threshold for next training data
         #
         stdev = pow(self.ema_variance, 0.5)
-        self.anomaly_threshold = self.ema_error + (self.anomaly_threshold_factor * stdev)
-        self.motif_threshold = max(self.ema_error - (2.0 * stdev), 0.0)
+        self.anomaly_threshold = max(self.ema_similarity - (self.anomaly_threshold_factor * stdev), 0.0)
+        self.motif_threshold = min(self.ema_similarity + (2.0 * stdev), 1.0)
 
         return anomaly, motif
 
@@ -128,7 +128,7 @@ class SAM(object):
                'nn_neurons': [],
                'anomaly': False,
                'motif': False,
-               'ema_error': self.ema_error,
+               'ema_similarity': self.ema_similarity,
                'ema_variance': self.ema_variance,
                'anomaly_threshold': self.anomaly_threshold,
                'motif_threshold': self.motif_threshold,
@@ -160,10 +160,11 @@ class SAM(object):
             #
             bmu_key = distances[0][0]
             bmu_distance = distances[0][1]['distance']
+            bmu_similarity = distances[0][1]['similarity']
 
             por['bmu_key'] = bmu_key
             por['bmu_distance'] = bmu_distance
-            por['bmu_similarity'] = distances[0][1]['similarity']
+            por['bmu_similarity'] = bmu_similarity
             por['bmu_distance_threshold'] = distances[0][1]['max_distance'] * (1 - self.similarity_threshold)
 
             # if the distance is larger than the neuron's threshold then add a new neuron
@@ -212,12 +213,12 @@ class SAM(object):
                 self.neurons[bmu_key]['n_bmu'] += 1
                 self.neurons[bmu_key]['last_bmu'] = self.update_id
 
-                # a neuron's error for mapped data is the exponential moving average of the distance.
+                # a neuron's similarity for mapped data is the exponential moving average of the similarity.
                 #
-                if self.neurons[bmu_key]['ema_error'] is None:
-                    self.neurons[bmu_key]['ema_error'] = bmu_distance
+                if self.neurons[bmu_key]['ema_similarity'] is None:
+                    self.neurons[bmu_key]['ema_similarity'] = bmu_similarity
                 else:
-                    self.neurons[bmu_key]['ema_error'] += ((bmu_distance - self.neurons[bmu_key]['ema_error']) * self.error_decay)
+                    self.neurons[bmu_key]['ema_similarity'] += ((bmu_similarity - self.neurons[bmu_key]['ema_similarity']) * self.similarity_ema_alpha)
 
                 # decay the learning rate so that this neuron learns more slowly the more it gets mapped too
                 #
@@ -292,7 +293,7 @@ class SAM(object):
                                 self.neurons[neuron_key]['nn'][nn_key] = distance['distance']
                                 self.neurons[nn_key]['nn'][neuron_key] = distance['distance']
 
-            anomaly, motif = self.update_gas_error(bmu_key=bmu_key, bmu_distance=bmu_distance, ref_id=ref_id, new_neuron=por['new_neuron_key'])
+            anomaly, motif = self.update_similarity(bmu_key=bmu_key, bmu_similarity=bmu_similarity, ref_id=ref_id, new_neuron=por['new_neuron_key'])
             por['anomaly'] = anomaly
             por['motif'] = motif
 
@@ -364,7 +365,7 @@ if __name__ == '__main__':
     ng = SAM(name='test',
              similarity_threshold=0.75,
              anomaly_threshold_factor=6.0,
-             error_decay=0.1,
+             similarity_ema_alpha=0.1,
              learn_rate_decay=0.3,
              prune_threshold=0.01,
              prune_neurons=False)
