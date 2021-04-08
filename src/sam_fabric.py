@@ -66,8 +66,12 @@ class SAMFabric(object):
                                'learn_types': learn_types
                                }
 
+            assoc_name = f'association_{self.domain}'
+
             if len(self.sams) > 1:
-                assoc_name = f'association_{self.domain}'
+                assoc_search_types = {f'{name}_{s_type}' for s_type in search_types}
+                assoc_learn_types = {f'{name}_{l_type}' for l_type in learn_types}
+
                 if assoc_name not in self.sams:
                     self.sams[assoc_name] = {'sam': SAM(name=assoc_name,
                                                         similarity_threshold=self.assoc_similarity_threshold,
@@ -76,20 +80,26 @@ class SAMFabric(object):
                                                         learn_rate_decay=self.learn_rate_decay,
                                                         prune_threshold=self.prune_threshold,
                                                         prune_neurons=self.prune_neurons),
-                                             'search_types': search_types,
-                                             'learn_types': learn_types
+                                             'search_types': assoc_search_types,
+                                             'learn_types': assoc_learn_types
                                              }
                     for exist_name in self.sams:
                         if exist_name != name and exist_name != assoc_name:
-                            self.sams[assoc_name]['search_types'].update(search_types)
-                            self.sams[assoc_name]['learn_types'].update(learn_types)
+                            self.sams[assoc_name]['search_types'].update(assoc_search_types)
+                            self.sams[assoc_name]['learn_types'].update(assoc_learn_types)
 
                 else:
-                    self.sams[assoc_name]['search_types'].update(search_types)
-                    self.sams[assoc_name]['learn_types'].update(learn_types)
+                    self.sams[assoc_name]['search_types'].update(assoc_search_types)
+                    self.sams[assoc_name]['learn_types'].update(assoc_learn_types)
 
             if create_temporal:
                 temporal_name = f'temporal_{self.domain}'
+                if assoc_name in self.sams:
+                    temporal_search_types = {f'{t}_{s_type}' for s_type in self.sams[assoc_name]['search_types'] for t in ['z0', 'z1', 'z2']}
+                    temporal_learn_types = {f'{t}_{l_type}' for l_type in self.sams[assoc_name]['learn_types'] for t in ['z0', 'z1', 'z2']}
+                else:
+                    temporal_search_types = {f'{t}_{s_type}' for s_type in search_types for t in ['z0', 'z1', 'z2']}
+                    temporal_learn_types = {f'{t}_{l_type}' for l_type in learn_types for t in ['z0', 'z1', 'z2']}
 
                 if temporal_name not in self.sams:
                     self.sams[temporal_name] = {'sam': SAM(name=temporal_name,
@@ -100,12 +110,12 @@ class SAMFabric(object):
                                                            prune_threshold=self.prune_threshold,
                                                            prune_neurons=self.prune_neurons,
                                                            ),
-                                                'search_types': {f'{t}_{s_type}' for s_type in search_types for t in ['z0', 'z1', 'z2']},
-                                                'learn_types': {f'{t}_{l_type}' for l_type in learn_types for t in ['z0', 'z1', 'z2']}
+                                                'search_types': temporal_search_types,
+                                                'learn_types': temporal_learn_types
                                                 }
                 else:
-                    self.sams[temporal_name]['search_types'].update({f'{t}_{s_type}' for s_type in search_types for t in ['z0', 'z1', 'z2']})
-                    self.sams[temporal_name]['learn_types'].update({f'{t}_{l_type}' for l_type in learn_types for t in ['z0', 'z1', 'z2']})
+                    self.sams[temporal_name]['search_types'].update(temporal_search_types)
+                    self.sams[temporal_name]['learn_types'].update(temporal_learn_types)
 
     def train(self, sdrs, ref_id):
         pors = {}
