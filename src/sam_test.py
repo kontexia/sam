@@ -3,7 +3,7 @@
 
 
 from src.sam import SAM
-from src.sgm import SDR
+from src.sgm import SGM
 from src.numeric_encoder import NumericEncoder
 from src.string_encoder import StringEncoder
 from src.sam_viz import plot_sam, plot_pors
@@ -30,12 +30,12 @@ def moon_test():
 
     for idx in range(len(data_set)):
 
-        t_sdr = SDR()
-        t_sdr.add_encoding('x', value=data_set[idx][0], encoder=numeric_encoder)
-        t_sdr.add_encoding('y', value=data_set[idx][1], encoder=numeric_encoder)
-        t_sdr.add_encoding('label', value=str(labels[idx]), encoder=label_encoder)
+        t_sgm = SGM()
+        t_sgm.add_encoding('x', value=data_set[idx][0], encoder=numeric_encoder)
+        t_sgm.add_encoding('y', value=data_set[idx][1], encoder=numeric_encoder)
+        t_sgm.add_encoding('label', value=str(labels[idx]), encoder=label_encoder)
 
-        training_graphs.append(t_sdr)
+        training_graphs.append(t_sgm)
 
     sam = SAM(name='MoonTest',
               similarity_threshold=0.75,
@@ -48,7 +48,7 @@ def moon_test():
     pors = []
 
     for t_idx in range(len(training_graphs)):
-        por = sam.train(sdr=training_graphs[t_idx],
+        por = sam.train(sgm=training_graphs[t_idx],
                         ref_id=str(t_idx),
                         search_types={'x', 'y', 'label'},
                         learn_types={'x', 'y', 'label'})
@@ -84,14 +84,14 @@ def swiss_roll_test():
 
     for idx in range(len(data_set)):
 
-        t_sdr = SDR()
-        t_sdr.add_encoding('x', value=data_set[idx][0], encoder=numeric_encoder)
-        t_sdr.add_encoding('y', value=data_set[idx][1], encoder=numeric_encoder)
-        t_sdr.add_encoding('z', value=data_set[idx][2], encoder=numeric_encoder)
+        t_sgm = SGM()
+        t_sgm.add_encoding('x', value=data_set[idx][0], encoder=numeric_encoder)
+        t_sgm.add_encoding('y', value=data_set[idx][1], encoder=numeric_encoder)
+        t_sgm.add_encoding('z', value=data_set[idx][2], encoder=numeric_encoder)
 
-        t_sdr.add_encoding('label', value=str(labels[idx]), encoder=label_encoder)
+        t_sgm.add_encoding('label', value=str(labels[idx]), encoder=label_encoder)
 
-        training_graphs.append(t_sdr)
+        training_graphs.append(t_sgm)
 
     sam = SAM(name='SwissTest',
               similarity_threshold=0.75,
@@ -104,7 +104,7 @@ def swiss_roll_test():
     pors = []
 
     for t_idx in range(len(training_graphs)):
-        por = sam.train(sdr=training_graphs[t_idx],
+        por = sam.train(sgm=training_graphs[t_idx],
                         ref_id=str(t_idx),
                         search_types={'x', 'y', 'z'},
                         learn_types={'x', 'y', 'z'})
@@ -155,14 +155,14 @@ def colours_test():
         if record['client'] not in training_graphs:
             training_graphs[record['client']] = []
 
-        t_sdr = SDR()
-        t_sdr.add_encoding('r', value=record['r'], encoder=numeric_encoder)
-        t_sdr.add_encoding('g', value=record['g'], encoder=numeric_encoder)
-        t_sdr.add_encoding('b', value=record['b'], encoder=numeric_encoder)
-        t_sdr.add_encoding('label', value=record['label'], encoder=label_encoder)
+        t_sgm = SGM()
+        t_sgm.add_encoding('r', value=record['r'], encoder=numeric_encoder)
+        t_sgm.add_encoding('g', value=record['g'], encoder=numeric_encoder)
+        t_sgm.add_encoding('b', value=record['b'], encoder=numeric_encoder)
+        t_sgm.add_encoding('label', value=record['label'], encoder=label_encoder)
         r_data = [record['r'], record['g'], record['b']]
 
-        training_graphs[record['client']].append((record['trade_id'], t_sdr, r_data))
+        training_graphs[record['client']].append((record['trade_id'], t_sgm, r_data))
 
     n_cycles = 1
 
@@ -181,7 +181,7 @@ def colours_test():
 
         for cycle in range(n_cycles):
             for t_idx in range(len(training_graphs[client])):
-                por = sam.train(sdr=training_graphs[client][t_idx][1],
+                por = sam.train(sgm=training_graphs[client][t_idx][1],
                                 ref_id=str(t_idx),
                                 search_types={'r', 'g', 'b', 'colour'},
                                 learn_types={'r', 'g', 'b', 'colour'})
