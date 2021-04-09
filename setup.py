@@ -17,12 +17,12 @@ ext_modules = []
 
 if use_cython:
     ext_modules += [
-        Extension("src.sdr", ["src/sdr.py"])
+        Extension("src.sgm", ["src/sgm.py"])
     ]
     cmdclass.update({'build_ext': build_ext})
 else:
     ext_modules += [
-        Extension("src.sdr", ["src/sdr.c"])
+        Extension("src.sgm", ["src/sgm.c"])
     ]
 
 setup(

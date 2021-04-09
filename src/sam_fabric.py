@@ -2,7 +2,7 @@
 # -*- encoding: utf-8 -*-
 
 from src.sam import SAM
-from src.sdr import SDR
+from src.sgm import SGM
 
 
 class SAMFabric(object):
@@ -26,7 +26,7 @@ class SAMFabric(object):
 
         # long short term memory of previous sam neurons that were activated
         #
-        self.lstm = SDR()
+        self.lstm = SGM()
 
         self.assoc_anomaly_threshold_factor = assoc_anomaly_threshold_factor
         self.assoc_similarity_threshold = assoc_similarity_threshold
@@ -117,24 +117,24 @@ class SAMFabric(object):
                     self.sams[temporal_name]['search_types'].update(temporal_search_types)
                     self.sams[temporal_name]['learn_types'].update(temporal_learn_types)
 
-    def train(self, sdrs, ref_id):
+    def train(self, sgms, ref_id):
         pors = {}
-        for name in sdrs:
+        for name in sgms:
             if name in self.sams:
-                por = self.sams[name]['sam'].train(sdr=sdrs[name],
+                por = self.sams[name]['sam'].train(sgm=sgms[name],
                                                    ref_id=ref_id,
                                                    search_types=self.sams[name]['search_types'],
                                                    learn_types=self.sams[name]['learn_types'])
                 pors[name] = por
 
-        if len(sdrs) > 1:
+        if len(sgms) > 1:
 
             # train the association sam
-            # create an sdr containing entries from each sam activated neuron
+            # create an sgm containing entries from each sam activated neuron
             #
             assoc_name = f'association_{self.domain}'
 
-            assoc_train_sdr = SDR()
+            assoc_train_sgm = SGM()
 
             for name in pors:
                 if pors[name]['new_neuron_key'] is not None:
@@ -142,9 +142,9 @@ class SAMFabric(object):
                 else:
                     neuron_to_merge = pors[name]['bmu_key']
 
-                assoc_train_sdr.merge(sdr=self.sams[name]['sam'].neurons[neuron_to_merge]['sdr'], weight=1.0, enc_type_prefix=name)
+                assoc_train_sgm.merge(sgm=self.sams[name]['sam'].neurons[neuron_to_merge]['sgm'], weight=1.0, enc_type_prefix=name)
 
-            por = self.sams[assoc_name]['sam'].train(sdr=assoc_train_sdr,
+            por = self.sams[assoc_name]['sam'].train(sgm=assoc_train_sgm,
                                                      ref_id=ref_id,
                                                      search_types=self.sams[assoc_name]['search_types'],
                                                      learn_types=self.sams[assoc_name]['learn_types'])
@@ -157,29 +157,29 @@ class SAMFabric(object):
             else:
                 neuron_to_merge = pors[assoc_name]['bmu_key']
 
-            assoc_sdr = self.sams[assoc_name]['sam'].neurons[neuron_to_merge]['sdr']
+            assoc_sgm = self.sams[assoc_name]['sam'].neurons[neuron_to_merge]['sgm']
 
-        # else only one name in the sdr
+        # else only one name in the sgm
         #
         else:
 
-            name = list(sdrs.keys())[0]
+            name = list(sgms.keys())[0]
 
             if pors[name]['new_neuron_key'] is not None:
                 neuron_to_merge = pors[name]['new_neuron_key']
             else:
                 neuron_to_merge = pors[name]['bmu_key']
 
-            assoc_sdr = self.sams[name]['sam'].neurons[neuron_to_merge]['sdr']
+            assoc_sgm = self.sams[name]['sam'].neurons[neuron_to_merge]['sgm']
 
         # now train the temporal sam if it exists
         #
         temporal_name = f'temporal_{self.domain}'
         if temporal_name in self.sams:
-            temporal_train_sdr = SDR(sdr=self.lstm)
-            temporal_train_sdr.merge(sdr=assoc_sdr, weight=1.0, enc_type_prefix='z0')
+            temporal_train_sgm = SGM(sgm=self.lstm)
+            temporal_train_sgm.merge(sgm=assoc_sgm, weight=1.0, enc_type_prefix='z0')
 
-            por = self.sams[temporal_name]['sam'].train(sdr=temporal_train_sdr,
+            por = self.sams[temporal_name]['sam'].train(sgm=temporal_train_sgm,
                                                         ref_id=ref_id,
                                                         search_types=self.sams[temporal_name]['search_types'],
                                                         learn_types=self.sams[temporal_name]['learn_types'])
@@ -187,39 +187,39 @@ class SAMFabric(object):
 
             # now update lstm for next step
             #
-            temporal_sdr = SDR()
-            temporal_sdr.copy(sdr=assoc_sdr, enc_type_prefix='z1')
-            self.lstm.learn(sdr=temporal_sdr,
+            temporal_sgm = SGM()
+            temporal_sgm.copy(sgm=assoc_sgm, enc_type_prefix='z1')
+            self.lstm.learn(sgm=temporal_sgm,
                             learn_rate=self.temporal_term_1_decay,
                             learn_types={l_type for l_type in self.sams[temporal_name]['learn_types'] if 'z1' in l_type},
                             prune=self.prune_threshold)
 
-            temporal_sdr = SDR()
-            temporal_sdr.copy(sdr=assoc_sdr, enc_type_prefix='z2')
-            self.lstm.learn(sdr=temporal_sdr,
+            temporal_sgm = SGM()
+            temporal_sgm.copy(sgm=assoc_sgm, enc_type_prefix='z2')
+            self.lstm.learn(sgm=temporal_sgm,
                             learn_rate=self.temporal_term_2_decay,
                             learn_types={l_type for l_type in self.sams[temporal_name]['learn_types'] if 'z2' in l_type},
                             prune=self.prune_threshold)
 
         return pors
 
-    def query_association(self, sdrs, bmu_only=True):
+    def query_association(self, sgms, bmu_only=True):
 
         por = {}
 
         assoc_name = f'association_{self.domain}'
         if assoc_name in self.sams:
-            q_sdr = SDR()
-            for name in sdrs:
-                q_sdr.merge(sdr=sdrs[name], weight=1.0, enc_type_prefix=name)
+            q_sgm = SGM()
+            for name in sgms:
+                q_sgm.merge(sgm=sgms[name], weight=1.0, enc_type_prefix=name)
 
-            por = self.sams[assoc_name]['sam'].query(sdr=q_sdr, bmu_only=True)
+            por = self.sams[assoc_name]['sam'].query(sgm=q_sgm, bmu_only=True)
 
-        # if no association then just query using the first sdr in sdrs
+        # if no association then just query using the first sgm in sgms
         else:
-            for name in sdrs:
+            for name in sgms:
                 if name in self.sams:
-                    por = self.sams[name]['sam'].query(sdr=sdrs[name], bmu_only=bmu_only)
+                    por = self.sams[name]['sam'].query(sgm=sgms[name], bmu_only=bmu_only)
                     break
 
         return por
@@ -234,29 +234,29 @@ class SAMFabric(object):
 
             # will need to create a lstm of the query results
             #
-            lstm = SDR()
+            lstm = SGM()
             for idx in range(len(context_sdrs)):
-                pors[idx] = self.query_association(sdrs=context_sdrs[idx], bmu_only=bmu_only)
+                pors[idx] = self.query_association(sgms=context_sdrs[idx], bmu_only=bmu_only)
 
-                assoc_sdr = pors[idx]['sdr']
+                assoc_sgm = pors[idx]['sgm']
 
                 # now update lstm for next step
                 #
-                temporal_sdr = SDR()
-                temporal_sdr.copy(sdr=assoc_sdr, enc_type_prefix='z1')
-                lstm.learn(sdr=temporal_sdr,
+                temporal_sgm = SGM()
+                temporal_sgm.copy(sgm=assoc_sgm, enc_type_prefix='z1')
+                lstm.learn(sgm=temporal_sgm,
                            learn_rate=self.temporal_term_1_decay,
                            learn_types={l_type for l_type in self.sams[temporal_name]['learn_types'] if 'z1' in l_type},
                            prune=self.prune_threshold)
 
-                temporal_sdr = SDR()
-                temporal_sdr.copy(sdr=assoc_sdr, enc_type_prefix='z2')
-                lstm.learn(sdr=temporal_sdr,
+                temporal_sgm = SGM()
+                temporal_sgm.copy(sgm=assoc_sgm, enc_type_prefix='z2')
+                lstm.learn(sgm=temporal_sgm,
                            learn_rate=self.temporal_term_2_decay,
                            learn_types={l_type for l_type in self.sams[temporal_name]['learn_types'] if 'z2' in l_type},
                            prune=self.prune_threshold)
 
-            pors[temporal_name] = self.sams[temporal_name]['sam'].query(sdr=lstm, bmu_only=bmu_only)
+            pors[temporal_name] = self.sams[temporal_name]['sam'].query(sgm=lstm, bmu_only=bmu_only)
 
         return pors
 

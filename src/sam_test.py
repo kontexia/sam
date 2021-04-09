@@ -3,7 +3,7 @@
 
 
 from src.sam import SAM
-from src.sdr import SDR
+from src.sgm import SDR
 from src.numeric_encoder import NumericEncoder
 from src.string_encoder import StringEncoder
 from src.sam_viz import plot_sam, plot_pors

@@ -2,7 +2,7 @@
 # -*- encoding: utf-8 -*-
 
 import json
-from src.sdr import SDR
+from src.sgm import SGM
 from src.numeric_encoder import NumericEncoder
 from src.string_encoder import StringEncoder
 from src.sam_fabric import SAMFabric
@@ -32,10 +32,10 @@ def colours_association_test():
         if record['client'] not in training_graphs:
             training_graphs[record['client']] = []
 
-        r_sdr = SDR(enc_type='r', value=record['r'], encoder=numeric_encoder)
-        g_sdr = SDR(enc_type='g', value=record['g'], encoder=numeric_encoder)
-        b_sdr = SDR(enc_type='b', value=record['b'], encoder=numeric_encoder)
-        l_sdr = SDR(enc_type='label', value=record['label'], encoder=label_encoder)
+        r_sdr = SGM(enc_type='r', value=record['r'], encoder=numeric_encoder)
+        g_sdr = SGM(enc_type='g', value=record['g'], encoder=numeric_encoder)
+        b_sdr = SGM(enc_type='b', value=record['b'], encoder=numeric_encoder)
+        l_sdr = SGM(enc_type='label', value=record['label'], encoder=label_encoder)
         r_data = [record['r'], record['g'], record['b']]
 
         training_graphs[record['client']].append((record['trade_id'], [r_sdr, g_sdr, b_sdr, l_sdr], r_data))
@@ -84,7 +84,7 @@ def colours_association_test():
         start_time = time.time()
         for cycle in range(n_cycles):
             for t_idx in range(len(training_graphs[client])):
-                por = domains[client]['fabric'].train(sdrs={'r': training_graphs[client][t_idx][1][0],
+                por = domains[client]['fabric'].train(sgms={'r': training_graphs[client][t_idx][1][0],
                                                             'g': training_graphs[client][t_idx][1][1],
                                                             'b': training_graphs[client][t_idx][1][2],
                                                             'l': training_graphs[client][t_idx][1][3]},
@@ -97,7 +97,7 @@ def colours_association_test():
         plot_pors(pors=pors, name=f'association_{client}')
         plot_pors(pors=pors, name=f'temporal_{client}')
 
-        sam_dict = domains[client]['fabric'].sams[client]['sam'].to_dict(decode=True)
+        sam_dict = domains[client]['fabric'].sams[f'association_{client}']['sam'].to_dict(decode=True)
 
         rn_data = [t_data[2] for t_data in training_graphs[client]]
         cycle_data = []
@@ -106,13 +106,21 @@ def colours_association_test():
 
         plot_sam(sam=sam_dict,
                  raw_data=cycle_data,
-                 xyz_types=['r', 'g', 'b'],
+                 xyz_types=['r_r', 'g_g', 'b_b'],
                  colour_nodes=None)
 
         start_idx = 50
-        por_qry = domains[client]['fabric'].query_temporal(context_sdrs=[{client: training_graphs[client][q_idx][1]} for q_idx in range(start_idx, start_idx + 4)])
-        actual_sdr = por_qry[f'temporal_{client}']['sdr'].to_dict(decode=True)
-        target_sdr = training_graphs[client][start_idx + 4][1].to_dict(decode=True)
+
+        por_qry = domains[client]['fabric'].query_temporal(context_sdrs=[{'r': training_graphs[client][q_idx][1][0],
+                                                                          'g': training_graphs[client][q_idx][1][1],
+                                                                          'b': training_graphs[client][q_idx][1][2],
+                                                                          'l': training_graphs[client][q_idx][1][3]}
+                                                                         for q_idx in range(start_idx, start_idx + 4)])
+        actual_sgm = por_qry[f'temporal_{client}']['sgm'].to_dict(decode=True)
+        target_sgm_r = training_graphs[client][start_idx + 4][1][0].to_dict(decode=True)
+        target_sgm_g = training_graphs[client][start_idx + 4][1][1].to_dict(decode=True)
+        target_sgm_b = training_graphs[client][start_idx + 4][1][2].to_dict(decode=True)
+        target_sgm_l = training_graphs[client][start_idx + 4][1][3].to_dict(decode=True)
 
         print(f'finished {client}')
 
@@ -154,7 +162,7 @@ def colours_test():
         if record['client'] not in training_graphs:
             training_graphs[record['client']] = []
 
-        t_sdr = SDR()
+        t_sdr = SGM()
         t_sdr.add_encoding('r', value=record['r'], encoder=numeric_encoder)
         t_sdr.add_encoding('g', value=record['g'], encoder=numeric_encoder)
         t_sdr.add_encoding('b', value=record['b'], encoder=numeric_encoder)
@@ -189,7 +197,7 @@ def colours_test():
         start_time = time.time()
         for cycle in range(n_cycles):
             for t_idx in range(len(training_graphs[client])):
-                por = domains[client]['fabric'].train(sdrs={client: training_graphs[client][t_idx][1]},
+                por = domains[client]['fabric'].train(sgms={client: training_graphs[client][t_idx][1]},
                                                       ref_id=str(t_idx))
                 pors.append(por)
         end_time = time.time()
@@ -213,7 +221,7 @@ def colours_test():
 
         start_idx = 50
         por_qry = domains[client]['fabric'].query_temporal(context_sdrs=[{client: training_graphs[client][q_idx][1]} for q_idx in range(start_idx, start_idx + 4)])
-        actual_sdr = por_qry[f'temporal_{client}']['sdr'].to_dict(decode=True)
+        actual_sdr = por_qry[f'temporal_{client}']['sgm'].to_dict(decode=True)
         target_sdr = training_graphs[client][start_idx + 4][1].to_dict(decode=True)
 
         print(f'finished {client}')

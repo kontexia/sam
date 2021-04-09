@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
-from src.sdr import SDR
+from src.sgm import SGM
 from typing import Optional, Tuple
 from copy import deepcopy
 
@@ -34,7 +34,7 @@ class SAM(object):
         self.updated: bool = True
         self.similarity_threshold = similarity_threshold
 
-    def add_neuron(self, sdr: SDR) -> str:
+    def add_neuron(self, sgm: SGM) -> str:
         neuron_key = f'{self.next_neuron_id}'
         self.next_neuron_id += 1
 
@@ -42,7 +42,7 @@ class SAM(object):
 
         self.neurons[neuron_key] = {'sam': self.name,
                                     'uid': neuron_key,
-                                    'sdr': sdr,
+                                    'sgm': sgm,
                                     'created': update_id,
                                     'ema_similarity': None,
                                     'n_bmu': 1,
@@ -79,7 +79,7 @@ class SAM(object):
         # replace neuron sdrs with dict (decoded as required)
         #
         for neuron_key in d_sam['neurons']:
-            d_sam['neurons'][neuron_key]['sdr'] = d_sam['neurons'][neuron_key]['sdr'].to_dict(decode=decode)
+            d_sam['neurons'][neuron_key]['sgm'] = d_sam['neurons'][neuron_key]['sgm'].to_dict(decode=decode)
 
         return d_sam
 
@@ -117,7 +117,7 @@ class SAM(object):
 
         return anomaly, motif
 
-    def train(self, sdr, ref_id: str, search_types: set, learn_types: set) -> dict:
+    def train(self, sgm, ref_id: str, search_types: set, learn_types: set) -> dict:
         por = {'sam': self.name,
                'ref_id': ref_id,
                'bmu_key': None,
@@ -140,15 +140,15 @@ class SAM(object):
         if len(self.neurons) == 0:
             # add new neuron
             #
-            new_neuron_key = self.add_neuron(sdr=sdr)
+            new_neuron_key = self.add_neuron(sgm=sgm)
 
             por['new_neuron_key'] = new_neuron_key
         else:
 
-            # calc the distance of the sdr to the existing neurons
+            # calc the distance of the sgm to the existing neurons
             #
             distances = [(neuron_key,
-                          self.neurons[neuron_key]['sdr'].distance(sdr=sdr, search_types=search_types),
+                          self.neurons[neuron_key]['sgm'].distance(sgm=sgm, search_types=search_types),
                           self.neurons[neuron_key]['n_bmu'])
                          for neuron_key in self.neurons]
 
@@ -173,7 +173,7 @@ class SAM(object):
 
                 # add new neuron
                 #
-                new_neuron_key = self.add_neuron(sdr=sdr)
+                new_neuron_key = self.add_neuron(sgm=sgm)
 
                 por['new_neuron_key'] = new_neuron_key
 
@@ -226,7 +226,7 @@ class SAM(object):
 
                 # learn the generalised graph
                 #
-                self.neurons[bmu_key]['sdr'].learn(sdr=sdr,
+                self.neurons[bmu_key]['sgm'].learn(sgm=sgm,
                                                    learn_rate=self.neurons[bmu_key]['learn_rate'],
                                                    learn_types=learn_types)
 
@@ -266,9 +266,9 @@ class SAM(object):
                             #
                             nn_learn_rate = self.neurons[bmu_key]['learn_rate'] * self.neurons[nn_key]['learn_rate'] * 0.1
 
-                            # learn the sdr
+                            # learn the sgm
                             #
-                            self.neurons[nn_key]['sdr'].learn(sdr=sdr,
+                            self.neurons[nn_key]['sgm'].learn(sgm=sgm,
                                                               learn_rate=nn_learn_rate,
                                                               learn_types=learn_types)
                             nn_idx += 1
@@ -285,7 +285,7 @@ class SAM(object):
                             pair = (min(neuron_key, nn_key), max(neuron_key, nn_key))
                             if pair not in nn_processed:
                                 nn_processed.add(pair)
-                                distance = self.neurons[neuron_key]['sdr'].distance(sdr=self.neurons[nn_key]['sdr'],
+                                distance = self.neurons[neuron_key]['sgm'].distance(sgm=self.neurons[nn_key]['sgm'],
                                                                                     search_types=search_types)
 
                                 # set the distance
@@ -301,20 +301,20 @@ class SAM(object):
 
         return por
 
-    def query(self, sdr, bmu_only: bool = True) -> dict:
+    def query(self, sgm, bmu_only: bool = True) -> dict:
 
         # get the types to search for
         #
-        search_types = sdr.get_enc_types()
+        search_types = sgm.get_enc_types()
 
-        # calc the distance of the sdr to the existing neurons
+        # calc the distance of the sgm to the existing neurons
         #
         distances = [(neuron_key,
-                      self.neurons[neuron_key]['sdr'].distance(sdr=sdr,
+                      self.neurons[neuron_key]['sgm'].distance(sgm=sgm,
                                                                search_types=search_types),
                       self.neurons[neuron_key]['n_bmu'],
-                      self.neurons[neuron_key]['sdr'],
-                      self.neurons[neuron_key]['sdr'].get_max_distance(search_types=search_types) * (1 - self.similarity_threshold))
+                      self.neurons[neuron_key]['sgm'],
+                      self.neurons[neuron_key]['sgm'].get_max_distance(search_types=search_types) * (1 - self.similarity_threshold))
                      for neuron_key in self.neurons]
 
         # sort in ascending order of distance and descending order of number of times bmu
@@ -336,7 +336,7 @@ class SAM(object):
             # select the bmu
             #
             if bmu_only or sum_distance == 0 or len(activated_neurons) == 1:
-                por['sdr'] = activated_neurons[0][3]
+                por['sgm'] = activated_neurons[0][3]
 
                 if sum_distance > 0 and len(activated_neurons) > 1:
                     por['neurons'] = [{'neuron_key': n[0], 'weight': 1 - (n[1]['distance'] / sum_distance)}
@@ -347,11 +347,11 @@ class SAM(object):
             # else create a weighted average of neurons
             #
             else:
-                por['sdr'] = SDR()
+                por['sgm'] = SGM()
                 por['neurons'] = []
                 for n in activated_neurons:
                     weight = 1 - (n[1]['distance'] / sum_distance)
-                    por['sdr'].merge(sdr=n[3], weight=weight)
+                    por['sgm'].merge(sgm=n[3], weight=weight)
                     por['neurons'].append({'neuron_key': n[0], 'weight': weight})
 
         return por
@@ -379,50 +379,50 @@ if __name__ == '__main__':
                                  enc_size=2048,
                                  seed=12345)
 
-    t_1 = SDR()
+    t_1 = SGM()
     t_1.add_encoding(enc_type='Date', value='22-11-66', encoder=str_enc)
     t_1.add_encoding(enc_type='Platform', value='A', encoder=str_enc)
     t_1.add_encoding(enc_type='Volume', value=100, encoder=numeric_enc)
 
-    p1 = ng.train(sdr=t_1, ref_id='t_1', search_types={'Date', 'Platform', 'Volume'}, learn_types={'Date', 'Platform', 'Volume'})
+    p1 = ng.train(sgm=t_1, ref_id='t_1', search_types={'Date', 'Platform', 'Volume'}, learn_types={'Date', 'Platform', 'Volume'})
 
-    t_2 = SDR()
+    t_2 = SGM()
     t_2.add_encoding(enc_type='Date', value='22-11-66', encoder=str_enc)
     t_2.add_encoding(enc_type='Platform', value='B', encoder=str_enc)
     t_2.add_encoding(enc_type='Volume', value=50, encoder=numeric_enc)
 
-    p2 = ng.train(sdr=t_2, ref_id='t_2', search_types={'Date', 'Platform', 'Volume'}, learn_types={'Date', 'Platform', 'Volume'})
+    p2 = ng.train(sgm=t_2, ref_id='t_2', search_types={'Date', 'Platform', 'Volume'}, learn_types={'Date', 'Platform', 'Volume'})
 
-    t_3 = SDR()
+    t_3 = SGM()
     t_3.add_encoding(enc_type='Date', value='22-11-66', encoder=str_enc)
     t_3.add_encoding(enc_type='Platform', value='A', encoder=str_enc)
     t_3.add_encoding(enc_type='Volume', value=75, encoder=numeric_enc)
 
-    p3 = ng.train(sdr=t_3, ref_id='t_3', search_types={'Date', 'Platform', 'Volume'}, learn_types={'Date', 'Platform', 'Volume'})
+    p3 = ng.train(sgm=t_3, ref_id='t_3', search_types={'Date', 'Platform', 'Volume'}, learn_types={'Date', 'Platform', 'Volume'})
 
-    t_4 = SDR()
+    t_4 = SGM()
     t_4.add_encoding(enc_type='Date', value='22-11-66', encoder=str_enc)
     t_4.add_encoding(enc_type='Platform', value='B', encoder=str_enc)
     t_4.add_encoding(enc_type='Volume', value=60, encoder=numeric_enc)
 
-    p4 = ng.train(sdr=t_4, ref_id='t_4', search_types={'Date', 'Platform', 'Volume'}, learn_types={'Date', 'Platform', 'Volume'})
+    p4 = ng.train(sgm=t_4, ref_id='t_4', search_types={'Date', 'Platform', 'Volume'}, learn_types={'Date', 'Platform', 'Volume'})
 
-    t_5 = SDR()
+    t_5 = SGM()
     t_5.add_encoding(enc_type='Date', value='22-11-66', encoder=str_enc)
     t_5.add_encoding(enc_type='Platform', value='A', encoder=str_enc)
     t_5.add_encoding(enc_type='Volume', value=110, encoder=numeric_enc)
 
-    p5 = ng.train(sdr=t_5, ref_id='t_5', search_types={'Date', 'Platform', 'Volume'}, learn_types={'Date', 'Platform', 'Volume'})
+    p5 = ng.train(sgm=t_5, ref_id='t_5', search_types={'Date', 'Platform', 'Volume'}, learn_types={'Date', 'Platform', 'Volume'})
 
     ng_dict = ng.to_dict(decode=True)
 
-    t_6 = SDR()
+    t_6 = SGM()
     t_6.add_encoding(enc_type='Volume', value=90, encoder=numeric_enc)
 
-    q_por_bmu = ng.query(sdr=t_6, bmu_only=True)
-    q_por_bmu_decode = q_por_bmu['sdr'].decode()
-    q_por_weav = ng.query(sdr=t_6, bmu_only=False)
-    q_por_weav_decode = q_por_weav['sdr'].decode()
+    q_por_bmu = ng.query(sgm=t_6, bmu_only=True)
+    q_por_bmu_decode = q_por_bmu['sgm'].decode()
+    q_por_weav = ng.query(sgm=t_6, bmu_only=False)
+    q_por_weav_decode = q_por_weav['sgm'].decode()
 
     print('finished')
 

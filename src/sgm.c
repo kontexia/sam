@@ -602,8 +602,8 @@ static CYTHON_INLINE float __PYX_NAN() {
   #endif
 #endif
 
-#define __PYX_HAVE__src__sdr
-#define __PYX_HAVE_API__src__sdr
+#define __PYX_HAVE__src__sgm
+#define __PYX_HAVE_API__src__sgm
 /* Early includes */
 #ifdef _OPENMP
 #include <omp.h>
@@ -813,21 +813,21 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "src/sdr.py",
+  "src/sgm.py",
   "stringsource",
 };
 
 /*--- Type declarations ---*/
-struct __pyx_obj_3src_3sdr_SDR;
+struct __pyx_obj_3src_3sgm_SGM;
 
-/* "src/sdr.py":7
+/* "src/sgm.py":7
  * 
  * @cython.cclass
- * class SDR(object):             # <<<<<<<<<<<<<<
+ * class SGM(object):             # <<<<<<<<<<<<<<
  *     encodings = cython.declare(dict, visibility='public')
  *     properties = cython.declare(dict, visibility='public')
  */
-struct __pyx_obj_3src_3sdr_SDR {
+struct __pyx_obj_3src_3sgm_SGM {
   PyObject_HEAD
   PyObject *encodings;
   PyObject *properties;
@@ -1452,14 +1452,14 @@ static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
 /* Module declarations from 'cython' */
 
-/* Module declarations from 'src.sdr' */
-static PyTypeObject *__pyx_ptype_3src_3sdr_SDR = 0;
-static PyObject *__pyx_f_3src_3sdr___pyx_unpickle_SDR__set_state(struct __pyx_obj_3src_3sdr_SDR *, PyObject *); /*proto*/
-#define __Pyx_MODULE_NAME "src.sdr"
-extern int __pyx_module_is_main_src__sdr;
-int __pyx_module_is_main_src__sdr = 0;
+/* Module declarations from 'src.sgm' */
+static PyTypeObject *__pyx_ptype_3src_3sgm_SGM = 0;
+static PyObject *__pyx_f_3src_3sgm___pyx_unpickle_SGM__set_state(struct __pyx_obj_3src_3sgm_SGM *, PyObject *); /*proto*/
+#define __Pyx_MODULE_NAME "src.sgm"
+extern int __pyx_module_is_main_src__sgm;
+int __pyx_module_is_main_src__sgm = 0;
 
-/* Implementation of 'src.sdr' */
+/* Implementation of 'src.sgm' */
 static PyObject *__pyx_builtin_range;
 static PyObject *__pyx_builtin_sum;
 static const char __pyx_k_[] = "";
@@ -1467,7 +1467,7 @@ static const char __pyx_k_d[] = "d";
 static const char __pyx_k_i[] = "i";
 static const char __pyx_k_o[] = "o";
 static const char __pyx_k__2[] = "_";
-static const char __pyx_k_SDR[] = "SDR";
+static const char __pyx_k_SGM[] = "SGM";
 static const char __pyx_k_bit[] = "bit";
 static const char __pyx_k_d_1[] = "d_1";
 static const char __pyx_k_d_2[] = "d_2";
@@ -1481,8 +1481,8 @@ static const char __pyx_k_enc[] = "enc";
 static const char __pyx_k_end[] = "end";
 static const char __pyx_k_new[] = "__new__";
 static const char __pyx_k_por[] = "por";
-static const char __pyx_k_sdr[] = "sdr";
 static const char __pyx_k_set[] = "set";
+static const char __pyx_k_sgm[] = "sgm";
 static const char __pyx_k_str[] = "str";
 static const char __pyx_k_sum[] = "sum";
 static const char __pyx_k_bits[] = "bits";
@@ -1505,10 +1505,10 @@ static const char __pyx_k_merge[] = "merge";
 static const char __pyx_k_print[] = "print";
 static const char __pyx_k_prune[] = "prune";
 static const char __pyx_k_range[] = "range";
-static const char __pyx_k_sdr_1[] = "sdr_1";
-static const char __pyx_k_sdr_2[] = "sdr_2";
-static const char __pyx_k_sdr_3[] = "sdr_3";
-static const char __pyx_k_sdr_4[] = "sdr_4";
+static const char __pyx_k_sgm_1[] = "sgm_1";
+static const char __pyx_k_sgm_2[] = "sgm_2";
+static const char __pyx_k_sgm_3[] = "sgm_3";
+static const char __pyx_k_sgm_4[] = "sgm_4";
 static const char __pyx_k_state[] = "state";
 static const char __pyx_k_value[] = "value";
 static const char __pyx_k_decode[] = "decode";
@@ -1527,9 +1527,9 @@ static const char __pyx_k_weight[] = "weight";
 static const char __pyx_k_encoder[] = "encoder";
 static const char __pyx_k_overlap[] = "overlap";
 static const char __pyx_k_replace[] = "replace";
-static const char __pyx_k_src_sdr[] = "src.sdr";
+static const char __pyx_k_src_sgm[] = "src.sgm";
 static const char __pyx_k_to_dict[] = "to_dict";
-static const char __pyx_k_SDR_copy[] = "SDR.copy";
+static const char __pyx_k_SGM_copy[] = "SGM.copy";
 static const char __pyx_k_deepcopy[] = "deepcopy";
 static const char __pyx_k_distance[] = "distance";
 static const char __pyx_k_enc_size[] = "enc_size";
@@ -1541,26 +1541,26 @@ static const char __pyx_k_min_step[] = "min_step";
 static const char __pyx_k_pyx_type[] = "__pyx_type";
 static const char __pyx_k_sdr_bits[] = "sdr_bits";
 static const char __pyx_k_setstate[] = "__setstate__";
-static const char __pyx_k_SDR_learn[] = "SDR.learn";
-static const char __pyx_k_SDR_merge[] = "SDR.merge";
+static const char __pyx_k_SGM_learn[] = "SGM.learn";
+static const char __pyx_k_SGM_merge[] = "SGM.merge";
 static const char __pyx_k_enc_types[] = "enc_types";
 static const char __pyx_k_encodings[] = "encodings";
 static const char __pyx_k_pyx_state[] = "__pyx_state";
 static const char __pyx_k_reduce_ex[] = "__reduce_ex__";
 static const char __pyx_k_self_bits[] = "self_bits";
-static const char __pyx_k_SDR_decode[] = "SDR.decode";
+static const char __pyx_k_SGM_decode[] = "SGM.decode";
 static const char __pyx_k_bit_weight[] = "bit_weight";
 static const char __pyx_k_learn_rate[] = "learn_rate";
 static const char __pyx_k_properties[] = "properties";
 static const char __pyx_k_pyx_result[] = "__pyx_result";
 static const char __pyx_k_similarity[] = "similarity";
-static const char __pyx_k_src_sdr_py[] = "src/sdr.py";
+static const char __pyx_k_src_sgm_py[] = "src/sgm.py";
 static const char __pyx_k_start_time[] = "start_time";
 static const char __pyx_k_PickleError[] = "PickleError";
-static const char __pyx_k_SDR_overlap[] = "SDR.overlap";
-static const char __pyx_k_SDR_to_dict[] = "SDR.to_dict";
+static const char __pyx_k_SGM_overlap[] = "SGM.overlap";
+static const char __pyx_k_SGM_to_dict[] = "SGM.to_dict";
 static const char __pyx_k_learn_types[] = "learn_types";
-static const char __pyx_k_SDR_distance[] = "SDR.distance";
+static const char __pyx_k_SGM_distance[] = "SGM.distance";
 static const char __pyx_k_add_encoding[] = "add_encoding";
 static const char __pyx_k_max_distance[] = "max_distance";
 static const char __pyx_k_norm_overlap[] = "norm_overlap";
@@ -1577,38 +1577,38 @@ static const char __pyx_k_enc_properties[] = "enc_properties";
 static const char __pyx_k_enc_type_prefix[] = "enc_type_prefix";
 static const char __pyx_k_pyx_PickleError[] = "__pyx_PickleError";
 static const char __pyx_k_setstate_cython[] = "__setstate_cython__";
-static const char __pyx_k_SDR_add_encoding[] = "SDR.add_encoding";
+static const char __pyx_k_SGM_add_encoding[] = "SGM.add_encoding";
 static const char __pyx_k_get_max_distance[] = "get_max_distance";
-static const char __pyx_k_pyx_unpickle_SDR[] = "__pyx_unpickle_SDR";
-static const char __pyx_k_SDR_get_enc_types[] = "SDR.get_enc_types";
-static const char __pyx_k_SDR_remove_prefix[] = "SDR.remove_prefix";
+static const char __pyx_k_pyx_unpickle_SGM[] = "__pyx_unpickle_SGM";
+static const char __pyx_k_SGM_get_enc_types[] = "SGM.get_enc_types";
+static const char __pyx_k_SGM_remove_prefix[] = "SGM.remove_prefix";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
 static const char __pyx_k_get_enc_properties[] = "get_enc_properties";
-static const char __pyx_k_SDR___reduce_cython[] = "SDR.__reduce_cython__";
+static const char __pyx_k_SGM___reduce_cython[] = "SGM.__reduce_cython__";
 static const char __pyx_k_src_numeric_encoder[] = "src.numeric_encoder";
-static const char __pyx_k_SDR_get_max_distance[] = "SDR.get_max_distance";
-static const char __pyx_k_SDR___setstate_cython[] = "SDR.__setstate_cython__";
-static const char __pyx_k_SDR_get_enc_properties[] = "SDR.get_enc_properties";
+static const char __pyx_k_SGM_get_max_distance[] = "SGM.get_max_distance";
+static const char __pyx_k_SGM___setstate_cython[] = "SGM.__setstate_cython__";
+static const char __pyx_k_SGM_get_enc_properties[] = "SGM.get_enc_properties";
 static const char __pyx_k_Incompatible_checksums_s_vs_0xa3[] = "Incompatible checksums (%s vs 0xa311906 = (encodings, properties))";
 static PyObject *__pyx_kp_s_;
 static PyObject *__pyx_kp_s_Incompatible_checksums_s_vs_0xa3;
 static PyObject *__pyx_n_s_NumericEncoder;
 static PyObject *__pyx_n_s_PickleError;
-static PyObject *__pyx_n_s_SDR;
-static PyObject *__pyx_n_s_SDR___reduce_cython;
-static PyObject *__pyx_n_s_SDR___setstate_cython;
-static PyObject *__pyx_n_s_SDR_add_encoding;
-static PyObject *__pyx_n_s_SDR_copy;
-static PyObject *__pyx_n_s_SDR_decode;
-static PyObject *__pyx_n_s_SDR_distance;
-static PyObject *__pyx_n_s_SDR_get_enc_properties;
-static PyObject *__pyx_n_s_SDR_get_enc_types;
-static PyObject *__pyx_n_s_SDR_get_max_distance;
-static PyObject *__pyx_n_s_SDR_learn;
-static PyObject *__pyx_n_s_SDR_merge;
-static PyObject *__pyx_n_s_SDR_overlap;
-static PyObject *__pyx_n_s_SDR_remove_prefix;
-static PyObject *__pyx_n_s_SDR_to_dict;
+static PyObject *__pyx_n_s_SGM;
+static PyObject *__pyx_n_s_SGM___reduce_cython;
+static PyObject *__pyx_n_s_SGM___setstate_cython;
+static PyObject *__pyx_n_s_SGM_add_encoding;
+static PyObject *__pyx_n_s_SGM_copy;
+static PyObject *__pyx_n_s_SGM_decode;
+static PyObject *__pyx_n_s_SGM_distance;
+static PyObject *__pyx_n_s_SGM_get_enc_properties;
+static PyObject *__pyx_n_s_SGM_get_enc_types;
+static PyObject *__pyx_n_s_SGM_get_max_distance;
+static PyObject *__pyx_n_s_SGM_learn;
+static PyObject *__pyx_n_s_SGM_merge;
+static PyObject *__pyx_n_s_SGM_overlap;
+static PyObject *__pyx_n_s_SGM_remove_prefix;
+static PyObject *__pyx_n_s_SGM_to_dict;
 static PyObject *__pyx_n_u__2;
 static PyObject *__pyx_n_s_add_encoding;
 static PyObject *__pyx_n_s_bit;
@@ -1679,7 +1679,7 @@ static PyObject *__pyx_n_s_pyx_checksum;
 static PyObject *__pyx_n_s_pyx_result;
 static PyObject *__pyx_n_s_pyx_state;
 static PyObject *__pyx_n_s_pyx_type;
-static PyObject *__pyx_n_s_pyx_unpickle_SDR;
+static PyObject *__pyx_n_s_pyx_unpickle_SGM;
 static PyObject *__pyx_n_s_range;
 static PyObject *__pyx_n_s_reduce;
 static PyObject *__pyx_n_s_reduce_cython;
@@ -1687,11 +1687,6 @@ static PyObject *__pyx_n_s_reduce_ex;
 static PyObject *__pyx_n_s_remove_prefix;
 static PyObject *__pyx_n_s_replace;
 static PyObject *__pyx_n_s_return;
-static PyObject *__pyx_n_s_sdr;
-static PyObject *__pyx_n_s_sdr_1;
-static PyObject *__pyx_n_s_sdr_2;
-static PyObject *__pyx_n_s_sdr_3;
-static PyObject *__pyx_n_s_sdr_4;
 static PyObject *__pyx_n_s_sdr_bits;
 static PyObject *__pyx_n_s_search_types;
 static PyObject *__pyx_n_s_seed;
@@ -1701,10 +1696,15 @@ static PyObject *__pyx_n_s_self_enc_type;
 static PyObject *__pyx_n_u_set;
 static PyObject *__pyx_n_s_setstate;
 static PyObject *__pyx_n_s_setstate_cython;
+static PyObject *__pyx_n_s_sgm;
+static PyObject *__pyx_n_s_sgm_1;
+static PyObject *__pyx_n_s_sgm_2;
+static PyObject *__pyx_n_s_sgm_3;
+static PyObject *__pyx_n_s_sgm_4;
 static PyObject *__pyx_n_s_similarity;
 static PyObject *__pyx_n_s_src_numeric_encoder;
-static PyObject *__pyx_n_s_src_sdr;
-static PyObject *__pyx_kp_s_src_sdr_py;
+static PyObject *__pyx_n_s_src_sgm;
+static PyObject *__pyx_kp_s_src_sgm_py;
 static PyObject *__pyx_n_s_start_time;
 static PyObject *__pyx_n_s_state;
 static PyObject *__pyx_n_u_str;
@@ -1718,29 +1718,29 @@ static PyObject *__pyx_n_s_use_setstate;
 static PyObject *__pyx_n_s_value;
 static PyObject *__pyx_n_s_volume;
 static PyObject *__pyx_n_s_weight;
-static int __pyx_pf_3src_3sdr_3SDR___init__(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self, PyObject *__pyx_v_sdr, PyObject *__pyx_v_enc_type, PyObject *__pyx_v_value, PyObject *__pyx_v_enc_properties, PyObject *__pyx_v_encoder, PyObject *__pyx_v_bit_weight); /* proto */
-static PyObject *__pyx_pf_3src_3sdr_3SDR_2get_max_distance(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self, PyObject *__pyx_v_search_types); /* proto */
-static PyObject *__pyx_pf_3src_3sdr_3SDR_4remove_prefix(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self, PyObject *__pyx_v_enc_type_prefix); /* proto */
-static PyObject *__pyx_pf_3src_3sdr_3SDR_6copy(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self, PyObject *__pyx_v_sdr, PyObject *__pyx_v_enc_type_prefix); /* proto */
-static PyObject *__pyx_pf_3src_3sdr_3SDR_8add_encoding(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self, PyObject *__pyx_v_enc_type, PyObject *__pyx_v_value, PyObject *__pyx_v_encoder, PyObject *__pyx_v_enc_properties, double __pyx_v_bit_weight); /* proto */
-static PyObject *__pyx_pf_3src_3sdr_3SDR_10get_enc_types(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_3src_3sdr_3SDR_12get_enc_properties(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self, PyObject *__pyx_v_enc_type); /* proto */
-static PyObject *__pyx_pf_3src_3sdr_3SDR_14decode(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_3src_3sdr_3SDR_16to_dict(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self, PyObject *__pyx_v_decode); /* proto */
-static PyObject *__pyx_pf_3src_3sdr_3SDR_18overlap(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self, PyObject *__pyx_v_sdr, PyObject *__pyx_v_search_types); /* proto */
-static PyObject *__pyx_pf_3src_3sdr_3SDR_20distance(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self, PyObject *__pyx_v_sdr, PyObject *__pyx_v_search_types); /* proto */
-static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self, PyObject *__pyx_v_sdr, double __pyx_v_learn_rate, PyObject *__pyx_v_learn_types, double __pyx_v_prune); /* proto */
-static PyObject *__pyx_pf_3src_3sdr_3SDR_24merge(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self, PyObject *__pyx_v_sdr, double __pyx_v_weight, PyObject *__pyx_v_enc_type_prefix); /* proto */
-static PyObject *__pyx_pf_3src_3sdr_3SDR_9encodings___get__(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self); /* proto */
-static int __pyx_pf_3src_3sdr_3SDR_9encodings_2__set__(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
-static int __pyx_pf_3src_3sdr_3SDR_9encodings_4__del__(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_3src_3sdr_3SDR_10properties___get__(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self); /* proto */
-static int __pyx_pf_3src_3sdr_3SDR_10properties_2__set__(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
-static int __pyx_pf_3src_3sdr_3SDR_10properties_4__del__(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_3src_3sdr_3SDR_26__reduce_cython__(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_3src_3sdr_3SDR_28__setstate_cython__(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self, PyObject *__pyx_v___pyx_state); /* proto */
-static PyObject *__pyx_pf_3src_3sdr___pyx_unpickle_SDR(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v___pyx_type, long __pyx_v___pyx_checksum, PyObject *__pyx_v___pyx_state); /* proto */
-static PyObject *__pyx_tp_new_3src_3sdr_SDR(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
+static int __pyx_pf_3src_3sgm_3SGM___init__(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self, PyObject *__pyx_v_sgm, PyObject *__pyx_v_enc_type, PyObject *__pyx_v_value, PyObject *__pyx_v_enc_properties, PyObject *__pyx_v_encoder, PyObject *__pyx_v_bit_weight); /* proto */
+static PyObject *__pyx_pf_3src_3sgm_3SGM_2get_max_distance(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self, PyObject *__pyx_v_search_types); /* proto */
+static PyObject *__pyx_pf_3src_3sgm_3SGM_4remove_prefix(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self, PyObject *__pyx_v_enc_type_prefix); /* proto */
+static PyObject *__pyx_pf_3src_3sgm_3SGM_6copy(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self, PyObject *__pyx_v_sgm, PyObject *__pyx_v_enc_type_prefix); /* proto */
+static PyObject *__pyx_pf_3src_3sgm_3SGM_8add_encoding(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self, PyObject *__pyx_v_enc_type, PyObject *__pyx_v_value, PyObject *__pyx_v_encoder, PyObject *__pyx_v_enc_properties, double __pyx_v_bit_weight); /* proto */
+static PyObject *__pyx_pf_3src_3sgm_3SGM_10get_enc_types(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_3src_3sgm_3SGM_12get_enc_properties(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self, PyObject *__pyx_v_enc_type); /* proto */
+static PyObject *__pyx_pf_3src_3sgm_3SGM_14decode(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_3src_3sgm_3SGM_16to_dict(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self, PyObject *__pyx_v_decode); /* proto */
+static PyObject *__pyx_pf_3src_3sgm_3SGM_18overlap(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self, PyObject *__pyx_v_sgm, PyObject *__pyx_v_search_types); /* proto */
+static PyObject *__pyx_pf_3src_3sgm_3SGM_20distance(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self, PyObject *__pyx_v_sgm, PyObject *__pyx_v_search_types); /* proto */
+static PyObject *__pyx_pf_3src_3sgm_3SGM_22learn(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self, PyObject *__pyx_v_sgm, double __pyx_v_learn_rate, PyObject *__pyx_v_learn_types, double __pyx_v_prune); /* proto */
+static PyObject *__pyx_pf_3src_3sgm_3SGM_24merge(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self, PyObject *__pyx_v_sgm, double __pyx_v_weight, PyObject *__pyx_v_enc_type_prefix); /* proto */
+static PyObject *__pyx_pf_3src_3sgm_3SGM_9encodings___get__(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self); /* proto */
+static int __pyx_pf_3src_3sgm_3SGM_9encodings_2__set__(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static int __pyx_pf_3src_3sgm_3SGM_9encodings_4__del__(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_3src_3sgm_3SGM_10properties___get__(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self); /* proto */
+static int __pyx_pf_3src_3sgm_3SGM_10properties_2__set__(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static int __pyx_pf_3src_3sgm_3SGM_10properties_4__del__(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_3src_3sgm_3SGM_26__reduce_cython__(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_3src_3sgm_3SGM_28__setstate_cython__(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self, PyObject *__pyx_v___pyx_state); /* proto */
+static PyObject *__pyx_pf_3src_3sgm___pyx_unpickle_SGM(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v___pyx_type, long __pyx_v___pyx_checksum, PyObject *__pyx_v___pyx_state); /* proto */
+static PyObject *__pyx_tp_new_3src_3sgm_SGM(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static __Pyx_CachedCFunction __pyx_umethod_PyDict_Type_keys = {0, &__pyx_n_s_keys, 0, 0, 0};
 static __Pyx_CachedCFunction __pyx_umethod_PyString_Type_replace = {0, &__pyx_n_s_replace, 0, 0, 0};
 static PyObject *__pyx_float_0_0;
@@ -1788,18 +1788,18 @@ static PyObject *__pyx_codeobj__30;
 static PyObject *__pyx_codeobj__32;
 /* Late includes */
 
-/* "src/sdr.py":11
+/* "src/sgm.py":11
  *     properties = cython.declare(dict, visibility='public')
  * 
- *     def __init__(self, sdr=None, enc_type=None, value=None, enc_properties=None, encoder=None, bit_weight=1.0):             # <<<<<<<<<<<<<<
+ *     def __init__(self, sgm=None, enc_type=None, value=None, enc_properties=None, encoder=None, bit_weight=1.0):             # <<<<<<<<<<<<<<
  * 
  *         self.encodings = {}
  */
 
 /* Python wrapper */
-static int __pyx_pw_3src_3sdr_3SDR_1__init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static int __pyx_pw_3src_3sdr_3SDR_1__init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
-  PyObject *__pyx_v_sdr = 0;
+static int __pyx_pw_3src_3sgm_3SGM_1__init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static int __pyx_pw_3src_3sgm_3SGM_1__init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  PyObject *__pyx_v_sgm = 0;
   PyObject *__pyx_v_enc_type = 0;
   PyObject *__pyx_v_value = 0;
   PyObject *__pyx_v_enc_properties = 0;
@@ -1812,7 +1812,7 @@ static int __pyx_pw_3src_3sdr_3SDR_1__init__(PyObject *__pyx_v_self, PyObject *_
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__init__ (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_sdr,&__pyx_n_s_enc_type,&__pyx_n_s_value,&__pyx_n_s_enc_properties,&__pyx_n_s_encoder,&__pyx_n_s_bit_weight,0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_sgm,&__pyx_n_s_enc_type,&__pyx_n_s_value,&__pyx_n_s_enc_properties,&__pyx_n_s_encoder,&__pyx_n_s_bit_weight,0};
     PyObject* values[6] = {0,0,0,0,0,0};
     values[0] = ((PyObject *)Py_None);
     values[1] = ((PyObject *)Py_None);
@@ -1843,7 +1843,7 @@ static int __pyx_pw_3src_3sdr_3SDR_1__init__(PyObject *__pyx_v_self, PyObject *_
       switch (pos_args) {
         case  0:
         if (kw_args > 0) {
-          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_sdr);
+          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_sgm);
           if (value) { values[0] = value; kw_args--; }
         }
         CYTHON_FALLTHROUGH;
@@ -1898,7 +1898,7 @@ static int __pyx_pw_3src_3sdr_3SDR_1__init__(PyObject *__pyx_v_self, PyObject *_
         default: goto __pyx_L5_argtuple_error;
       }
     }
-    __pyx_v_sdr = values[0];
+    __pyx_v_sgm = values[0];
     __pyx_v_enc_type = values[1];
     __pyx_v_value = values[2];
     __pyx_v_enc_properties = values[3];
@@ -1909,18 +1909,18 @@ static int __pyx_pw_3src_3sdr_3SDR_1__init__(PyObject *__pyx_v_self, PyObject *_
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("__init__", 0, 0, 6, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 11, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("src.sdr.SDR.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.sgm.SGM.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return -1;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_3src_3sdr_3SDR___init__(((struct __pyx_obj_3src_3sdr_SDR *)__pyx_v_self), __pyx_v_sdr, __pyx_v_enc_type, __pyx_v_value, __pyx_v_enc_properties, __pyx_v_encoder, __pyx_v_bit_weight);
+  __pyx_r = __pyx_pf_3src_3sgm_3SGM___init__(((struct __pyx_obj_3src_3sgm_SGM *)__pyx_v_self), __pyx_v_sgm, __pyx_v_enc_type, __pyx_v_value, __pyx_v_enc_properties, __pyx_v_encoder, __pyx_v_bit_weight);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static int __pyx_pf_3src_3sdr_3SDR___init__(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self, PyObject *__pyx_v_sdr, PyObject *__pyx_v_enc_type, PyObject *__pyx_v_value, PyObject *__pyx_v_enc_properties, PyObject *__pyx_v_encoder, PyObject *__pyx_v_bit_weight) {
+static int __pyx_pf_3src_3sgm_3SGM___init__(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self, PyObject *__pyx_v_sgm, PyObject *__pyx_v_enc_type, PyObject *__pyx_v_value, PyObject *__pyx_v_enc_properties, PyObject *__pyx_v_encoder, PyObject *__pyx_v_bit_weight) {
   int __pyx_r;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -1934,8 +1934,8 @@ static int __pyx_pf_3src_3sdr_3SDR___init__(struct __pyx_obj_3src_3sdr_SDR *__py
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__init__", 0);
 
-  /* "src/sdr.py":13
- *     def __init__(self, sdr=None, enc_type=None, value=None, enc_properties=None, encoder=None, bit_weight=1.0):
+  /* "src/sgm.py":13
+ *     def __init__(self, sgm=None, enc_type=None, value=None, enc_properties=None, encoder=None, bit_weight=1.0):
  * 
  *         self.encodings = {}             # <<<<<<<<<<<<<<
  *         self.properties = {}
@@ -1949,12 +1949,12 @@ static int __pyx_pf_3src_3sdr_3SDR___init__(struct __pyx_obj_3src_3sdr_SDR *__py
   __pyx_v_self->encodings = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/sdr.py":14
+  /* "src/sgm.py":14
  * 
  *         self.encodings = {}
  *         self.properties = {}             # <<<<<<<<<<<<<<
  * 
- *         # copy an sdr if provided
+ *         # copy an sgm if provided
  */
   __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 14, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -1964,21 +1964,21 @@ static int __pyx_pf_3src_3sdr_3SDR___init__(struct __pyx_obj_3src_3sdr_SDR *__py
   __pyx_v_self->properties = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/sdr.py":19
+  /* "src/sgm.py":19
  *         # note don't copy encoder just take reference
  *         #
- *         if sdr is not None:             # <<<<<<<<<<<<<<
- *             self.copy(sdr=sdr)
+ *         if sgm is not None:             # <<<<<<<<<<<<<<
+ *             self.copy(sgm=sgm)
  * 
  */
-  __pyx_t_2 = (__pyx_v_sdr != Py_None);
+  __pyx_t_2 = (__pyx_v_sgm != Py_None);
   __pyx_t_3 = (__pyx_t_2 != 0);
   if (__pyx_t_3) {
 
-    /* "src/sdr.py":20
+    /* "src/sgm.py":20
  *         #
- *         if sdr is not None:
- *             self.copy(sdr=sdr)             # <<<<<<<<<<<<<<
+ *         if sgm is not None:
+ *             self.copy(sgm=sgm)             # <<<<<<<<<<<<<<
  * 
  *         # else process a new value
  */
@@ -1986,24 +1986,24 @@ static int __pyx_pf_3src_3sdr_3SDR___init__(struct __pyx_obj_3src_3sdr_SDR *__py
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 20, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_sdr, __pyx_v_sdr) < 0) __PYX_ERR(0, 20, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_sgm, __pyx_v_sgm) < 0) __PYX_ERR(0, 20, __pyx_L1_error)
     __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_empty_tuple, __pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 20, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-    /* "src/sdr.py":19
+    /* "src/sgm.py":19
  *         # note don't copy encoder just take reference
  *         #
- *         if sdr is not None:             # <<<<<<<<<<<<<<
- *             self.copy(sdr=sdr)
+ *         if sgm is not None:             # <<<<<<<<<<<<<<
+ *             self.copy(sgm=sgm)
  * 
  */
     goto __pyx_L3;
   }
 
-  /* "src/sdr.py":24
+  /* "src/sgm.py":24
  *         # else process a new value
  *         #
  *         elif enc_type is not None and value is not None and encoder is not None:             # <<<<<<<<<<<<<<
@@ -2030,7 +2030,7 @@ static int __pyx_pf_3src_3sdr_3SDR___init__(struct __pyx_obj_3src_3sdr_SDR *__py
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_3) {
 
-    /* "src/sdr.py":25
+    /* "src/sgm.py":25
  *         #
  *         elif enc_type is not None and value is not None and encoder is not None:
  *             self.add_encoding(enc_type=enc_type, value=value, encoder=encoder, enc_properties=enc_properties, bit_weight=bit_weight)             # <<<<<<<<<<<<<<
@@ -2052,7 +2052,7 @@ static int __pyx_pf_3src_3sdr_3SDR___init__(struct __pyx_obj_3src_3sdr_SDR *__py
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "src/sdr.py":24
+    /* "src/sgm.py":24
  *         # else process a new value
  *         #
  *         elif enc_type is not None and value is not None and encoder is not None:             # <<<<<<<<<<<<<<
@@ -2062,10 +2062,10 @@ static int __pyx_pf_3src_3sdr_3SDR___init__(struct __pyx_obj_3src_3sdr_SDR *__py
   }
   __pyx_L3:;
 
-  /* "src/sdr.py":11
+  /* "src/sgm.py":11
  *     properties = cython.declare(dict, visibility='public')
  * 
- *     def __init__(self, sdr=None, enc_type=None, value=None, enc_properties=None, encoder=None, bit_weight=1.0):             # <<<<<<<<<<<<<<
+ *     def __init__(self, sgm=None, enc_type=None, value=None, enc_properties=None, encoder=None, bit_weight=1.0):             # <<<<<<<<<<<<<<
  * 
  *         self.encodings = {}
  */
@@ -2077,14 +2077,14 @@ static int __pyx_pf_3src_3sdr_3SDR___init__(struct __pyx_obj_3src_3sdr_SDR *__py
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_AddTraceback("src.sdr.SDR.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.sgm.SGM.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "src/sdr.py":27
+/* "src/sgm.py":27
  *             self.add_encoding(enc_type=enc_type, value=value, encoder=encoder, enc_properties=enc_properties, bit_weight=bit_weight)
  * 
  *     def get_max_distance(self, search_types: set = None) -> float:             # <<<<<<<<<<<<<<
@@ -2093,9 +2093,9 @@ static int __pyx_pf_3src_3sdr_3SDR___init__(struct __pyx_obj_3src_3sdr_SDR *__py
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_3src_3sdr_3SDR_3get_max_distance(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_3src_3sdr_3SDR_3get_max_distance = {"get_max_distance", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_3sdr_3SDR_3get_max_distance, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_3src_3sdr_3SDR_3get_max_distance(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_3src_3sgm_3SGM_3get_max_distance(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_3src_3sgm_3SGM_3get_max_distance = {"get_max_distance", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_3sgm_3SGM_3get_max_distance, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_3src_3sgm_3SGM_3get_max_distance(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_search_types = 0;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
@@ -2141,12 +2141,12 @@ static PyObject *__pyx_pw_3src_3sdr_3SDR_3get_max_distance(PyObject *__pyx_v_sel
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("get_max_distance", 0, 0, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 27, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("src.sdr.SDR.get_max_distance", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.sgm.SGM.get_max_distance", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_search_types), (&PySet_Type), 1, "search_types", 1))) __PYX_ERR(0, 27, __pyx_L1_error)
-  __pyx_r = __pyx_pf_3src_3sdr_3SDR_2get_max_distance(((struct __pyx_obj_3src_3sdr_SDR *)__pyx_v_self), __pyx_v_search_types);
+  __pyx_r = __pyx_pf_3src_3sgm_3SGM_2get_max_distance(((struct __pyx_obj_3src_3sgm_SGM *)__pyx_v_self), __pyx_v_search_types);
 
   /* function exit code */
   goto __pyx_L0;
@@ -2157,7 +2157,7 @@ static PyObject *__pyx_pw_3src_3sdr_3SDR_3get_max_distance(PyObject *__pyx_v_sel
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_3src_3sdr_3SDR_2get_max_distance(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self, PyObject *__pyx_v_search_types) {
+static PyObject *__pyx_pf_3src_3sgm_3SGM_2get_max_distance(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self, PyObject *__pyx_v_search_types) {
   PyObject *__pyx_v_enc_type = 0;
   double __pyx_v_dist;
   PyObject *__pyx_r = NULL;
@@ -2179,7 +2179,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_2get_max_distance(struct __pyx_obj_3src
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("get_max_distance", 0);
 
-  /* "src/sdr.py":32
+  /* "src/sgm.py":32
  *         dist: float
  * 
  *         dist = sum([self.properties[enc_type]['encoder'].n_bits             # <<<<<<<<<<<<<<
@@ -2189,7 +2189,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_2get_max_distance(struct __pyx_obj_3src
   __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 32, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
 
-  /* "src/sdr.py":33
+  /* "src/sgm.py":33
  * 
  *         dist = sum([self.properties[enc_type]['encoder'].n_bits
  *                     for enc_type in self.properties             # <<<<<<<<<<<<<<
@@ -2215,7 +2215,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_2get_max_distance(struct __pyx_obj_3src
     __Pyx_XDECREF_SET(__pyx_v_enc_type, ((PyObject*)__pyx_t_6));
     __pyx_t_6 = 0;
 
-    /* "src/sdr.py":34
+    /* "src/sgm.py":34
  *         dist = sum([self.properties[enc_type]['encoder'].n_bits
  *                     for enc_type in self.properties
  *                     if search_types is None or enc_type in search_types])             # <<<<<<<<<<<<<<
@@ -2239,7 +2239,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_2get_max_distance(struct __pyx_obj_3src
     __pyx_L6_bool_binop_done:;
     if (__pyx_t_8) {
 
-      /* "src/sdr.py":32
+      /* "src/sgm.py":32
  *         dist: float
  * 
  *         dist = sum([self.properties[enc_type]['encoder'].n_bits             # <<<<<<<<<<<<<<
@@ -2261,7 +2261,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_2get_max_distance(struct __pyx_obj_3src
       if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_6))) __PYX_ERR(0, 32, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-      /* "src/sdr.py":34
+      /* "src/sgm.py":34
  *         dist = sum([self.properties[enc_type]['encoder'].n_bits
  *                     for enc_type in self.properties
  *                     if search_types is None or enc_type in search_types])             # <<<<<<<<<<<<<<
@@ -2272,7 +2272,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_2get_max_distance(struct __pyx_obj_3src
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "src/sdr.py":32
+  /* "src/sgm.py":32
  *         dist: float
  * 
  *         dist = sum([self.properties[enc_type]['encoder'].n_bits             # <<<<<<<<<<<<<<
@@ -2286,7 +2286,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_2get_max_distance(struct __pyx_obj_3src
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_dist = __pyx_t_12;
 
-  /* "src/sdr.py":36
+  /* "src/sgm.py":36
  *                     if search_types is None or enc_type in search_types])
  * 
  *         return dist             # <<<<<<<<<<<<<<
@@ -2300,7 +2300,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_2get_max_distance(struct __pyx_obj_3src
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "src/sdr.py":27
+  /* "src/sgm.py":27
  *             self.add_encoding(enc_type=enc_type, value=value, encoder=encoder, enc_properties=enc_properties, bit_weight=bit_weight)
  * 
  *     def get_max_distance(self, search_types: set = None) -> float:             # <<<<<<<<<<<<<<
@@ -2314,7 +2314,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_2get_max_distance(struct __pyx_obj_3src
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_6);
   __Pyx_XDECREF(__pyx_t_11);
-  __Pyx_AddTraceback("src.sdr.SDR.get_max_distance", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.sgm.SGM.get_max_distance", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_enc_type);
@@ -2323,7 +2323,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_2get_max_distance(struct __pyx_obj_3src
   return __pyx_r;
 }
 
-/* "src/sdr.py":38
+/* "src/sgm.py":38
  *         return dist
  * 
  *     def remove_prefix(self, enc_type_prefix: str):             # <<<<<<<<<<<<<<
@@ -2332,9 +2332,9 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_2get_max_distance(struct __pyx_obj_3src
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_3src_3sdr_3SDR_5remove_prefix(PyObject *__pyx_v_self, PyObject *__pyx_v_enc_type_prefix); /*proto*/
-static PyMethodDef __pyx_mdef_3src_3sdr_3SDR_5remove_prefix = {"remove_prefix", (PyCFunction)__pyx_pw_3src_3sdr_3SDR_5remove_prefix, METH_O, 0};
-static PyObject *__pyx_pw_3src_3sdr_3SDR_5remove_prefix(PyObject *__pyx_v_self, PyObject *__pyx_v_enc_type_prefix) {
+static PyObject *__pyx_pw_3src_3sgm_3SGM_5remove_prefix(PyObject *__pyx_v_self, PyObject *__pyx_v_enc_type_prefix); /*proto*/
+static PyMethodDef __pyx_mdef_3src_3sgm_3SGM_5remove_prefix = {"remove_prefix", (PyCFunction)__pyx_pw_3src_3sgm_3SGM_5remove_prefix, METH_O, 0};
+static PyObject *__pyx_pw_3src_3sgm_3SGM_5remove_prefix(PyObject *__pyx_v_self, PyObject *__pyx_v_enc_type_prefix) {
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -2342,7 +2342,7 @@ static PyObject *__pyx_pw_3src_3sdr_3SDR_5remove_prefix(PyObject *__pyx_v_self, 
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("remove_prefix (wrapper)", 0);
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_enc_type_prefix), (&PyString_Type), 1, "enc_type_prefix", 1))) __PYX_ERR(0, 38, __pyx_L1_error)
-  __pyx_r = __pyx_pf_3src_3sdr_3SDR_4remove_prefix(((struct __pyx_obj_3src_3sdr_SDR *)__pyx_v_self), ((PyObject*)__pyx_v_enc_type_prefix));
+  __pyx_r = __pyx_pf_3src_3sgm_3SGM_4remove_prefix(((struct __pyx_obj_3src_3sgm_SGM *)__pyx_v_self), ((PyObject*)__pyx_v_enc_type_prefix));
 
   /* function exit code */
   goto __pyx_L0;
@@ -2353,7 +2353,7 @@ static PyObject *__pyx_pw_3src_3sdr_3SDR_5remove_prefix(PyObject *__pyx_v_self, 
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_3src_3sdr_3SDR_4remove_prefix(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self, PyObject *__pyx_v_enc_type_prefix) {
+static PyObject *__pyx_pf_3src_3sgm_3SGM_4remove_prefix(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self, PyObject *__pyx_v_enc_type_prefix) {
   PyObject *__pyx_7genexpr__pyx_v_enc_type = NULL;
   PyObject *__pyx_8genexpr1__pyx_v_enc_type = NULL;
   PyObject *__pyx_r = NULL;
@@ -2371,7 +2371,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_4remove_prefix(struct __pyx_obj_3src_3s
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("remove_prefix", 0);
 
-  /* "src/sdr.py":41
+  /* "src/sgm.py":41
  *         enc_type: str
  * 
  *         self.encodings = {enc_type.replace(enc_type_prefix, ''): self.encodings[enc_type] for enc_type in self.encodings}             # <<<<<<<<<<<<<<
@@ -2425,12 +2425,12 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_4remove_prefix(struct __pyx_obj_3src_3s
   __pyx_v_self->encodings = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/sdr.py":42
+  /* "src/sgm.py":42
  * 
  *         self.encodings = {enc_type.replace(enc_type_prefix, ''): self.encodings[enc_type] for enc_type in self.encodings}
  *         self.properties = {enc_type.replace(enc_type_prefix, ''): self.properties[enc_type] for enc_type in self.properties}             # <<<<<<<<<<<<<<
  * 
- *     def copy(self, sdr, enc_type_prefix: str = None):
+ *     def copy(self, sgm, enc_type_prefix: str = None):
  */
   { /* enter inner scope */
     __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 42, __pyx_L11_error)
@@ -2479,7 +2479,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_4remove_prefix(struct __pyx_obj_3src_3s
   __pyx_v_self->properties = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/sdr.py":38
+  /* "src/sgm.py":38
  *         return dist
  * 
  *     def remove_prefix(self, enc_type_prefix: str):             # <<<<<<<<<<<<<<
@@ -2495,7 +2495,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_4remove_prefix(struct __pyx_obj_3src_3s
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_6);
   __Pyx_XDECREF(__pyx_t_8);
-  __Pyx_AddTraceback("src.sdr.SDR.remove_prefix", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.sgm.SGM.remove_prefix", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_7genexpr__pyx_v_enc_type);
@@ -2505,19 +2505,19 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_4remove_prefix(struct __pyx_obj_3src_3s
   return __pyx_r;
 }
 
-/* "src/sdr.py":44
+/* "src/sgm.py":44
  *         self.properties = {enc_type.replace(enc_type_prefix, ''): self.properties[enc_type] for enc_type in self.properties}
  * 
- *     def copy(self, sdr, enc_type_prefix: str = None):             # <<<<<<<<<<<<<<
+ *     def copy(self, sgm, enc_type_prefix: str = None):             # <<<<<<<<<<<<<<
  *         enc_type: str
  *         prop: str
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_3src_3sdr_3SDR_7copy(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_3src_3sdr_3SDR_7copy = {"copy", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_3sdr_3SDR_7copy, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_3src_3sdr_3SDR_7copy(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
-  PyObject *__pyx_v_sdr = 0;
+static PyObject *__pyx_pw_3src_3sgm_3SGM_7copy(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_3src_3sgm_3SGM_7copy = {"copy", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_3sgm_3SGM_7copy, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_3src_3sgm_3SGM_7copy(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  PyObject *__pyx_v_sgm = 0;
   PyObject *__pyx_v_enc_type_prefix = 0;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
@@ -2526,7 +2526,7 @@ static PyObject *__pyx_pw_3src_3sdr_3SDR_7copy(PyObject *__pyx_v_self, PyObject 
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("copy (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_sdr,&__pyx_n_s_enc_type_prefix,0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_sgm,&__pyx_n_s_enc_type_prefix,0};
     PyObject* values[2] = {0,0};
     values[1] = ((PyObject*)Py_None);
     if (unlikely(__pyx_kwds)) {
@@ -2543,7 +2543,7 @@ static PyObject *__pyx_pw_3src_3sdr_3SDR_7copy(PyObject *__pyx_v_self, PyObject 
       kw_args = PyDict_Size(__pyx_kwds);
       switch (pos_args) {
         case  0:
-        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_sdr)) != 0)) kw_args--;
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_sgm)) != 0)) kw_args--;
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
@@ -2564,19 +2564,19 @@ static PyObject *__pyx_pw_3src_3sdr_3SDR_7copy(PyObject *__pyx_v_self, PyObject 
         default: goto __pyx_L5_argtuple_error;
       }
     }
-    __pyx_v_sdr = values[0];
+    __pyx_v_sgm = values[0];
     __pyx_v_enc_type_prefix = ((PyObject*)values[1]);
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("copy", 0, 1, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 44, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("src.sdr.SDR.copy", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.sgm.SGM.copy", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_enc_type_prefix), (&PyString_Type), 1, "enc_type_prefix", 1))) __PYX_ERR(0, 44, __pyx_L1_error)
-  __pyx_r = __pyx_pf_3src_3sdr_3SDR_6copy(((struct __pyx_obj_3src_3sdr_SDR *)__pyx_v_self), __pyx_v_sdr, __pyx_v_enc_type_prefix);
+  __pyx_r = __pyx_pf_3src_3sgm_3SGM_6copy(((struct __pyx_obj_3src_3sgm_SGM *)__pyx_v_self), __pyx_v_sgm, __pyx_v_enc_type_prefix);
 
   /* function exit code */
   goto __pyx_L0;
@@ -2587,7 +2587,7 @@ static PyObject *__pyx_pw_3src_3sdr_3SDR_7copy(PyObject *__pyx_v_self, PyObject 
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_3src_3sdr_3SDR_6copy(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self, PyObject *__pyx_v_sdr, PyObject *__pyx_v_enc_type_prefix) {
+static PyObject *__pyx_pf_3src_3sgm_3SGM_6copy(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self, PyObject *__pyx_v_sgm, PyObject *__pyx_v_enc_type_prefix) {
   PyObject *__pyx_8genexpr2__pyx_v_enc_type = NULL;
   PyObject *__pyx_8genexpr3__pyx_v_enc_type = NULL;
   PyObject *__pyx_8genexpr4__pyx_v_prop = NULL;
@@ -2614,28 +2614,28 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_6copy(struct __pyx_obj_3src_3sdr_SDR *_
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("copy", 0);
 
-  /* "src/sdr.py":48
+  /* "src/sgm.py":48
  *         prop: str
  * 
  *         if enc_type_prefix is not None:             # <<<<<<<<<<<<<<
- *             self.encodings = {f'{enc_type_prefix}_{enc_type}': deepcopy(sdr.encodings[enc_type]) for enc_type in sdr.encodings}
- *             self.properties = {f'{enc_type_prefix}_{enc_type}': {prop: sdr.properties[enc_type][prop] for prop in sdr.properties[enc_type]} for enc_type in sdr.properties}
+ *             self.encodings = {f'{enc_type_prefix}_{enc_type}': deepcopy(sgm.encodings[enc_type]) for enc_type in sgm.encodings}
+ *             self.properties = {f'{enc_type_prefix}_{enc_type}': {prop: sgm.properties[enc_type][prop] for prop in sgm.properties[enc_type]} for enc_type in sgm.properties}
  */
   __pyx_t_1 = (__pyx_v_enc_type_prefix != ((PyObject*)Py_None));
   __pyx_t_2 = (__pyx_t_1 != 0);
   if (__pyx_t_2) {
 
-    /* "src/sdr.py":49
+    /* "src/sgm.py":49
  * 
  *         if enc_type_prefix is not None:
- *             self.encodings = {f'{enc_type_prefix}_{enc_type}': deepcopy(sdr.encodings[enc_type]) for enc_type in sdr.encodings}             # <<<<<<<<<<<<<<
- *             self.properties = {f'{enc_type_prefix}_{enc_type}': {prop: sdr.properties[enc_type][prop] for prop in sdr.properties[enc_type]} for enc_type in sdr.properties}
+ *             self.encodings = {f'{enc_type_prefix}_{enc_type}': deepcopy(sgm.encodings[enc_type]) for enc_type in sgm.encodings}             # <<<<<<<<<<<<<<
+ *             self.properties = {f'{enc_type_prefix}_{enc_type}': {prop: sgm.properties[enc_type][prop] for prop in sgm.properties[enc_type]} for enc_type in sgm.properties}
  *         else:
  */
     { /* enter inner scope */
       __pyx_t_3 = PyDict_New(); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 49, __pyx_L6_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encodings); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 49, __pyx_L6_error)
+      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encodings); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 49, __pyx_L6_error)
       __Pyx_GOTREF(__pyx_t_4);
       if (likely(PyList_CheckExact(__pyx_t_4)) || PyTuple_CheckExact(__pyx_t_4)) {
         __pyx_t_5 = __pyx_t_4; __Pyx_INCREF(__pyx_t_5); __pyx_t_6 = 0;
@@ -2707,7 +2707,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_6copy(struct __pyx_obj_3src_3sdr_SDR *_
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
         __Pyx_GetModuleGlobalName(__pyx_t_11, __pyx_n_s_deepcopy); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 49, __pyx_L6_error)
         __Pyx_GOTREF(__pyx_t_11);
-        __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encodings); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 49, __pyx_L6_error)
+        __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encodings); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 49, __pyx_L6_error)
         __Pyx_GOTREF(__pyx_t_12);
         __pyx_t_13 = __Pyx_PyObject_Dict_GetItem(__pyx_t_12, __pyx_8genexpr2__pyx_v_enc_type); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 49, __pyx_L6_error)
         __Pyx_GOTREF(__pyx_t_13);
@@ -2746,17 +2746,17 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_6copy(struct __pyx_obj_3src_3sdr_SDR *_
     __pyx_v_self->encodings = ((PyObject*)__pyx_t_3);
     __pyx_t_3 = 0;
 
-    /* "src/sdr.py":50
+    /* "src/sgm.py":50
  *         if enc_type_prefix is not None:
- *             self.encodings = {f'{enc_type_prefix}_{enc_type}': deepcopy(sdr.encodings[enc_type]) for enc_type in sdr.encodings}
- *             self.properties = {f'{enc_type_prefix}_{enc_type}': {prop: sdr.properties[enc_type][prop] for prop in sdr.properties[enc_type]} for enc_type in sdr.properties}             # <<<<<<<<<<<<<<
+ *             self.encodings = {f'{enc_type_prefix}_{enc_type}': deepcopy(sgm.encodings[enc_type]) for enc_type in sgm.encodings}
+ *             self.properties = {f'{enc_type_prefix}_{enc_type}': {prop: sgm.properties[enc_type][prop] for prop in sgm.properties[enc_type]} for enc_type in sgm.properties}             # <<<<<<<<<<<<<<
  *         else:
- *             self.encodings = deepcopy(sdr.encodings)
+ *             self.encodings = deepcopy(sgm.encodings)
  */
     { /* enter inner scope */
       __pyx_t_3 = PyDict_New(); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 50, __pyx_L12_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_properties); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 50, __pyx_L12_error)
+      __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_properties); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 50, __pyx_L12_error)
       __Pyx_GOTREF(__pyx_t_5);
       if (likely(PyList_CheckExact(__pyx_t_5)) || PyTuple_CheckExact(__pyx_t_5)) {
         __pyx_t_4 = __pyx_t_5; __Pyx_INCREF(__pyx_t_4); __pyx_t_6 = 0;
@@ -2829,7 +2829,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_6copy(struct __pyx_obj_3src_3sdr_SDR *_
         { /* enter inner scope */
           __pyx_t_5 = PyDict_New(); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 50, __pyx_L17_error)
           __Pyx_GOTREF(__pyx_t_5);
-          __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_properties); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 50, __pyx_L17_error)
+          __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_properties); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 50, __pyx_L17_error)
           __Pyx_GOTREF(__pyx_t_11);
           __pyx_t_13 = __Pyx_PyObject_Dict_GetItem(__pyx_t_11, __pyx_8genexpr3__pyx_v_enc_type); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 50, __pyx_L17_error)
           __Pyx_GOTREF(__pyx_t_13);
@@ -2877,7 +2877,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_6copy(struct __pyx_obj_3src_3sdr_SDR *_
             if (!(likely(PyString_CheckExact(__pyx_t_13))||((__pyx_t_13) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_13)->tp_name), 0))) __PYX_ERR(0, 50, __pyx_L17_error)
             __Pyx_XDECREF_SET(__pyx_8genexpr4__pyx_v_prop, ((PyObject*)__pyx_t_13));
             __pyx_t_13 = 0;
-            __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_properties); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 50, __pyx_L17_error)
+            __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_properties); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 50, __pyx_L17_error)
             __Pyx_GOTREF(__pyx_t_13);
             __pyx_t_12 = __Pyx_PyObject_Dict_GetItem(__pyx_t_13, __pyx_8genexpr3__pyx_v_enc_type); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 50, __pyx_L17_error)
             __Pyx_GOTREF(__pyx_t_12);
@@ -2914,27 +2914,27 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_6copy(struct __pyx_obj_3src_3sdr_SDR *_
     __pyx_v_self->properties = ((PyObject*)__pyx_t_3);
     __pyx_t_3 = 0;
 
-    /* "src/sdr.py":48
+    /* "src/sgm.py":48
  *         prop: str
  * 
  *         if enc_type_prefix is not None:             # <<<<<<<<<<<<<<
- *             self.encodings = {f'{enc_type_prefix}_{enc_type}': deepcopy(sdr.encodings[enc_type]) for enc_type in sdr.encodings}
- *             self.properties = {f'{enc_type_prefix}_{enc_type}': {prop: sdr.properties[enc_type][prop] for prop in sdr.properties[enc_type]} for enc_type in sdr.properties}
+ *             self.encodings = {f'{enc_type_prefix}_{enc_type}': deepcopy(sgm.encodings[enc_type]) for enc_type in sgm.encodings}
+ *             self.properties = {f'{enc_type_prefix}_{enc_type}': {prop: sgm.properties[enc_type][prop] for prop in sgm.properties[enc_type]} for enc_type in sgm.properties}
  */
     goto __pyx_L3;
   }
 
-  /* "src/sdr.py":52
- *             self.properties = {f'{enc_type_prefix}_{enc_type}': {prop: sdr.properties[enc_type][prop] for prop in sdr.properties[enc_type]} for enc_type in sdr.properties}
+  /* "src/sgm.py":52
+ *             self.properties = {f'{enc_type_prefix}_{enc_type}': {prop: sgm.properties[enc_type][prop] for prop in sgm.properties[enc_type]} for enc_type in sgm.properties}
  *         else:
- *             self.encodings = deepcopy(sdr.encodings)             # <<<<<<<<<<<<<<
- *             self.properties = {enc_type: {prop: sdr.properties[enc_type][prop] for prop in sdr.properties[enc_type]} for enc_type in sdr.properties}
+ *             self.encodings = deepcopy(sgm.encodings)             # <<<<<<<<<<<<<<
+ *             self.properties = {enc_type: {prop: sgm.properties[enc_type][prop] for prop in sgm.properties[enc_type]} for enc_type in sgm.properties}
  * 
  */
   /*else*/ {
     __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_deepcopy); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 52, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encodings); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 52, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encodings); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 52, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __pyx_t_10 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
@@ -2959,17 +2959,17 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_6copy(struct __pyx_obj_3src_3sdr_SDR *_
     __pyx_v_self->encodings = ((PyObject*)__pyx_t_3);
     __pyx_t_3 = 0;
 
-    /* "src/sdr.py":53
+    /* "src/sgm.py":53
  *         else:
- *             self.encodings = deepcopy(sdr.encodings)
- *             self.properties = {enc_type: {prop: sdr.properties[enc_type][prop] for prop in sdr.properties[enc_type]} for enc_type in sdr.properties}             # <<<<<<<<<<<<<<
+ *             self.encodings = deepcopy(sgm.encodings)
+ *             self.properties = {enc_type: {prop: sgm.properties[enc_type][prop] for prop in sgm.properties[enc_type]} for enc_type in sgm.properties}             # <<<<<<<<<<<<<<
  * 
  *     def add_encoding(self, enc_type: str, value, encoder, enc_properties: dict = None, bit_weight: float = 1.0):
  */
     { /* enter inner scope */
       __pyx_t_3 = PyDict_New(); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 53, __pyx_L24_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_properties); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 53, __pyx_L24_error)
+      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_properties); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 53, __pyx_L24_error)
       __Pyx_GOTREF(__pyx_t_4);
       if (likely(PyList_CheckExact(__pyx_t_4)) || PyTuple_CheckExact(__pyx_t_4)) {
         __pyx_t_5 = __pyx_t_4; __Pyx_INCREF(__pyx_t_5); __pyx_t_6 = 0;
@@ -3017,7 +3017,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_6copy(struct __pyx_obj_3src_3sdr_SDR *_
         { /* enter inner scope */
           __pyx_t_4 = PyDict_New(); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 53, __pyx_L29_error)
           __Pyx_GOTREF(__pyx_t_4);
-          __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_properties); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 53, __pyx_L29_error)
+          __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_properties); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 53, __pyx_L29_error)
           __Pyx_GOTREF(__pyx_t_10);
           __pyx_t_11 = __Pyx_PyObject_Dict_GetItem(__pyx_t_10, __pyx_8genexpr5__pyx_v_enc_type); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 53, __pyx_L29_error)
           __Pyx_GOTREF(__pyx_t_11);
@@ -3065,7 +3065,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_6copy(struct __pyx_obj_3src_3sdr_SDR *_
             if (!(likely(PyString_CheckExact(__pyx_t_11))||((__pyx_t_11) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_11)->tp_name), 0))) __PYX_ERR(0, 53, __pyx_L29_error)
             __Pyx_XDECREF_SET(__pyx_8genexpr6__pyx_v_prop, ((PyObject*)__pyx_t_11));
             __pyx_t_11 = 0;
-            __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_properties); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 53, __pyx_L29_error)
+            __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_properties); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 53, __pyx_L29_error)
             __Pyx_GOTREF(__pyx_t_11);
             __pyx_t_13 = __Pyx_PyObject_Dict_GetItem(__pyx_t_11, __pyx_8genexpr5__pyx_v_enc_type); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 53, __pyx_L29_error)
             __Pyx_GOTREF(__pyx_t_13);
@@ -3103,10 +3103,10 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_6copy(struct __pyx_obj_3src_3sdr_SDR *_
   }
   __pyx_L3:;
 
-  /* "src/sdr.py":44
+  /* "src/sgm.py":44
  *         self.properties = {enc_type.replace(enc_type_prefix, ''): self.properties[enc_type] for enc_type in self.properties}
  * 
- *     def copy(self, sdr, enc_type_prefix: str = None):             # <<<<<<<<<<<<<<
+ *     def copy(self, sgm, enc_type_prefix: str = None):             # <<<<<<<<<<<<<<
  *         enc_type: str
  *         prop: str
  */
@@ -3122,7 +3122,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_6copy(struct __pyx_obj_3src_3sdr_SDR *_
   __Pyx_XDECREF(__pyx_t_11);
   __Pyx_XDECREF(__pyx_t_12);
   __Pyx_XDECREF(__pyx_t_13);
-  __Pyx_AddTraceback("src.sdr.SDR.copy", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.sgm.SGM.copy", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_8genexpr2__pyx_v_enc_type);
@@ -3135,8 +3135,8 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_6copy(struct __pyx_obj_3src_3sdr_SDR *_
   return __pyx_r;
 }
 
-/* "src/sdr.py":55
- *             self.properties = {enc_type: {prop: sdr.properties[enc_type][prop] for prop in sdr.properties[enc_type]} for enc_type in sdr.properties}
+/* "src/sgm.py":55
+ *             self.properties = {enc_type: {prop: sgm.properties[enc_type][prop] for prop in sgm.properties[enc_type]} for enc_type in sgm.properties}
  * 
  *     def add_encoding(self, enc_type: str, value, encoder, enc_properties: dict = None, bit_weight: float = 1.0):             # <<<<<<<<<<<<<<
  * 
@@ -3144,9 +3144,9 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_6copy(struct __pyx_obj_3src_3sdr_SDR *_
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_3src_3sdr_3SDR_9add_encoding(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_3src_3sdr_3SDR_9add_encoding = {"add_encoding", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_3sdr_3SDR_9add_encoding, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_3src_3sdr_3SDR_9add_encoding(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_3src_3sgm_3SGM_9add_encoding(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_3src_3sgm_3SGM_9add_encoding = {"add_encoding", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_3sgm_3SGM_9add_encoding, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_3src_3sgm_3SGM_9add_encoding(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_enc_type = 0;
   PyObject *__pyx_v_value = 0;
   PyObject *__pyx_v_encoder = 0;
@@ -3239,13 +3239,13 @@ static PyObject *__pyx_pw_3src_3sdr_3SDR_9add_encoding(PyObject *__pyx_v_self, P
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("add_encoding", 0, 3, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 55, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("src.sdr.SDR.add_encoding", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.sgm.SGM.add_encoding", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_enc_type), (&PyString_Type), 1, "enc_type", 1))) __PYX_ERR(0, 55, __pyx_L1_error)
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_enc_properties), (&PyDict_Type), 1, "enc_properties", 1))) __PYX_ERR(0, 55, __pyx_L1_error)
-  __pyx_r = __pyx_pf_3src_3sdr_3SDR_8add_encoding(((struct __pyx_obj_3src_3sdr_SDR *)__pyx_v_self), __pyx_v_enc_type, __pyx_v_value, __pyx_v_encoder, __pyx_v_enc_properties, __pyx_v_bit_weight);
+  __pyx_r = __pyx_pf_3src_3sgm_3SGM_8add_encoding(((struct __pyx_obj_3src_3sgm_SGM *)__pyx_v_self), __pyx_v_enc_type, __pyx_v_value, __pyx_v_encoder, __pyx_v_enc_properties, __pyx_v_bit_weight);
 
   /* function exit code */
   goto __pyx_L0;
@@ -3256,7 +3256,7 @@ static PyObject *__pyx_pw_3src_3sdr_3SDR_9add_encoding(PyObject *__pyx_v_self, P
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_3src_3sdr_3SDR_8add_encoding(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self, PyObject *__pyx_v_enc_type, PyObject *__pyx_v_value, PyObject *__pyx_v_encoder, PyObject *__pyx_v_enc_properties, double __pyx_v_bit_weight) {
+static PyObject *__pyx_pf_3src_3sgm_3SGM_8add_encoding(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self, PyObject *__pyx_v_enc_type, PyObject *__pyx_v_value, PyObject *__pyx_v_encoder, PyObject *__pyx_v_enc_properties, double __pyx_v_bit_weight) {
   PyObject *__pyx_v_enc = NULL;
   PyObject *__pyx_8genexpr7__pyx_v_prop = NULL;
   PyObject *__pyx_8genexpr8__pyx_v_bit = NULL;
@@ -3277,7 +3277,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_8add_encoding(struct __pyx_obj_3src_3sd
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("add_encoding", 0);
 
-  /* "src/sdr.py":60
+  /* "src/sgm.py":60
  *         prop: str
  * 
  *         if enc_properties is not None:             # <<<<<<<<<<<<<<
@@ -3288,7 +3288,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_8add_encoding(struct __pyx_obj_3src_3sd
   __pyx_t_2 = (__pyx_t_1 != 0);
   if (__pyx_t_2) {
 
-    /* "src/sdr.py":61
+    /* "src/sgm.py":61
  * 
  *         if enc_properties is not None:
  *             self.properties[enc_type] = {prop: enc_properties[prop] for prop in enc_properties}             # <<<<<<<<<<<<<<
@@ -3340,7 +3340,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_8add_encoding(struct __pyx_obj_3src_3sd
     if (unlikely(PyDict_SetItem(__pyx_v_self->properties, __pyx_v_enc_type, __pyx_t_3) < 0)) __PYX_ERR(0, 61, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "src/sdr.py":60
+    /* "src/sgm.py":60
  *         prop: str
  * 
  *         if enc_properties is not None:             # <<<<<<<<<<<<<<
@@ -3349,7 +3349,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_8add_encoding(struct __pyx_obj_3src_3sd
  */
   }
 
-  /* "src/sdr.py":63
+  /* "src/sgm.py":63
  *             self.properties[enc_type] = {prop: enc_properties[prop] for prop in enc_properties}
  * 
  *         self.properties[enc_type] = {'encoder': encoder}             # <<<<<<<<<<<<<<
@@ -3366,7 +3366,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_8add_encoding(struct __pyx_obj_3src_3sd
   if (unlikely(PyDict_SetItem(__pyx_v_self->properties, __pyx_v_enc_type, __pyx_t_3) < 0)) __PYX_ERR(0, 63, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "src/sdr.py":65
+  /* "src/sgm.py":65
  *         self.properties[enc_type] = {'encoder': encoder}
  * 
  *         enc = encoder.encode(value)             # <<<<<<<<<<<<<<
@@ -3393,7 +3393,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_8add_encoding(struct __pyx_obj_3src_3sd
   __pyx_v_enc = __pyx_t_3;
   __pyx_t_3 = 0;
 
-  /* "src/sdr.py":66
+  /* "src/sgm.py":66
  * 
  *         enc = encoder.encode(value)
  *         self.encodings[enc_type] = {bit: bit_weight for bit in enc}             # <<<<<<<<<<<<<<
@@ -3464,8 +3464,8 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_8add_encoding(struct __pyx_obj_3src_3sd
   if (unlikely(PyDict_SetItem(__pyx_v_self->encodings, __pyx_v_enc_type, __pyx_t_3) < 0)) __PYX_ERR(0, 66, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "src/sdr.py":55
- *             self.properties = {enc_type: {prop: sdr.properties[enc_type][prop] for prop in sdr.properties[enc_type]} for enc_type in sdr.properties}
+  /* "src/sgm.py":55
+ *             self.properties = {enc_type: {prop: sgm.properties[enc_type][prop] for prop in sgm.properties[enc_type]} for enc_type in sgm.properties}
  * 
  *     def add_encoding(self, enc_type: str, value, encoder, enc_properties: dict = None, bit_weight: float = 1.0):             # <<<<<<<<<<<<<<
  * 
@@ -3479,7 +3479,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_8add_encoding(struct __pyx_obj_3src_3sd
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_8);
-  __Pyx_AddTraceback("src.sdr.SDR.add_encoding", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.sgm.SGM.add_encoding", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_enc);
@@ -3490,7 +3490,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_8add_encoding(struct __pyx_obj_3src_3sd
   return __pyx_r;
 }
 
-/* "src/sdr.py":68
+/* "src/sgm.py":68
  *         self.encodings[enc_type] = {bit: bit_weight for bit in enc}
  * 
  *     def get_enc_types(self) -> set:             # <<<<<<<<<<<<<<
@@ -3499,20 +3499,20 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_8add_encoding(struct __pyx_obj_3src_3sd
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_3src_3sdr_3SDR_11get_enc_types(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyMethodDef __pyx_mdef_3src_3sdr_3SDR_11get_enc_types = {"get_enc_types", (PyCFunction)__pyx_pw_3src_3sdr_3SDR_11get_enc_types, METH_NOARGS, 0};
-static PyObject *__pyx_pw_3src_3sdr_3SDR_11get_enc_types(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_3src_3sgm_3SGM_11get_enc_types(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyMethodDef __pyx_mdef_3src_3sgm_3SGM_11get_enc_types = {"get_enc_types", (PyCFunction)__pyx_pw_3src_3sgm_3SGM_11get_enc_types, METH_NOARGS, 0};
+static PyObject *__pyx_pw_3src_3sgm_3SGM_11get_enc_types(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("get_enc_types (wrapper)", 0);
-  __pyx_r = __pyx_pf_3src_3sdr_3SDR_10get_enc_types(((struct __pyx_obj_3src_3sdr_SDR *)__pyx_v_self));
+  __pyx_r = __pyx_pf_3src_3sgm_3SGM_10get_enc_types(((struct __pyx_obj_3src_3sgm_SGM *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_3src_3sdr_3SDR_10get_enc_types(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self) {
+static PyObject *__pyx_pf_3src_3sgm_3SGM_10get_enc_types(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -3522,7 +3522,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_10get_enc_types(struct __pyx_obj_3src_3
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("get_enc_types", 0);
 
-  /* "src/sdr.py":69
+  /* "src/sgm.py":69
  * 
  *     def get_enc_types(self) -> set:
  *         return set(self.encodings.keys())             # <<<<<<<<<<<<<<
@@ -3543,7 +3543,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_10get_enc_types(struct __pyx_obj_3src_3
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "src/sdr.py":68
+  /* "src/sgm.py":68
  *         self.encodings[enc_type] = {bit: bit_weight for bit in enc}
  * 
  *     def get_enc_types(self) -> set:             # <<<<<<<<<<<<<<
@@ -3555,7 +3555,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_10get_enc_types(struct __pyx_obj_3src_3
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("src.sdr.SDR.get_enc_types", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.sgm.SGM.get_enc_types", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -3563,7 +3563,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_10get_enc_types(struct __pyx_obj_3src_3
   return __pyx_r;
 }
 
-/* "src/sdr.py":71
+/* "src/sgm.py":71
  *         return set(self.encodings.keys())
  * 
  *     def get_enc_properties(self, enc_type: str) -> dict:             # <<<<<<<<<<<<<<
@@ -3572,9 +3572,9 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_10get_enc_types(struct __pyx_obj_3src_3
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_3src_3sdr_3SDR_13get_enc_properties(PyObject *__pyx_v_self, PyObject *__pyx_v_enc_type); /*proto*/
-static PyMethodDef __pyx_mdef_3src_3sdr_3SDR_13get_enc_properties = {"get_enc_properties", (PyCFunction)__pyx_pw_3src_3sdr_3SDR_13get_enc_properties, METH_O, 0};
-static PyObject *__pyx_pw_3src_3sdr_3SDR_13get_enc_properties(PyObject *__pyx_v_self, PyObject *__pyx_v_enc_type) {
+static PyObject *__pyx_pw_3src_3sgm_3SGM_13get_enc_properties(PyObject *__pyx_v_self, PyObject *__pyx_v_enc_type); /*proto*/
+static PyMethodDef __pyx_mdef_3src_3sgm_3SGM_13get_enc_properties = {"get_enc_properties", (PyCFunction)__pyx_pw_3src_3sgm_3SGM_13get_enc_properties, METH_O, 0};
+static PyObject *__pyx_pw_3src_3sgm_3SGM_13get_enc_properties(PyObject *__pyx_v_self, PyObject *__pyx_v_enc_type) {
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -3582,7 +3582,7 @@ static PyObject *__pyx_pw_3src_3sdr_3SDR_13get_enc_properties(PyObject *__pyx_v_
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("get_enc_properties (wrapper)", 0);
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_enc_type), (&PyString_Type), 1, "enc_type", 1))) __PYX_ERR(0, 71, __pyx_L1_error)
-  __pyx_r = __pyx_pf_3src_3sdr_3SDR_12get_enc_properties(((struct __pyx_obj_3src_3sdr_SDR *)__pyx_v_self), ((PyObject*)__pyx_v_enc_type));
+  __pyx_r = __pyx_pf_3src_3sgm_3SGM_12get_enc_properties(((struct __pyx_obj_3src_3sgm_SGM *)__pyx_v_self), ((PyObject*)__pyx_v_enc_type));
 
   /* function exit code */
   goto __pyx_L0;
@@ -3593,7 +3593,7 @@ static PyObject *__pyx_pw_3src_3sdr_3SDR_13get_enc_properties(PyObject *__pyx_v_
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_3src_3sdr_3SDR_12get_enc_properties(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self, PyObject *__pyx_v_enc_type) {
+static PyObject *__pyx_pf_3src_3sgm_3SGM_12get_enc_properties(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self, PyObject *__pyx_v_enc_type) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
@@ -3604,7 +3604,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_12get_enc_properties(struct __pyx_obj_3
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("get_enc_properties", 0);
 
-  /* "src/sdr.py":72
+  /* "src/sgm.py":72
  * 
  *     def get_enc_properties(self, enc_type: str) -> dict:
  *         if enc_type in self.properties:             # <<<<<<<<<<<<<<
@@ -3619,7 +3619,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_12get_enc_properties(struct __pyx_obj_3
   __pyx_t_2 = (__pyx_t_1 != 0);
   if (__pyx_t_2) {
 
-    /* "src/sdr.py":73
+    /* "src/sgm.py":73
  *     def get_enc_properties(self, enc_type: str) -> dict:
  *         if enc_type in self.properties:
  *             return self.properties[enc_type]             # <<<<<<<<<<<<<<
@@ -3638,7 +3638,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_12get_enc_properties(struct __pyx_obj_3
     __pyx_t_3 = 0;
     goto __pyx_L0;
 
-    /* "src/sdr.py":72
+    /* "src/sgm.py":72
  * 
  *     def get_enc_properties(self, enc_type: str) -> dict:
  *         if enc_type in self.properties:             # <<<<<<<<<<<<<<
@@ -3647,7 +3647,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_12get_enc_properties(struct __pyx_obj_3
  */
   }
 
-  /* "src/sdr.py":75
+  /* "src/sgm.py":75
  *             return self.properties[enc_type]
  *         else:
  *             return {}             # <<<<<<<<<<<<<<
@@ -3663,7 +3663,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_12get_enc_properties(struct __pyx_obj_3
     goto __pyx_L0;
   }
 
-  /* "src/sdr.py":71
+  /* "src/sgm.py":71
  *         return set(self.encodings.keys())
  * 
  *     def get_enc_properties(self, enc_type: str) -> dict:             # <<<<<<<<<<<<<<
@@ -3674,7 +3674,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_12get_enc_properties(struct __pyx_obj_3
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("src.sdr.SDR.get_enc_properties", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.sgm.SGM.get_enc_properties", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -3682,7 +3682,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_12get_enc_properties(struct __pyx_obj_3
   return __pyx_r;
 }
 
-/* "src/sdr.py":77
+/* "src/sgm.py":77
  *             return {}
  * 
  *     def decode(self) -> dict:             # <<<<<<<<<<<<<<
@@ -3691,20 +3691,20 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_12get_enc_properties(struct __pyx_obj_3
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_3src_3sdr_3SDR_15decode(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyMethodDef __pyx_mdef_3src_3sdr_3SDR_15decode = {"decode", (PyCFunction)__pyx_pw_3src_3sdr_3SDR_15decode, METH_NOARGS, 0};
-static PyObject *__pyx_pw_3src_3sdr_3SDR_15decode(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_3src_3sgm_3SGM_15decode(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyMethodDef __pyx_mdef_3src_3sgm_3SGM_15decode = {"decode", (PyCFunction)__pyx_pw_3src_3sgm_3SGM_15decode, METH_NOARGS, 0};
+static PyObject *__pyx_pw_3src_3sgm_3SGM_15decode(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("decode (wrapper)", 0);
-  __pyx_r = __pyx_pf_3src_3sdr_3SDR_14decode(((struct __pyx_obj_3src_3sdr_SDR *)__pyx_v_self));
+  __pyx_r = __pyx_pf_3src_3sgm_3SGM_14decode(((struct __pyx_obj_3src_3sgm_SGM *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_3src_3sdr_3SDR_14decode(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self) {
+static PyObject *__pyx_pf_3src_3sgm_3SGM_14decode(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self) {
   PyObject *__pyx_v_dec = NULL;
   PyObject *__pyx_8genexpr9__pyx_v_enc_type = NULL;
   PyObject *__pyx_r = NULL;
@@ -3724,7 +3724,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_14decode(struct __pyx_obj_3src_3sdr_SDR
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("decode", 0);
 
-  /* "src/sdr.py":79
+  /* "src/sgm.py":79
  *     def decode(self) -> dict:
  *         enc_type: str
  *         dec = {enc_type: self.properties[enc_type]['encoder'].decode(self.encodings[enc_type]) for enc_type in self.encodings}             # <<<<<<<<<<<<<<
@@ -3800,7 +3800,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_14decode(struct __pyx_obj_3src_3sdr_SDR
   __pyx_v_dec = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/sdr.py":80
+  /* "src/sgm.py":80
  *         enc_type: str
  *         dec = {enc_type: self.properties[enc_type]['encoder'].decode(self.encodings[enc_type]) for enc_type in self.encodings}
  *         return dec             # <<<<<<<<<<<<<<
@@ -3812,7 +3812,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_14decode(struct __pyx_obj_3src_3sdr_SDR
   __pyx_r = __pyx_v_dec;
   goto __pyx_L0;
 
-  /* "src/sdr.py":77
+  /* "src/sgm.py":77
  *             return {}
  * 
  *     def decode(self) -> dict:             # <<<<<<<<<<<<<<
@@ -3828,7 +3828,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_14decode(struct __pyx_obj_3src_3sdr_SDR
   __Pyx_XDECREF(__pyx_t_8);
   __Pyx_XDECREF(__pyx_t_9);
   __Pyx_XDECREF(__pyx_t_10);
-  __Pyx_AddTraceback("src.sdr.SDR.decode", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.sgm.SGM.decode", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_dec);
@@ -3838,7 +3838,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_14decode(struct __pyx_obj_3src_3sdr_SDR
   return __pyx_r;
 }
 
-/* "src/sdr.py":82
+/* "src/sgm.py":82
  *         return dec
  * 
  *     def to_dict(self, decode: bool = False) -> dict:             # <<<<<<<<<<<<<<
@@ -3847,9 +3847,9 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_14decode(struct __pyx_obj_3src_3sdr_SDR
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_3src_3sdr_3SDR_17to_dict(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_3src_3sdr_3SDR_17to_dict = {"to_dict", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_3sdr_3SDR_17to_dict, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_3src_3sdr_3SDR_17to_dict(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_3src_3sgm_3SGM_17to_dict(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_3src_3sgm_3SGM_17to_dict = {"to_dict", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_3sgm_3SGM_17to_dict, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_3src_3sgm_3SGM_17to_dict(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_decode = 0;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
@@ -3895,18 +3895,18 @@ static PyObject *__pyx_pw_3src_3sdr_3SDR_17to_dict(PyObject *__pyx_v_self, PyObj
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("to_dict", 0, 0, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 82, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("src.sdr.SDR.to_dict", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.sgm.SGM.to_dict", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_3src_3sdr_3SDR_16to_dict(((struct __pyx_obj_3src_3sdr_SDR *)__pyx_v_self), __pyx_v_decode);
+  __pyx_r = __pyx_pf_3src_3sgm_3SGM_16to_dict(((struct __pyx_obj_3src_3sgm_SGM *)__pyx_v_self), __pyx_v_decode);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_3src_3sdr_3SDR_16to_dict(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self, PyObject *__pyx_v_decode) {
+static PyObject *__pyx_pf_3src_3sgm_3SGM_16to_dict(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self, PyObject *__pyx_v_decode) {
   PyObject *__pyx_v_d_sdr = NULL;
   PyObject *__pyx_9genexpr10__pyx_v_enc_type = NULL;
   PyObject *__pyx_9genexpr11__pyx_v_prop = NULL;
@@ -3930,7 +3930,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_16to_dict(struct __pyx_obj_3src_3sdr_SD
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("to_dict", 0);
 
-  /* "src/sdr.py":86
+  /* "src/sgm.py":86
  *         prop: str
  * 
  *         if decode:             # <<<<<<<<<<<<<<
@@ -3940,7 +3940,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_16to_dict(struct __pyx_obj_3src_3sdr_SD
   __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_decode); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 86, __pyx_L1_error)
   if (__pyx_t_1) {
 
-    /* "src/sdr.py":87
+    /* "src/sgm.py":87
  * 
  *         if decode:
  *             d_sdr = {'encodings': self.decode()}             # <<<<<<<<<<<<<<
@@ -3971,7 +3971,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_16to_dict(struct __pyx_obj_3src_3sdr_SD
     __pyx_v_d_sdr = ((PyObject*)__pyx_t_2);
     __pyx_t_2 = 0;
 
-    /* "src/sdr.py":86
+    /* "src/sgm.py":86
  *         prop: str
  * 
  *         if decode:             # <<<<<<<<<<<<<<
@@ -3981,7 +3981,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_16to_dict(struct __pyx_obj_3src_3sdr_SD
     goto __pyx_L3;
   }
 
-  /* "src/sdr.py":89
+  /* "src/sgm.py":89
  *             d_sdr = {'encodings': self.decode()}
  *         else:
  *             d_sdr = {'encodings': deepcopy(self.encodings)}             # <<<<<<<<<<<<<<
@@ -4015,7 +4015,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_16to_dict(struct __pyx_obj_3src_3sdr_SD
   }
   __pyx_L3:;
 
-  /* "src/sdr.py":90
+  /* "src/sgm.py":90
  *         else:
  *             d_sdr = {'encodings': deepcopy(self.encodings)}
  *         d_sdr['properties'] = {enc_type: {prop: self.properties[enc_type][prop] for prop in self.properties[enc_type]} for enc_type in self.properties}             # <<<<<<<<<<<<<<
@@ -4129,19 +4129,19 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_16to_dict(struct __pyx_obj_3src_3sdr_SD
   if (unlikely(PyDict_SetItem(__pyx_v_d_sdr, __pyx_n_s_properties, __pyx_t_2) < 0)) __PYX_ERR(0, 90, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "src/sdr.py":91
+  /* "src/sgm.py":91
  *             d_sdr = {'encodings': deepcopy(self.encodings)}
  *         d_sdr['properties'] = {enc_type: {prop: self.properties[enc_type][prop] for prop in self.properties[enc_type]} for enc_type in self.properties}
  *         return d_sdr             # <<<<<<<<<<<<<<
  * 
- *     def overlap(self, sdr, search_types: set = None) -> dict:
+ *     def overlap(self, sgm, search_types: set = None) -> dict:
  */
   __Pyx_XDECREF(__pyx_r);
   __Pyx_INCREF(__pyx_v_d_sdr);
   __pyx_r = __pyx_v_d_sdr;
   goto __pyx_L0;
 
-  /* "src/sdr.py":82
+  /* "src/sgm.py":82
  *         return dec
  * 
  *     def to_dict(self, decode: bool = False) -> dict:             # <<<<<<<<<<<<<<
@@ -4157,7 +4157,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_16to_dict(struct __pyx_obj_3src_3sdr_SD
   __Pyx_XDECREF(__pyx_t_5);
   __Pyx_XDECREF(__pyx_t_10);
   __Pyx_XDECREF(__pyx_t_13);
-  __Pyx_AddTraceback("src.sdr.SDR.to_dict", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.sgm.SGM.to_dict", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_d_sdr);
@@ -4168,19 +4168,19 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_16to_dict(struct __pyx_obj_3src_3sdr_SD
   return __pyx_r;
 }
 
-/* "src/sdr.py":93
+/* "src/sgm.py":93
  *         return d_sdr
  * 
- *     def overlap(self, sdr, search_types: set = None) -> dict:             # <<<<<<<<<<<<<<
+ *     def overlap(self, sgm, search_types: set = None) -> dict:             # <<<<<<<<<<<<<<
  * 
  *         enc_type: str
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_3src_3sdr_3SDR_19overlap(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_3src_3sdr_3SDR_19overlap = {"overlap", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_3sdr_3SDR_19overlap, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_3src_3sdr_3SDR_19overlap(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
-  PyObject *__pyx_v_sdr = 0;
+static PyObject *__pyx_pw_3src_3sgm_3SGM_19overlap(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_3src_3sgm_3SGM_19overlap = {"overlap", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_3sgm_3SGM_19overlap, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_3src_3sgm_3SGM_19overlap(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  PyObject *__pyx_v_sgm = 0;
   PyObject *__pyx_v_search_types = 0;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
@@ -4189,7 +4189,7 @@ static PyObject *__pyx_pw_3src_3sdr_3SDR_19overlap(PyObject *__pyx_v_self, PyObj
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("overlap (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_sdr,&__pyx_n_s_search_types,0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_sgm,&__pyx_n_s_search_types,0};
     PyObject* values[2] = {0,0};
     values[1] = ((PyObject*)Py_None);
     if (unlikely(__pyx_kwds)) {
@@ -4206,7 +4206,7 @@ static PyObject *__pyx_pw_3src_3sdr_3SDR_19overlap(PyObject *__pyx_v_self, PyObj
       kw_args = PyDict_Size(__pyx_kwds);
       switch (pos_args) {
         case  0:
-        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_sdr)) != 0)) kw_args--;
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_sgm)) != 0)) kw_args--;
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
@@ -4227,19 +4227,19 @@ static PyObject *__pyx_pw_3src_3sdr_3SDR_19overlap(PyObject *__pyx_v_self, PyObj
         default: goto __pyx_L5_argtuple_error;
       }
     }
-    __pyx_v_sdr = values[0];
+    __pyx_v_sgm = values[0];
     __pyx_v_search_types = ((PyObject*)values[1]);
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("overlap", 0, 1, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 93, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("src.sdr.SDR.overlap", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.sgm.SGM.overlap", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_search_types), (&PySet_Type), 1, "search_types", 1))) __PYX_ERR(0, 93, __pyx_L1_error)
-  __pyx_r = __pyx_pf_3src_3sdr_3SDR_18overlap(((struct __pyx_obj_3src_3sdr_SDR *)__pyx_v_self), __pyx_v_sdr, __pyx_v_search_types);
+  __pyx_r = __pyx_pf_3src_3sgm_3SGM_18overlap(((struct __pyx_obj_3src_3sgm_SGM *)__pyx_v_self), __pyx_v_sgm, __pyx_v_search_types);
 
   /* function exit code */
   goto __pyx_L0;
@@ -4250,7 +4250,7 @@ static PyObject *__pyx_pw_3src_3sdr_3SDR_19overlap(PyObject *__pyx_v_self, PyObj
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_3src_3sdr_3SDR_18overlap(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self, PyObject *__pyx_v_sdr, PyObject *__pyx_v_search_types) {
+static PyObject *__pyx_pf_3src_3sgm_3SGM_18overlap(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self, PyObject *__pyx_v_sgm, PyObject *__pyx_v_search_types) {
   PyObject *__pyx_v_enc_type = 0;
   PyObject *__pyx_v_enc_types = 0;
   PyObject *__pyx_v_por = 0;
@@ -4283,7 +4283,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_18overlap(struct __pyx_obj_3src_3sdr_SD
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("overlap", 0);
 
-  /* "src/sdr.py":102
+  /* "src/sgm.py":102
  *         # get the filtered intersection of enc_types to compare
  *         #
  *         if search_types is not None:             # <<<<<<<<<<<<<<
@@ -4294,16 +4294,16 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_18overlap(struct __pyx_obj_3src_3sdr_SD
   __pyx_t_2 = (__pyx_t_1 != 0);
   if (__pyx_t_2) {
 
-    /* "src/sdr.py":105
+    /* "src/sgm.py":105
  *             enc_types = ({enc_type
  *                           for enc_type in self.encodings.keys()
  *                           if enc_type in search_types} &             # <<<<<<<<<<<<<<
  *                          {enc_type
- *                           for enc_type in sdr.encodings.keys()
+ *                           for enc_type in sgm.encodings.keys()
  */
     { /* enter inner scope */
 
-      /* "src/sdr.py":103
+      /* "src/sgm.py":103
  *         #
  *         if search_types is not None:
  *             enc_types = ({enc_type             # <<<<<<<<<<<<<<
@@ -4313,7 +4313,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_18overlap(struct __pyx_obj_3src_3sdr_SD
       __pyx_t_3 = PySet_New(NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 103, __pyx_L6_error)
       __Pyx_GOTREF(__pyx_t_3);
 
-      /* "src/sdr.py":104
+      /* "src/sgm.py":104
  *         if search_types is not None:
  *             enc_types = ({enc_type
  *                           for enc_type in self.encodings.keys()             # <<<<<<<<<<<<<<
@@ -4370,12 +4370,12 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_18overlap(struct __pyx_obj_3src_3sdr_SD
         __Pyx_XDECREF_SET(__pyx_9genexpr12__pyx_v_enc_type, ((PyObject*)__pyx_t_4));
         __pyx_t_4 = 0;
 
-        /* "src/sdr.py":105
+        /* "src/sgm.py":105
  *             enc_types = ({enc_type
  *                           for enc_type in self.encodings.keys()
  *                           if enc_type in search_types} &             # <<<<<<<<<<<<<<
  *                          {enc_type
- *                           for enc_type in sdr.encodings.keys()
+ *                           for enc_type in sgm.encodings.keys()
  */
         if (unlikely(__pyx_v_search_types == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
@@ -4385,7 +4385,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_18overlap(struct __pyx_obj_3src_3sdr_SD
         __pyx_t_1 = (__pyx_t_2 != 0);
         if (__pyx_t_1) {
 
-          /* "src/sdr.py":103
+          /* "src/sgm.py":103
  *         #
  *         if search_types is not None:
  *             enc_types = ({enc_type             # <<<<<<<<<<<<<<
@@ -4394,16 +4394,16 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_18overlap(struct __pyx_obj_3src_3sdr_SD
  */
           if (unlikely(PySet_Add(__pyx_t_3, (PyObject*)__pyx_9genexpr12__pyx_v_enc_type))) __PYX_ERR(0, 103, __pyx_L6_error)
 
-          /* "src/sdr.py":105
+          /* "src/sgm.py":105
  *             enc_types = ({enc_type
  *                           for enc_type in self.encodings.keys()
  *                           if enc_type in search_types} &             # <<<<<<<<<<<<<<
  *                          {enc_type
- *                           for enc_type in sdr.encodings.keys()
+ *                           for enc_type in sgm.encodings.keys()
  */
         }
 
-        /* "src/sdr.py":104
+        /* "src/sgm.py":104
  *         if search_types is not None:
  *             enc_types = ({enc_type
  *                           for enc_type in self.encodings.keys()             # <<<<<<<<<<<<<<
@@ -4421,24 +4421,24 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_18overlap(struct __pyx_obj_3src_3sdr_SD
     } /* exit inner scope */
     { /* enter inner scope */
 
-      /* "src/sdr.py":106
+      /* "src/sgm.py":106
  *                           for enc_type in self.encodings.keys()
  *                           if enc_type in search_types} &
  *                          {enc_type             # <<<<<<<<<<<<<<
- *                           for enc_type in sdr.encodings.keys()
+ *                           for enc_type in sgm.encodings.keys()
  *                           if enc_type in search_types})
  */
       __pyx_t_5 = PySet_New(NULL); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 106, __pyx_L13_error)
       __Pyx_GOTREF(__pyx_t_5);
 
-      /* "src/sdr.py":107
+      /* "src/sgm.py":107
  *                           if enc_type in search_types} &
  *                          {enc_type
- *                           for enc_type in sdr.encodings.keys()             # <<<<<<<<<<<<<<
+ *                           for enc_type in sgm.encodings.keys()             # <<<<<<<<<<<<<<
  *                           if enc_type in search_types})
  *         else:
  */
-      __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encodings); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 107, __pyx_L13_error)
+      __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encodings); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 107, __pyx_L13_error)
       __Pyx_GOTREF(__pyx_t_8);
       __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_keys); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 107, __pyx_L13_error)
       __Pyx_GOTREF(__pyx_t_9);
@@ -4502,12 +4502,12 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_18overlap(struct __pyx_obj_3src_3sdr_SD
         __Pyx_XDECREF_SET(__pyx_9genexpr13__pyx_v_enc_type, ((PyObject*)__pyx_t_4));
         __pyx_t_4 = 0;
 
-        /* "src/sdr.py":108
+        /* "src/sgm.py":108
  *                          {enc_type
- *                           for enc_type in sdr.encodings.keys()
+ *                           for enc_type in sgm.encodings.keys()
  *                           if enc_type in search_types})             # <<<<<<<<<<<<<<
  *         else:
- *             enc_types = set(self.encodings.keys()) & set(sdr.encodings.keys())
+ *             enc_types = set(self.encodings.keys()) & set(sgm.encodings.keys())
  */
         if (unlikely(__pyx_v_search_types == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
@@ -4517,28 +4517,28 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_18overlap(struct __pyx_obj_3src_3sdr_SD
         __pyx_t_2 = (__pyx_t_1 != 0);
         if (__pyx_t_2) {
 
-          /* "src/sdr.py":106
+          /* "src/sgm.py":106
  *                           for enc_type in self.encodings.keys()
  *                           if enc_type in search_types} &
  *                          {enc_type             # <<<<<<<<<<<<<<
- *                           for enc_type in sdr.encodings.keys()
+ *                           for enc_type in sgm.encodings.keys()
  *                           if enc_type in search_types})
  */
           if (unlikely(PySet_Add(__pyx_t_5, (PyObject*)__pyx_9genexpr13__pyx_v_enc_type))) __PYX_ERR(0, 106, __pyx_L13_error)
 
-          /* "src/sdr.py":108
+          /* "src/sgm.py":108
  *                          {enc_type
- *                           for enc_type in sdr.encodings.keys()
+ *                           for enc_type in sgm.encodings.keys()
  *                           if enc_type in search_types})             # <<<<<<<<<<<<<<
  *         else:
- *             enc_types = set(self.encodings.keys()) & set(sdr.encodings.keys())
+ *             enc_types = set(self.encodings.keys()) & set(sgm.encodings.keys())
  */
         }
 
-        /* "src/sdr.py":107
+        /* "src/sgm.py":107
  *                           if enc_type in search_types} &
  *                          {enc_type
- *                           for enc_type in sdr.encodings.keys()             # <<<<<<<<<<<<<<
+ *                           for enc_type in sgm.encodings.keys()             # <<<<<<<<<<<<<<
  *                           if enc_type in search_types})
  *         else:
  */
@@ -4552,12 +4552,12 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_18overlap(struct __pyx_obj_3src_3sdr_SD
       __pyx_L17_exit_scope:;
     } /* exit inner scope */
 
-    /* "src/sdr.py":105
+    /* "src/sgm.py":105
  *             enc_types = ({enc_type
  *                           for enc_type in self.encodings.keys()
  *                           if enc_type in search_types} &             # <<<<<<<<<<<<<<
  *                          {enc_type
- *                           for enc_type in sdr.encodings.keys()
+ *                           for enc_type in sgm.encodings.keys()
  */
     __pyx_t_9 = PyNumber_And(__pyx_t_3, __pyx_t_5); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 105, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
@@ -4566,7 +4566,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_18overlap(struct __pyx_obj_3src_3sdr_SD
     __pyx_v_enc_types = ((PyObject*)__pyx_t_9);
     __pyx_t_9 = 0;
 
-    /* "src/sdr.py":102
+    /* "src/sgm.py":102
  *         # get the filtered intersection of enc_types to compare
  *         #
  *         if search_types is not None:             # <<<<<<<<<<<<<<
@@ -4576,10 +4576,10 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_18overlap(struct __pyx_obj_3src_3sdr_SD
     goto __pyx_L3;
   }
 
-  /* "src/sdr.py":110
+  /* "src/sgm.py":110
  *                           if enc_type in search_types})
  *         else:
- *             enc_types = set(self.encodings.keys()) & set(sdr.encodings.keys())             # <<<<<<<<<<<<<<
+ *             enc_types = set(self.encodings.keys()) & set(sgm.encodings.keys())             # <<<<<<<<<<<<<<
  * 
  *         por = {'overlap': 0, 'norm_overlap': 0.0}
  */
@@ -4593,7 +4593,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_18overlap(struct __pyx_obj_3src_3sdr_SD
     __pyx_t_5 = PySet_New(__pyx_t_9); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 110, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encodings); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 110, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encodings); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 110, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_keys); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 110, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
@@ -4625,12 +4625,12 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_18overlap(struct __pyx_obj_3src_3sdr_SD
   }
   __pyx_L3:;
 
-  /* "src/sdr.py":112
- *             enc_types = set(self.encodings.keys()) & set(sdr.encodings.keys())
+  /* "src/sgm.py":112
+ *             enc_types = set(self.encodings.keys()) & set(sgm.encodings.keys())
  * 
  *         por = {'overlap': 0, 'norm_overlap': 0.0}             # <<<<<<<<<<<<<<
  * 
- *         por['enc_types'] = {enc_type: sum([min(self.encodings[enc_type][bit], sdr.encodings[enc_type][bit])
+ *         por['enc_types'] = {enc_type: sum([min(self.encodings[enc_type][bit], sgm.encodings[enc_type][bit])
  */
   __pyx_t_9 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 112, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
@@ -4639,20 +4639,20 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_18overlap(struct __pyx_obj_3src_3sdr_SD
   __pyx_v_por = ((PyObject*)__pyx_t_9);
   __pyx_t_9 = 0;
 
-  /* "src/sdr.py":114
+  /* "src/sgm.py":114
  *         por = {'overlap': 0, 'norm_overlap': 0.0}
  * 
- *         por['enc_types'] = {enc_type: sum([min(self.encodings[enc_type][bit], sdr.encodings[enc_type][bit])             # <<<<<<<<<<<<<<
- *                                            for bit in set(self.encodings[enc_type].keys()) & set(sdr.encodings[enc_type].keys())])
+ *         por['enc_types'] = {enc_type: sum([min(self.encodings[enc_type][bit], sgm.encodings[enc_type][bit])             # <<<<<<<<<<<<<<
+ *                                            for bit in set(self.encodings[enc_type].keys()) & set(sgm.encodings[enc_type].keys())])
  *                             for enc_type in enc_types}
  */
   { /* enter inner scope */
     __pyx_t_9 = PyDict_New(); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 114, __pyx_L20_error)
     __Pyx_GOTREF(__pyx_t_9);
 
-    /* "src/sdr.py":116
- *         por['enc_types'] = {enc_type: sum([min(self.encodings[enc_type][bit], sdr.encodings[enc_type][bit])
- *                                            for bit in set(self.encodings[enc_type].keys()) & set(sdr.encodings[enc_type].keys())])
+    /* "src/sgm.py":116
+ *         por['enc_types'] = {enc_type: sum([min(self.encodings[enc_type][bit], sgm.encodings[enc_type][bit])
+ *                                            for bit in set(self.encodings[enc_type].keys()) & set(sgm.encodings[enc_type].keys())])
  *                             for enc_type in enc_types}             # <<<<<<<<<<<<<<
  * 
  *         por['overlap'] = sum([por['enc_types'][enc_type] for enc_type in por['enc_types']])
@@ -4672,20 +4672,20 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_18overlap(struct __pyx_obj_3src_3sdr_SD
       __Pyx_XDECREF_SET(__pyx_9genexpr14__pyx_v_enc_type, ((PyObject*)__pyx_t_5));
       __pyx_t_5 = 0;
 
-      /* "src/sdr.py":114
+      /* "src/sgm.py":114
  *         por = {'overlap': 0, 'norm_overlap': 0.0}
  * 
- *         por['enc_types'] = {enc_type: sum([min(self.encodings[enc_type][bit], sdr.encodings[enc_type][bit])             # <<<<<<<<<<<<<<
- *                                            for bit in set(self.encodings[enc_type].keys()) & set(sdr.encodings[enc_type].keys())])
+ *         por['enc_types'] = {enc_type: sum([min(self.encodings[enc_type][bit], sgm.encodings[enc_type][bit])             # <<<<<<<<<<<<<<
+ *                                            for bit in set(self.encodings[enc_type].keys()) & set(sgm.encodings[enc_type].keys())])
  *                             for enc_type in enc_types}
  */
       __pyx_t_5 = PyList_New(0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 114, __pyx_L20_error)
       __Pyx_GOTREF(__pyx_t_5);
 
-      /* "src/sdr.py":115
+      /* "src/sgm.py":115
  * 
- *         por['enc_types'] = {enc_type: sum([min(self.encodings[enc_type][bit], sdr.encodings[enc_type][bit])
- *                                            for bit in set(self.encodings[enc_type].keys()) & set(sdr.encodings[enc_type].keys())])             # <<<<<<<<<<<<<<
+ *         por['enc_types'] = {enc_type: sum([min(self.encodings[enc_type][bit], sgm.encodings[enc_type][bit])
+ *                                            for bit in set(self.encodings[enc_type].keys()) & set(sgm.encodings[enc_type].keys())])             # <<<<<<<<<<<<<<
  *                             for enc_type in enc_types}
  * 
  */
@@ -4717,7 +4717,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_18overlap(struct __pyx_obj_3src_3sdr_SD
       __pyx_t_16 = PySet_New(__pyx_t_8); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 115, __pyx_L20_error)
       __Pyx_GOTREF(__pyx_t_16);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-      __pyx_t_15 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encodings); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 115, __pyx_L20_error)
+      __pyx_t_15 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encodings); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 115, __pyx_L20_error)
       __Pyx_GOTREF(__pyx_t_15);
       __pyx_t_17 = __Pyx_PyObject_Dict_GetItem(__pyx_t_15, __pyx_9genexpr14__pyx_v_enc_type); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 115, __pyx_L20_error)
       __Pyx_GOTREF(__pyx_t_17);
@@ -4761,14 +4761,14 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_18overlap(struct __pyx_obj_3src_3sdr_SD
         __Pyx_XDECREF_SET(__pyx_9genexpr14__pyx_v_bit, __pyx_t_15);
         __pyx_t_15 = 0;
 
-        /* "src/sdr.py":114
+        /* "src/sgm.py":114
  *         por = {'overlap': 0, 'norm_overlap': 0.0}
  * 
- *         por['enc_types'] = {enc_type: sum([min(self.encodings[enc_type][bit], sdr.encodings[enc_type][bit])             # <<<<<<<<<<<<<<
- *                                            for bit in set(self.encodings[enc_type].keys()) & set(sdr.encodings[enc_type].keys())])
+ *         por['enc_types'] = {enc_type: sum([min(self.encodings[enc_type][bit], sgm.encodings[enc_type][bit])             # <<<<<<<<<<<<<<
+ *                                            for bit in set(self.encodings[enc_type].keys()) & set(sgm.encodings[enc_type].keys())])
  *                             for enc_type in enc_types}
  */
-        __pyx_t_15 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encodings); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 114, __pyx_L20_error)
+        __pyx_t_15 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encodings); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 114, __pyx_L20_error)
         __Pyx_GOTREF(__pyx_t_15);
         __pyx_t_8 = __Pyx_PyObject_Dict_GetItem(__pyx_t_15, __pyx_9genexpr14__pyx_v_enc_type); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 114, __pyx_L20_error)
         __Pyx_GOTREF(__pyx_t_8);
@@ -4820,7 +4820,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_18overlap(struct __pyx_obj_3src_3sdr_SD
   if (unlikely(PyDict_SetItem(__pyx_v_por, __pyx_n_s_enc_types, __pyx_t_9) < 0)) __PYX_ERR(0, 114, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-  /* "src/sdr.py":118
+  /* "src/sgm.py":118
  *                             for enc_type in enc_types}
  * 
  *         por['overlap'] = sum([por['enc_types'][enc_type] for enc_type in por['enc_types']])             # <<<<<<<<<<<<<<
@@ -4889,7 +4889,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_18overlap(struct __pyx_obj_3src_3sdr_SD
   if (unlikely(PyDict_SetItem(__pyx_v_por, __pyx_n_s_overlap, __pyx_t_3) < 0)) __PYX_ERR(0, 118, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "src/sdr.py":120
+  /* "src/sgm.py":120
  *         por['overlap'] = sum([por['enc_types'][enc_type] for enc_type in por['enc_types']])
  * 
  *         if len(enc_types) > 0:             # <<<<<<<<<<<<<<
@@ -4900,7 +4900,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_18overlap(struct __pyx_obj_3src_3sdr_SD
   __pyx_t_2 = ((__pyx_t_10 > 0) != 0);
   if (__pyx_t_2) {
 
-    /* "src/sdr.py":121
+    /* "src/sgm.py":121
  * 
  *         if len(enc_types) > 0:
  *             por['norm_overlap'] = por['overlap'] / len(enc_types)             # <<<<<<<<<<<<<<
@@ -4919,7 +4919,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_18overlap(struct __pyx_obj_3src_3sdr_SD
     if (unlikely(PyDict_SetItem(__pyx_v_por, __pyx_n_s_norm_overlap, __pyx_t_5) < 0)) __PYX_ERR(0, 121, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-    /* "src/sdr.py":120
+    /* "src/sgm.py":120
  *         por['overlap'] = sum([por['enc_types'][enc_type] for enc_type in por['enc_types']])
  * 
  *         if len(enc_types) > 0:             # <<<<<<<<<<<<<<
@@ -4928,22 +4928,22 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_18overlap(struct __pyx_obj_3src_3sdr_SD
  */
   }
 
-  /* "src/sdr.py":123
+  /* "src/sgm.py":123
  *             por['norm_overlap'] = por['overlap'] / len(enc_types)
  * 
  *         return por             # <<<<<<<<<<<<<<
  * 
- *     def distance(self, sdr, search_types: set = None) -> dict:
+ *     def distance(self, sgm, search_types: set = None) -> dict:
  */
   __Pyx_XDECREF(__pyx_r);
   __Pyx_INCREF(__pyx_v_por);
   __pyx_r = __pyx_v_por;
   goto __pyx_L0;
 
-  /* "src/sdr.py":93
+  /* "src/sgm.py":93
  *         return d_sdr
  * 
- *     def overlap(self, sdr, search_types: set = None) -> dict:             # <<<<<<<<<<<<<<
+ *     def overlap(self, sgm, search_types: set = None) -> dict:             # <<<<<<<<<<<<<<
  * 
  *         enc_type: str
  */
@@ -4958,7 +4958,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_18overlap(struct __pyx_obj_3src_3sdr_SD
   __Pyx_XDECREF(__pyx_t_15);
   __Pyx_XDECREF(__pyx_t_16);
   __Pyx_XDECREF(__pyx_t_17);
-  __Pyx_AddTraceback("src.sdr.SDR.overlap", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.sgm.SGM.overlap", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_enc_type);
@@ -4973,19 +4973,19 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_18overlap(struct __pyx_obj_3src_3sdr_SD
   return __pyx_r;
 }
 
-/* "src/sdr.py":125
+/* "src/sgm.py":125
  *         return por
  * 
- *     def distance(self, sdr, search_types: set = None) -> dict:             # <<<<<<<<<<<<<<
+ *     def distance(self, sgm, search_types: set = None) -> dict:             # <<<<<<<<<<<<<<
  * 
  *         por: dict
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_3src_3sdr_3SDR_21distance(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_3src_3sdr_3SDR_21distance = {"distance", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_3sdr_3SDR_21distance, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_3src_3sdr_3SDR_21distance(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
-  PyObject *__pyx_v_sdr = 0;
+static PyObject *__pyx_pw_3src_3sgm_3SGM_21distance(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_3src_3sgm_3SGM_21distance = {"distance", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_3sgm_3SGM_21distance, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_3src_3sgm_3SGM_21distance(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  PyObject *__pyx_v_sgm = 0;
   PyObject *__pyx_v_search_types = 0;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
@@ -4994,7 +4994,7 @@ static PyObject *__pyx_pw_3src_3sdr_3SDR_21distance(PyObject *__pyx_v_self, PyOb
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("distance (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_sdr,&__pyx_n_s_search_types,0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_sgm,&__pyx_n_s_search_types,0};
     PyObject* values[2] = {0,0};
     values[1] = ((PyObject*)Py_None);
     if (unlikely(__pyx_kwds)) {
@@ -5011,7 +5011,7 @@ static PyObject *__pyx_pw_3src_3sdr_3SDR_21distance(PyObject *__pyx_v_self, PyOb
       kw_args = PyDict_Size(__pyx_kwds);
       switch (pos_args) {
         case  0:
-        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_sdr)) != 0)) kw_args--;
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_sgm)) != 0)) kw_args--;
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
@@ -5032,19 +5032,19 @@ static PyObject *__pyx_pw_3src_3sdr_3SDR_21distance(PyObject *__pyx_v_self, PyOb
         default: goto __pyx_L5_argtuple_error;
       }
     }
-    __pyx_v_sdr = values[0];
+    __pyx_v_sgm = values[0];
     __pyx_v_search_types = ((PyObject*)values[1]);
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("distance", 0, 1, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 125, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("src.sdr.SDR.distance", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.sgm.SGM.distance", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_search_types), (&PySet_Type), 1, "search_types", 1))) __PYX_ERR(0, 125, __pyx_L1_error)
-  __pyx_r = __pyx_pf_3src_3sdr_3SDR_20distance(((struct __pyx_obj_3src_3sdr_SDR *)__pyx_v_self), __pyx_v_sdr, __pyx_v_search_types);
+  __pyx_r = __pyx_pf_3src_3sgm_3SGM_20distance(((struct __pyx_obj_3src_3sgm_SGM *)__pyx_v_self), __pyx_v_sgm, __pyx_v_search_types);
 
   /* function exit code */
   goto __pyx_L0;
@@ -5055,7 +5055,7 @@ static PyObject *__pyx_pw_3src_3sdr_3SDR_21distance(PyObject *__pyx_v_self, PyOb
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_3src_3sdr_3SDR_20distance(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self, PyObject *__pyx_v_sdr, PyObject *__pyx_v_search_types) {
+static PyObject *__pyx_pf_3src_3sgm_3SGM_20distance(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self, PyObject *__pyx_v_sgm, PyObject *__pyx_v_search_types) {
   PyObject *__pyx_v_por = 0;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
@@ -5069,18 +5069,18 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_20distance(struct __pyx_obj_3src_3sdr_S
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("distance", 0);
 
-  /* "src/sdr.py":129
+  /* "src/sgm.py":129
  *         por: dict
  * 
- *         por = self.overlap(sdr=sdr, search_types=search_types)             # <<<<<<<<<<<<<<
- *         por['max_distance'] = max(self.get_max_distance(search_types=search_types), sdr.get_max_distance(search_types=search_types))
+ *         por = self.overlap(sgm=sgm, search_types=search_types)             # <<<<<<<<<<<<<<
+ *         por['max_distance'] = max(self.get_max_distance(search_types=search_types), sgm.get_max_distance(search_types=search_types))
  *         por['distance'] = por['max_distance'] - por['overlap']
  */
   __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_overlap); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 129, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_2 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 129, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_sdr, __pyx_v_sdr) < 0) __PYX_ERR(0, 129, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_sgm, __pyx_v_sgm) < 0) __PYX_ERR(0, 129, __pyx_L1_error)
   if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_search_types, __pyx_v_search_types) < 0) __PYX_ERR(0, 129, __pyx_L1_error)
   __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_empty_tuple, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 129, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
@@ -5090,14 +5090,14 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_20distance(struct __pyx_obj_3src_3sdr_S
   __pyx_v_por = ((PyObject*)__pyx_t_3);
   __pyx_t_3 = 0;
 
-  /* "src/sdr.py":130
+  /* "src/sgm.py":130
  * 
- *         por = self.overlap(sdr=sdr, search_types=search_types)
- *         por['max_distance'] = max(self.get_max_distance(search_types=search_types), sdr.get_max_distance(search_types=search_types))             # <<<<<<<<<<<<<<
+ *         por = self.overlap(sgm=sgm, search_types=search_types)
+ *         por['max_distance'] = max(self.get_max_distance(search_types=search_types), sgm.get_max_distance(search_types=search_types))             # <<<<<<<<<<<<<<
  *         por['distance'] = por['max_distance'] - por['overlap']
  *         if por['max_distance'] > 0.0:
  */
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_get_max_distance); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 130, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_get_max_distance); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 130, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 130, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
@@ -5137,9 +5137,9 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_20distance(struct __pyx_obj_3src_3sdr_S
   if (unlikely(PyDict_SetItem(__pyx_v_por, __pyx_n_s_max_distance, __pyx_t_1) < 0)) __PYX_ERR(0, 130, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/sdr.py":131
- *         por = self.overlap(sdr=sdr, search_types=search_types)
- *         por['max_distance'] = max(self.get_max_distance(search_types=search_types), sdr.get_max_distance(search_types=search_types))
+  /* "src/sgm.py":131
+ *         por = self.overlap(sgm=sgm, search_types=search_types)
+ *         por['max_distance'] = max(self.get_max_distance(search_types=search_types), sgm.get_max_distance(search_types=search_types))
  *         por['distance'] = por['max_distance'] - por['overlap']             # <<<<<<<<<<<<<<
  *         if por['max_distance'] > 0.0:
  *             por['similarity'] = por['overlap'] / por['max_distance']
@@ -5167,8 +5167,8 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_20distance(struct __pyx_obj_3src_3sdr_S
   if (unlikely(PyDict_SetItem(__pyx_v_por, __pyx_n_s_distance, __pyx_t_4) < 0)) __PYX_ERR(0, 131, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "src/sdr.py":132
- *         por['max_distance'] = max(self.get_max_distance(search_types=search_types), sdr.get_max_distance(search_types=search_types))
+  /* "src/sgm.py":132
+ *         por['max_distance'] = max(self.get_max_distance(search_types=search_types), sgm.get_max_distance(search_types=search_types))
  *         por['distance'] = por['max_distance'] - por['overlap']
  *         if por['max_distance'] > 0.0:             # <<<<<<<<<<<<<<
  *             por['similarity'] = por['overlap'] / por['max_distance']
@@ -5186,7 +5186,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_20distance(struct __pyx_obj_3src_3sdr_S
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   if (__pyx_t_5) {
 
-    /* "src/sdr.py":133
+    /* "src/sgm.py":133
  *         por['distance'] = por['max_distance'] - por['overlap']
  *         if por['max_distance'] > 0.0:
  *             por['similarity'] = por['overlap'] / por['max_distance']             # <<<<<<<<<<<<<<
@@ -5216,8 +5216,8 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_20distance(struct __pyx_obj_3src_3sdr_S
     if (unlikely(PyDict_SetItem(__pyx_v_por, __pyx_n_s_similarity, __pyx_t_1) < 0)) __PYX_ERR(0, 133, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "src/sdr.py":132
- *         por['max_distance'] = max(self.get_max_distance(search_types=search_types), sdr.get_max_distance(search_types=search_types))
+    /* "src/sgm.py":132
+ *         por['max_distance'] = max(self.get_max_distance(search_types=search_types), sgm.get_max_distance(search_types=search_types))
  *         por['distance'] = por['max_distance'] - por['overlap']
  *         if por['max_distance'] > 0.0:             # <<<<<<<<<<<<<<
  *             por['similarity'] = por['overlap'] / por['max_distance']
@@ -5226,7 +5226,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_20distance(struct __pyx_obj_3src_3sdr_S
     goto __pyx_L3;
   }
 
-  /* "src/sdr.py":135
+  /* "src/sgm.py":135
  *             por['similarity'] = por['overlap'] / por['max_distance']
  *         else:
  *             por['similarity'] = 0.0             # <<<<<<<<<<<<<<
@@ -5242,22 +5242,22 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_20distance(struct __pyx_obj_3src_3sdr_S
   }
   __pyx_L3:;
 
-  /* "src/sdr.py":137
+  /* "src/sgm.py":137
  *             por['similarity'] = 0.0
  * 
  *         return por             # <<<<<<<<<<<<<<
  * 
- *     def learn(self, sdr, learn_rate: float =1.0, learn_types: set = None, prune: float = 0.01):
+ *     def learn(self, sgm, learn_rate: float = 1.0, learn_types: set = None, prune: float = 0.01):
  */
   __Pyx_XDECREF(__pyx_r);
   __Pyx_INCREF(__pyx_v_por);
   __pyx_r = __pyx_v_por;
   goto __pyx_L0;
 
-  /* "src/sdr.py":125
+  /* "src/sgm.py":125
  *         return por
  * 
- *     def distance(self, sdr, search_types: set = None) -> dict:             # <<<<<<<<<<<<<<
+ *     def distance(self, sgm, search_types: set = None) -> dict:             # <<<<<<<<<<<<<<
  * 
  *         por: dict
  */
@@ -5268,7 +5268,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_20distance(struct __pyx_obj_3src_3sdr_S
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_AddTraceback("src.sdr.SDR.distance", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.sgm.SGM.distance", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_por);
@@ -5277,19 +5277,19 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_20distance(struct __pyx_obj_3src_3sdr_S
   return __pyx_r;
 }
 
-/* "src/sdr.py":139
+/* "src/sgm.py":139
  *         return por
  * 
- *     def learn(self, sdr, learn_rate: float =1.0, learn_types: set = None, prune: float = 0.01):             # <<<<<<<<<<<<<<
+ *     def learn(self, sgm, learn_rate: float = 1.0, learn_types: set = None, prune: float = 0.01):             # <<<<<<<<<<<<<<
  * 
  *         enc_type: str
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_3src_3sdr_3SDR_23learn(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_3src_3sdr_3SDR_23learn = {"learn", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_3sdr_3SDR_23learn, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_3src_3sdr_3SDR_23learn(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
-  PyObject *__pyx_v_sdr = 0;
+static PyObject *__pyx_pw_3src_3sgm_3SGM_23learn(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_3src_3sgm_3SGM_23learn = {"learn", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_3sgm_3SGM_23learn, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_3src_3sgm_3SGM_23learn(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  PyObject *__pyx_v_sgm = 0;
   double __pyx_v_learn_rate;
   PyObject *__pyx_v_learn_types = 0;
   double __pyx_v_prune;
@@ -5300,7 +5300,7 @@ static PyObject *__pyx_pw_3src_3sdr_3SDR_23learn(PyObject *__pyx_v_self, PyObjec
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("learn (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_sdr,&__pyx_n_s_learn_rate,&__pyx_n_s_learn_types,&__pyx_n_s_prune,0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_sgm,&__pyx_n_s_learn_rate,&__pyx_n_s_learn_types,&__pyx_n_s_prune,0};
     PyObject* values[4] = {0,0,0,0};
     values[2] = ((PyObject*)Py_None);
     if (unlikely(__pyx_kwds)) {
@@ -5321,7 +5321,7 @@ static PyObject *__pyx_pw_3src_3sdr_3SDR_23learn(PyObject *__pyx_v_self, PyObjec
       kw_args = PyDict_Size(__pyx_kwds);
       switch (pos_args) {
         case  0:
-        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_sdr)) != 0)) kw_args--;
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_sgm)) != 0)) kw_args--;
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
@@ -5358,7 +5358,7 @@ static PyObject *__pyx_pw_3src_3sdr_3SDR_23learn(PyObject *__pyx_v_self, PyObjec
         default: goto __pyx_L5_argtuple_error;
       }
     }
-    __pyx_v_sdr = values[0];
+    __pyx_v_sgm = values[0];
     if (values[1]) {
       __pyx_v_learn_rate = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_learn_rate == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 139, __pyx_L3_error)
     } else {
@@ -5375,12 +5375,12 @@ static PyObject *__pyx_pw_3src_3sdr_3SDR_23learn(PyObject *__pyx_v_self, PyObjec
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("learn", 0, 1, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 139, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("src.sdr.SDR.learn", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.sgm.SGM.learn", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_learn_types), (&PySet_Type), 1, "learn_types", 1))) __PYX_ERR(0, 139, __pyx_L1_error)
-  __pyx_r = __pyx_pf_3src_3sdr_3SDR_22learn(((struct __pyx_obj_3src_3sdr_SDR *)__pyx_v_self), __pyx_v_sdr, __pyx_v_learn_rate, __pyx_v_learn_types, __pyx_v_prune);
+  __pyx_r = __pyx_pf_3src_3sgm_3SGM_22learn(((struct __pyx_obj_3src_3sgm_SGM *)__pyx_v_self), __pyx_v_sgm, __pyx_v_learn_rate, __pyx_v_learn_types, __pyx_v_prune);
 
   /* function exit code */
   goto __pyx_L0;
@@ -5391,7 +5391,7 @@ static PyObject *__pyx_pw_3src_3sdr_3SDR_23learn(PyObject *__pyx_v_self, PyObjec
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self, PyObject *__pyx_v_sdr, double __pyx_v_learn_rate, PyObject *__pyx_v_learn_types, double __pyx_v_prune) {
+static PyObject *__pyx_pf_3src_3sgm_3SGM_22learn(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self, PyObject *__pyx_v_sgm, double __pyx_v_learn_rate, PyObject *__pyx_v_learn_types, double __pyx_v_prune) {
   PyObject *__pyx_v_enc_type = 0;
   PyObject *__pyx_v_enc_types = 0;
   PyObject *__pyx_v_bits = 0;
@@ -5428,8 +5428,8 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("learn", 0);
 
-  /* "src/sdr.py":150
- *         # if this sdr is empty then learn at fastest rate
+  /* "src/sgm.py":150
+ *         # if this sgm is empty then learn at fastest rate
  *         #
  *         if len(self.encodings) == 0:             # <<<<<<<<<<<<<<
  *             learn_rate = 1.0
@@ -5446,7 +5446,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
   __pyx_t_3 = ((__pyx_t_2 == 0) != 0);
   if (__pyx_t_3) {
 
-    /* "src/sdr.py":151
+    /* "src/sgm.py":151
  *         #
  *         if len(self.encodings) == 0:
  *             learn_rate = 1.0             # <<<<<<<<<<<<<<
@@ -5455,8 +5455,8 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
  */
     __pyx_v_learn_rate = 1.0;
 
-    /* "src/sdr.py":150
- *         # if this sdr is empty then learn at fastest rate
+    /* "src/sgm.py":150
+ *         # if this sgm is empty then learn at fastest rate
  *         #
  *         if len(self.encodings) == 0:             # <<<<<<<<<<<<<<
  *             learn_rate = 1.0
@@ -5464,7 +5464,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
  */
   }
 
-  /* "src/sdr.py":153
+  /* "src/sgm.py":153
  *             learn_rate = 1.0
  * 
  *         if learn_types is not None:             # <<<<<<<<<<<<<<
@@ -5475,16 +5475,16 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
   __pyx_t_4 = (__pyx_t_3 != 0);
   if (__pyx_t_4) {
 
-    /* "src/sdr.py":156
+    /* "src/sgm.py":156
  *             enc_types = ({enc_type
  *                          for enc_type in self.encodings.keys()
  *                          if enc_type in learn_types} |             # <<<<<<<<<<<<<<
  *                          {enc_type
- *                           for enc_type in sdr.encodings.keys()
+ *                           for enc_type in sgm.encodings.keys()
  */
     { /* enter inner scope */
 
-      /* "src/sdr.py":154
+      /* "src/sgm.py":154
  * 
  *         if learn_types is not None:
  *             enc_types = ({enc_type             # <<<<<<<<<<<<<<
@@ -5494,7 +5494,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
       __pyx_t_1 = PySet_New(NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 154, __pyx_L7_error)
       __Pyx_GOTREF(__pyx_t_1);
 
-      /* "src/sdr.py":155
+      /* "src/sgm.py":155
  *         if learn_types is not None:
  *             enc_types = ({enc_type
  *                          for enc_type in self.encodings.keys()             # <<<<<<<<<<<<<<
@@ -5551,12 +5551,12 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
         __Pyx_XDECREF_SET(__pyx_9genexpr15__pyx_v_enc_type, ((PyObject*)__pyx_t_5));
         __pyx_t_5 = 0;
 
-        /* "src/sdr.py":156
+        /* "src/sgm.py":156
  *             enc_types = ({enc_type
  *                          for enc_type in self.encodings.keys()
  *                          if enc_type in learn_types} |             # <<<<<<<<<<<<<<
  *                          {enc_type
- *                           for enc_type in sdr.encodings.keys()
+ *                           for enc_type in sgm.encodings.keys()
  */
         if (unlikely(__pyx_v_learn_types == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
@@ -5566,7 +5566,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
         __pyx_t_3 = (__pyx_t_4 != 0);
         if (__pyx_t_3) {
 
-          /* "src/sdr.py":154
+          /* "src/sgm.py":154
  * 
  *         if learn_types is not None:
  *             enc_types = ({enc_type             # <<<<<<<<<<<<<<
@@ -5575,16 +5575,16 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
  */
           if (unlikely(PySet_Add(__pyx_t_1, (PyObject*)__pyx_9genexpr15__pyx_v_enc_type))) __PYX_ERR(0, 154, __pyx_L7_error)
 
-          /* "src/sdr.py":156
+          /* "src/sgm.py":156
  *             enc_types = ({enc_type
  *                          for enc_type in self.encodings.keys()
  *                          if enc_type in learn_types} |             # <<<<<<<<<<<<<<
  *                          {enc_type
- *                           for enc_type in sdr.encodings.keys()
+ *                           for enc_type in sgm.encodings.keys()
  */
         }
 
-        /* "src/sdr.py":155
+        /* "src/sgm.py":155
  *         if learn_types is not None:
  *             enc_types = ({enc_type
  *                          for enc_type in self.encodings.keys()             # <<<<<<<<<<<<<<
@@ -5602,24 +5602,24 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
     } /* exit inner scope */
     { /* enter inner scope */
 
-      /* "src/sdr.py":157
+      /* "src/sgm.py":157
  *                          for enc_type in self.encodings.keys()
  *                          if enc_type in learn_types} |
  *                          {enc_type             # <<<<<<<<<<<<<<
- *                           for enc_type in sdr.encodings.keys()
+ *                           for enc_type in sgm.encodings.keys()
  *                           if enc_type in learn_types})
  */
       __pyx_t_6 = PySet_New(NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 157, __pyx_L14_error)
       __Pyx_GOTREF(__pyx_t_6);
 
-      /* "src/sdr.py":158
+      /* "src/sgm.py":158
  *                          if enc_type in learn_types} |
  *                          {enc_type
- *                           for enc_type in sdr.encodings.keys()             # <<<<<<<<<<<<<<
+ *                           for enc_type in sgm.encodings.keys()             # <<<<<<<<<<<<<<
  *                           if enc_type in learn_types})
  * 
  */
-      __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encodings); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 158, __pyx_L14_error)
+      __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encodings); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 158, __pyx_L14_error)
       __Pyx_GOTREF(__pyx_t_8);
       __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_keys); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 158, __pyx_L14_error)
       __Pyx_GOTREF(__pyx_t_9);
@@ -5683,9 +5683,9 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
         __Pyx_XDECREF_SET(__pyx_9genexpr16__pyx_v_enc_type, ((PyObject*)__pyx_t_5));
         __pyx_t_5 = 0;
 
-        /* "src/sdr.py":159
+        /* "src/sgm.py":159
  *                          {enc_type
- *                           for enc_type in sdr.encodings.keys()
+ *                           for enc_type in sgm.encodings.keys()
  *                           if enc_type in learn_types})             # <<<<<<<<<<<<<<
  * 
  *         else:
@@ -5698,28 +5698,28 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
         __pyx_t_4 = (__pyx_t_3 != 0);
         if (__pyx_t_4) {
 
-          /* "src/sdr.py":157
+          /* "src/sgm.py":157
  *                          for enc_type in self.encodings.keys()
  *                          if enc_type in learn_types} |
  *                          {enc_type             # <<<<<<<<<<<<<<
- *                           for enc_type in sdr.encodings.keys()
+ *                           for enc_type in sgm.encodings.keys()
  *                           if enc_type in learn_types})
  */
           if (unlikely(PySet_Add(__pyx_t_6, (PyObject*)__pyx_9genexpr16__pyx_v_enc_type))) __PYX_ERR(0, 157, __pyx_L14_error)
 
-          /* "src/sdr.py":159
+          /* "src/sgm.py":159
  *                          {enc_type
- *                           for enc_type in sdr.encodings.keys()
+ *                           for enc_type in sgm.encodings.keys()
  *                           if enc_type in learn_types})             # <<<<<<<<<<<<<<
  * 
  *         else:
  */
         }
 
-        /* "src/sdr.py":158
+        /* "src/sgm.py":158
  *                          if enc_type in learn_types} |
  *                          {enc_type
- *                           for enc_type in sdr.encodings.keys()             # <<<<<<<<<<<<<<
+ *                           for enc_type in sgm.encodings.keys()             # <<<<<<<<<<<<<<
  *                           if enc_type in learn_types})
  * 
  */
@@ -5733,12 +5733,12 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
       __pyx_L18_exit_scope:;
     } /* exit inner scope */
 
-    /* "src/sdr.py":156
+    /* "src/sgm.py":156
  *             enc_types = ({enc_type
  *                          for enc_type in self.encodings.keys()
  *                          if enc_type in learn_types} |             # <<<<<<<<<<<<<<
  *                          {enc_type
- *                           for enc_type in sdr.encodings.keys()
+ *                           for enc_type in sgm.encodings.keys()
  */
     __pyx_t_9 = PyNumber_Or(__pyx_t_1, __pyx_t_6); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 156, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
@@ -5747,7 +5747,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
     __pyx_v_enc_types = ((PyObject*)__pyx_t_9);
     __pyx_t_9 = 0;
 
-    /* "src/sdr.py":153
+    /* "src/sgm.py":153
  *             learn_rate = 1.0
  * 
  *         if learn_types is not None:             # <<<<<<<<<<<<<<
@@ -5757,10 +5757,10 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
     goto __pyx_L4;
   }
 
-  /* "src/sdr.py":162
+  /* "src/sgm.py":162
  * 
  *         else:
- *             enc_types = set(self.encodings.keys()) | set(sdr.encodings.keys())             # <<<<<<<<<<<<<<
+ *             enc_types = set(self.encodings.keys()) | set(sgm.encodings.keys())             # <<<<<<<<<<<<<<
  * 
  *         for enc_type in enc_types:
  */
@@ -5774,7 +5774,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
     __pyx_t_6 = PySet_New(__pyx_t_9); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 162, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encodings); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 162, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encodings); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 162, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_keys); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 162, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
@@ -5806,11 +5806,11 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
   }
   __pyx_L4:;
 
-  /* "src/sdr.py":164
- *             enc_types = set(self.encodings.keys()) | set(sdr.encodings.keys())
+  /* "src/sgm.py":164
+ *             enc_types = set(self.encodings.keys()) | set(sgm.encodings.keys())
  * 
  *         for enc_type in enc_types:             # <<<<<<<<<<<<<<
- *             if enc_type in self.encodings and enc_type in sdr.encodings:
+ *             if enc_type in self.encodings and enc_type in sgm.encodings:
  *                 self_bits = set(self.encodings[enc_type].keys())
  */
   __pyx_t_2 = 0;
@@ -5828,12 +5828,12 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
     __Pyx_XDECREF_SET(__pyx_v_enc_type, ((PyObject*)__pyx_t_5));
     __pyx_t_5 = 0;
 
-    /* "src/sdr.py":165
+    /* "src/sgm.py":165
  * 
  *         for enc_type in enc_types:
- *             if enc_type in self.encodings and enc_type in sdr.encodings:             # <<<<<<<<<<<<<<
+ *             if enc_type in self.encodings and enc_type in sgm.encodings:             # <<<<<<<<<<<<<<
  *                 self_bits = set(self.encodings[enc_type].keys())
- *                 sdr_bits = set(sdr.encodings[enc_type].keys())
+ *                 sdr_bits = set(sgm.encodings[enc_type].keys())
  */
     if (unlikely(__pyx_v_self->encodings == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
@@ -5846,7 +5846,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
       __pyx_t_4 = __pyx_t_13;
       goto __pyx_L22_bool_binop_done;
     }
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encodings); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 165, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encodings); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 165, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __pyx_t_13 = (__Pyx_PySequence_ContainsTF(__pyx_v_enc_type, __pyx_t_5, Py_EQ)); if (unlikely(__pyx_t_13 < 0)) __PYX_ERR(0, 165, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
@@ -5855,11 +5855,11 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
     __pyx_L22_bool_binop_done:;
     if (__pyx_t_4) {
 
-      /* "src/sdr.py":166
+      /* "src/sgm.py":166
  *         for enc_type in enc_types:
- *             if enc_type in self.encodings and enc_type in sdr.encodings:
+ *             if enc_type in self.encodings and enc_type in sgm.encodings:
  *                 self_bits = set(self.encodings[enc_type].keys())             # <<<<<<<<<<<<<<
- *                 sdr_bits = set(sdr.encodings[enc_type].keys())
+ *                 sdr_bits = set(sgm.encodings[enc_type].keys())
  *                 bits = self_bits | sdr_bits
  */
       if (unlikely(__pyx_v_self->encodings == Py_None)) {
@@ -5892,14 +5892,14 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
       __Pyx_XDECREF_SET(__pyx_v_self_bits, ((PyObject*)__pyx_t_1));
       __pyx_t_1 = 0;
 
-      /* "src/sdr.py":167
- *             if enc_type in self.encodings and enc_type in sdr.encodings:
+      /* "src/sgm.py":167
+ *             if enc_type in self.encodings and enc_type in sgm.encodings:
  *                 self_bits = set(self.encodings[enc_type].keys())
- *                 sdr_bits = set(sdr.encodings[enc_type].keys())             # <<<<<<<<<<<<<<
+ *                 sdr_bits = set(sgm.encodings[enc_type].keys())             # <<<<<<<<<<<<<<
  *                 bits = self_bits | sdr_bits
  *                 for bit in bits:
  */
-      __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encodings); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 167, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encodings); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 167, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __pyx_t_6 = __Pyx_PyObject_Dict_GetItem(__pyx_t_5, __pyx_v_enc_type); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 167, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
@@ -5928,24 +5928,24 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
       __Pyx_XDECREF_SET(__pyx_v_sdr_bits, ((PyObject*)__pyx_t_5));
       __pyx_t_5 = 0;
 
-      /* "src/sdr.py":168
+      /* "src/sgm.py":168
  *                 self_bits = set(self.encodings[enc_type].keys())
- *                 sdr_bits = set(sdr.encodings[enc_type].keys())
+ *                 sdr_bits = set(sgm.encodings[enc_type].keys())
  *                 bits = self_bits | sdr_bits             # <<<<<<<<<<<<<<
  *                 for bit in bits:
- *                     if bit in self.encodings[enc_type] and bit in sdr.encodings[enc_type]:
+ *                     if bit in self.encodings[enc_type] and bit in sgm.encodings[enc_type]:
  */
       __pyx_t_5 = PyNumber_Or(__pyx_v_self_bits, __pyx_v_sdr_bits); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 168, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_XDECREF_SET(__pyx_v_bits, ((PyObject*)__pyx_t_5));
       __pyx_t_5 = 0;
 
-      /* "src/sdr.py":169
- *                 sdr_bits = set(sdr.encodings[enc_type].keys())
+      /* "src/sgm.py":169
+ *                 sdr_bits = set(sgm.encodings[enc_type].keys())
  *                 bits = self_bits | sdr_bits
  *                 for bit in bits:             # <<<<<<<<<<<<<<
- *                     if bit in self.encodings[enc_type] and bit in sdr.encodings[enc_type]:
- *                         self.encodings[enc_type][bit] += (sdr.encodings[enc_type][bit] - self.encodings[enc_type][bit]) * learn_rate
+ *                     if bit in self.encodings[enc_type] and bit in sgm.encodings[enc_type]:
+ *                         self.encodings[enc_type][bit] += (sgm.encodings[enc_type][bit] - self.encodings[enc_type][bit]) * learn_rate
  */
       __pyx_t_14 = 0;
       __pyx_t_1 = __Pyx_set_iterator(__pyx_v_bits, 1, (&__pyx_t_15), (&__pyx_t_12)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 169, __pyx_L1_error)
@@ -5961,11 +5961,11 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
         __Pyx_XDECREF_SET(__pyx_v_bit, __pyx_t_1);
         __pyx_t_1 = 0;
 
-        /* "src/sdr.py":170
+        /* "src/sgm.py":170
  *                 bits = self_bits | sdr_bits
  *                 for bit in bits:
- *                     if bit in self.encodings[enc_type] and bit in sdr.encodings[enc_type]:             # <<<<<<<<<<<<<<
- *                         self.encodings[enc_type][bit] += (sdr.encodings[enc_type][bit] - self.encodings[enc_type][bit]) * learn_rate
+ *                     if bit in self.encodings[enc_type] and bit in sgm.encodings[enc_type]:             # <<<<<<<<<<<<<<
+ *                         self.encodings[enc_type][bit] += (sgm.encodings[enc_type][bit] - self.encodings[enc_type][bit]) * learn_rate
  *                     elif bit in self.encodings[enc_type]:
  */
         if (unlikely(__pyx_v_self->encodings == Py_None)) {
@@ -5982,7 +5982,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
           __pyx_t_4 = __pyx_t_13;
           goto __pyx_L27_bool_binop_done;
         }
-        __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encodings); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 170, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encodings); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 170, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         __pyx_t_6 = __Pyx_PyObject_Dict_GetItem(__pyx_t_1, __pyx_v_enc_type); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 170, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
@@ -5994,10 +5994,10 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
         __pyx_L27_bool_binop_done:;
         if (__pyx_t_4) {
 
-          /* "src/sdr.py":171
+          /* "src/sgm.py":171
  *                 for bit in bits:
- *                     if bit in self.encodings[enc_type] and bit in sdr.encodings[enc_type]:
- *                         self.encodings[enc_type][bit] += (sdr.encodings[enc_type][bit] - self.encodings[enc_type][bit]) * learn_rate             # <<<<<<<<<<<<<<
+ *                     if bit in self.encodings[enc_type] and bit in sgm.encodings[enc_type]:
+ *                         self.encodings[enc_type][bit] += (sgm.encodings[enc_type][bit] - self.encodings[enc_type][bit]) * learn_rate             # <<<<<<<<<<<<<<
  *                     elif bit in self.encodings[enc_type]:
  *                         self.encodings[enc_type][bit] -= self.encodings[enc_type][bit] * learn_rate
  */
@@ -6011,7 +6011,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
           __pyx_t_1 = __pyx_v_bit;
           __pyx_t_8 = __Pyx_PyObject_GetItem(__pyx_t_6, __pyx_t_1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 171, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_8);
-          __pyx_t_17 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encodings); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 171, __pyx_L1_error)
+          __pyx_t_17 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encodings); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 171, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_17);
           __pyx_t_18 = __Pyx_PyObject_Dict_GetItem(__pyx_t_17, __pyx_v_enc_type); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 171, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_18);
@@ -6047,19 +6047,19 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
           __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-          /* "src/sdr.py":170
+          /* "src/sgm.py":170
  *                 bits = self_bits | sdr_bits
  *                 for bit in bits:
- *                     if bit in self.encodings[enc_type] and bit in sdr.encodings[enc_type]:             # <<<<<<<<<<<<<<
- *                         self.encodings[enc_type][bit] += (sdr.encodings[enc_type][bit] - self.encodings[enc_type][bit]) * learn_rate
+ *                     if bit in self.encodings[enc_type] and bit in sgm.encodings[enc_type]:             # <<<<<<<<<<<<<<
+ *                         self.encodings[enc_type][bit] += (sgm.encodings[enc_type][bit] - self.encodings[enc_type][bit]) * learn_rate
  *                     elif bit in self.encodings[enc_type]:
  */
           goto __pyx_L26;
         }
 
-        /* "src/sdr.py":172
- *                     if bit in self.encodings[enc_type] and bit in sdr.encodings[enc_type]:
- *                         self.encodings[enc_type][bit] += (sdr.encodings[enc_type][bit] - self.encodings[enc_type][bit]) * learn_rate
+        /* "src/sgm.py":172
+ *                     if bit in self.encodings[enc_type] and bit in sgm.encodings[enc_type]:
+ *                         self.encodings[enc_type][bit] += (sgm.encodings[enc_type][bit] - self.encodings[enc_type][bit]) * learn_rate
  *                     elif bit in self.encodings[enc_type]:             # <<<<<<<<<<<<<<
  *                         self.encodings[enc_type][bit] -= self.encodings[enc_type][bit] * learn_rate
  *                     else:
@@ -6075,12 +6075,12 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
         __pyx_t_3 = (__pyx_t_4 != 0);
         if (__pyx_t_3) {
 
-          /* "src/sdr.py":173
- *                         self.encodings[enc_type][bit] += (sdr.encodings[enc_type][bit] - self.encodings[enc_type][bit]) * learn_rate
+          /* "src/sgm.py":173
+ *                         self.encodings[enc_type][bit] += (sgm.encodings[enc_type][bit] - self.encodings[enc_type][bit]) * learn_rate
  *                     elif bit in self.encodings[enc_type]:
  *                         self.encodings[enc_type][bit] -= self.encodings[enc_type][bit] * learn_rate             # <<<<<<<<<<<<<<
  *                     else:
- *                         self.encodings[enc_type][bit] = sdr.encodings[enc_type][bit] * learn_rate
+ *                         self.encodings[enc_type][bit] = sgm.encodings[enc_type][bit] * learn_rate
  */
           if (unlikely(__pyx_v_self->encodings == Py_None)) {
             PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
@@ -6116,9 +6116,9 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
           __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-          /* "src/sdr.py":172
- *                     if bit in self.encodings[enc_type] and bit in sdr.encodings[enc_type]:
- *                         self.encodings[enc_type][bit] += (sdr.encodings[enc_type][bit] - self.encodings[enc_type][bit]) * learn_rate
+          /* "src/sgm.py":172
+ *                     if bit in self.encodings[enc_type] and bit in sgm.encodings[enc_type]:
+ *                         self.encodings[enc_type][bit] += (sgm.encodings[enc_type][bit] - self.encodings[enc_type][bit]) * learn_rate
  *                     elif bit in self.encodings[enc_type]:             # <<<<<<<<<<<<<<
  *                         self.encodings[enc_type][bit] -= self.encodings[enc_type][bit] * learn_rate
  *                     else:
@@ -6126,15 +6126,15 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
           goto __pyx_L26;
         }
 
-        /* "src/sdr.py":175
+        /* "src/sgm.py":175
  *                         self.encodings[enc_type][bit] -= self.encodings[enc_type][bit] * learn_rate
  *                     else:
- *                         self.encodings[enc_type][bit] = sdr.encodings[enc_type][bit] * learn_rate             # <<<<<<<<<<<<<<
+ *                         self.encodings[enc_type][bit] = sgm.encodings[enc_type][bit] * learn_rate             # <<<<<<<<<<<<<<
  * 
  *                     # prune if required
  */
         /*else*/ {
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encodings); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 175, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encodings); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 175, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
           __pyx_t_1 = __Pyx_PyObject_Dict_GetItem(__pyx_t_6, __pyx_v_enc_type); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 175, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_1);
@@ -6160,7 +6160,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
         }
         __pyx_L26:;
 
-        /* "src/sdr.py":179
+        /* "src/sgm.py":179
  *                     # prune if required
  *                     #
  *                     if self.encodings[enc_type][bit] < prune:             # <<<<<<<<<<<<<<
@@ -6185,7 +6185,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         if (__pyx_t_3) {
 
-          /* "src/sdr.py":180
+          /* "src/sgm.py":180
  *                     #
  *                     if self.encodings[enc_type][bit] < prune:
  *                         del self.encodings[enc_type][bit]             # <<<<<<<<<<<<<<
@@ -6201,7 +6201,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
           if (unlikely(PyObject_DelItem(__pyx_t_6, __pyx_v_bit) < 0)) __PYX_ERR(0, 180, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-          /* "src/sdr.py":179
+          /* "src/sgm.py":179
  *                     # prune if required
  *                     #
  *                     if self.encodings[enc_type][bit] < prune:             # <<<<<<<<<<<<<<
@@ -6212,17 +6212,17 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
       }
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-      /* "src/sdr.py":165
+      /* "src/sgm.py":165
  * 
  *         for enc_type in enc_types:
- *             if enc_type in self.encodings and enc_type in sdr.encodings:             # <<<<<<<<<<<<<<
+ *             if enc_type in self.encodings and enc_type in sgm.encodings:             # <<<<<<<<<<<<<<
  *                 self_bits = set(self.encodings[enc_type].keys())
- *                 sdr_bits = set(sdr.encodings[enc_type].keys())
+ *                 sdr_bits = set(sgm.encodings[enc_type].keys())
  */
       goto __pyx_L21;
     }
 
-    /* "src/sdr.py":182
+    /* "src/sgm.py":182
  *                         del self.encodings[enc_type][bit]
  * 
  *             elif enc_type in self.encodings:             # <<<<<<<<<<<<<<
@@ -6237,7 +6237,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
     __pyx_t_4 = (__pyx_t_3 != 0);
     if (__pyx_t_4) {
 
-      /* "src/sdr.py":183
+      /* "src/sgm.py":183
  * 
  *             elif enc_type in self.encodings:
  *                 for bit in list(self.encodings[enc_type]):             # <<<<<<<<<<<<<<
@@ -6266,7 +6266,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
         __Pyx_XDECREF_SET(__pyx_v_bit, __pyx_t_6);
         __pyx_t_6 = 0;
 
-        /* "src/sdr.py":184
+        /* "src/sgm.py":184
  *             elif enc_type in self.encodings:
  *                 for bit in list(self.encodings[enc_type]):
  *                     self.encodings[enc_type][bit] -= (self.encodings[enc_type][bit] * learn_rate)             # <<<<<<<<<<<<<<
@@ -6307,7 +6307,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
         __Pyx_DECREF(__pyx_t_17); __pyx_t_17 = 0;
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-        /* "src/sdr.py":188
+        /* "src/sgm.py":188
  *                     # prune if required
  *                     #
  *                     if self.encodings[enc_type][bit] < prune:             # <<<<<<<<<<<<<<
@@ -6332,12 +6332,12 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
         __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
         if (__pyx_t_4) {
 
-          /* "src/sdr.py":189
+          /* "src/sgm.py":189
  *                     #
  *                     if self.encodings[enc_type][bit] < prune:
  *                         del self.encodings[enc_type][bit]             # <<<<<<<<<<<<<<
  *             else:
- *                 self.encodings[enc_type] = {bit: sdr.encodings[enc_type][bit] * learn_rate for bit in sdr.encodings[enc_type]}
+ *                 self.encodings[enc_type] = {bit: sgm.encodings[enc_type][bit] * learn_rate for bit in sgm.encodings[enc_type]}
  */
           if (unlikely(__pyx_v_self->encodings == Py_None)) {
             PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
@@ -6348,7 +6348,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
           if (unlikely(PyObject_DelItem(__pyx_t_18, __pyx_v_bit) < 0)) __PYX_ERR(0, 189, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
 
-          /* "src/sdr.py":188
+          /* "src/sgm.py":188
  *                     # prune if required
  *                     #
  *                     if self.encodings[enc_type][bit] < prune:             # <<<<<<<<<<<<<<
@@ -6357,7 +6357,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
  */
         }
 
-        /* "src/sdr.py":183
+        /* "src/sgm.py":183
  * 
  *             elif enc_type in self.encodings:
  *                 for bit in list(self.encodings[enc_type]):             # <<<<<<<<<<<<<<
@@ -6367,7 +6367,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
       }
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-      /* "src/sdr.py":182
+      /* "src/sgm.py":182
  *                         del self.encodings[enc_type][bit]
  * 
  *             elif enc_type in self.encodings:             # <<<<<<<<<<<<<<
@@ -6377,10 +6377,10 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
       goto __pyx_L21;
     }
 
-    /* "src/sdr.py":191
+    /* "src/sgm.py":191
  *                         del self.encodings[enc_type][bit]
  *             else:
- *                 self.encodings[enc_type] = {bit: sdr.encodings[enc_type][bit] * learn_rate for bit in sdr.encodings[enc_type]}             # <<<<<<<<<<<<<<
+ *                 self.encodings[enc_type] = {bit: sgm.encodings[enc_type][bit] * learn_rate for bit in sgm.encodings[enc_type]}             # <<<<<<<<<<<<<<
  * 
  *                 # copy over the properties
  */
@@ -6388,7 +6388,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
       { /* enter inner scope */
         __pyx_t_5 = PyDict_New(); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 191, __pyx_L35_error)
         __Pyx_GOTREF(__pyx_t_5);
-        __pyx_t_18 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encodings); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 191, __pyx_L35_error)
+        __pyx_t_18 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encodings); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 191, __pyx_L35_error)
         __Pyx_GOTREF(__pyx_t_18);
         __pyx_t_6 = __Pyx_PyObject_Dict_GetItem(__pyx_t_18, __pyx_v_enc_type); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 191, __pyx_L35_error)
         __Pyx_GOTREF(__pyx_t_6);
@@ -6435,7 +6435,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
           }
           __Pyx_XDECREF_SET(__pyx_9genexpr17__pyx_v_bit, __pyx_t_6);
           __pyx_t_6 = 0;
-          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encodings); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 191, __pyx_L35_error)
+          __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encodings); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 191, __pyx_L35_error)
           __Pyx_GOTREF(__pyx_t_6);
           __pyx_t_17 = __Pyx_PyObject_Dict_GetItem(__pyx_t_6, __pyx_v_enc_type); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 191, __pyx_L35_error)
           __Pyx_GOTREF(__pyx_t_17);
@@ -6467,17 +6467,17 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
       if (unlikely(PyDict_SetItem(__pyx_v_self->encodings, __pyx_v_enc_type, __pyx_t_5) < 0)) __PYX_ERR(0, 191, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-      /* "src/sdr.py":195
+      /* "src/sgm.py":195
  *                 # copy over the properties
  *                 #
- *                 self.properties[enc_type] = {prop: sdr.properties[enc_type][prop] for prop in sdr.properties[enc_type]}             # <<<<<<<<<<<<<<
+ *                 self.properties[enc_type] = {prop: sgm.properties[enc_type][prop] for prop in sgm.properties[enc_type]}             # <<<<<<<<<<<<<<
  * 
  *             # prune the bit type if empty
  */
       { /* enter inner scope */
         __pyx_t_5 = PyDict_New(); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 195, __pyx_L41_error)
         __Pyx_GOTREF(__pyx_t_5);
-        __pyx_t_18 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_properties); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 195, __pyx_L41_error)
+        __pyx_t_18 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_properties); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 195, __pyx_L41_error)
         __Pyx_GOTREF(__pyx_t_18);
         __pyx_t_8 = __Pyx_PyObject_Dict_GetItem(__pyx_t_18, __pyx_v_enc_type); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 195, __pyx_L41_error)
         __Pyx_GOTREF(__pyx_t_8);
@@ -6525,7 +6525,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
           if (!(likely(PyString_CheckExact(__pyx_t_8))||((__pyx_t_8) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_8)->tp_name), 0))) __PYX_ERR(0, 195, __pyx_L41_error)
           __Pyx_XDECREF_SET(__pyx_9genexpr18__pyx_v_prop, ((PyObject*)__pyx_t_8));
           __pyx_t_8 = 0;
-          __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_properties); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 195, __pyx_L41_error)
+          __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_properties); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 195, __pyx_L41_error)
           __Pyx_GOTREF(__pyx_t_8);
           __pyx_t_17 = __Pyx_PyObject_Dict_GetItem(__pyx_t_8, __pyx_v_enc_type); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 195, __pyx_L41_error)
           __Pyx_GOTREF(__pyx_t_17);
@@ -6553,7 +6553,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
     }
     __pyx_L21:;
 
-    /* "src/sdr.py":199
+    /* "src/sgm.py":199
  *             # prune the bit type if empty
  *             #
  *             if len(self.encodings[enc_type]) == 0:             # <<<<<<<<<<<<<<
@@ -6571,7 +6571,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
     __pyx_t_4 = ((__pyx_t_15 == 0) != 0);
     if (__pyx_t_4) {
 
-      /* "src/sdr.py":200
+      /* "src/sgm.py":200
  *             #
  *             if len(self.encodings[enc_type]) == 0:
  *                 del self.encodings[enc_type]             # <<<<<<<<<<<<<<
@@ -6584,12 +6584,12 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
       }
       if (unlikely(PyDict_DelItem(__pyx_v_self->encodings, __pyx_v_enc_type) < 0)) __PYX_ERR(0, 200, __pyx_L1_error)
 
-      /* "src/sdr.py":201
+      /* "src/sgm.py":201
  *             if len(self.encodings[enc_type]) == 0:
  *                 del self.encodings[enc_type]
  *                 del self.properties[enc_type]             # <<<<<<<<<<<<<<
  * 
- *     def merge(self, sdr, weight: float = 1.0, enc_type_prefix: str = None):
+ *     def merge(self, sgm, weight: float = 1.0, enc_type_prefix: str = None):
  */
       if (unlikely(__pyx_v_self->properties == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
@@ -6597,7 +6597,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
       }
       if (unlikely(PyDict_DelItem(__pyx_v_self->properties, __pyx_v_enc_type) < 0)) __PYX_ERR(0, 201, __pyx_L1_error)
 
-      /* "src/sdr.py":199
+      /* "src/sgm.py":199
  *             # prune the bit type if empty
  *             #
  *             if len(self.encodings[enc_type]) == 0:             # <<<<<<<<<<<<<<
@@ -6608,10 +6608,10 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
   }
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-  /* "src/sdr.py":139
+  /* "src/sgm.py":139
  *         return por
  * 
- *     def learn(self, sdr, learn_rate: float =1.0, learn_types: set = None, prune: float = 0.01):             # <<<<<<<<<<<<<<
+ *     def learn(self, sgm, learn_rate: float = 1.0, learn_types: set = None, prune: float = 0.01):             # <<<<<<<<<<<<<<
  * 
  *         enc_type: str
  */
@@ -6628,7 +6628,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
   __Pyx_XDECREF(__pyx_t_17);
   __Pyx_XDECREF(__pyx_t_18);
   __Pyx_XDECREF(__pyx_t_19);
-  __Pyx_AddTraceback("src.sdr.SDR.learn", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.sgm.SGM.learn", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_enc_type);
@@ -6646,19 +6646,19 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_22learn(struct __pyx_obj_3src_3sdr_SDR 
   return __pyx_r;
 }
 
-/* "src/sdr.py":203
+/* "src/sgm.py":203
  *                 del self.properties[enc_type]
  * 
- *     def merge(self, sdr, weight: float = 1.0, enc_type_prefix: str = None):             # <<<<<<<<<<<<<<
+ *     def merge(self, sgm, weight: float = 1.0, enc_type_prefix: str = None):             # <<<<<<<<<<<<<<
  *         enc_type: str
  *         enc_types: set
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_3src_3sdr_3SDR_25merge(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_3src_3sdr_3SDR_25merge = {"merge", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_3sdr_3SDR_25merge, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_3src_3sdr_3SDR_25merge(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
-  PyObject *__pyx_v_sdr = 0;
+static PyObject *__pyx_pw_3src_3sgm_3SGM_25merge(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_3src_3sgm_3SGM_25merge = {"merge", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_3sgm_3SGM_25merge, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_3src_3sgm_3SGM_25merge(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  PyObject *__pyx_v_sgm = 0;
   double __pyx_v_weight;
   PyObject *__pyx_v_enc_type_prefix = 0;
   int __pyx_lineno = 0;
@@ -6668,7 +6668,7 @@ static PyObject *__pyx_pw_3src_3sdr_3SDR_25merge(PyObject *__pyx_v_self, PyObjec
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("merge (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_sdr,&__pyx_n_s_weight,&__pyx_n_s_enc_type_prefix,0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_sgm,&__pyx_n_s_weight,&__pyx_n_s_enc_type_prefix,0};
     PyObject* values[3] = {0,0,0};
     values[2] = ((PyObject*)Py_None);
     if (unlikely(__pyx_kwds)) {
@@ -6687,7 +6687,7 @@ static PyObject *__pyx_pw_3src_3sdr_3SDR_25merge(PyObject *__pyx_v_self, PyObjec
       kw_args = PyDict_Size(__pyx_kwds);
       switch (pos_args) {
         case  0:
-        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_sdr)) != 0)) kw_args--;
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_sgm)) != 0)) kw_args--;
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
@@ -6716,7 +6716,7 @@ static PyObject *__pyx_pw_3src_3sdr_3SDR_25merge(PyObject *__pyx_v_self, PyObjec
         default: goto __pyx_L5_argtuple_error;
       }
     }
-    __pyx_v_sdr = values[0];
+    __pyx_v_sgm = values[0];
     if (values[1]) {
       __pyx_v_weight = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_weight == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 203, __pyx_L3_error)
     } else {
@@ -6728,12 +6728,12 @@ static PyObject *__pyx_pw_3src_3sdr_3SDR_25merge(PyObject *__pyx_v_self, PyObjec
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("merge", 0, 1, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 203, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("src.sdr.SDR.merge", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.sgm.SGM.merge", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_enc_type_prefix), (&PyString_Type), 1, "enc_type_prefix", 1))) __PYX_ERR(0, 203, __pyx_L1_error)
-  __pyx_r = __pyx_pf_3src_3sdr_3SDR_24merge(((struct __pyx_obj_3src_3sdr_SDR *)__pyx_v_self), __pyx_v_sdr, __pyx_v_weight, __pyx_v_enc_type_prefix);
+  __pyx_r = __pyx_pf_3src_3sgm_3SGM_24merge(((struct __pyx_obj_3src_3sgm_SGM *)__pyx_v_self), __pyx_v_sgm, __pyx_v_weight, __pyx_v_enc_type_prefix);
 
   /* function exit code */
   goto __pyx_L0;
@@ -6744,7 +6744,7 @@ static PyObject *__pyx_pw_3src_3sdr_3SDR_25merge(PyObject *__pyx_v_self, PyObjec
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_3src_3sdr_3SDR_24merge(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self, PyObject *__pyx_v_sdr, double __pyx_v_weight, PyObject *__pyx_v_enc_type_prefix) {
+static PyObject *__pyx_pf_3src_3sgm_3SGM_24merge(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self, PyObject *__pyx_v_sgm, double __pyx_v_weight, PyObject *__pyx_v_enc_type_prefix) {
   PyObject *__pyx_v_enc_type = 0;
   PyObject *__pyx_v_bit = 0;
   PyObject *__pyx_v_self_enc_type = NULL;
@@ -6772,14 +6772,14 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_24merge(struct __pyx_obj_3src_3sdr_SDR 
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("merge", 0);
 
-  /* "src/sdr.py":210
+  /* "src/sgm.py":210
  *         prop: str
  * 
- *         for enc_type in sdr.encodings:             # <<<<<<<<<<<<<<
+ *         for enc_type in sgm.encodings:             # <<<<<<<<<<<<<<
  * 
  *             if enc_type_prefix is not None:
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encodings); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 210, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encodings); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 210, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (likely(PyList_CheckExact(__pyx_t_1)) || PyTuple_CheckExact(__pyx_t_1)) {
     __pyx_t_2 = __pyx_t_1; __Pyx_INCREF(__pyx_t_2); __pyx_t_3 = 0;
@@ -6825,8 +6825,8 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_24merge(struct __pyx_obj_3src_3sdr_SDR 
     __Pyx_XDECREF_SET(__pyx_v_enc_type, ((PyObject*)__pyx_t_1));
     __pyx_t_1 = 0;
 
-    /* "src/sdr.py":212
- *         for enc_type in sdr.encodings:
+    /* "src/sgm.py":212
+ *         for enc_type in sgm.encodings:
  * 
  *             if enc_type_prefix is not None:             # <<<<<<<<<<<<<<
  *                 self_enc_type = f'{enc_type_prefix}_{enc_type}'
@@ -6836,7 +6836,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_24merge(struct __pyx_obj_3src_3sdr_SDR 
     __pyx_t_6 = (__pyx_t_5 != 0);
     if (__pyx_t_6) {
 
-      /* "src/sdr.py":213
+      /* "src/sgm.py":213
  * 
  *             if enc_type_prefix is not None:
  *                 self_enc_type = f'{enc_type_prefix}_{enc_type}'             # <<<<<<<<<<<<<<
@@ -6871,8 +6871,8 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_24merge(struct __pyx_obj_3src_3sdr_SDR 
       __Pyx_XDECREF_SET(__pyx_v_self_enc_type, __pyx_t_9);
       __pyx_t_9 = 0;
 
-      /* "src/sdr.py":212
- *         for enc_type in sdr.encodings:
+      /* "src/sgm.py":212
+ *         for enc_type in sgm.encodings:
  * 
  *             if enc_type_prefix is not None:             # <<<<<<<<<<<<<<
  *                 self_enc_type = f'{enc_type_prefix}_{enc_type}'
@@ -6881,7 +6881,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_24merge(struct __pyx_obj_3src_3sdr_SDR 
       goto __pyx_L5;
     }
 
-    /* "src/sdr.py":215
+    /* "src/sgm.py":215
  *                 self_enc_type = f'{enc_type_prefix}_{enc_type}'
  *             else:
  *                 self_enc_type = enc_type             # <<<<<<<<<<<<<<
@@ -6894,11 +6894,11 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_24merge(struct __pyx_obj_3src_3sdr_SDR 
     }
     __pyx_L5:;
 
-    /* "src/sdr.py":217
+    /* "src/sgm.py":217
  *                 self_enc_type = enc_type
  * 
  *             if self_enc_type in self.encodings:             # <<<<<<<<<<<<<<
- *                 for bit in sdr.encodings[enc_type].keys():
+ *                 for bit in sgm.encodings[enc_type].keys():
  *                     if bit in self.encodings[self_enc_type]:
  */
     if (unlikely(__pyx_v_self->encodings == Py_None)) {
@@ -6909,14 +6909,14 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_24merge(struct __pyx_obj_3src_3sdr_SDR 
     __pyx_t_5 = (__pyx_t_6 != 0);
     if (__pyx_t_5) {
 
-      /* "src/sdr.py":218
+      /* "src/sgm.py":218
  * 
  *             if self_enc_type in self.encodings:
- *                 for bit in sdr.encodings[enc_type].keys():             # <<<<<<<<<<<<<<
+ *                 for bit in sgm.encodings[enc_type].keys():             # <<<<<<<<<<<<<<
  *                     if bit in self.encodings[self_enc_type]:
- *                         self.encodings[self_enc_type][bit] += sdr.encodings[enc_type][bit] * weight
+ *                         self.encodings[self_enc_type][bit] += sgm.encodings[enc_type][bit] * weight
  */
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encodings); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 218, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encodings); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 218, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __pyx_t_10 = __Pyx_PyObject_Dict_GetItem(__pyx_t_1, __pyx_v_enc_type); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 218, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_10);
@@ -6982,11 +6982,11 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_24merge(struct __pyx_obj_3src_3sdr_SDR 
         __Pyx_XDECREF_SET(__pyx_v_bit, __pyx_t_9);
         __pyx_t_9 = 0;
 
-        /* "src/sdr.py":219
+        /* "src/sgm.py":219
  *             if self_enc_type in self.encodings:
- *                 for bit in sdr.encodings[enc_type].keys():
+ *                 for bit in sgm.encodings[enc_type].keys():
  *                     if bit in self.encodings[self_enc_type]:             # <<<<<<<<<<<<<<
- *                         self.encodings[self_enc_type][bit] += sdr.encodings[enc_type][bit] * weight
+ *                         self.encodings[self_enc_type][bit] += sgm.encodings[enc_type][bit] * weight
  *                     else:
  */
         if (unlikely(__pyx_v_self->encodings == Py_None)) {
@@ -7000,12 +7000,12 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_24merge(struct __pyx_obj_3src_3sdr_SDR 
         __pyx_t_6 = (__pyx_t_5 != 0);
         if (__pyx_t_6) {
 
-          /* "src/sdr.py":220
- *                 for bit in sdr.encodings[enc_type].keys():
+          /* "src/sgm.py":220
+ *                 for bit in sgm.encodings[enc_type].keys():
  *                     if bit in self.encodings[self_enc_type]:
- *                         self.encodings[self_enc_type][bit] += sdr.encodings[enc_type][bit] * weight             # <<<<<<<<<<<<<<
+ *                         self.encodings[self_enc_type][bit] += sgm.encodings[enc_type][bit] * weight             # <<<<<<<<<<<<<<
  *                     else:
- *                         self.encodings[self_enc_type][bit] = sdr.encodings[enc_type][bit] * weight
+ *                         self.encodings[self_enc_type][bit] = sgm.encodings[enc_type][bit] * weight
  */
           if (unlikely(__pyx_v_self->encodings == Py_None)) {
             PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
@@ -7017,7 +7017,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_24merge(struct __pyx_obj_3src_3sdr_SDR 
           __pyx_t_10 = __pyx_v_bit;
           __pyx_t_12 = __Pyx_PyObject_GetItem(__pyx_t_9, __pyx_t_10); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 220, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_12);
-          __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encodings); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 220, __pyx_L1_error)
+          __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encodings); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 220, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_13);
           __pyx_t_14 = __Pyx_PyObject_Dict_GetItem(__pyx_t_13, __pyx_v_enc_type); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 220, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_14);
@@ -7040,25 +7040,25 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_24merge(struct __pyx_obj_3src_3sdr_SDR 
           __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
           __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-          /* "src/sdr.py":219
+          /* "src/sgm.py":219
  *             if self_enc_type in self.encodings:
- *                 for bit in sdr.encodings[enc_type].keys():
+ *                 for bit in sgm.encodings[enc_type].keys():
  *                     if bit in self.encodings[self_enc_type]:             # <<<<<<<<<<<<<<
- *                         self.encodings[self_enc_type][bit] += sdr.encodings[enc_type][bit] * weight
+ *                         self.encodings[self_enc_type][bit] += sgm.encodings[enc_type][bit] * weight
  *                     else:
  */
           goto __pyx_L9;
         }
 
-        /* "src/sdr.py":222
- *                         self.encodings[self_enc_type][bit] += sdr.encodings[enc_type][bit] * weight
+        /* "src/sgm.py":222
+ *                         self.encodings[self_enc_type][bit] += sgm.encodings[enc_type][bit] * weight
  *                     else:
- *                         self.encodings[self_enc_type][bit] = sdr.encodings[enc_type][bit] * weight             # <<<<<<<<<<<<<<
+ *                         self.encodings[self_enc_type][bit] = sgm.encodings[enc_type][bit] * weight             # <<<<<<<<<<<<<<
  *             else:
- *                 self.encodings[self_enc_type] = {bit: sdr.encodings[enc_type][bit] * weight for bit in sdr.encodings[enc_type]}
+ *                 self.encodings[self_enc_type] = {bit: sgm.encodings[enc_type][bit] * weight for bit in sgm.encodings[enc_type]}
  */
         /*else*/ {
-          __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encodings); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 222, __pyx_L1_error)
+          __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encodings); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 222, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_9);
           __pyx_t_10 = __Pyx_PyObject_Dict_GetItem(__pyx_t_9, __pyx_v_enc_type); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 222, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_10);
@@ -7084,30 +7084,30 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_24merge(struct __pyx_obj_3src_3sdr_SDR 
         }
         __pyx_L9:;
 
-        /* "src/sdr.py":218
+        /* "src/sgm.py":218
  * 
  *             if self_enc_type in self.encodings:
- *                 for bit in sdr.encodings[enc_type].keys():             # <<<<<<<<<<<<<<
+ *                 for bit in sgm.encodings[enc_type].keys():             # <<<<<<<<<<<<<<
  *                     if bit in self.encodings[self_enc_type]:
- *                         self.encodings[self_enc_type][bit] += sdr.encodings[enc_type][bit] * weight
+ *                         self.encodings[self_enc_type][bit] += sgm.encodings[enc_type][bit] * weight
  */
       }
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "src/sdr.py":217
+      /* "src/sgm.py":217
  *                 self_enc_type = enc_type
  * 
  *             if self_enc_type in self.encodings:             # <<<<<<<<<<<<<<
- *                 for bit in sdr.encodings[enc_type].keys():
+ *                 for bit in sgm.encodings[enc_type].keys():
  *                     if bit in self.encodings[self_enc_type]:
  */
       goto __pyx_L6;
     }
 
-    /* "src/sdr.py":224
- *                         self.encodings[self_enc_type][bit] = sdr.encodings[enc_type][bit] * weight
+    /* "src/sgm.py":224
+ *                         self.encodings[self_enc_type][bit] = sgm.encodings[enc_type][bit] * weight
  *             else:
- *                 self.encodings[self_enc_type] = {bit: sdr.encodings[enc_type][bit] * weight for bit in sdr.encodings[enc_type]}             # <<<<<<<<<<<<<<
+ *                 self.encodings[self_enc_type] = {bit: sgm.encodings[enc_type][bit] * weight for bit in sgm.encodings[enc_type]}             # <<<<<<<<<<<<<<
  * 
  *                 # copy over the properties
  */
@@ -7115,7 +7115,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_24merge(struct __pyx_obj_3src_3sdr_SDR 
       { /* enter inner scope */
         __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 224, __pyx_L12_error)
         __Pyx_GOTREF(__pyx_t_1);
-        __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encodings); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 224, __pyx_L12_error)
+        __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encodings); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 224, __pyx_L12_error)
         __Pyx_GOTREF(__pyx_t_14);
         __pyx_t_10 = __Pyx_PyObject_Dict_GetItem(__pyx_t_14, __pyx_v_enc_type); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 224, __pyx_L12_error)
         __Pyx_GOTREF(__pyx_t_10);
@@ -7162,7 +7162,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_24merge(struct __pyx_obj_3src_3sdr_SDR 
           }
           __Pyx_XDECREF_SET(__pyx_9genexpr19__pyx_v_bit, __pyx_t_10);
           __pyx_t_10 = 0;
-          __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encodings); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 224, __pyx_L12_error)
+          __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encodings); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 224, __pyx_L12_error)
           __Pyx_GOTREF(__pyx_t_10);
           __pyx_t_9 = __Pyx_PyObject_Dict_GetItem(__pyx_t_10, __pyx_v_enc_type); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 224, __pyx_L12_error)
           __Pyx_GOTREF(__pyx_t_9);
@@ -7194,17 +7194,17 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_24merge(struct __pyx_obj_3src_3sdr_SDR 
       if (unlikely(PyDict_SetItem(__pyx_v_self->encodings, __pyx_v_self_enc_type, __pyx_t_1) < 0)) __PYX_ERR(0, 224, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "src/sdr.py":228
+      /* "src/sgm.py":228
  *                 # copy over the properties
  *                 #
- *                 self.properties[self_enc_type] = {prop: sdr.properties[enc_type][prop] for prop in sdr.properties[enc_type]}             # <<<<<<<<<<<<<<
+ *                 self.properties[self_enc_type] = {prop: sgm.properties[enc_type][prop] for prop in sgm.properties[enc_type]}             # <<<<<<<<<<<<<<
  * 
  * 
  */
       { /* enter inner scope */
         __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 228, __pyx_L18_error)
         __Pyx_GOTREF(__pyx_t_1);
-        __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_properties); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 228, __pyx_L18_error)
+        __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_properties); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 228, __pyx_L18_error)
         __Pyx_GOTREF(__pyx_t_14);
         __pyx_t_15 = __Pyx_PyObject_Dict_GetItem(__pyx_t_14, __pyx_v_enc_type); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 228, __pyx_L18_error)
         __Pyx_GOTREF(__pyx_t_15);
@@ -7252,7 +7252,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_24merge(struct __pyx_obj_3src_3sdr_SDR 
           if (!(likely(PyString_CheckExact(__pyx_t_15))||((__pyx_t_15) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_15)->tp_name), 0))) __PYX_ERR(0, 228, __pyx_L18_error)
           __Pyx_XDECREF_SET(__pyx_9genexpr20__pyx_v_prop, ((PyObject*)__pyx_t_15));
           __pyx_t_15 = 0;
-          __pyx_t_15 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_properties); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 228, __pyx_L18_error)
+          __pyx_t_15 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_properties); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 228, __pyx_L18_error)
           __Pyx_GOTREF(__pyx_t_15);
           __pyx_t_9 = __Pyx_PyObject_Dict_GetItem(__pyx_t_15, __pyx_v_enc_type); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 228, __pyx_L18_error)
           __Pyx_GOTREF(__pyx_t_9);
@@ -7280,20 +7280,20 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_24merge(struct __pyx_obj_3src_3sdr_SDR 
     }
     __pyx_L6:;
 
-    /* "src/sdr.py":210
+    /* "src/sgm.py":210
  *         prop: str
  * 
- *         for enc_type in sdr.encodings:             # <<<<<<<<<<<<<<
+ *         for enc_type in sgm.encodings:             # <<<<<<<<<<<<<<
  * 
  *             if enc_type_prefix is not None:
  */
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "src/sdr.py":203
+  /* "src/sgm.py":203
  *                 del self.properties[enc_type]
  * 
- *     def merge(self, sdr, weight: float = 1.0, enc_type_prefix: str = None):             # <<<<<<<<<<<<<<
+ *     def merge(self, sgm, weight: float = 1.0, enc_type_prefix: str = None):             # <<<<<<<<<<<<<<
  *         enc_type: str
  *         enc_types: set
  */
@@ -7310,7 +7310,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_24merge(struct __pyx_obj_3src_3sdr_SDR 
   __Pyx_XDECREF(__pyx_t_13);
   __Pyx_XDECREF(__pyx_t_14);
   __Pyx_XDECREF(__pyx_t_15);
-  __Pyx_AddTraceback("src.sdr.SDR.merge", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.sgm.SGM.merge", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_enc_type);
@@ -7323,28 +7323,28 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_24merge(struct __pyx_obj_3src_3sdr_SDR 
   return __pyx_r;
 }
 
-/* "src/sdr.py":8
+/* "src/sgm.py":8
  * @cython.cclass
- * class SDR(object):
+ * class SGM(object):
  *     encodings = cython.declare(dict, visibility='public')             # <<<<<<<<<<<<<<
  *     properties = cython.declare(dict, visibility='public')
  * 
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_3src_3sdr_3SDR_9encodings_1__get__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_3src_3sdr_3SDR_9encodings_1__get__(PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_3src_3sgm_3SGM_9encodings_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_3src_3sgm_3SGM_9encodings_1__get__(PyObject *__pyx_v_self) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_3src_3sdr_3SDR_9encodings___get__(((struct __pyx_obj_3src_3sdr_SDR *)__pyx_v_self));
+  __pyx_r = __pyx_pf_3src_3sgm_3SGM_9encodings___get__(((struct __pyx_obj_3src_3sgm_SGM *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_3src_3sdr_3SDR_9encodings___get__(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self) {
+static PyObject *__pyx_pf_3src_3sgm_3SGM_9encodings___get__(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__get__", 0);
@@ -7361,19 +7361,19 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_9encodings___get__(struct __pyx_obj_3sr
 }
 
 /* Python wrapper */
-static int __pyx_pw_3src_3sdr_3SDR_9encodings_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
-static int __pyx_pw_3src_3sdr_3SDR_9encodings_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+static int __pyx_pw_3src_3sgm_3SGM_9encodings_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_3src_3sgm_3SGM_9encodings_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
   int __pyx_r;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_3src_3sdr_3SDR_9encodings_2__set__(((struct __pyx_obj_3src_3sdr_SDR *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+  __pyx_r = __pyx_pf_3src_3sgm_3SGM_9encodings_2__set__(((struct __pyx_obj_3src_3sgm_SGM *)__pyx_v_self), ((PyObject *)__pyx_v_value));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static int __pyx_pf_3src_3sdr_3SDR_9encodings_2__set__(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self, PyObject *__pyx_v_value) {
+static int __pyx_pf_3src_3sgm_3SGM_9encodings_2__set__(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self, PyObject *__pyx_v_value) {
   int __pyx_r;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -7395,7 +7395,7 @@ static int __pyx_pf_3src_3sdr_3SDR_9encodings_2__set__(struct __pyx_obj_3src_3sd
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("src.sdr.SDR.encodings.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.sgm.SGM.encodings.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
@@ -7403,19 +7403,19 @@ static int __pyx_pf_3src_3sdr_3SDR_9encodings_2__set__(struct __pyx_obj_3src_3sd
 }
 
 /* Python wrapper */
-static int __pyx_pw_3src_3sdr_3SDR_9encodings_5__del__(PyObject *__pyx_v_self); /*proto*/
-static int __pyx_pw_3src_3sdr_3SDR_9encodings_5__del__(PyObject *__pyx_v_self) {
+static int __pyx_pw_3src_3sgm_3SGM_9encodings_5__del__(PyObject *__pyx_v_self); /*proto*/
+static int __pyx_pw_3src_3sgm_3SGM_9encodings_5__del__(PyObject *__pyx_v_self) {
   int __pyx_r;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__del__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_3src_3sdr_3SDR_9encodings_4__del__(((struct __pyx_obj_3src_3sdr_SDR *)__pyx_v_self));
+  __pyx_r = __pyx_pf_3src_3sgm_3SGM_9encodings_4__del__(((struct __pyx_obj_3src_3sgm_SGM *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static int __pyx_pf_3src_3sdr_3SDR_9encodings_4__del__(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self) {
+static int __pyx_pf_3src_3sgm_3SGM_9encodings_4__del__(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self) {
   int __pyx_r;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__del__", 0);
@@ -7431,28 +7431,28 @@ static int __pyx_pf_3src_3sdr_3SDR_9encodings_4__del__(struct __pyx_obj_3src_3sd
   return __pyx_r;
 }
 
-/* "src/sdr.py":9
- * class SDR(object):
+/* "src/sgm.py":9
+ * class SGM(object):
  *     encodings = cython.declare(dict, visibility='public')
  *     properties = cython.declare(dict, visibility='public')             # <<<<<<<<<<<<<<
  * 
- *     def __init__(self, sdr=None, enc_type=None, value=None, enc_properties=None, encoder=None, bit_weight=1.0):
+ *     def __init__(self, sgm=None, enc_type=None, value=None, enc_properties=None, encoder=None, bit_weight=1.0):
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_3src_3sdr_3SDR_10properties_1__get__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_3src_3sdr_3SDR_10properties_1__get__(PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_3src_3sgm_3SGM_10properties_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_3src_3sgm_3SGM_10properties_1__get__(PyObject *__pyx_v_self) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_3src_3sdr_3SDR_10properties___get__(((struct __pyx_obj_3src_3sdr_SDR *)__pyx_v_self));
+  __pyx_r = __pyx_pf_3src_3sgm_3SGM_10properties___get__(((struct __pyx_obj_3src_3sgm_SGM *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_3src_3sdr_3SDR_10properties___get__(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self) {
+static PyObject *__pyx_pf_3src_3sgm_3SGM_10properties___get__(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__get__", 0);
@@ -7469,19 +7469,19 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_10properties___get__(struct __pyx_obj_3
 }
 
 /* Python wrapper */
-static int __pyx_pw_3src_3sdr_3SDR_10properties_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
-static int __pyx_pw_3src_3sdr_3SDR_10properties_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+static int __pyx_pw_3src_3sgm_3SGM_10properties_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_3src_3sgm_3SGM_10properties_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
   int __pyx_r;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_3src_3sdr_3SDR_10properties_2__set__(((struct __pyx_obj_3src_3sdr_SDR *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+  __pyx_r = __pyx_pf_3src_3sgm_3SGM_10properties_2__set__(((struct __pyx_obj_3src_3sgm_SGM *)__pyx_v_self), ((PyObject *)__pyx_v_value));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static int __pyx_pf_3src_3sdr_3SDR_10properties_2__set__(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self, PyObject *__pyx_v_value) {
+static int __pyx_pf_3src_3sgm_3SGM_10properties_2__set__(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self, PyObject *__pyx_v_value) {
   int __pyx_r;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -7503,7 +7503,7 @@ static int __pyx_pf_3src_3sdr_3SDR_10properties_2__set__(struct __pyx_obj_3src_3
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("src.sdr.SDR.properties.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.sgm.SGM.properties.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
@@ -7511,19 +7511,19 @@ static int __pyx_pf_3src_3sdr_3SDR_10properties_2__set__(struct __pyx_obj_3src_3
 }
 
 /* Python wrapper */
-static int __pyx_pw_3src_3sdr_3SDR_10properties_5__del__(PyObject *__pyx_v_self); /*proto*/
-static int __pyx_pw_3src_3sdr_3SDR_10properties_5__del__(PyObject *__pyx_v_self) {
+static int __pyx_pw_3src_3sgm_3SGM_10properties_5__del__(PyObject *__pyx_v_self); /*proto*/
+static int __pyx_pw_3src_3sgm_3SGM_10properties_5__del__(PyObject *__pyx_v_self) {
   int __pyx_r;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__del__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_3src_3sdr_3SDR_10properties_4__del__(((struct __pyx_obj_3src_3sdr_SDR *)__pyx_v_self));
+  __pyx_r = __pyx_pf_3src_3sgm_3SGM_10properties_4__del__(((struct __pyx_obj_3src_3sgm_SGM *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static int __pyx_pf_3src_3sdr_3SDR_10properties_4__del__(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self) {
+static int __pyx_pf_3src_3sgm_3SGM_10properties_4__del__(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self) {
   int __pyx_r;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__del__", 0);
@@ -7546,20 +7546,20 @@ static int __pyx_pf_3src_3sdr_3SDR_10properties_4__del__(struct __pyx_obj_3src_3
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_3src_3sdr_3SDR_27__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyMethodDef __pyx_mdef_3src_3sdr_3SDR_27__reduce_cython__ = {"__reduce_cython__", (PyCFunction)__pyx_pw_3src_3sdr_3SDR_27__reduce_cython__, METH_NOARGS, 0};
-static PyObject *__pyx_pw_3src_3sdr_3SDR_27__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_3src_3sgm_3SGM_27__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyMethodDef __pyx_mdef_3src_3sgm_3SGM_27__reduce_cython__ = {"__reduce_cython__", (PyCFunction)__pyx_pw_3src_3sgm_3SGM_27__reduce_cython__, METH_NOARGS, 0};
+static PyObject *__pyx_pw_3src_3sgm_3SGM_27__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__reduce_cython__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_3src_3sdr_3SDR_26__reduce_cython__(((struct __pyx_obj_3src_3sdr_SDR *)__pyx_v_self));
+  __pyx_r = __pyx_pf_3src_3sgm_3SGM_26__reduce_cython__(((struct __pyx_obj_3src_3sgm_SGM *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_3src_3sdr_3SDR_26__reduce_cython__(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self) {
+static PyObject *__pyx_pf_3src_3sgm_3SGM_26__reduce_cython__(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self) {
   PyObject *__pyx_v_state = 0;
   PyObject *__pyx_v__dict = 0;
   int __pyx_v_use_setstate;
@@ -7659,7 +7659,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_26__reduce_cython__(struct __pyx_obj_3s
  *     else:
  *         use_setstate = self.encodings is not None or self.properties is not None             # <<<<<<<<<<<<<<
  *     if use_setstate:
- *         return __pyx_unpickle_SDR, (type(self), 0xa311906, None), state
+ *         return __pyx_unpickle_SGM, (type(self), 0xa311906, None), state
  */
   /*else*/ {
     __pyx_t_2 = (__pyx_v_self->encodings != ((PyObject*)Py_None));
@@ -7681,7 +7681,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_26__reduce_cython__(struct __pyx_obj_3s
  *     else:
  *         use_setstate = self.encodings is not None or self.properties is not None
  *     if use_setstate:             # <<<<<<<<<<<<<<
- *         return __pyx_unpickle_SDR, (type(self), 0xa311906, None), state
+ *         return __pyx_unpickle_SGM, (type(self), 0xa311906, None), state
  *     else:
  */
   __pyx_t_3 = (__pyx_v_use_setstate != 0);
@@ -7690,12 +7690,12 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_26__reduce_cython__(struct __pyx_obj_3s
     /* "(tree fragment)":13
  *         use_setstate = self.encodings is not None or self.properties is not None
  *     if use_setstate:
- *         return __pyx_unpickle_SDR, (type(self), 0xa311906, None), state             # <<<<<<<<<<<<<<
+ *         return __pyx_unpickle_SGM, (type(self), 0xa311906, None), state             # <<<<<<<<<<<<<<
  *     else:
- *         return __pyx_unpickle_SDR, (type(self), 0xa311906, state)
+ *         return __pyx_unpickle_SGM, (type(self), 0xa311906, state)
  */
     __Pyx_XDECREF(__pyx_r);
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_pyx_unpickle_SDR); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 13, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_pyx_unpickle_SGM); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 13, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_t_1 = PyTuple_New(3); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 13, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
@@ -7727,21 +7727,21 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_26__reduce_cython__(struct __pyx_obj_3s
  *     else:
  *         use_setstate = self.encodings is not None or self.properties is not None
  *     if use_setstate:             # <<<<<<<<<<<<<<
- *         return __pyx_unpickle_SDR, (type(self), 0xa311906, None), state
+ *         return __pyx_unpickle_SGM, (type(self), 0xa311906, None), state
  *     else:
  */
   }
 
   /* "(tree fragment)":15
- *         return __pyx_unpickle_SDR, (type(self), 0xa311906, None), state
+ *         return __pyx_unpickle_SGM, (type(self), 0xa311906, None), state
  *     else:
- *         return __pyx_unpickle_SDR, (type(self), 0xa311906, state)             # <<<<<<<<<<<<<<
+ *         return __pyx_unpickle_SGM, (type(self), 0xa311906, state)             # <<<<<<<<<<<<<<
  * def __setstate_cython__(self, __pyx_state):
- *     __pyx_unpickle_SDR__set_state(self, __pyx_state)
+ *     __pyx_unpickle_SGM__set_state(self, __pyx_state)
  */
   /*else*/ {
     __Pyx_XDECREF(__pyx_r);
-    __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_pyx_unpickle_SDR); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 15, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_pyx_unpickle_SGM); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 15, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __pyx_t_1 = PyTuple_New(3); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 15, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
@@ -7778,7 +7778,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_26__reduce_cython__(struct __pyx_obj_3s
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_6);
-  __Pyx_AddTraceback("src.sdr.SDR.__reduce_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.sgm.SGM.__reduce_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_state);
@@ -7790,26 +7790,26 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_26__reduce_cython__(struct __pyx_obj_3s
 
 /* "(tree fragment)":16
  *     else:
- *         return __pyx_unpickle_SDR, (type(self), 0xa311906, state)
+ *         return __pyx_unpickle_SGM, (type(self), 0xa311906, state)
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
- *     __pyx_unpickle_SDR__set_state(self, __pyx_state)
+ *     __pyx_unpickle_SGM__set_state(self, __pyx_state)
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_3src_3sdr_3SDR_29__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
-static PyMethodDef __pyx_mdef_3src_3sdr_3SDR_29__setstate_cython__ = {"__setstate_cython__", (PyCFunction)__pyx_pw_3src_3sdr_3SDR_29__setstate_cython__, METH_O, 0};
-static PyObject *__pyx_pw_3src_3sdr_3SDR_29__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pw_3src_3sgm_3SGM_29__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
+static PyMethodDef __pyx_mdef_3src_3sgm_3SGM_29__setstate_cython__ = {"__setstate_cython__", (PyCFunction)__pyx_pw_3src_3sgm_3SGM_29__setstate_cython__, METH_O, 0};
+static PyObject *__pyx_pw_3src_3sgm_3SGM_29__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__setstate_cython__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_3src_3sdr_3SDR_28__setstate_cython__(((struct __pyx_obj_3src_3sdr_SDR *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
+  __pyx_r = __pyx_pf_3src_3sgm_3SGM_28__setstate_cython__(((struct __pyx_obj_3src_3sgm_SGM *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_3src_3sdr_3SDR_28__setstate_cython__(struct __pyx_obj_3src_3sdr_SDR *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pf_3src_3sgm_3SGM_28__setstate_cython__(struct __pyx_obj_3src_3sgm_SGM *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -7819,20 +7819,20 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_28__setstate_cython__(struct __pyx_obj_
   __Pyx_RefNannySetupContext("__setstate_cython__", 0);
 
   /* "(tree fragment)":17
- *         return __pyx_unpickle_SDR, (type(self), 0xa311906, state)
+ *         return __pyx_unpickle_SGM, (type(self), 0xa311906, state)
  * def __setstate_cython__(self, __pyx_state):
- *     __pyx_unpickle_SDR__set_state(self, __pyx_state)             # <<<<<<<<<<<<<<
+ *     __pyx_unpickle_SGM__set_state(self, __pyx_state)             # <<<<<<<<<<<<<<
  */
   if (!(likely(PyTuple_CheckExact(__pyx_v___pyx_state))||((__pyx_v___pyx_state) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "tuple", Py_TYPE(__pyx_v___pyx_state)->tp_name), 0))) __PYX_ERR(1, 17, __pyx_L1_error)
-  __pyx_t_1 = __pyx_f_3src_3sdr___pyx_unpickle_SDR__set_state(__pyx_v_self, ((PyObject*)__pyx_v___pyx_state)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 17, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_3src_3sgm___pyx_unpickle_SGM__set_state(__pyx_v_self, ((PyObject*)__pyx_v___pyx_state)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 17, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "(tree fragment)":16
  *     else:
- *         return __pyx_unpickle_SDR, (type(self), 0xa311906, state)
+ *         return __pyx_unpickle_SGM, (type(self), 0xa311906, state)
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
- *     __pyx_unpickle_SDR__set_state(self, __pyx_state)
+ *     __pyx_unpickle_SGM__set_state(self, __pyx_state)
  */
 
   /* function exit code */
@@ -7840,7 +7840,7 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_28__setstate_cython__(struct __pyx_obj_
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("src.sdr.SDR.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.sgm.SGM.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -7849,15 +7849,15 @@ static PyObject *__pyx_pf_3src_3sdr_3SDR_28__setstate_cython__(struct __pyx_obj_
 }
 
 /* "(tree fragment)":1
- * def __pyx_unpickle_SDR(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
+ * def __pyx_unpickle_SGM(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
  *     cdef object __pyx_PickleError
  *     cdef object __pyx_result
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_3src_3sdr_1__pyx_unpickle_SDR(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_3src_3sdr_1__pyx_unpickle_SDR = {"__pyx_unpickle_SDR", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_3sdr_1__pyx_unpickle_SDR, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_3src_3sdr_1__pyx_unpickle_SDR(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_3src_3sgm_1__pyx_unpickle_SGM(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_3src_3sgm_1__pyx_unpickle_SGM = {"__pyx_unpickle_SGM", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_3sgm_1__pyx_unpickle_SGM, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_3src_3sgm_1__pyx_unpickle_SGM(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v___pyx_type = 0;
   long __pyx_v___pyx_checksum;
   PyObject *__pyx_v___pyx_state = 0;
@@ -7866,7 +7866,7 @@ static PyObject *__pyx_pw_3src_3sdr_1__pyx_unpickle_SDR(PyObject *__pyx_self, Py
   int __pyx_clineno = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__pyx_unpickle_SDR (wrapper)", 0);
+  __Pyx_RefNannySetupContext("__pyx_unpickle_SGM (wrapper)", 0);
   {
     static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_pyx_type,&__pyx_n_s_pyx_checksum,&__pyx_n_s_pyx_state,0};
     PyObject* values[3] = {0,0,0};
@@ -7892,17 +7892,17 @@ static PyObject *__pyx_pw_3src_3sdr_1__pyx_unpickle_SDR(PyObject *__pyx_self, Py
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_pyx_checksum)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__pyx_unpickle_SDR", 1, 3, 3, 1); __PYX_ERR(1, 1, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__pyx_unpickle_SGM", 1, 3, 3, 1); __PYX_ERR(1, 1, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_pyx_state)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__pyx_unpickle_SDR", 1, 3, 3, 2); __PYX_ERR(1, 1, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__pyx_unpickle_SGM", 1, 3, 3, 2); __PYX_ERR(1, 1, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__pyx_unpickle_SDR") < 0)) __PYX_ERR(1, 1, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__pyx_unpickle_SGM") < 0)) __PYX_ERR(1, 1, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
       goto __pyx_L5_argtuple_error;
@@ -7917,20 +7917,20 @@ static PyObject *__pyx_pw_3src_3sdr_1__pyx_unpickle_SDR(PyObject *__pyx_self, Py
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__pyx_unpickle_SDR", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 1, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__pyx_unpickle_SGM", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 1, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("src.sdr.__pyx_unpickle_SDR", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.sgm.__pyx_unpickle_SGM", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_3src_3sdr___pyx_unpickle_SDR(__pyx_self, __pyx_v___pyx_type, __pyx_v___pyx_checksum, __pyx_v___pyx_state);
+  __pyx_r = __pyx_pf_3src_3sgm___pyx_unpickle_SGM(__pyx_self, __pyx_v___pyx_type, __pyx_v___pyx_checksum, __pyx_v___pyx_state);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_3src_3sdr___pyx_unpickle_SDR(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v___pyx_type, long __pyx_v___pyx_checksum, PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pf_3src_3sgm___pyx_unpickle_SGM(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v___pyx_type, long __pyx_v___pyx_checksum, PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_v___pyx_PickleError = 0;
   PyObject *__pyx_v___pyx_result = 0;
   PyObject *__pyx_r = NULL;
@@ -7944,7 +7944,7 @@ static PyObject *__pyx_pf_3src_3sdr___pyx_unpickle_SDR(CYTHON_UNUSED PyObject *_
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("__pyx_unpickle_SDR", 0);
+  __Pyx_RefNannySetupContext("__pyx_unpickle_SGM", 0);
 
   /* "(tree fragment)":4
  *     cdef object __pyx_PickleError
@@ -7961,7 +7961,7 @@ static PyObject *__pyx_pf_3src_3sdr___pyx_unpickle_SDR(CYTHON_UNUSED PyObject *_
  *     if __pyx_checksum != 0xa311906:
  *         from pickle import PickleError as __pyx_PickleError             # <<<<<<<<<<<<<<
  *         raise __pyx_PickleError("Incompatible checksums (%s vs 0xa311906 = (encodings, properties))" % __pyx_checksum)
- *     __pyx_result = SDR.__new__(__pyx_type)
+ *     __pyx_result = SGM.__new__(__pyx_type)
  */
     __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 5, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
@@ -7982,7 +7982,7 @@ static PyObject *__pyx_pf_3src_3sdr___pyx_unpickle_SDR(CYTHON_UNUSED PyObject *_
  *     if __pyx_checksum != 0xa311906:
  *         from pickle import PickleError as __pyx_PickleError
  *         raise __pyx_PickleError("Incompatible checksums (%s vs 0xa311906 = (encodings, properties))" % __pyx_checksum)             # <<<<<<<<<<<<<<
- *     __pyx_result = SDR.__new__(__pyx_type)
+ *     __pyx_result = SGM.__new__(__pyx_type)
  *     if __pyx_state is not None:
  */
     __pyx_t_2 = __Pyx_PyInt_From_long(__pyx_v___pyx_checksum); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 6, __pyx_L1_error)
@@ -8023,11 +8023,11 @@ static PyObject *__pyx_pf_3src_3sdr___pyx_unpickle_SDR(CYTHON_UNUSED PyObject *_
   /* "(tree fragment)":7
  *         from pickle import PickleError as __pyx_PickleError
  *         raise __pyx_PickleError("Incompatible checksums (%s vs 0xa311906 = (encodings, properties))" % __pyx_checksum)
- *     __pyx_result = SDR.__new__(__pyx_type)             # <<<<<<<<<<<<<<
+ *     __pyx_result = SGM.__new__(__pyx_type)             # <<<<<<<<<<<<<<
  *     if __pyx_state is not None:
- *         __pyx_unpickle_SDR__set_state(<SDR> __pyx_result, __pyx_state)
+ *         __pyx_unpickle_SGM__set_state(<SGM> __pyx_result, __pyx_state)
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_ptype_3src_3sdr_SDR), __pyx_n_s_new); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 7, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_ptype_3src_3sgm_SGM), __pyx_n_s_new); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 7, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_4 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -8049,9 +8049,9 @@ static PyObject *__pyx_pf_3src_3sdr___pyx_unpickle_SDR(CYTHON_UNUSED PyObject *_
 
   /* "(tree fragment)":8
  *         raise __pyx_PickleError("Incompatible checksums (%s vs 0xa311906 = (encodings, properties))" % __pyx_checksum)
- *     __pyx_result = SDR.__new__(__pyx_type)
+ *     __pyx_result = SGM.__new__(__pyx_type)
  *     if __pyx_state is not None:             # <<<<<<<<<<<<<<
- *         __pyx_unpickle_SDR__set_state(<SDR> __pyx_result, __pyx_state)
+ *         __pyx_unpickle_SGM__set_state(<SGM> __pyx_result, __pyx_state)
  *     return __pyx_result
  */
   __pyx_t_1 = (__pyx_v___pyx_state != Py_None);
@@ -8059,31 +8059,31 @@ static PyObject *__pyx_pf_3src_3sdr___pyx_unpickle_SDR(CYTHON_UNUSED PyObject *_
   if (__pyx_t_6) {
 
     /* "(tree fragment)":9
- *     __pyx_result = SDR.__new__(__pyx_type)
+ *     __pyx_result = SGM.__new__(__pyx_type)
  *     if __pyx_state is not None:
- *         __pyx_unpickle_SDR__set_state(<SDR> __pyx_result, __pyx_state)             # <<<<<<<<<<<<<<
+ *         __pyx_unpickle_SGM__set_state(<SGM> __pyx_result, __pyx_state)             # <<<<<<<<<<<<<<
  *     return __pyx_result
- * cdef __pyx_unpickle_SDR__set_state(SDR __pyx_result, tuple __pyx_state):
+ * cdef __pyx_unpickle_SGM__set_state(SGM __pyx_result, tuple __pyx_state):
  */
     if (!(likely(PyTuple_CheckExact(__pyx_v___pyx_state))||((__pyx_v___pyx_state) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "tuple", Py_TYPE(__pyx_v___pyx_state)->tp_name), 0))) __PYX_ERR(1, 9, __pyx_L1_error)
-    __pyx_t_3 = __pyx_f_3src_3sdr___pyx_unpickle_SDR__set_state(((struct __pyx_obj_3src_3sdr_SDR *)__pyx_v___pyx_result), ((PyObject*)__pyx_v___pyx_state)); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 9, __pyx_L1_error)
+    __pyx_t_3 = __pyx_f_3src_3sgm___pyx_unpickle_SGM__set_state(((struct __pyx_obj_3src_3sgm_SGM *)__pyx_v___pyx_result), ((PyObject*)__pyx_v___pyx_state)); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 9, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
     /* "(tree fragment)":8
  *         raise __pyx_PickleError("Incompatible checksums (%s vs 0xa311906 = (encodings, properties))" % __pyx_checksum)
- *     __pyx_result = SDR.__new__(__pyx_type)
+ *     __pyx_result = SGM.__new__(__pyx_type)
  *     if __pyx_state is not None:             # <<<<<<<<<<<<<<
- *         __pyx_unpickle_SDR__set_state(<SDR> __pyx_result, __pyx_state)
+ *         __pyx_unpickle_SGM__set_state(<SGM> __pyx_result, __pyx_state)
  *     return __pyx_result
  */
   }
 
   /* "(tree fragment)":10
  *     if __pyx_state is not None:
- *         __pyx_unpickle_SDR__set_state(<SDR> __pyx_result, __pyx_state)
+ *         __pyx_unpickle_SGM__set_state(<SGM> __pyx_result, __pyx_state)
  *     return __pyx_result             # <<<<<<<<<<<<<<
- * cdef __pyx_unpickle_SDR__set_state(SDR __pyx_result, tuple __pyx_state):
+ * cdef __pyx_unpickle_SGM__set_state(SGM __pyx_result, tuple __pyx_state):
  *     __pyx_result.encodings = __pyx_state[0]; __pyx_result.properties = __pyx_state[1]
  */
   __Pyx_XDECREF(__pyx_r);
@@ -8092,7 +8092,7 @@ static PyObject *__pyx_pf_3src_3sdr___pyx_unpickle_SDR(CYTHON_UNUSED PyObject *_
   goto __pyx_L0;
 
   /* "(tree fragment)":1
- * def __pyx_unpickle_SDR(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
+ * def __pyx_unpickle_SGM(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
  *     cdef object __pyx_PickleError
  *     cdef object __pyx_result
  */
@@ -8103,7 +8103,7 @@ static PyObject *__pyx_pf_3src_3sdr___pyx_unpickle_SDR(CYTHON_UNUSED PyObject *_
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_AddTraceback("src.sdr.__pyx_unpickle_SDR", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.sgm.__pyx_unpickle_SGM", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v___pyx_PickleError);
@@ -8114,14 +8114,14 @@ static PyObject *__pyx_pf_3src_3sdr___pyx_unpickle_SDR(CYTHON_UNUSED PyObject *_
 }
 
 /* "(tree fragment)":11
- *         __pyx_unpickle_SDR__set_state(<SDR> __pyx_result, __pyx_state)
+ *         __pyx_unpickle_SGM__set_state(<SGM> __pyx_result, __pyx_state)
  *     return __pyx_result
- * cdef __pyx_unpickle_SDR__set_state(SDR __pyx_result, tuple __pyx_state):             # <<<<<<<<<<<<<<
+ * cdef __pyx_unpickle_SGM__set_state(SGM __pyx_result, tuple __pyx_state):             # <<<<<<<<<<<<<<
  *     __pyx_result.encodings = __pyx_state[0]; __pyx_result.properties = __pyx_state[1]
  *     if len(__pyx_state) > 2 and hasattr(__pyx_result, '__dict__'):
  */
 
-static PyObject *__pyx_f_3src_3sdr___pyx_unpickle_SDR__set_state(struct __pyx_obj_3src_3sdr_SDR *__pyx_v___pyx_result, PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_f_3src_3sgm___pyx_unpickle_SGM__set_state(struct __pyx_obj_3src_3sgm_SGM *__pyx_v___pyx_result, PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -8135,11 +8135,11 @@ static PyObject *__pyx_f_3src_3sdr___pyx_unpickle_SDR__set_state(struct __pyx_ob
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("__pyx_unpickle_SDR__set_state", 0);
+  __Pyx_RefNannySetupContext("__pyx_unpickle_SGM__set_state", 0);
 
   /* "(tree fragment)":12
  *     return __pyx_result
- * cdef __pyx_unpickle_SDR__set_state(SDR __pyx_result, tuple __pyx_state):
+ * cdef __pyx_unpickle_SGM__set_state(SGM __pyx_result, tuple __pyx_state):
  *     __pyx_result.encodings = __pyx_state[0]; __pyx_result.properties = __pyx_state[1]             # <<<<<<<<<<<<<<
  *     if len(__pyx_state) > 2 and hasattr(__pyx_result, '__dict__'):
  *         __pyx_result.__dict__.update(__pyx_state[2])
@@ -8170,7 +8170,7 @@ static PyObject *__pyx_f_3src_3sdr___pyx_unpickle_SDR__set_state(struct __pyx_ob
   __pyx_t_1 = 0;
 
   /* "(tree fragment)":13
- * cdef __pyx_unpickle_SDR__set_state(SDR __pyx_result, tuple __pyx_state):
+ * cdef __pyx_unpickle_SGM__set_state(SGM __pyx_result, tuple __pyx_state):
  *     __pyx_result.encodings = __pyx_state[0]; __pyx_result.properties = __pyx_state[1]
  *     if len(__pyx_state) > 2 and hasattr(__pyx_result, '__dict__'):             # <<<<<<<<<<<<<<
  *         __pyx_result.__dict__.update(__pyx_state[2])
@@ -8227,7 +8227,7 @@ static PyObject *__pyx_f_3src_3sdr___pyx_unpickle_SDR__set_state(struct __pyx_ob
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
     /* "(tree fragment)":13
- * cdef __pyx_unpickle_SDR__set_state(SDR __pyx_result, tuple __pyx_state):
+ * cdef __pyx_unpickle_SGM__set_state(SGM __pyx_result, tuple __pyx_state):
  *     __pyx_result.encodings = __pyx_state[0]; __pyx_result.properties = __pyx_state[1]
  *     if len(__pyx_state) > 2 and hasattr(__pyx_result, '__dict__'):             # <<<<<<<<<<<<<<
  *         __pyx_result.__dict__.update(__pyx_state[2])
@@ -8235,9 +8235,9 @@ static PyObject *__pyx_f_3src_3sdr___pyx_unpickle_SDR__set_state(struct __pyx_ob
   }
 
   /* "(tree fragment)":11
- *         __pyx_unpickle_SDR__set_state(<SDR> __pyx_result, __pyx_state)
+ *         __pyx_unpickle_SGM__set_state(<SGM> __pyx_result, __pyx_state)
  *     return __pyx_result
- * cdef __pyx_unpickle_SDR__set_state(SDR __pyx_result, tuple __pyx_state):             # <<<<<<<<<<<<<<
+ * cdef __pyx_unpickle_SGM__set_state(SGM __pyx_result, tuple __pyx_state):             # <<<<<<<<<<<<<<
  *     __pyx_result.encodings = __pyx_state[0]; __pyx_result.properties = __pyx_state[1]
  *     if len(__pyx_state) > 2 and hasattr(__pyx_result, '__dict__'):
  */
@@ -8250,7 +8250,7 @@ static PyObject *__pyx_f_3src_3sdr___pyx_unpickle_SDR__set_state(struct __pyx_ob
   __Pyx_XDECREF(__pyx_t_6);
   __Pyx_XDECREF(__pyx_t_7);
   __Pyx_XDECREF(__pyx_t_8);
-  __Pyx_AddTraceback("src.sdr.__pyx_unpickle_SDR__set_state", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.sgm.__pyx_unpickle_SGM__set_state", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -8258,8 +8258,8 @@ static PyObject *__pyx_f_3src_3sdr___pyx_unpickle_SDR__set_state(struct __pyx_ob
   return __pyx_r;
 }
 
-static PyObject *__pyx_tp_new_3src_3sdr_SDR(PyTypeObject *t, CYTHON_UNUSED PyObject *a, CYTHON_UNUSED PyObject *k) {
-  struct __pyx_obj_3src_3sdr_SDR *p;
+static PyObject *__pyx_tp_new_3src_3sgm_SGM(PyTypeObject *t, CYTHON_UNUSED PyObject *a, CYTHON_UNUSED PyObject *k) {
+  struct __pyx_obj_3src_3sgm_SGM *p;
   PyObject *o;
   if (likely((t->tp_flags & Py_TPFLAGS_IS_ABSTRACT) == 0)) {
     o = (*t->tp_alloc)(t, 0);
@@ -8267,14 +8267,14 @@ static PyObject *__pyx_tp_new_3src_3sdr_SDR(PyTypeObject *t, CYTHON_UNUSED PyObj
     o = (PyObject *) PyBaseObject_Type.tp_new(t, __pyx_empty_tuple, 0);
   }
   if (unlikely(!o)) return 0;
-  p = ((struct __pyx_obj_3src_3sdr_SDR *)o);
+  p = ((struct __pyx_obj_3src_3sgm_SGM *)o);
   p->encodings = ((PyObject*)Py_None); Py_INCREF(Py_None);
   p->properties = ((PyObject*)Py_None); Py_INCREF(Py_None);
   return o;
 }
 
-static void __pyx_tp_dealloc_3src_3sdr_SDR(PyObject *o) {
-  struct __pyx_obj_3src_3sdr_SDR *p = (struct __pyx_obj_3src_3sdr_SDR *)o;
+static void __pyx_tp_dealloc_3src_3sgm_SGM(PyObject *o) {
+  struct __pyx_obj_3src_3sgm_SGM *p = (struct __pyx_obj_3src_3sgm_SGM *)o;
   #if CYTHON_USE_TP_FINALIZE
   if (unlikely(PyType_HasFeature(Py_TYPE(o), Py_TPFLAGS_HAVE_FINALIZE) && Py_TYPE(o)->tp_finalize) && !_PyGC_FINALIZED(o)) {
     if (PyObject_CallFinalizerFromDealloc(o)) return;
@@ -8286,9 +8286,9 @@ static void __pyx_tp_dealloc_3src_3sdr_SDR(PyObject *o) {
   (*Py_TYPE(o)->tp_free)(o);
 }
 
-static int __pyx_tp_traverse_3src_3sdr_SDR(PyObject *o, visitproc v, void *a) {
+static int __pyx_tp_traverse_3src_3sgm_SGM(PyObject *o, visitproc v, void *a) {
   int e;
-  struct __pyx_obj_3src_3sdr_SDR *p = (struct __pyx_obj_3src_3sdr_SDR *)o;
+  struct __pyx_obj_3src_3sgm_SGM *p = (struct __pyx_obj_3src_3sgm_SGM *)o;
   if (p->encodings) {
     e = (*v)(p->encodings, a); if (e) return e;
   }
@@ -8298,9 +8298,9 @@ static int __pyx_tp_traverse_3src_3sdr_SDR(PyObject *o, visitproc v, void *a) {
   return 0;
 }
 
-static int __pyx_tp_clear_3src_3sdr_SDR(PyObject *o) {
+static int __pyx_tp_clear_3src_3sgm_SGM(PyObject *o) {
   PyObject* tmp;
-  struct __pyx_obj_3src_3sdr_SDR *p = (struct __pyx_obj_3src_3sdr_SDR *)o;
+  struct __pyx_obj_3src_3sgm_SGM *p = (struct __pyx_obj_3src_3sgm_SGM *)o;
   tmp = ((PyObject*)p->encodings);
   p->encodings = ((PyObject*)Py_None); Py_INCREF(Py_None);
   Py_XDECREF(tmp);
@@ -8310,62 +8310,62 @@ static int __pyx_tp_clear_3src_3sdr_SDR(PyObject *o) {
   return 0;
 }
 
-static PyObject *__pyx_getprop_3src_3sdr_3SDR_encodings(PyObject *o, CYTHON_UNUSED void *x) {
-  return __pyx_pw_3src_3sdr_3SDR_9encodings_1__get__(o);
+static PyObject *__pyx_getprop_3src_3sgm_3SGM_encodings(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_3src_3sgm_3SGM_9encodings_1__get__(o);
 }
 
-static int __pyx_setprop_3src_3sdr_3SDR_encodings(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+static int __pyx_setprop_3src_3sgm_3SGM_encodings(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
   if (v) {
-    return __pyx_pw_3src_3sdr_3SDR_9encodings_3__set__(o, v);
+    return __pyx_pw_3src_3sgm_3SGM_9encodings_3__set__(o, v);
   }
   else {
-    return __pyx_pw_3src_3sdr_3SDR_9encodings_5__del__(o);
+    return __pyx_pw_3src_3sgm_3SGM_9encodings_5__del__(o);
   }
 }
 
-static PyObject *__pyx_getprop_3src_3sdr_3SDR_properties(PyObject *o, CYTHON_UNUSED void *x) {
-  return __pyx_pw_3src_3sdr_3SDR_10properties_1__get__(o);
+static PyObject *__pyx_getprop_3src_3sgm_3SGM_properties(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_3src_3sgm_3SGM_10properties_1__get__(o);
 }
 
-static int __pyx_setprop_3src_3sdr_3SDR_properties(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+static int __pyx_setprop_3src_3sgm_3SGM_properties(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
   if (v) {
-    return __pyx_pw_3src_3sdr_3SDR_10properties_3__set__(o, v);
+    return __pyx_pw_3src_3sgm_3SGM_10properties_3__set__(o, v);
   }
   else {
-    return __pyx_pw_3src_3sdr_3SDR_10properties_5__del__(o);
+    return __pyx_pw_3src_3sgm_3SGM_10properties_5__del__(o);
   }
 }
 
-static PyMethodDef __pyx_methods_3src_3sdr_SDR[] = {
-  {"get_max_distance", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_3sdr_3SDR_3get_max_distance, METH_VARARGS|METH_KEYWORDS, 0},
-  {"remove_prefix", (PyCFunction)__pyx_pw_3src_3sdr_3SDR_5remove_prefix, METH_O, 0},
-  {"copy", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_3sdr_3SDR_7copy, METH_VARARGS|METH_KEYWORDS, 0},
-  {"add_encoding", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_3sdr_3SDR_9add_encoding, METH_VARARGS|METH_KEYWORDS, 0},
-  {"get_enc_types", (PyCFunction)__pyx_pw_3src_3sdr_3SDR_11get_enc_types, METH_NOARGS, 0},
-  {"get_enc_properties", (PyCFunction)__pyx_pw_3src_3sdr_3SDR_13get_enc_properties, METH_O, 0},
-  {"decode", (PyCFunction)__pyx_pw_3src_3sdr_3SDR_15decode, METH_NOARGS, 0},
-  {"to_dict", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_3sdr_3SDR_17to_dict, METH_VARARGS|METH_KEYWORDS, 0},
-  {"overlap", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_3sdr_3SDR_19overlap, METH_VARARGS|METH_KEYWORDS, 0},
-  {"distance", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_3sdr_3SDR_21distance, METH_VARARGS|METH_KEYWORDS, 0},
-  {"learn", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_3sdr_3SDR_23learn, METH_VARARGS|METH_KEYWORDS, 0},
-  {"merge", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_3sdr_3SDR_25merge, METH_VARARGS|METH_KEYWORDS, 0},
-  {"__reduce_cython__", (PyCFunction)__pyx_pw_3src_3sdr_3SDR_27__reduce_cython__, METH_NOARGS, 0},
-  {"__setstate_cython__", (PyCFunction)__pyx_pw_3src_3sdr_3SDR_29__setstate_cython__, METH_O, 0},
+static PyMethodDef __pyx_methods_3src_3sgm_SGM[] = {
+  {"get_max_distance", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_3sgm_3SGM_3get_max_distance, METH_VARARGS|METH_KEYWORDS, 0},
+  {"remove_prefix", (PyCFunction)__pyx_pw_3src_3sgm_3SGM_5remove_prefix, METH_O, 0},
+  {"copy", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_3sgm_3SGM_7copy, METH_VARARGS|METH_KEYWORDS, 0},
+  {"add_encoding", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_3sgm_3SGM_9add_encoding, METH_VARARGS|METH_KEYWORDS, 0},
+  {"get_enc_types", (PyCFunction)__pyx_pw_3src_3sgm_3SGM_11get_enc_types, METH_NOARGS, 0},
+  {"get_enc_properties", (PyCFunction)__pyx_pw_3src_3sgm_3SGM_13get_enc_properties, METH_O, 0},
+  {"decode", (PyCFunction)__pyx_pw_3src_3sgm_3SGM_15decode, METH_NOARGS, 0},
+  {"to_dict", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_3sgm_3SGM_17to_dict, METH_VARARGS|METH_KEYWORDS, 0},
+  {"overlap", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_3sgm_3SGM_19overlap, METH_VARARGS|METH_KEYWORDS, 0},
+  {"distance", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_3sgm_3SGM_21distance, METH_VARARGS|METH_KEYWORDS, 0},
+  {"learn", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_3sgm_3SGM_23learn, METH_VARARGS|METH_KEYWORDS, 0},
+  {"merge", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_3sgm_3SGM_25merge, METH_VARARGS|METH_KEYWORDS, 0},
+  {"__reduce_cython__", (PyCFunction)__pyx_pw_3src_3sgm_3SGM_27__reduce_cython__, METH_NOARGS, 0},
+  {"__setstate_cython__", (PyCFunction)__pyx_pw_3src_3sgm_3SGM_29__setstate_cython__, METH_O, 0},
   {0, 0, 0, 0}
 };
 
-static struct PyGetSetDef __pyx_getsets_3src_3sdr_SDR[] = {
-  {(char *)"encodings", __pyx_getprop_3src_3sdr_3SDR_encodings, __pyx_setprop_3src_3sdr_3SDR_encodings, (char *)0, 0},
-  {(char *)"properties", __pyx_getprop_3src_3sdr_3SDR_properties, __pyx_setprop_3src_3sdr_3SDR_properties, (char *)0, 0},
+static struct PyGetSetDef __pyx_getsets_3src_3sgm_SGM[] = {
+  {(char *)"encodings", __pyx_getprop_3src_3sgm_3SGM_encodings, __pyx_setprop_3src_3sgm_3SGM_encodings, (char *)0, 0},
+  {(char *)"properties", __pyx_getprop_3src_3sgm_3SGM_properties, __pyx_setprop_3src_3sgm_3SGM_properties, (char *)0, 0},
   {0, 0, 0, 0, 0}
 };
 
-static PyTypeObject __pyx_type_3src_3sdr_SDR = {
+static PyTypeObject __pyx_type_3src_3sgm_SGM = {
   PyVarObject_HEAD_INIT(0, 0)
-  "src.sdr.SDR", /*tp_name*/
-  sizeof(struct __pyx_obj_3src_3sdr_SDR), /*tp_basicsize*/
+  "src.sgm.SGM", /*tp_name*/
+  sizeof(struct __pyx_obj_3src_3sgm_SGM), /*tp_basicsize*/
   0, /*tp_itemsize*/
-  __pyx_tp_dealloc_3src_3sdr_SDR, /*tp_dealloc*/
+  __pyx_tp_dealloc_3src_3sgm_SGM, /*tp_dealloc*/
   #if PY_VERSION_HEX < 0x030800b4
   0, /*tp_print*/
   #endif
@@ -8392,23 +8392,23 @@ static PyTypeObject __pyx_type_3src_3sdr_SDR = {
   0, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
   0, /*tp_doc*/
-  __pyx_tp_traverse_3src_3sdr_SDR, /*tp_traverse*/
-  __pyx_tp_clear_3src_3sdr_SDR, /*tp_clear*/
+  __pyx_tp_traverse_3src_3sgm_SGM, /*tp_traverse*/
+  __pyx_tp_clear_3src_3sgm_SGM, /*tp_clear*/
   0, /*tp_richcompare*/
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/
   0, /*tp_iternext*/
-  __pyx_methods_3src_3sdr_SDR, /*tp_methods*/
+  __pyx_methods_3src_3sgm_SGM, /*tp_methods*/
   0, /*tp_members*/
-  __pyx_getsets_3src_3sdr_SDR, /*tp_getset*/
+  __pyx_getsets_3src_3sgm_SGM, /*tp_getset*/
   0, /*tp_base*/
   0, /*tp_dict*/
   0, /*tp_descr_get*/
   0, /*tp_descr_set*/
   0, /*tp_dictoffset*/
-  __pyx_pw_3src_3sdr_3SDR_1__init__, /*tp_init*/
+  __pyx_pw_3src_3sgm_3SGM_1__init__, /*tp_init*/
   0, /*tp_alloc*/
-  __pyx_tp_new_3src_3sdr_SDR, /*tp_new*/
+  __pyx_tp_new_3src_3sgm_SGM, /*tp_new*/
   0, /*tp_free*/
   0, /*tp_is_gc*/
   0, /*tp_bases*/
@@ -8436,17 +8436,17 @@ static PyMethodDef __pyx_methods[] = {
 #if PY_MAJOR_VERSION >= 3
 #if CYTHON_PEP489_MULTI_PHASE_INIT
 static PyObject* __pyx_pymod_create(PyObject *spec, PyModuleDef *def); /*proto*/
-static int __pyx_pymod_exec_sdr(PyObject* module); /*proto*/
+static int __pyx_pymod_exec_sgm(PyObject* module); /*proto*/
 static PyModuleDef_Slot __pyx_moduledef_slots[] = {
   {Py_mod_create, (void*)__pyx_pymod_create},
-  {Py_mod_exec, (void*)__pyx_pymod_exec_sdr},
+  {Py_mod_exec, (void*)__pyx_pymod_exec_sgm},
   {0, NULL}
 };
 #endif
 
 static struct PyModuleDef __pyx_moduledef = {
     PyModuleDef_HEAD_INIT,
-    "sdr",
+    "sgm",
     0, /* m_doc */
   #if CYTHON_PEP489_MULTI_PHASE_INIT
     0, /* m_size */
@@ -8479,21 +8479,21 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_Incompatible_checksums_s_vs_0xa3, __pyx_k_Incompatible_checksums_s_vs_0xa3, sizeof(__pyx_k_Incompatible_checksums_s_vs_0xa3), 0, 0, 1, 0},
   {&__pyx_n_s_NumericEncoder, __pyx_k_NumericEncoder, sizeof(__pyx_k_NumericEncoder), 0, 0, 1, 1},
   {&__pyx_n_s_PickleError, __pyx_k_PickleError, sizeof(__pyx_k_PickleError), 0, 0, 1, 1},
-  {&__pyx_n_s_SDR, __pyx_k_SDR, sizeof(__pyx_k_SDR), 0, 0, 1, 1},
-  {&__pyx_n_s_SDR___reduce_cython, __pyx_k_SDR___reduce_cython, sizeof(__pyx_k_SDR___reduce_cython), 0, 0, 1, 1},
-  {&__pyx_n_s_SDR___setstate_cython, __pyx_k_SDR___setstate_cython, sizeof(__pyx_k_SDR___setstate_cython), 0, 0, 1, 1},
-  {&__pyx_n_s_SDR_add_encoding, __pyx_k_SDR_add_encoding, sizeof(__pyx_k_SDR_add_encoding), 0, 0, 1, 1},
-  {&__pyx_n_s_SDR_copy, __pyx_k_SDR_copy, sizeof(__pyx_k_SDR_copy), 0, 0, 1, 1},
-  {&__pyx_n_s_SDR_decode, __pyx_k_SDR_decode, sizeof(__pyx_k_SDR_decode), 0, 0, 1, 1},
-  {&__pyx_n_s_SDR_distance, __pyx_k_SDR_distance, sizeof(__pyx_k_SDR_distance), 0, 0, 1, 1},
-  {&__pyx_n_s_SDR_get_enc_properties, __pyx_k_SDR_get_enc_properties, sizeof(__pyx_k_SDR_get_enc_properties), 0, 0, 1, 1},
-  {&__pyx_n_s_SDR_get_enc_types, __pyx_k_SDR_get_enc_types, sizeof(__pyx_k_SDR_get_enc_types), 0, 0, 1, 1},
-  {&__pyx_n_s_SDR_get_max_distance, __pyx_k_SDR_get_max_distance, sizeof(__pyx_k_SDR_get_max_distance), 0, 0, 1, 1},
-  {&__pyx_n_s_SDR_learn, __pyx_k_SDR_learn, sizeof(__pyx_k_SDR_learn), 0, 0, 1, 1},
-  {&__pyx_n_s_SDR_merge, __pyx_k_SDR_merge, sizeof(__pyx_k_SDR_merge), 0, 0, 1, 1},
-  {&__pyx_n_s_SDR_overlap, __pyx_k_SDR_overlap, sizeof(__pyx_k_SDR_overlap), 0, 0, 1, 1},
-  {&__pyx_n_s_SDR_remove_prefix, __pyx_k_SDR_remove_prefix, sizeof(__pyx_k_SDR_remove_prefix), 0, 0, 1, 1},
-  {&__pyx_n_s_SDR_to_dict, __pyx_k_SDR_to_dict, sizeof(__pyx_k_SDR_to_dict), 0, 0, 1, 1},
+  {&__pyx_n_s_SGM, __pyx_k_SGM, sizeof(__pyx_k_SGM), 0, 0, 1, 1},
+  {&__pyx_n_s_SGM___reduce_cython, __pyx_k_SGM___reduce_cython, sizeof(__pyx_k_SGM___reduce_cython), 0, 0, 1, 1},
+  {&__pyx_n_s_SGM___setstate_cython, __pyx_k_SGM___setstate_cython, sizeof(__pyx_k_SGM___setstate_cython), 0, 0, 1, 1},
+  {&__pyx_n_s_SGM_add_encoding, __pyx_k_SGM_add_encoding, sizeof(__pyx_k_SGM_add_encoding), 0, 0, 1, 1},
+  {&__pyx_n_s_SGM_copy, __pyx_k_SGM_copy, sizeof(__pyx_k_SGM_copy), 0, 0, 1, 1},
+  {&__pyx_n_s_SGM_decode, __pyx_k_SGM_decode, sizeof(__pyx_k_SGM_decode), 0, 0, 1, 1},
+  {&__pyx_n_s_SGM_distance, __pyx_k_SGM_distance, sizeof(__pyx_k_SGM_distance), 0, 0, 1, 1},
+  {&__pyx_n_s_SGM_get_enc_properties, __pyx_k_SGM_get_enc_properties, sizeof(__pyx_k_SGM_get_enc_properties), 0, 0, 1, 1},
+  {&__pyx_n_s_SGM_get_enc_types, __pyx_k_SGM_get_enc_types, sizeof(__pyx_k_SGM_get_enc_types), 0, 0, 1, 1},
+  {&__pyx_n_s_SGM_get_max_distance, __pyx_k_SGM_get_max_distance, sizeof(__pyx_k_SGM_get_max_distance), 0, 0, 1, 1},
+  {&__pyx_n_s_SGM_learn, __pyx_k_SGM_learn, sizeof(__pyx_k_SGM_learn), 0, 0, 1, 1},
+  {&__pyx_n_s_SGM_merge, __pyx_k_SGM_merge, sizeof(__pyx_k_SGM_merge), 0, 0, 1, 1},
+  {&__pyx_n_s_SGM_overlap, __pyx_k_SGM_overlap, sizeof(__pyx_k_SGM_overlap), 0, 0, 1, 1},
+  {&__pyx_n_s_SGM_remove_prefix, __pyx_k_SGM_remove_prefix, sizeof(__pyx_k_SGM_remove_prefix), 0, 0, 1, 1},
+  {&__pyx_n_s_SGM_to_dict, __pyx_k_SGM_to_dict, sizeof(__pyx_k_SGM_to_dict), 0, 0, 1, 1},
   {&__pyx_n_u__2, __pyx_k__2, sizeof(__pyx_k__2), 0, 1, 0, 1},
   {&__pyx_n_s_add_encoding, __pyx_k_add_encoding, sizeof(__pyx_k_add_encoding), 0, 0, 1, 1},
   {&__pyx_n_s_bit, __pyx_k_bit, sizeof(__pyx_k_bit), 0, 0, 1, 1},
@@ -8564,7 +8564,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_pyx_result, __pyx_k_pyx_result, sizeof(__pyx_k_pyx_result), 0, 0, 1, 1},
   {&__pyx_n_s_pyx_state, __pyx_k_pyx_state, sizeof(__pyx_k_pyx_state), 0, 0, 1, 1},
   {&__pyx_n_s_pyx_type, __pyx_k_pyx_type, sizeof(__pyx_k_pyx_type), 0, 0, 1, 1},
-  {&__pyx_n_s_pyx_unpickle_SDR, __pyx_k_pyx_unpickle_SDR, sizeof(__pyx_k_pyx_unpickle_SDR), 0, 0, 1, 1},
+  {&__pyx_n_s_pyx_unpickle_SGM, __pyx_k_pyx_unpickle_SGM, sizeof(__pyx_k_pyx_unpickle_SGM), 0, 0, 1, 1},
   {&__pyx_n_s_range, __pyx_k_range, sizeof(__pyx_k_range), 0, 0, 1, 1},
   {&__pyx_n_s_reduce, __pyx_k_reduce, sizeof(__pyx_k_reduce), 0, 0, 1, 1},
   {&__pyx_n_s_reduce_cython, __pyx_k_reduce_cython, sizeof(__pyx_k_reduce_cython), 0, 0, 1, 1},
@@ -8572,11 +8572,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_remove_prefix, __pyx_k_remove_prefix, sizeof(__pyx_k_remove_prefix), 0, 0, 1, 1},
   {&__pyx_n_s_replace, __pyx_k_replace, sizeof(__pyx_k_replace), 0, 0, 1, 1},
   {&__pyx_n_s_return, __pyx_k_return, sizeof(__pyx_k_return), 0, 0, 1, 1},
-  {&__pyx_n_s_sdr, __pyx_k_sdr, sizeof(__pyx_k_sdr), 0, 0, 1, 1},
-  {&__pyx_n_s_sdr_1, __pyx_k_sdr_1, sizeof(__pyx_k_sdr_1), 0, 0, 1, 1},
-  {&__pyx_n_s_sdr_2, __pyx_k_sdr_2, sizeof(__pyx_k_sdr_2), 0, 0, 1, 1},
-  {&__pyx_n_s_sdr_3, __pyx_k_sdr_3, sizeof(__pyx_k_sdr_3), 0, 0, 1, 1},
-  {&__pyx_n_s_sdr_4, __pyx_k_sdr_4, sizeof(__pyx_k_sdr_4), 0, 0, 1, 1},
   {&__pyx_n_s_sdr_bits, __pyx_k_sdr_bits, sizeof(__pyx_k_sdr_bits), 0, 0, 1, 1},
   {&__pyx_n_s_search_types, __pyx_k_search_types, sizeof(__pyx_k_search_types), 0, 0, 1, 1},
   {&__pyx_n_s_seed, __pyx_k_seed, sizeof(__pyx_k_seed), 0, 0, 1, 1},
@@ -8586,10 +8581,15 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_u_set, __pyx_k_set, sizeof(__pyx_k_set), 0, 1, 0, 1},
   {&__pyx_n_s_setstate, __pyx_k_setstate, sizeof(__pyx_k_setstate), 0, 0, 1, 1},
   {&__pyx_n_s_setstate_cython, __pyx_k_setstate_cython, sizeof(__pyx_k_setstate_cython), 0, 0, 1, 1},
+  {&__pyx_n_s_sgm, __pyx_k_sgm, sizeof(__pyx_k_sgm), 0, 0, 1, 1},
+  {&__pyx_n_s_sgm_1, __pyx_k_sgm_1, sizeof(__pyx_k_sgm_1), 0, 0, 1, 1},
+  {&__pyx_n_s_sgm_2, __pyx_k_sgm_2, sizeof(__pyx_k_sgm_2), 0, 0, 1, 1},
+  {&__pyx_n_s_sgm_3, __pyx_k_sgm_3, sizeof(__pyx_k_sgm_3), 0, 0, 1, 1},
+  {&__pyx_n_s_sgm_4, __pyx_k_sgm_4, sizeof(__pyx_k_sgm_4), 0, 0, 1, 1},
   {&__pyx_n_s_similarity, __pyx_k_similarity, sizeof(__pyx_k_similarity), 0, 0, 1, 1},
   {&__pyx_n_s_src_numeric_encoder, __pyx_k_src_numeric_encoder, sizeof(__pyx_k_src_numeric_encoder), 0, 0, 1, 1},
-  {&__pyx_n_s_src_sdr, __pyx_k_src_sdr, sizeof(__pyx_k_src_sdr), 0, 0, 1, 1},
-  {&__pyx_kp_s_src_sdr_py, __pyx_k_src_sdr_py, sizeof(__pyx_k_src_sdr_py), 0, 0, 1, 0},
+  {&__pyx_n_s_src_sgm, __pyx_k_src_sgm, sizeof(__pyx_k_src_sgm), 0, 0, 1, 1},
+  {&__pyx_kp_s_src_sgm_py, __pyx_k_src_sgm_py, sizeof(__pyx_k_src_sgm_py), 0, 0, 1, 0},
   {&__pyx_n_s_start_time, __pyx_k_start_time, sizeof(__pyx_k_start_time), 0, 0, 1, 1},
   {&__pyx_n_s_state, __pyx_k_state, sizeof(__pyx_k_state), 0, 0, 1, 1},
   {&__pyx_n_u_str, __pyx_k_str, sizeof(__pyx_k_str), 0, 1, 0, 1},
@@ -8617,7 +8617,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "src/sdr.py":27
+  /* "src/sgm.py":27
  *             self.add_encoding(enc_type=enc_type, value=value, encoder=encoder, enc_properties=enc_properties, bit_weight=bit_weight)
  * 
  *     def get_max_distance(self, search_types: set = None) -> float:             # <<<<<<<<<<<<<<
@@ -8627,9 +8627,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__3 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_search_types, __pyx_n_s_enc_type, __pyx_n_s_dist); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(0, 27, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__3);
   __Pyx_GIVEREF(__pyx_tuple__3);
-  __pyx_codeobj__4 = (PyObject*)__Pyx_PyCode_New(2, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__3, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sdr_py, __pyx_n_s_get_max_distance, 27, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__4)) __PYX_ERR(0, 27, __pyx_L1_error)
+  __pyx_codeobj__4 = (PyObject*)__Pyx_PyCode_New(2, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__3, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sgm_py, __pyx_n_s_get_max_distance, 27, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__4)) __PYX_ERR(0, 27, __pyx_L1_error)
 
-  /* "src/sdr.py":38
+  /* "src/sgm.py":38
  *         return dist
  * 
  *     def remove_prefix(self, enc_type_prefix: str):             # <<<<<<<<<<<<<<
@@ -8639,22 +8639,22 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__5 = PyTuple_Pack(5, __pyx_n_s_self, __pyx_n_s_enc_type_prefix, __pyx_n_s_enc_type, __pyx_n_s_enc_type, __pyx_n_s_enc_type); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(0, 38, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__5);
   __Pyx_GIVEREF(__pyx_tuple__5);
-  __pyx_codeobj__6 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__5, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sdr_py, __pyx_n_s_remove_prefix, 38, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__6)) __PYX_ERR(0, 38, __pyx_L1_error)
+  __pyx_codeobj__6 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__5, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sgm_py, __pyx_n_s_remove_prefix, 38, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__6)) __PYX_ERR(0, 38, __pyx_L1_error)
 
-  /* "src/sdr.py":44
+  /* "src/sgm.py":44
  *         self.properties = {enc_type.replace(enc_type_prefix, ''): self.properties[enc_type] for enc_type in self.properties}
  * 
- *     def copy(self, sdr, enc_type_prefix: str = None):             # <<<<<<<<<<<<<<
+ *     def copy(self, sgm, enc_type_prefix: str = None):             # <<<<<<<<<<<<<<
  *         enc_type: str
  *         prop: str
  */
-  __pyx_tuple__7 = PyTuple_Pack(10, __pyx_n_s_self, __pyx_n_s_sdr, __pyx_n_s_enc_type_prefix, __pyx_n_s_enc_type, __pyx_n_s_prop, __pyx_n_s_enc_type, __pyx_n_s_enc_type, __pyx_n_s_prop, __pyx_n_s_enc_type, __pyx_n_s_prop); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(0, 44, __pyx_L1_error)
+  __pyx_tuple__7 = PyTuple_Pack(10, __pyx_n_s_self, __pyx_n_s_sgm, __pyx_n_s_enc_type_prefix, __pyx_n_s_enc_type, __pyx_n_s_prop, __pyx_n_s_enc_type, __pyx_n_s_enc_type, __pyx_n_s_prop, __pyx_n_s_enc_type, __pyx_n_s_prop); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(0, 44, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__7);
   __Pyx_GIVEREF(__pyx_tuple__7);
-  __pyx_codeobj__8 = (PyObject*)__Pyx_PyCode_New(3, 0, 10, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__7, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sdr_py, __pyx_n_s_copy, 44, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__8)) __PYX_ERR(0, 44, __pyx_L1_error)
+  __pyx_codeobj__8 = (PyObject*)__Pyx_PyCode_New(3, 0, 10, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__7, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sgm_py, __pyx_n_s_copy, 44, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__8)) __PYX_ERR(0, 44, __pyx_L1_error)
 
-  /* "src/sdr.py":55
- *             self.properties = {enc_type: {prop: sdr.properties[enc_type][prop] for prop in sdr.properties[enc_type]} for enc_type in sdr.properties}
+  /* "src/sgm.py":55
+ *             self.properties = {enc_type: {prop: sgm.properties[enc_type][prop] for prop in sgm.properties[enc_type]} for enc_type in sgm.properties}
  * 
  *     def add_encoding(self, enc_type: str, value, encoder, enc_properties: dict = None, bit_weight: float = 1.0):             # <<<<<<<<<<<<<<
  * 
@@ -8663,9 +8663,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__9 = PyTuple_Pack(11, __pyx_n_s_self, __pyx_n_s_enc_type, __pyx_n_s_value, __pyx_n_s_encoder, __pyx_n_s_enc_properties, __pyx_n_s_bit_weight, __pyx_n_s_bit, __pyx_n_s_prop, __pyx_n_s_enc, __pyx_n_s_prop, __pyx_n_s_bit); if (unlikely(!__pyx_tuple__9)) __PYX_ERR(0, 55, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__9);
   __Pyx_GIVEREF(__pyx_tuple__9);
-  __pyx_codeobj__10 = (PyObject*)__Pyx_PyCode_New(6, 0, 11, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__9, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sdr_py, __pyx_n_s_add_encoding, 55, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__10)) __PYX_ERR(0, 55, __pyx_L1_error)
+  __pyx_codeobj__10 = (PyObject*)__Pyx_PyCode_New(6, 0, 11, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__9, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sgm_py, __pyx_n_s_add_encoding, 55, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__10)) __PYX_ERR(0, 55, __pyx_L1_error)
 
-  /* "src/sdr.py":68
+  /* "src/sgm.py":68
  *         self.encodings[enc_type] = {bit: bit_weight for bit in enc}
  * 
  *     def get_enc_types(self) -> set:             # <<<<<<<<<<<<<<
@@ -8675,9 +8675,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__11 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(0, 68, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__11);
   __Pyx_GIVEREF(__pyx_tuple__11);
-  __pyx_codeobj__12 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__11, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sdr_py, __pyx_n_s_get_enc_types, 68, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__12)) __PYX_ERR(0, 68, __pyx_L1_error)
+  __pyx_codeobj__12 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__11, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sgm_py, __pyx_n_s_get_enc_types, 68, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__12)) __PYX_ERR(0, 68, __pyx_L1_error)
 
-  /* "src/sdr.py":71
+  /* "src/sgm.py":71
  *         return set(self.encodings.keys())
  * 
  *     def get_enc_properties(self, enc_type: str) -> dict:             # <<<<<<<<<<<<<<
@@ -8687,9 +8687,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__13 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_enc_type); if (unlikely(!__pyx_tuple__13)) __PYX_ERR(0, 71, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__13);
   __Pyx_GIVEREF(__pyx_tuple__13);
-  __pyx_codeobj__14 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__13, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sdr_py, __pyx_n_s_get_enc_properties, 71, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__14)) __PYX_ERR(0, 71, __pyx_L1_error)
+  __pyx_codeobj__14 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__13, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sgm_py, __pyx_n_s_get_enc_properties, 71, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__14)) __PYX_ERR(0, 71, __pyx_L1_error)
 
-  /* "src/sdr.py":77
+  /* "src/sgm.py":77
  *             return {}
  * 
  *     def decode(self) -> dict:             # <<<<<<<<<<<<<<
@@ -8699,9 +8699,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__15 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_enc_type, __pyx_n_s_dec, __pyx_n_s_enc_type); if (unlikely(!__pyx_tuple__15)) __PYX_ERR(0, 77, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__15);
   __Pyx_GIVEREF(__pyx_tuple__15);
-  __pyx_codeobj__16 = (PyObject*)__Pyx_PyCode_New(1, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__15, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sdr_py, __pyx_n_s_decode, 77, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__16)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __pyx_codeobj__16 = (PyObject*)__Pyx_PyCode_New(1, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__15, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sgm_py, __pyx_n_s_decode, 77, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__16)) __PYX_ERR(0, 77, __pyx_L1_error)
 
-  /* "src/sdr.py":82
+  /* "src/sgm.py":82
  *         return dec
  * 
  *     def to_dict(self, decode: bool = False) -> dict:             # <<<<<<<<<<<<<<
@@ -8711,55 +8711,55 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__17 = PyTuple_Pack(7, __pyx_n_s_self, __pyx_n_s_decode, __pyx_n_s_enc_type, __pyx_n_s_prop, __pyx_n_s_d_sdr, __pyx_n_s_enc_type, __pyx_n_s_prop); if (unlikely(!__pyx_tuple__17)) __PYX_ERR(0, 82, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__17);
   __Pyx_GIVEREF(__pyx_tuple__17);
-  __pyx_codeobj__18 = (PyObject*)__Pyx_PyCode_New(2, 0, 7, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__17, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sdr_py, __pyx_n_s_to_dict, 82, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__18)) __PYX_ERR(0, 82, __pyx_L1_error)
+  __pyx_codeobj__18 = (PyObject*)__Pyx_PyCode_New(2, 0, 7, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__17, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sgm_py, __pyx_n_s_to_dict, 82, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__18)) __PYX_ERR(0, 82, __pyx_L1_error)
 
-  /* "src/sdr.py":93
+  /* "src/sgm.py":93
  *         return d_sdr
  * 
- *     def overlap(self, sdr, search_types: set = None) -> dict:             # <<<<<<<<<<<<<<
+ *     def overlap(self, sgm, search_types: set = None) -> dict:             # <<<<<<<<<<<<<<
  * 
  *         enc_type: str
  */
-  __pyx_tuple__19 = PyTuple_Pack(11, __pyx_n_s_self, __pyx_n_s_sdr, __pyx_n_s_search_types, __pyx_n_s_enc_type, __pyx_n_s_enc_types, __pyx_n_s_por, __pyx_n_s_bit, __pyx_n_s_enc_type, __pyx_n_s_enc_type, __pyx_n_s_enc_type, __pyx_n_s_bit); if (unlikely(!__pyx_tuple__19)) __PYX_ERR(0, 93, __pyx_L1_error)
+  __pyx_tuple__19 = PyTuple_Pack(11, __pyx_n_s_self, __pyx_n_s_sgm, __pyx_n_s_search_types, __pyx_n_s_enc_type, __pyx_n_s_enc_types, __pyx_n_s_por, __pyx_n_s_bit, __pyx_n_s_enc_type, __pyx_n_s_enc_type, __pyx_n_s_enc_type, __pyx_n_s_bit); if (unlikely(!__pyx_tuple__19)) __PYX_ERR(0, 93, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__19);
   __Pyx_GIVEREF(__pyx_tuple__19);
-  __pyx_codeobj__20 = (PyObject*)__Pyx_PyCode_New(3, 0, 11, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__19, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sdr_py, __pyx_n_s_overlap, 93, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__20)) __PYX_ERR(0, 93, __pyx_L1_error)
+  __pyx_codeobj__20 = (PyObject*)__Pyx_PyCode_New(3, 0, 11, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__19, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sgm_py, __pyx_n_s_overlap, 93, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__20)) __PYX_ERR(0, 93, __pyx_L1_error)
 
-  /* "src/sdr.py":125
+  /* "src/sgm.py":125
  *         return por
  * 
- *     def distance(self, sdr, search_types: set = None) -> dict:             # <<<<<<<<<<<<<<
+ *     def distance(self, sgm, search_types: set = None) -> dict:             # <<<<<<<<<<<<<<
  * 
  *         por: dict
  */
-  __pyx_tuple__21 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_sdr, __pyx_n_s_search_types, __pyx_n_s_por); if (unlikely(!__pyx_tuple__21)) __PYX_ERR(0, 125, __pyx_L1_error)
+  __pyx_tuple__21 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_sgm, __pyx_n_s_search_types, __pyx_n_s_por); if (unlikely(!__pyx_tuple__21)) __PYX_ERR(0, 125, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__21);
   __Pyx_GIVEREF(__pyx_tuple__21);
-  __pyx_codeobj__22 = (PyObject*)__Pyx_PyCode_New(3, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__21, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sdr_py, __pyx_n_s_distance, 125, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__22)) __PYX_ERR(0, 125, __pyx_L1_error)
+  __pyx_codeobj__22 = (PyObject*)__Pyx_PyCode_New(3, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__21, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sgm_py, __pyx_n_s_distance, 125, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__22)) __PYX_ERR(0, 125, __pyx_L1_error)
 
-  /* "src/sdr.py":139
+  /* "src/sgm.py":139
  *         return por
  * 
- *     def learn(self, sdr, learn_rate: float =1.0, learn_types: set = None, prune: float = 0.01):             # <<<<<<<<<<<<<<
+ *     def learn(self, sgm, learn_rate: float = 1.0, learn_types: set = None, prune: float = 0.01):             # <<<<<<<<<<<<<<
  * 
  *         enc_type: str
  */
-  __pyx_tuple__23 = PyTuple_Pack(17, __pyx_n_s_self, __pyx_n_s_sdr, __pyx_n_s_learn_rate, __pyx_n_s_learn_types, __pyx_n_s_prune, __pyx_n_s_enc_type, __pyx_n_s_enc_types, __pyx_n_s_por, __pyx_n_s_bits, __pyx_n_s_bit, __pyx_n_s_prop, __pyx_n_s_self_bits, __pyx_n_s_sdr_bits, __pyx_n_s_enc_type, __pyx_n_s_enc_type, __pyx_n_s_bit, __pyx_n_s_prop); if (unlikely(!__pyx_tuple__23)) __PYX_ERR(0, 139, __pyx_L1_error)
+  __pyx_tuple__23 = PyTuple_Pack(17, __pyx_n_s_self, __pyx_n_s_sgm, __pyx_n_s_learn_rate, __pyx_n_s_learn_types, __pyx_n_s_prune, __pyx_n_s_enc_type, __pyx_n_s_enc_types, __pyx_n_s_por, __pyx_n_s_bits, __pyx_n_s_bit, __pyx_n_s_prop, __pyx_n_s_self_bits, __pyx_n_s_sdr_bits, __pyx_n_s_enc_type, __pyx_n_s_enc_type, __pyx_n_s_bit, __pyx_n_s_prop); if (unlikely(!__pyx_tuple__23)) __PYX_ERR(0, 139, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__23);
   __Pyx_GIVEREF(__pyx_tuple__23);
-  __pyx_codeobj__24 = (PyObject*)__Pyx_PyCode_New(5, 0, 17, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__23, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sdr_py, __pyx_n_s_learn, 139, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__24)) __PYX_ERR(0, 139, __pyx_L1_error)
+  __pyx_codeobj__24 = (PyObject*)__Pyx_PyCode_New(5, 0, 17, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__23, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sgm_py, __pyx_n_s_learn, 139, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__24)) __PYX_ERR(0, 139, __pyx_L1_error)
 
-  /* "src/sdr.py":203
+  /* "src/sgm.py":203
  *                 del self.properties[enc_type]
  * 
- *     def merge(self, sdr, weight: float = 1.0, enc_type_prefix: str = None):             # <<<<<<<<<<<<<<
+ *     def merge(self, sgm, weight: float = 1.0, enc_type_prefix: str = None):             # <<<<<<<<<<<<<<
  *         enc_type: str
  *         enc_types: set
  */
-  __pyx_tuple__25 = PyTuple_Pack(12, __pyx_n_s_self, __pyx_n_s_sdr, __pyx_n_s_weight, __pyx_n_s_enc_type_prefix, __pyx_n_s_enc_type, __pyx_n_s_enc_types, __pyx_n_s_por, __pyx_n_s_bit, __pyx_n_s_prop, __pyx_n_s_self_enc_type, __pyx_n_s_bit, __pyx_n_s_prop); if (unlikely(!__pyx_tuple__25)) __PYX_ERR(0, 203, __pyx_L1_error)
+  __pyx_tuple__25 = PyTuple_Pack(12, __pyx_n_s_self, __pyx_n_s_sgm, __pyx_n_s_weight, __pyx_n_s_enc_type_prefix, __pyx_n_s_enc_type, __pyx_n_s_enc_types, __pyx_n_s_por, __pyx_n_s_bit, __pyx_n_s_prop, __pyx_n_s_self_enc_type, __pyx_n_s_bit, __pyx_n_s_prop); if (unlikely(!__pyx_tuple__25)) __PYX_ERR(0, 203, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__25);
   __Pyx_GIVEREF(__pyx_tuple__25);
-  __pyx_codeobj__26 = (PyObject*)__Pyx_PyCode_New(4, 0, 12, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__25, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sdr_py, __pyx_n_s_merge, 203, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__26)) __PYX_ERR(0, 203, __pyx_L1_error)
+  __pyx_codeobj__26 = (PyObject*)__Pyx_PyCode_New(4, 0, 12, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__25, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sgm_py, __pyx_n_s_merge, 203, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__26)) __PYX_ERR(0, 203, __pyx_L1_error)
 
   /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
@@ -8773,9 +8773,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
 
   /* "(tree fragment)":16
  *     else:
- *         return __pyx_unpickle_SDR, (type(self), 0xa311906, state)
+ *         return __pyx_unpickle_SGM, (type(self), 0xa311906, state)
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
- *     __pyx_unpickle_SDR__set_state(self, __pyx_state)
+ *     __pyx_unpickle_SGM__set_state(self, __pyx_state)
  */
   __pyx_tuple__29 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_pyx_state); if (unlikely(!__pyx_tuple__29)) __PYX_ERR(1, 16, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__29);
@@ -8783,14 +8783,14 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_codeobj__30 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__29, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_setstate_cython, 16, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__30)) __PYX_ERR(1, 16, __pyx_L1_error)
 
   /* "(tree fragment)":1
- * def __pyx_unpickle_SDR(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
+ * def __pyx_unpickle_SGM(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
  *     cdef object __pyx_PickleError
  *     cdef object __pyx_result
  */
   __pyx_tuple__31 = PyTuple_Pack(5, __pyx_n_s_pyx_type, __pyx_n_s_pyx_checksum, __pyx_n_s_pyx_state, __pyx_n_s_pyx_PickleError, __pyx_n_s_pyx_result); if (unlikely(!__pyx_tuple__31)) __PYX_ERR(1, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__31);
   __Pyx_GIVEREF(__pyx_tuple__31);
-  __pyx_codeobj__32 = (PyObject*)__Pyx_PyCode_New(3, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__31, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_pyx_unpickle_SDR, 1, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__32)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __pyx_codeobj__32 = (PyObject*)__Pyx_PyCode_New(3, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__31, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_pyx_unpickle_SGM, 1, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__32)) __PYX_ERR(1, 1, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -8859,16 +8859,16 @@ static int __Pyx_modinit_type_init_code(void) {
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__Pyx_modinit_type_init_code", 0);
   /*--- Type init code ---*/
-  if (PyType_Ready(&__pyx_type_3src_3sdr_SDR) < 0) __PYX_ERR(0, 7, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_3src_3sgm_SGM) < 0) __PYX_ERR(0, 7, __pyx_L1_error)
   #if PY_VERSION_HEX < 0x030800B1
-  __pyx_type_3src_3sdr_SDR.tp_print = 0;
+  __pyx_type_3src_3sgm_SGM.tp_print = 0;
   #endif
-  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_3src_3sdr_SDR.tp_dictoffset && __pyx_type_3src_3sdr_SDR.tp_getattro == PyObject_GenericGetAttr)) {
-    __pyx_type_3src_3sdr_SDR.tp_getattro = __Pyx_PyObject_GenericGetAttr;
+  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_3src_3sgm_SGM.tp_dictoffset && __pyx_type_3src_3sgm_SGM.tp_getattro == PyObject_GenericGetAttr)) {
+    __pyx_type_3src_3sgm_SGM.tp_getattro = __Pyx_PyObject_GenericGetAttr;
   }
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_SDR, (PyObject *)&__pyx_type_3src_3sdr_SDR) < 0) __PYX_ERR(0, 7, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_3src_3sdr_SDR) < 0) __PYX_ERR(0, 7, __pyx_L1_error)
-  __pyx_ptype_3src_3sdr_SDR = &__pyx_type_3src_3sdr_SDR;
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_SGM, (PyObject *)&__pyx_type_3src_3sgm_SGM) < 0) __PYX_ERR(0, 7, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_3src_3sgm_SGM) < 0) __PYX_ERR(0, 7, __pyx_L1_error)
+  __pyx_ptype_3src_3sgm_SGM = &__pyx_type_3src_3sgm_SGM;
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -8919,11 +8919,11 @@ static int __Pyx_modinit_function_import_code(void) {
 
 
 #if PY_MAJOR_VERSION < 3
-__Pyx_PyMODINIT_FUNC initsdr(void) CYTHON_SMALL_CODE; /*proto*/
-__Pyx_PyMODINIT_FUNC initsdr(void)
+__Pyx_PyMODINIT_FUNC initsgm(void) CYTHON_SMALL_CODE; /*proto*/
+__Pyx_PyMODINIT_FUNC initsgm(void)
 #else
-__Pyx_PyMODINIT_FUNC PyInit_sdr(void) CYTHON_SMALL_CODE; /*proto*/
-__Pyx_PyMODINIT_FUNC PyInit_sdr(void)
+__Pyx_PyMODINIT_FUNC PyInit_sgm(void) CYTHON_SMALL_CODE; /*proto*/
+__Pyx_PyMODINIT_FUNC PyInit_sgm(void)
 #if CYTHON_PEP489_MULTI_PHASE_INIT
 {
   return PyModuleDef_Init(&__pyx_moduledef);
@@ -8990,7 +8990,7 @@ bad:
 }
 
 
-static CYTHON_SMALL_CODE int __pyx_pymod_exec_sdr(PyObject *__pyx_pyinit_module)
+static CYTHON_SMALL_CODE int __pyx_pymod_exec_sgm(PyObject *__pyx_pyinit_module)
 #endif
 #endif
 {
@@ -9007,7 +9007,7 @@ static CYTHON_SMALL_CODE int __pyx_pymod_exec_sdr(PyObject *__pyx_pyinit_module)
   #if CYTHON_PEP489_MULTI_PHASE_INIT
   if (__pyx_m) {
     if (__pyx_m == __pyx_pyinit_module) return 0;
-    PyErr_SetString(PyExc_RuntimeError, "Module 'sdr' has already been imported. Re-initialisation is not supported.");
+    PyErr_SetString(PyExc_RuntimeError, "Module 'sgm' has already been imported. Re-initialisation is not supported.");
     return -1;
   }
   #elif PY_MAJOR_VERSION >= 3
@@ -9022,7 +9022,7 @@ if (!__Pyx_RefNanny) {
       Py_FatalError("failed to import 'refnanny' module");
 }
 #endif
-  __Pyx_RefNannySetupContext("__Pyx_PyMODINIT_FUNC PyInit_sdr(void)", 0);
+  __Pyx_RefNannySetupContext("__Pyx_PyMODINIT_FUNC PyInit_sgm(void)", 0);
   if (__Pyx_check_binary_version() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #ifdef __Pxy_PyFrame_Initialize_Offsets
   __Pxy_PyFrame_Initialize_Offsets();
@@ -9061,7 +9061,7 @@ if (!__Pyx_RefNanny) {
   Py_INCREF(__pyx_m);
   #else
   #if PY_MAJOR_VERSION < 3
-  __pyx_m = Py_InitModule4("sdr", __pyx_methods, 0, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
+  __pyx_m = Py_InitModule4("sgm", __pyx_methods, 0, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
   #else
   __pyx_m = PyModule_Create(&__pyx_moduledef);
   #endif
@@ -9079,14 +9079,14 @@ if (!__Pyx_RefNanny) {
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
-  if (__pyx_module_is_main_src__sdr) {
+  if (__pyx_module_is_main_src__sgm) {
     if (PyObject_SetAttr(__pyx_m, __pyx_n_s_name, __pyx_n_s_main) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) __PYX_ERR(0, 1, __pyx_L1_error)
-    if (!PyDict_GetItemString(modules, "src.sdr")) {
-      if (unlikely(PyDict_SetItemString(modules, "src.sdr", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
+    if (!PyDict_GetItemString(modules, "src.sgm")) {
+      if (unlikely(PyDict_SetItemString(modules, "src.sgm", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
     }
   }
   #endif
@@ -9107,7 +9107,7 @@ if (!__Pyx_RefNanny) {
   if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
 
-  /* "src/sdr.py":3
+  /* "src/sgm.py":3
  * #!/usr/bin/env python
  * # -*- encoding: utf-8 -*-
  * from copy import deepcopy             # <<<<<<<<<<<<<<
@@ -9128,7 +9128,7 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "src/sdr.py":27
+  /* "src/sgm.py":27
  *             self.add_encoding(enc_type=enc_type, value=value, encoder=encoder, enc_properties=enc_properties, bit_weight=bit_weight)
  * 
  *     def get_max_distance(self, search_types: set = None) -> float:             # <<<<<<<<<<<<<<
@@ -9139,15 +9139,15 @@ if (!__Pyx_RefNanny) {
   __Pyx_GOTREF(__pyx_t_2);
   if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_search_types, __pyx_n_u_set) < 0) __PYX_ERR(0, 27, __pyx_L1_error)
   if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_return, __pyx_n_u_float) < 0) __PYX_ERR(0, 27, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_3src_3sdr_3SDR_3get_max_distance, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SDR_get_max_distance, NULL, __pyx_n_s_src_sdr, __pyx_d, ((PyObject *)__pyx_codeobj__4)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 27, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_3src_3sgm_3SGM_3get_max_distance, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SGM_get_max_distance, NULL, __pyx_n_s_src_sgm, __pyx_d, ((PyObject *)__pyx_codeobj__4)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 27, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_1, __pyx_t_2);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_3src_3sdr_SDR->tp_dict, __pyx_n_s_get_max_distance, __pyx_t_1) < 0) __PYX_ERR(0, 27, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_3src_3sgm_SGM->tp_dict, __pyx_n_s_get_max_distance, __pyx_t_1) < 0) __PYX_ERR(0, 27, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  PyType_Modified(__pyx_ptype_3src_3sdr_SDR);
+  PyType_Modified(__pyx_ptype_3src_3sgm_SGM);
 
-  /* "src/sdr.py":38
+  /* "src/sgm.py":38
  *         return dist
  * 
  *     def remove_prefix(self, enc_type_prefix: str):             # <<<<<<<<<<<<<<
@@ -9157,34 +9157,34 @@ if (!__Pyx_RefNanny) {
   __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 38, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_enc_type_prefix, __pyx_n_u_str) < 0) __PYX_ERR(0, 38, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_3src_3sdr_3SDR_5remove_prefix, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SDR_remove_prefix, NULL, __pyx_n_s_src_sdr, __pyx_d, ((PyObject *)__pyx_codeobj__6)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 38, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_3src_3sgm_3SGM_5remove_prefix, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SGM_remove_prefix, NULL, __pyx_n_s_src_sgm, __pyx_d, ((PyObject *)__pyx_codeobj__6)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 38, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_2, __pyx_t_1);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_3src_3sdr_SDR->tp_dict, __pyx_n_s_remove_prefix, __pyx_t_2) < 0) __PYX_ERR(0, 38, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_3src_3sgm_SGM->tp_dict, __pyx_n_s_remove_prefix, __pyx_t_2) < 0) __PYX_ERR(0, 38, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  PyType_Modified(__pyx_ptype_3src_3sdr_SDR);
+  PyType_Modified(__pyx_ptype_3src_3sgm_SGM);
 
-  /* "src/sdr.py":44
+  /* "src/sgm.py":44
  *         self.properties = {enc_type.replace(enc_type_prefix, ''): self.properties[enc_type] for enc_type in self.properties}
  * 
- *     def copy(self, sdr, enc_type_prefix: str = None):             # <<<<<<<<<<<<<<
+ *     def copy(self, sgm, enc_type_prefix: str = None):             # <<<<<<<<<<<<<<
  *         enc_type: str
  *         prop: str
  */
   __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 44, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_enc_type_prefix, __pyx_n_u_str) < 0) __PYX_ERR(0, 44, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_3src_3sdr_3SDR_7copy, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SDR_copy, NULL, __pyx_n_s_src_sdr, __pyx_d, ((PyObject *)__pyx_codeobj__8)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 44, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_3src_3sgm_3SGM_7copy, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SGM_copy, NULL, __pyx_n_s_src_sgm, __pyx_d, ((PyObject *)__pyx_codeobj__8)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 44, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_1, __pyx_t_2);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_3src_3sdr_SDR->tp_dict, __pyx_n_s_copy, __pyx_t_1) < 0) __PYX_ERR(0, 44, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_3src_3sgm_SGM->tp_dict, __pyx_n_s_copy, __pyx_t_1) < 0) __PYX_ERR(0, 44, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  PyType_Modified(__pyx_ptype_3src_3sdr_SDR);
+  PyType_Modified(__pyx_ptype_3src_3sgm_SGM);
 
-  /* "src/sdr.py":55
- *             self.properties = {enc_type: {prop: sdr.properties[enc_type][prop] for prop in sdr.properties[enc_type]} for enc_type in sdr.properties}
+  /* "src/sgm.py":55
+ *             self.properties = {enc_type: {prop: sgm.properties[enc_type][prop] for prop in sgm.properties[enc_type]} for enc_type in sgm.properties}
  * 
  *     def add_encoding(self, enc_type: str, value, encoder, enc_properties: dict = None, bit_weight: float = 1.0):             # <<<<<<<<<<<<<<
  * 
@@ -9195,15 +9195,15 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_enc_type, __pyx_n_u_str) < 0) __PYX_ERR(0, 55, __pyx_L1_error)
   if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_enc_properties, __pyx_n_u_dict_2) < 0) __PYX_ERR(0, 55, __pyx_L1_error)
   if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_bit_weight, __pyx_n_u_float) < 0) __PYX_ERR(0, 55, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_3src_3sdr_3SDR_9add_encoding, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SDR_add_encoding, NULL, __pyx_n_s_src_sdr, __pyx_d, ((PyObject *)__pyx_codeobj__10)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 55, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_3src_3sgm_3SGM_9add_encoding, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SGM_add_encoding, NULL, __pyx_n_s_src_sgm, __pyx_d, ((PyObject *)__pyx_codeobj__10)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 55, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_2, __pyx_t_1);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_3src_3sdr_SDR->tp_dict, __pyx_n_s_add_encoding, __pyx_t_2) < 0) __PYX_ERR(0, 55, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_3src_3sgm_SGM->tp_dict, __pyx_n_s_add_encoding, __pyx_t_2) < 0) __PYX_ERR(0, 55, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  PyType_Modified(__pyx_ptype_3src_3sdr_SDR);
+  PyType_Modified(__pyx_ptype_3src_3sgm_SGM);
 
-  /* "src/sdr.py":68
+  /* "src/sgm.py":68
  *         self.encodings[enc_type] = {bit: bit_weight for bit in enc}
  * 
  *     def get_enc_types(self) -> set:             # <<<<<<<<<<<<<<
@@ -9213,15 +9213,15 @@ if (!__Pyx_RefNanny) {
   __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 68, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_return, __pyx_n_u_set) < 0) __PYX_ERR(0, 68, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_3src_3sdr_3SDR_11get_enc_types, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SDR_get_enc_types, NULL, __pyx_n_s_src_sdr, __pyx_d, ((PyObject *)__pyx_codeobj__12)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 68, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_3src_3sgm_3SGM_11get_enc_types, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SGM_get_enc_types, NULL, __pyx_n_s_src_sgm, __pyx_d, ((PyObject *)__pyx_codeobj__12)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 68, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_1, __pyx_t_2);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_3src_3sdr_SDR->tp_dict, __pyx_n_s_get_enc_types, __pyx_t_1) < 0) __PYX_ERR(0, 68, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_3src_3sgm_SGM->tp_dict, __pyx_n_s_get_enc_types, __pyx_t_1) < 0) __PYX_ERR(0, 68, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  PyType_Modified(__pyx_ptype_3src_3sdr_SDR);
+  PyType_Modified(__pyx_ptype_3src_3sgm_SGM);
 
-  /* "src/sdr.py":71
+  /* "src/sgm.py":71
  *         return set(self.encodings.keys())
  * 
  *     def get_enc_properties(self, enc_type: str) -> dict:             # <<<<<<<<<<<<<<
@@ -9232,15 +9232,15 @@ if (!__Pyx_RefNanny) {
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_enc_type, __pyx_n_u_str) < 0) __PYX_ERR(0, 71, __pyx_L1_error)
   if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_return, __pyx_n_u_dict_2) < 0) __PYX_ERR(0, 71, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_3src_3sdr_3SDR_13get_enc_properties, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SDR_get_enc_properties, NULL, __pyx_n_s_src_sdr, __pyx_d, ((PyObject *)__pyx_codeobj__14)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 71, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_3src_3sgm_3SGM_13get_enc_properties, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SGM_get_enc_properties, NULL, __pyx_n_s_src_sgm, __pyx_d, ((PyObject *)__pyx_codeobj__14)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 71, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_2, __pyx_t_1);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_3src_3sdr_SDR->tp_dict, __pyx_n_s_get_enc_properties, __pyx_t_2) < 0) __PYX_ERR(0, 71, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_3src_3sgm_SGM->tp_dict, __pyx_n_s_get_enc_properties, __pyx_t_2) < 0) __PYX_ERR(0, 71, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  PyType_Modified(__pyx_ptype_3src_3sdr_SDR);
+  PyType_Modified(__pyx_ptype_3src_3sgm_SGM);
 
-  /* "src/sdr.py":77
+  /* "src/sgm.py":77
  *             return {}
  * 
  *     def decode(self) -> dict:             # <<<<<<<<<<<<<<
@@ -9250,15 +9250,15 @@ if (!__Pyx_RefNanny) {
   __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 77, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_return, __pyx_n_u_dict_2) < 0) __PYX_ERR(0, 77, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_3src_3sdr_3SDR_15decode, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SDR_decode, NULL, __pyx_n_s_src_sdr, __pyx_d, ((PyObject *)__pyx_codeobj__16)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_3src_3sgm_3SGM_15decode, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SGM_decode, NULL, __pyx_n_s_src_sgm, __pyx_d, ((PyObject *)__pyx_codeobj__16)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 77, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_1, __pyx_t_2);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_3src_3sdr_SDR->tp_dict, __pyx_n_s_decode, __pyx_t_1) < 0) __PYX_ERR(0, 77, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_3src_3sgm_SGM->tp_dict, __pyx_n_s_decode, __pyx_t_1) < 0) __PYX_ERR(0, 77, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  PyType_Modified(__pyx_ptype_3src_3sdr_SDR);
+  PyType_Modified(__pyx_ptype_3src_3sgm_SGM);
 
-  /* "src/sdr.py":82
+  /* "src/sgm.py":82
  *         return dec
  * 
  *     def to_dict(self, decode: bool = False) -> dict:             # <<<<<<<<<<<<<<
@@ -9269,18 +9269,18 @@ if (!__Pyx_RefNanny) {
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_decode, ((PyObject*)&PyBool_Type)) < 0) __PYX_ERR(0, 82, __pyx_L1_error)
   if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_return, __pyx_n_u_dict_2) < 0) __PYX_ERR(0, 82, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_3src_3sdr_3SDR_17to_dict, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SDR_to_dict, NULL, __pyx_n_s_src_sdr, __pyx_d, ((PyObject *)__pyx_codeobj__18)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 82, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_3src_3sgm_3SGM_17to_dict, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SGM_to_dict, NULL, __pyx_n_s_src_sgm, __pyx_d, ((PyObject *)__pyx_codeobj__18)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 82, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_2, __pyx_t_1);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_3src_3sdr_SDR->tp_dict, __pyx_n_s_to_dict, __pyx_t_2) < 0) __PYX_ERR(0, 82, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_3src_3sgm_SGM->tp_dict, __pyx_n_s_to_dict, __pyx_t_2) < 0) __PYX_ERR(0, 82, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  PyType_Modified(__pyx_ptype_3src_3sdr_SDR);
+  PyType_Modified(__pyx_ptype_3src_3sgm_SGM);
 
-  /* "src/sdr.py":93
+  /* "src/sgm.py":93
  *         return d_sdr
  * 
- *     def overlap(self, sdr, search_types: set = None) -> dict:             # <<<<<<<<<<<<<<
+ *     def overlap(self, sgm, search_types: set = None) -> dict:             # <<<<<<<<<<<<<<
  * 
  *         enc_type: str
  */
@@ -9288,18 +9288,18 @@ if (!__Pyx_RefNanny) {
   __Pyx_GOTREF(__pyx_t_2);
   if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_search_types, __pyx_n_u_set) < 0) __PYX_ERR(0, 93, __pyx_L1_error)
   if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_return, __pyx_n_u_dict_2) < 0) __PYX_ERR(0, 93, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_3src_3sdr_3SDR_19overlap, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SDR_overlap, NULL, __pyx_n_s_src_sdr, __pyx_d, ((PyObject *)__pyx_codeobj__20)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 93, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_3src_3sgm_3SGM_19overlap, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SGM_overlap, NULL, __pyx_n_s_src_sgm, __pyx_d, ((PyObject *)__pyx_codeobj__20)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 93, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_1, __pyx_t_2);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_3src_3sdr_SDR->tp_dict, __pyx_n_s_overlap, __pyx_t_1) < 0) __PYX_ERR(0, 93, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_3src_3sgm_SGM->tp_dict, __pyx_n_s_overlap, __pyx_t_1) < 0) __PYX_ERR(0, 93, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  PyType_Modified(__pyx_ptype_3src_3sdr_SDR);
+  PyType_Modified(__pyx_ptype_3src_3sgm_SGM);
 
-  /* "src/sdr.py":125
+  /* "src/sgm.py":125
  *         return por
  * 
- *     def distance(self, sdr, search_types: set = None) -> dict:             # <<<<<<<<<<<<<<
+ *     def distance(self, sgm, search_types: set = None) -> dict:             # <<<<<<<<<<<<<<
  * 
  *         por: dict
  */
@@ -9307,18 +9307,18 @@ if (!__Pyx_RefNanny) {
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_search_types, __pyx_n_u_set) < 0) __PYX_ERR(0, 125, __pyx_L1_error)
   if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_return, __pyx_n_u_dict_2) < 0) __PYX_ERR(0, 125, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_3src_3sdr_3SDR_21distance, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SDR_distance, NULL, __pyx_n_s_src_sdr, __pyx_d, ((PyObject *)__pyx_codeobj__22)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 125, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_3src_3sgm_3SGM_21distance, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SGM_distance, NULL, __pyx_n_s_src_sgm, __pyx_d, ((PyObject *)__pyx_codeobj__22)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 125, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_2, __pyx_t_1);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_3src_3sdr_SDR->tp_dict, __pyx_n_s_distance, __pyx_t_2) < 0) __PYX_ERR(0, 125, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_3src_3sgm_SGM->tp_dict, __pyx_n_s_distance, __pyx_t_2) < 0) __PYX_ERR(0, 125, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  PyType_Modified(__pyx_ptype_3src_3sdr_SDR);
+  PyType_Modified(__pyx_ptype_3src_3sgm_SGM);
 
-  /* "src/sdr.py":139
+  /* "src/sgm.py":139
  *         return por
  * 
- *     def learn(self, sdr, learn_rate: float =1.0, learn_types: set = None, prune: float = 0.01):             # <<<<<<<<<<<<<<
+ *     def learn(self, sgm, learn_rate: float = 1.0, learn_types: set = None, prune: float = 0.01):             # <<<<<<<<<<<<<<
  * 
  *         enc_type: str
  */
@@ -9327,18 +9327,18 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_learn_rate, __pyx_n_u_float) < 0) __PYX_ERR(0, 139, __pyx_L1_error)
   if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_learn_types, __pyx_n_u_set) < 0) __PYX_ERR(0, 139, __pyx_L1_error)
   if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_prune, __pyx_n_u_float) < 0) __PYX_ERR(0, 139, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_3src_3sdr_3SDR_23learn, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SDR_learn, NULL, __pyx_n_s_src_sdr, __pyx_d, ((PyObject *)__pyx_codeobj__24)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 139, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_3src_3sgm_3SGM_23learn, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SGM_learn, NULL, __pyx_n_s_src_sgm, __pyx_d, ((PyObject *)__pyx_codeobj__24)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 139, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_1, __pyx_t_2);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_3src_3sdr_SDR->tp_dict, __pyx_n_s_learn, __pyx_t_1) < 0) __PYX_ERR(0, 139, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_3src_3sgm_SGM->tp_dict, __pyx_n_s_learn, __pyx_t_1) < 0) __PYX_ERR(0, 139, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  PyType_Modified(__pyx_ptype_3src_3sdr_SDR);
+  PyType_Modified(__pyx_ptype_3src_3sgm_SGM);
 
-  /* "src/sdr.py":203
+  /* "src/sgm.py":203
  *                 del self.properties[enc_type]
  * 
- *     def merge(self, sdr, weight: float = 1.0, enc_type_prefix: str = None):             # <<<<<<<<<<<<<<
+ *     def merge(self, sgm, weight: float = 1.0, enc_type_prefix: str = None):             # <<<<<<<<<<<<<<
  *         enc_type: str
  *         enc_types: set
  */
@@ -9346,38 +9346,38 @@ if (!__Pyx_RefNanny) {
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_weight, __pyx_n_u_float) < 0) __PYX_ERR(0, 203, __pyx_L1_error)
   if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_enc_type_prefix, __pyx_n_u_str) < 0) __PYX_ERR(0, 203, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_3src_3sdr_3SDR_25merge, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SDR_merge, NULL, __pyx_n_s_src_sdr, __pyx_d, ((PyObject *)__pyx_codeobj__26)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 203, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_3src_3sgm_3SGM_25merge, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SGM_merge, NULL, __pyx_n_s_src_sgm, __pyx_d, ((PyObject *)__pyx_codeobj__26)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 203, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_2, __pyx_t_1);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_3src_3sdr_SDR->tp_dict, __pyx_n_s_merge, __pyx_t_2) < 0) __PYX_ERR(0, 203, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_3src_3sgm_SGM->tp_dict, __pyx_n_s_merge, __pyx_t_2) < 0) __PYX_ERR(0, 203, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  PyType_Modified(__pyx_ptype_3src_3sdr_SDR);
+  PyType_Modified(__pyx_ptype_3src_3sgm_SGM);
 
   /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
  *     cdef tuple state
  *     cdef object _dict
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_3src_3sdr_3SDR_27__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SDR___reduce_cython, NULL, __pyx_n_s_src_sdr, __pyx_d, ((PyObject *)__pyx_codeobj__28)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_3src_3sgm_3SGM_27__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SGM___reduce_cython, NULL, __pyx_n_s_src_sgm, __pyx_d, ((PyObject *)__pyx_codeobj__28)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_3src_3sdr_SDR->tp_dict, __pyx_n_s_reduce_cython, __pyx_t_2) < 0) __PYX_ERR(1, 1, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_3src_3sgm_SGM->tp_dict, __pyx_n_s_reduce_cython, __pyx_t_2) < 0) __PYX_ERR(1, 1, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  PyType_Modified(__pyx_ptype_3src_3sdr_SDR);
+  PyType_Modified(__pyx_ptype_3src_3sgm_SGM);
 
   /* "(tree fragment)":16
  *     else:
- *         return __pyx_unpickle_SDR, (type(self), 0xa311906, state)
+ *         return __pyx_unpickle_SGM, (type(self), 0xa311906, state)
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
- *     __pyx_unpickle_SDR__set_state(self, __pyx_state)
+ *     __pyx_unpickle_SGM__set_state(self, __pyx_state)
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_3src_3sdr_3SDR_29__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SDR___setstate_cython, NULL, __pyx_n_s_src_sdr, __pyx_d, ((PyObject *)__pyx_codeobj__30)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 16, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_3src_3sgm_3SGM_29__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SGM___setstate_cython, NULL, __pyx_n_s_src_sgm, __pyx_d, ((PyObject *)__pyx_codeobj__30)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 16, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_3src_3sdr_SDR->tp_dict, __pyx_n_s_setstate_cython, __pyx_t_2) < 0) __PYX_ERR(1, 16, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_3src_3sgm_SGM->tp_dict, __pyx_n_s_setstate_cython, __pyx_t_2) < 0) __PYX_ERR(1, 16, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  PyType_Modified(__pyx_ptype_3src_3sdr_SDR);
+  PyType_Modified(__pyx_ptype_3src_3sgm_SGM);
 
-  /* "src/sdr.py":231
+  /* "src/sgm.py":231
  * 
  * 
  * if __name__ == '__main__':             # <<<<<<<<<<<<<<
@@ -9390,7 +9390,7 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   if (__pyx_t_3) {
 
-    /* "src/sdr.py":232
+    /* "src/sgm.py":232
  * 
  * if __name__ == '__main__':
  *     from src.numeric_encoder import NumericEncoder             # <<<<<<<<<<<<<<
@@ -9411,7 +9411,7 @@ if (!__Pyx_RefNanny) {
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "src/sdr.py":233
+    /* "src/sgm.py":233
  * if __name__ == '__main__':
  *     from src.numeric_encoder import NumericEncoder
  *     import time             # <<<<<<<<<<<<<<
@@ -9423,7 +9423,7 @@ if (!__Pyx_RefNanny) {
     if (PyDict_SetItem(__pyx_d, __pyx_n_s_time, __pyx_t_1) < 0) __PYX_ERR(0, 233, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "src/sdr.py":235
+    /* "src/sgm.py":235
  *     import time
  * 
  *     encoder = NumericEncoder(min_step=1,             # <<<<<<<<<<<<<<
@@ -9445,12 +9445,12 @@ if (!__Pyx_RefNanny) {
     if (PyDict_SetItem(__pyx_d, __pyx_n_s_encoder, __pyx_t_4) < 0) __PYX_ERR(0, 235, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "src/sdr.py":240
+    /* "src/sgm.py":240
  *                              seed=12345)
  * 
- *     sdr_1 = SDR(enc_type='volume', value=100, encoder=encoder)             # <<<<<<<<<<<<<<
+ *     sgm_1 = SGM(enc_type='volume', value=100, encoder=encoder)             # <<<<<<<<<<<<<<
  * 
- *     sdr_2 = SDR(enc_type='volume', value=210, encoder=encoder)
+ *     sgm_2 = SGM(enc_type='volume', value=210, encoder=encoder)
  */
     __pyx_t_4 = __Pyx_PyDict_NewPresized(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 240, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
@@ -9460,18 +9460,18 @@ if (!__Pyx_RefNanny) {
     __Pyx_GOTREF(__pyx_t_2);
     if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_encoder, __pyx_t_2) < 0) __PYX_ERR(0, 240, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_3src_3sdr_SDR), __pyx_empty_tuple, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 240, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_3src_3sgm_SGM), __pyx_empty_tuple, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 240, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_sdr_1, __pyx_t_2) < 0) __PYX_ERR(0, 240, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_sgm_1, __pyx_t_2) < 0) __PYX_ERR(0, 240, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "src/sdr.py":242
- *     sdr_1 = SDR(enc_type='volume', value=100, encoder=encoder)
+    /* "src/sgm.py":242
+ *     sgm_1 = SGM(enc_type='volume', value=100, encoder=encoder)
  * 
- *     sdr_2 = SDR(enc_type='volume', value=210, encoder=encoder)             # <<<<<<<<<<<<<<
+ *     sgm_2 = SGM(enc_type='volume', value=210, encoder=encoder)             # <<<<<<<<<<<<<<
  * 
- *     d = sdr_1.distance(sdr_2)
+ *     d = sgm_1.distance(sgm_2)
  */
     __pyx_t_2 = __Pyx_PyDict_NewPresized(3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 242, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
@@ -9481,25 +9481,25 @@ if (!__Pyx_RefNanny) {
     __Pyx_GOTREF(__pyx_t_4);
     if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_encoder, __pyx_t_4) < 0) __PYX_ERR(0, 242, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_3src_3sdr_SDR), __pyx_empty_tuple, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 242, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_3src_3sgm_SGM), __pyx_empty_tuple, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 242, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_sdr_2, __pyx_t_4) < 0) __PYX_ERR(0, 242, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_sgm_2, __pyx_t_4) < 0) __PYX_ERR(0, 242, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "src/sdr.py":244
- *     sdr_2 = SDR(enc_type='volume', value=210, encoder=encoder)
+    /* "src/sgm.py":244
+ *     sgm_2 = SGM(enc_type='volume', value=210, encoder=encoder)
  * 
- *     d = sdr_1.distance(sdr_2)             # <<<<<<<<<<<<<<
+ *     d = sgm_1.distance(sgm_2)             # <<<<<<<<<<<<<<
  * 
- *     o = sdr_1.overlap(sdr_2)
+ *     o = sgm_1.overlap(sgm_2)
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_sdr_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 244, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_sgm_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 244, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_distance); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 244, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_sdr_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 244, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_sgm_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 244, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 244, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
@@ -9508,19 +9508,19 @@ if (!__Pyx_RefNanny) {
     if (PyDict_SetItem(__pyx_d, __pyx_n_s_d, __pyx_t_1) < 0) __PYX_ERR(0, 244, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "src/sdr.py":246
- *     d = sdr_1.distance(sdr_2)
+    /* "src/sgm.py":246
+ *     d = sgm_1.distance(sgm_2)
  * 
- *     o = sdr_1.overlap(sdr_2)             # <<<<<<<<<<<<<<
+ *     o = sgm_1.overlap(sgm_2)             # <<<<<<<<<<<<<<
  * 
- *     m_dist = sdr_1.get_max_distance()
+ *     m_dist = sgm_1.get_max_distance()
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_sdr_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 246, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_sgm_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 246, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_overlap); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 246, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_sdr_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 246, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_sgm_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 246, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 246, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
@@ -9529,14 +9529,14 @@ if (!__Pyx_RefNanny) {
     if (PyDict_SetItem(__pyx_d, __pyx_n_s_o, __pyx_t_2) < 0) __PYX_ERR(0, 246, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "src/sdr.py":248
- *     o = sdr_1.overlap(sdr_2)
+    /* "src/sgm.py":248
+ *     o = sgm_1.overlap(sgm_2)
  * 
- *     m_dist = sdr_1.get_max_distance()             # <<<<<<<<<<<<<<
+ *     m_dist = sgm_1.get_max_distance()             # <<<<<<<<<<<<<<
  * 
- *     sdr_3 = SDR(sdr=sdr_2)
+ *     sgm_3 = SGM(sgm=sgm_2)
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sdr_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 248, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sgm_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 248, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_get_max_distance); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 248, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
@@ -9547,38 +9547,38 @@ if (!__Pyx_RefNanny) {
     if (PyDict_SetItem(__pyx_d, __pyx_n_s_m_dist, __pyx_t_2) < 0) __PYX_ERR(0, 248, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "src/sdr.py":250
- *     m_dist = sdr_1.get_max_distance()
+    /* "src/sgm.py":250
+ *     m_dist = sgm_1.get_max_distance()
  * 
- *     sdr_3 = SDR(sdr=sdr_2)             # <<<<<<<<<<<<<<
+ *     sgm_3 = SGM(sgm=sgm_2)             # <<<<<<<<<<<<<<
  * 
- *     sdr_3.learn(sdr_1, learn_rate=0.7, prune=0.01)
+ *     sgm_3.learn(sgm_1, learn_rate=0.7, prune=0.01)
  */
     __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 250, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_sdr_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 250, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_sgm_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 250, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_sdr, __pyx_t_1) < 0) __PYX_ERR(0, 250, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_sgm, __pyx_t_1) < 0) __PYX_ERR(0, 250, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_3src_3sdr_SDR), __pyx_empty_tuple, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 250, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_3src_3sgm_SGM), __pyx_empty_tuple, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 250, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_sdr_3, __pyx_t_1) < 0) __PYX_ERR(0, 250, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_sgm_3, __pyx_t_1) < 0) __PYX_ERR(0, 250, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "src/sdr.py":252
- *     sdr_3 = SDR(sdr=sdr_2)
+    /* "src/sgm.py":252
+ *     sgm_3 = SGM(sgm=sgm_2)
  * 
- *     sdr_3.learn(sdr_1, learn_rate=0.7, prune=0.01)             # <<<<<<<<<<<<<<
+ *     sgm_3.learn(sgm_1, learn_rate=0.7, prune=0.01)             # <<<<<<<<<<<<<<
  * 
- *     d_1 = sdr_1.distance(sdr=sdr_3)
+ *     d_1 = sgm_1.distance(sgm=sgm_3)
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_sdr_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 252, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_sgm_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 252, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_learn); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 252, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_sdr_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 252, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_sgm_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 252, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 252, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
@@ -9596,23 +9596,23 @@ if (!__Pyx_RefNanny) {
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-    /* "src/sdr.py":254
- *     sdr_3.learn(sdr_1, learn_rate=0.7, prune=0.01)
+    /* "src/sgm.py":254
+ *     sgm_3.learn(sgm_1, learn_rate=0.7, prune=0.01)
  * 
- *     d_1 = sdr_1.distance(sdr=sdr_3)             # <<<<<<<<<<<<<<
+ *     d_1 = sgm_1.distance(sgm=sgm_3)             # <<<<<<<<<<<<<<
  * 
- *     sdr_3.learn(sdr_1, learn_rate=0.7, prune=0.01)
+ *     sgm_3.learn(sgm_1, learn_rate=0.7, prune=0.01)
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_sdr_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 254, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_sgm_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 254, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_distance); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 254, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __pyx_t_5 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 254, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_sdr_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 254, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_sgm_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 254, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_sdr, __pyx_t_4) < 0) __PYX_ERR(0, 254, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_sgm, __pyx_t_4) < 0) __PYX_ERR(0, 254, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_empty_tuple, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 254, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
@@ -9621,19 +9621,19 @@ if (!__Pyx_RefNanny) {
     if (PyDict_SetItem(__pyx_d, __pyx_n_s_d_1, __pyx_t_4) < 0) __PYX_ERR(0, 254, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "src/sdr.py":256
- *     d_1 = sdr_1.distance(sdr=sdr_3)
+    /* "src/sgm.py":256
+ *     d_1 = sgm_1.distance(sgm=sgm_3)
  * 
- *     sdr_3.learn(sdr_1, learn_rate=0.7, prune=0.01)             # <<<<<<<<<<<<<<
+ *     sgm_3.learn(sgm_1, learn_rate=0.7, prune=0.01)             # <<<<<<<<<<<<<<
  * 
- *     d_2 = sdr_1.distance(sdr=sdr_3)
+ *     d_2 = sgm_1.distance(sgm=sgm_3)
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_sdr_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 256, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_sgm_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 256, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_learn); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 256, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_sdr_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 256, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_sgm_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 256, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 256, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
@@ -9651,23 +9651,23 @@ if (!__Pyx_RefNanny) {
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "src/sdr.py":258
- *     sdr_3.learn(sdr_1, learn_rate=0.7, prune=0.01)
+    /* "src/sgm.py":258
+ *     sgm_3.learn(sgm_1, learn_rate=0.7, prune=0.01)
  * 
- *     d_2 = sdr_1.distance(sdr=sdr_3)             # <<<<<<<<<<<<<<
+ *     d_2 = sgm_1.distance(sgm=sgm_3)             # <<<<<<<<<<<<<<
  * 
- *     sdr_3.learn(sdr_1, learn_rate=0.7, prune=0.01)
+ *     sgm_3.learn(sgm_1, learn_rate=0.7, prune=0.01)
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sdr_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 258, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sgm_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 258, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_distance); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 258, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 258, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_sdr_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 258, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_sgm_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 258, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_sdr, __pyx_t_1) < 0) __PYX_ERR(0, 258, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_sgm, __pyx_t_1) < 0) __PYX_ERR(0, 258, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_empty_tuple, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 258, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
@@ -9676,19 +9676,19 @@ if (!__Pyx_RefNanny) {
     if (PyDict_SetItem(__pyx_d, __pyx_n_s_d_2, __pyx_t_1) < 0) __PYX_ERR(0, 258, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "src/sdr.py":260
- *     d_2 = sdr_1.distance(sdr=sdr_3)
+    /* "src/sgm.py":260
+ *     d_2 = sgm_1.distance(sgm=sgm_3)
  * 
- *     sdr_3.learn(sdr_1, learn_rate=0.7, prune=0.01)             # <<<<<<<<<<<<<<
+ *     sgm_3.learn(sgm_1, learn_rate=0.7, prune=0.01)             # <<<<<<<<<<<<<<
  * 
- *     d_3 = sdr_1.distance(sdr=sdr_3)
+ *     d_3 = sgm_1.distance(sgm=sgm_3)
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_sdr_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 260, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_sgm_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 260, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_learn); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 260, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_sdr_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 260, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_sgm_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 260, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 260, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
@@ -9706,23 +9706,23 @@ if (!__Pyx_RefNanny) {
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-    /* "src/sdr.py":262
- *     sdr_3.learn(sdr_1, learn_rate=0.7, prune=0.01)
+    /* "src/sgm.py":262
+ *     sgm_3.learn(sgm_1, learn_rate=0.7, prune=0.01)
  * 
- *     d_3 = sdr_1.distance(sdr=sdr_3)             # <<<<<<<<<<<<<<
+ *     d_3 = sgm_1.distance(sgm=sgm_3)             # <<<<<<<<<<<<<<
  * 
- *     sdr_4 = SDR()
+ *     sgm_4 = SGM()
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_sdr_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 262, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_sgm_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 262, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_distance); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 262, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __pyx_t_5 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 262, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_sdr_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 262, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_sgm_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 262, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_sdr, __pyx_t_4) < 0) __PYX_ERR(0, 262, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_sgm, __pyx_t_4) < 0) __PYX_ERR(0, 262, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_empty_tuple, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 262, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
@@ -9731,31 +9731,31 @@ if (!__Pyx_RefNanny) {
     if (PyDict_SetItem(__pyx_d, __pyx_n_s_d_3, __pyx_t_4) < 0) __PYX_ERR(0, 262, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "src/sdr.py":264
- *     d_3 = sdr_1.distance(sdr=sdr_3)
+    /* "src/sgm.py":264
+ *     d_3 = sgm_1.distance(sgm=sgm_3)
  * 
- *     sdr_4 = SDR()             # <<<<<<<<<<<<<<
+ *     sgm_4 = SGM()             # <<<<<<<<<<<<<<
  * 
- *     sdr_3.learn(sdr_4, learn_rate=0.7, prune=0.01)
+ *     sgm_3.learn(sgm_4, learn_rate=0.7, prune=0.01)
  */
-    __pyx_t_4 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_3src_3sdr_SDR)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 264, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_3src_3sgm_SGM)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 264, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_sdr_4, __pyx_t_4) < 0) __PYX_ERR(0, 264, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_sgm_4, __pyx_t_4) < 0) __PYX_ERR(0, 264, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "src/sdr.py":266
- *     sdr_4 = SDR()
+    /* "src/sgm.py":266
+ *     sgm_4 = SGM()
  * 
- *     sdr_3.learn(sdr_4, learn_rate=0.7, prune=0.01)             # <<<<<<<<<<<<<<
+ *     sgm_3.learn(sgm_4, learn_rate=0.7, prune=0.01)             # <<<<<<<<<<<<<<
  * 
  *     start_time = time.time()
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_sdr_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 266, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_sgm_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 266, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_learn); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 266, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_sdr_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 266, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_sgm_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 266, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 266, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
@@ -9773,12 +9773,12 @@ if (!__Pyx_RefNanny) {
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "src/sdr.py":268
- *     sdr_3.learn(sdr_4, learn_rate=0.7, prune=0.01)
+    /* "src/sgm.py":268
+ *     sgm_3.learn(sgm_4, learn_rate=0.7, prune=0.01)
  * 
  *     start_time = time.time()             # <<<<<<<<<<<<<<
  *     for i in range(1000):
- *         d_4 = sdr_1.distance(sdr=sdr_3)
+ *         d_4 = sgm_1.distance(sgm=sgm_3)
  */
     __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_time); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 268, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
@@ -9791,11 +9791,11 @@ if (!__Pyx_RefNanny) {
     if (PyDict_SetItem(__pyx_d, __pyx_n_s_start_time, __pyx_t_2) < 0) __PYX_ERR(0, 268, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "src/sdr.py":269
+    /* "src/sgm.py":269
  * 
  *     start_time = time.time()
  *     for i in range(1000):             # <<<<<<<<<<<<<<
- *         d_4 = sdr_1.distance(sdr=sdr_3)
+ *         d_4 = sgm_1.distance(sgm=sgm_3)
  *     end_time = time.time()
  */
     for (__pyx_t_6 = 0; __pyx_t_6 < 0x3E8; __pyx_t_6+=1) {
@@ -9804,23 +9804,23 @@ if (!__Pyx_RefNanny) {
       if (PyDict_SetItem(__pyx_d, __pyx_n_s_i, __pyx_t_2) < 0) __PYX_ERR(0, 269, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-      /* "src/sdr.py":270
+      /* "src/sgm.py":270
  *     start_time = time.time()
  *     for i in range(1000):
- *         d_4 = sdr_1.distance(sdr=sdr_3)             # <<<<<<<<<<<<<<
+ *         d_4 = sgm_1.distance(sgm=sgm_3)             # <<<<<<<<<<<<<<
  *     end_time = time.time()
  *     print((end_time - start_time)/1000)
  */
-      __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sdr_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 270, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sgm_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 270, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_distance); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 270, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 270, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_sdr_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 270, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_sgm_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 270, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_sdr, __pyx_t_1) < 0) __PYX_ERR(0, 270, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_sgm, __pyx_t_1) < 0) __PYX_ERR(0, 270, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_empty_tuple, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 270, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
@@ -9830,9 +9830,9 @@ if (!__Pyx_RefNanny) {
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     }
 
-    /* "src/sdr.py":271
+    /* "src/sgm.py":271
  *     for i in range(1000):
- *         d_4 = sdr_1.distance(sdr=sdr_3)
+ *         d_4 = sgm_1.distance(sgm=sgm_3)
  *     end_time = time.time()             # <<<<<<<<<<<<<<
  *     print((end_time - start_time)/1000)
  * 
@@ -9848,12 +9848,12 @@ if (!__Pyx_RefNanny) {
     if (PyDict_SetItem(__pyx_d, __pyx_n_s_end_time, __pyx_t_1) < 0) __PYX_ERR(0, 271, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "src/sdr.py":272
- *         d_4 = sdr_1.distance(sdr=sdr_3)
+    /* "src/sgm.py":272
+ *         d_4 = sgm_1.distance(sgm=sgm_3)
  *     end_time = time.time()
  *     print((end_time - start_time)/1000)             # <<<<<<<<<<<<<<
  * 
- *     sdr_3.learn(sdr_4, learn_rate=0.7, prune=0.01)
+ *     sgm_3.learn(sgm_4, learn_rate=0.7, prune=0.01)
  */
     __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_end_time); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 272, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
@@ -9869,19 +9869,19 @@ if (!__Pyx_RefNanny) {
     if (__Pyx_PrintOne(0, __pyx_t_2) < 0) __PYX_ERR(0, 272, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "src/sdr.py":274
+    /* "src/sgm.py":274
  *     print((end_time - start_time)/1000)
  * 
- *     sdr_3.learn(sdr_4, learn_rate=0.7, prune=0.01)             # <<<<<<<<<<<<<<
+ *     sgm_3.learn(sgm_4, learn_rate=0.7, prune=0.01)             # <<<<<<<<<<<<<<
  * 
- *     d_5 = sdr_1.distance(sdr=sdr_3)
+ *     d_5 = sgm_1.distance(sgm=sgm_3)
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sdr_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 274, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sgm_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 274, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_learn); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 274, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sdr_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 274, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sgm_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 274, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 274, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
@@ -9899,23 +9899,23 @@ if (!__Pyx_RefNanny) {
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-    /* "src/sdr.py":276
- *     sdr_3.learn(sdr_4, learn_rate=0.7, prune=0.01)
+    /* "src/sgm.py":276
+ *     sgm_3.learn(sgm_4, learn_rate=0.7, prune=0.01)
  * 
- *     d_5 = sdr_1.distance(sdr=sdr_3)             # <<<<<<<<<<<<<<
+ *     d_5 = sgm_1.distance(sgm=sgm_3)             # <<<<<<<<<<<<<<
  * 
- *     sdr_3.learn(sdr_4, learn_rate=0.7, prune=0.01)
+ *     sgm_3.learn(sgm_4, learn_rate=0.7, prune=0.01)
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_sdr_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 276, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_sgm_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 276, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_distance); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 276, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __pyx_t_5 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 276, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_sdr_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 276, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_sgm_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 276, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_sdr, __pyx_t_1) < 0) __PYX_ERR(0, 276, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_sgm, __pyx_t_1) < 0) __PYX_ERR(0, 276, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_empty_tuple, __pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 276, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
@@ -9924,19 +9924,19 @@ if (!__Pyx_RefNanny) {
     if (PyDict_SetItem(__pyx_d, __pyx_n_s_d_5, __pyx_t_1) < 0) __PYX_ERR(0, 276, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "src/sdr.py":278
- *     d_5 = sdr_1.distance(sdr=sdr_3)
+    /* "src/sgm.py":278
+ *     d_5 = sgm_1.distance(sgm=sgm_3)
  * 
- *     sdr_3.learn(sdr_4, learn_rate=0.7, prune=0.01)             # <<<<<<<<<<<<<<
+ *     sgm_3.learn(sgm_4, learn_rate=0.7, prune=0.01)             # <<<<<<<<<<<<<<
  * 
- *     d_6 = sdr_1.distance(sdr=sdr_3)
+ *     d_6 = sgm_1.distance(sgm=sgm_3)
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_sdr_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 278, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_sgm_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 278, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_learn); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 278, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_sdr_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 278, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_sgm_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 278, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 278, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
@@ -9954,23 +9954,23 @@ if (!__Pyx_RefNanny) {
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "src/sdr.py":280
- *     sdr_3.learn(sdr_4, learn_rate=0.7, prune=0.01)
+    /* "src/sgm.py":280
+ *     sgm_3.learn(sgm_4, learn_rate=0.7, prune=0.01)
  * 
- *     d_6 = sdr_1.distance(sdr=sdr_3)             # <<<<<<<<<<<<<<
+ *     d_6 = sgm_1.distance(sgm=sgm_3)             # <<<<<<<<<<<<<<
  * 
- *     sdr_3.learn(sdr_4, learn_rate=0.7, prune=0.01)
+ *     sgm_3.learn(sgm_4, learn_rate=0.7, prune=0.01)
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_sdr_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 280, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_sgm_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 280, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_distance); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 280, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 280, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sdr_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 280, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sgm_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 280, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_sdr, __pyx_t_2) < 0) __PYX_ERR(0, 280, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_sgm, __pyx_t_2) < 0) __PYX_ERR(0, 280, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_empty_tuple, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 280, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
@@ -9979,19 +9979,19 @@ if (!__Pyx_RefNanny) {
     if (PyDict_SetItem(__pyx_d, __pyx_n_s_d_6, __pyx_t_2) < 0) __PYX_ERR(0, 280, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "src/sdr.py":282
- *     d_6 = sdr_1.distance(sdr=sdr_3)
+    /* "src/sgm.py":282
+ *     d_6 = sgm_1.distance(sgm=sgm_3)
  * 
- *     sdr_3.learn(sdr_4, learn_rate=0.7, prune=0.01)             # <<<<<<<<<<<<<<
+ *     sgm_3.learn(sgm_4, learn_rate=0.7, prune=0.01)             # <<<<<<<<<<<<<<
  * 
- *     d_7 = sdr_1.distance(sdr=sdr_3)
+ *     d_7 = sgm_1.distance(sgm=sgm_3)
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sdr_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 282, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sgm_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 282, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_learn); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 282, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sdr_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 282, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sgm_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 282, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 282, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
@@ -10009,23 +10009,23 @@ if (!__Pyx_RefNanny) {
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-    /* "src/sdr.py":284
- *     sdr_3.learn(sdr_4, learn_rate=0.7, prune=0.01)
+    /* "src/sgm.py":284
+ *     sgm_3.learn(sgm_4, learn_rate=0.7, prune=0.01)
  * 
- *     d_7 = sdr_1.distance(sdr=sdr_3)             # <<<<<<<<<<<<<<
+ *     d_7 = sgm_1.distance(sgm=sgm_3)             # <<<<<<<<<<<<<<
  * 
  * 
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_sdr_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 284, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_sgm_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 284, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_distance); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 284, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __pyx_t_5 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 284, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_sdr_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 284, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_sgm_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 284, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_sdr, __pyx_t_1) < 0) __PYX_ERR(0, 284, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_sgm, __pyx_t_1) < 0) __PYX_ERR(0, 284, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_empty_tuple, __pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 284, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
@@ -10034,14 +10034,14 @@ if (!__Pyx_RefNanny) {
     if (PyDict_SetItem(__pyx_d, __pyx_n_s_d_7, __pyx_t_1) < 0) __PYX_ERR(0, 284, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "src/sdr.py":287
+    /* "src/sgm.py":287
  * 
  * 
  *     print('finished')             # <<<<<<<<<<<<<<
  */
     if (__Pyx_PrintOne(0, __pyx_n_s_finished) < 0) __PYX_ERR(0, 287, __pyx_L1_error)
 
-    /* "src/sdr.py":231
+    /* "src/sgm.py":231
  * 
  * 
  * if __name__ == '__main__':             # <<<<<<<<<<<<<<
@@ -10051,16 +10051,16 @@ if (!__Pyx_RefNanny) {
   }
 
   /* "(tree fragment)":1
- * def __pyx_unpickle_SDR(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
+ * def __pyx_unpickle_SGM(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
  *     cdef object __pyx_PickleError
  *     cdef object __pyx_result
  */
-  __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_3src_3sdr_1__pyx_unpickle_SDR, 0, __pyx_n_s_pyx_unpickle_SDR, NULL, __pyx_n_s_src_sdr, __pyx_d, ((PyObject *)__pyx_codeobj__32)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_3src_3sgm_1__pyx_unpickle_SGM, 0, __pyx_n_s_pyx_unpickle_SGM, NULL, __pyx_n_s_src_sgm, __pyx_d, ((PyObject *)__pyx_codeobj__32)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_pyx_unpickle_SDR, __pyx_t_1) < 0) __PYX_ERR(1, 1, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_pyx_unpickle_SGM, __pyx_t_1) < 0) __PYX_ERR(1, 1, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/sdr.py":1
+  /* "src/sgm.py":1
  * #!/usr/bin/env python             # <<<<<<<<<<<<<<
  * # -*- encoding: utf-8 -*-
  * from copy import deepcopy
@@ -10080,11 +10080,11 @@ if (!__Pyx_RefNanny) {
   __Pyx_XDECREF(__pyx_t_5);
   if (__pyx_m) {
     if (__pyx_d) {
-      __Pyx_AddTraceback("init src.sdr", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init src.sgm", __pyx_clineno, __pyx_lineno, __pyx_filename);
     }
     Py_CLEAR(__pyx_m);
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init src.sdr");
+    PyErr_SetString(PyExc_ImportError, "init src.sgm");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();

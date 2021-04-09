@@ -218,7 +218,8 @@ class NumericEncoder(Encoder):
                 value = 0.0
                 total_weight = 0.0
 
-                #for idx in range(len(buckets)):
+                # look only at the top 3 buckets which should contain the most relevant values
+                #
                 for idx in range(min(3, len(buckets))):
                     value += (buckets[idx][0] + self.zero_bucket) * self.min_step * buckets[idx][1]
                     total_weight += buckets[idx][1]
@@ -232,8 +233,6 @@ class NumericEncoder(Encoder):
 
 
 if __name__ == '__main__':
-
-    from src.sdr import SDR
 
     encoder = NumericEncoder(min_step=0.5, n_bits=40, enc_size=2048)
 
@@ -251,39 +250,5 @@ if __name__ == '__main__':
     val_3 = encoder.decode(enc_3)
 
     val_4 = encoder.decode(enc_4)
-
-    sdr_1 = SDR(enc_type='test', value=100, encoder=encoder)
-    sdr_2 = SDR(enc_type='test', value=102, encoder=encoder)
-    sdr_3 = SDR(enc_type='test', value=100.5, encoder=encoder)
-
-    d_1_2 = sdr_1.distance(sdr_2)
-
-    d_1_3 = sdr_1.distance(sdr_3)
-
-    learn_rate = 0.5
-    sdr_1.learn(sdr=sdr_2, learn_rate=learn_rate, prune=0.01)
-    d_1_4 = sdr_1.distance(sdr_2)
-
-    val_1_learned_1 = sdr_1.decode()
-
-    sdr_1.learn(sdr=sdr_2, learn_rate=learn_rate, prune=0.01)
-    d_1_5 = sdr_1.distance(sdr_2)
-
-    val_1_learned_2 = sdr_1.decode()
-
-    sdr_1.learn(sdr=sdr_2, learn_rate=learn_rate, prune=0.01)
-    d_1_6 = sdr_1.distance(sdr_2)
-
-    val_1_learned_3 = sdr_1.decode()
-
-    sdr_1.learn(sdr=sdr_2, learn_rate=learn_rate, prune=0.01)
-    d_1_7 = sdr_1.distance(sdr_2)
-
-    val_1_learned_4 = sdr_1.decode()
-
-    sdr_1.learn(sdr=sdr_2, learn_rate=learn_rate, prune=0.01)
-    d_1_8 = sdr_1.distance(sdr_2)
-
-    val_1_learned_5 = sdr_1.decode()
 
     print('finished')

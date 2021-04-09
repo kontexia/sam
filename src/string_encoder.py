@@ -62,7 +62,7 @@ class StringEncoder(Encoder):
 
 if __name__ == '__main__':
 
-    from src.sdr import SDR
+    from src.sgm import SDR
 
     encoder = StringEncoder(n_bits=40, enc_size=2048)
 

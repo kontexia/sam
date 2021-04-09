@@ -27,27 +27,27 @@ def plot_sam(sam, raw_data, xyz_types, colour_nodes):
 
     neuron_xyz = {}
     for neuron_key in sam['neurons']:
-        for enc_type in sam['neurons'][neuron_key]['sdr']['encodings']:
+        for enc_type in sam['neurons'][neuron_key]['sgm']['encodings']:
             if enc_type == xyz_types[0]:
-                node_x.append(sam['neurons'][neuron_key]['sdr']['encodings'][enc_type])
+                node_x.append(sam['neurons'][neuron_key]['sgm']['encodings'][enc_type])
                 if neuron_key not in neuron_xyz:
-                    neuron_xyz[neuron_key]={'x': sam['neurons'][neuron_key]['sdr']['encodings'][enc_type], 'z': 0.0, 'y': 0.0}
+                    neuron_xyz[neuron_key]={'x': sam['neurons'][neuron_key]['sgm']['encodings'][enc_type], 'z': 0.0, 'y': 0.0}
                 else:
-                    neuron_xyz[neuron_key]['x'] = sam['neurons'][neuron_key]['sdr']['encodings'][enc_type]
+                    neuron_xyz[neuron_key]['x'] = sam['neurons'][neuron_key]['sgm']['encodings'][enc_type]
             elif enc_type == xyz_types[1]:
-                node_y.append(sam['neurons'][neuron_key]['sdr']['encodings'][enc_type])
+                node_y.append(sam['neurons'][neuron_key]['sgm']['encodings'][enc_type])
                 if neuron_key not in neuron_xyz:
-                    neuron_xyz[neuron_key] = {'y': sam['neurons'][neuron_key]['sdr']['encodings'][enc_type], 'x': 0.0, 'z': 0.0}
+                    neuron_xyz[neuron_key] = {'y': sam['neurons'][neuron_key]['sgm']['encodings'][enc_type], 'x': 0.0, 'z': 0.0}
                 else:
-                    neuron_xyz[neuron_key]['y'] = sam['neurons'][neuron_key]['sdr']['encodings'][enc_type]
+                    neuron_xyz[neuron_key]['y'] = sam['neurons'][neuron_key]['sgm']['encodings'][enc_type]
 
             elif len(xyz_types) == 3 and enc_type == xyz_types[2]:
 
-                node_z.append(sam['neurons'][neuron_key]['sdr']['encodings'][enc_type])
+                node_z.append(sam['neurons'][neuron_key]['sgm']['encodings'][enc_type])
                 if neuron_key not in neuron_xyz:
-                    neuron_xyz[neuron_key] = {'z': sam['neurons'][neuron_key]['sdr']['encodings'][enc_type], 'x': 0.0, 'y': 0.0}
+                    neuron_xyz[neuron_key] = {'z': sam['neurons'][neuron_key]['sgm']['encodings'][enc_type], 'x': 0.0, 'y': 0.0}
                 else:
-                    neuron_xyz[neuron_key]['z'] = sam['neurons'][neuron_key]['sdr']['encodings'][enc_type]
+                    neuron_xyz[neuron_key]['z'] = sam['neurons'][neuron_key]['sgm']['encodings'][enc_type]
 
             if colour_nodes is not None and enc_type == colour_nodes:
                 if enc_type not in colour_labels:

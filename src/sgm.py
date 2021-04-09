@@ -4,20 +4,20 @@ from copy import deepcopy
 import cython
 
 @cython.cclass
-class SDR(object):
+class SGM(object):
     encodings = cython.declare(dict, visibility='public')
     properties = cython.declare(dict, visibility='public')
 
-    def __init__(self, sdr=None, enc_type=None, value=None, enc_properties=None, encoder=None, bit_weight=1.0):
+    def __init__(self, sgm=None, enc_type=None, value=None, enc_properties=None, encoder=None, bit_weight=1.0):
 
         self.encodings = {}
         self.properties = {}
 
-        # copy an sdr if provided
+        # copy an sgm if provided
         # note don't copy encoder just take reference
         #
-        if sdr is not None:
-            self.copy(sdr=sdr)
+        if sgm is not None:
+            self.copy(sgm=sgm)
 
         # else process a new value
         #
@@ -41,16 +41,16 @@ class SDR(object):
         self.encodings = {enc_type.replace(enc_type_prefix, ''): self.encodings[enc_type] for enc_type in self.encodings}
         self.properties = {enc_type.replace(enc_type_prefix, ''): self.properties[enc_type] for enc_type in self.properties}
 
-    def copy(self, sdr, enc_type_prefix: str = None):
+    def copy(self, sgm, enc_type_prefix: str = None):
         enc_type: str
         prop: str
 
         if enc_type_prefix is not None:
-            self.encodings = {f'{enc_type_prefix}_{enc_type}': deepcopy(sdr.encodings[enc_type]) for enc_type in sdr.encodings}
-            self.properties = {f'{enc_type_prefix}_{enc_type}': {prop: sdr.properties[enc_type][prop] for prop in sdr.properties[enc_type]} for enc_type in sdr.properties}
+            self.encodings = {f'{enc_type_prefix}_{enc_type}': deepcopy(sgm.encodings[enc_type]) for enc_type in sgm.encodings}
+            self.properties = {f'{enc_type_prefix}_{enc_type}': {prop: sgm.properties[enc_type][prop] for prop in sgm.properties[enc_type]} for enc_type in sgm.properties}
         else:
-            self.encodings = deepcopy(sdr.encodings)
-            self.properties = {enc_type: {prop: sdr.properties[enc_type][prop] for prop in sdr.properties[enc_type]} for enc_type in sdr.properties}
+            self.encodings = deepcopy(sgm.encodings)
+            self.properties = {enc_type: {prop: sgm.properties[enc_type][prop] for prop in sgm.properties[enc_type]} for enc_type in sgm.properties}
 
     def add_encoding(self, enc_type: str, value, encoder, enc_properties: dict = None, bit_weight: float = 1.0):
 
@@ -90,7 +90,7 @@ class SDR(object):
         d_sdr['properties'] = {enc_type: {prop: self.properties[enc_type][prop] for prop in self.properties[enc_type]} for enc_type in self.properties}
         return d_sdr
 
-    def overlap(self, sdr, search_types: set = None) -> dict:
+    def overlap(self, sgm, search_types: set = None) -> dict:
 
         enc_type: str
         enc_types: set
@@ -104,15 +104,15 @@ class SDR(object):
                           for enc_type in self.encodings.keys()
                           if enc_type in search_types} &
                          {enc_type
-                          for enc_type in sdr.encodings.keys()
+                          for enc_type in sgm.encodings.keys()
                           if enc_type in search_types})
         else:
-            enc_types = set(self.encodings.keys()) & set(sdr.encodings.keys())
+            enc_types = set(self.encodings.keys()) & set(sgm.encodings.keys())
 
         por = {'overlap': 0, 'norm_overlap': 0.0}
 
-        por['enc_types'] = {enc_type: sum([min(self.encodings[enc_type][bit], sdr.encodings[enc_type][bit])
-                                           for bit in set(self.encodings[enc_type].keys()) & set(sdr.encodings[enc_type].keys())])
+        por['enc_types'] = {enc_type: sum([min(self.encodings[enc_type][bit], sgm.encodings[enc_type][bit])
+                                           for bit in set(self.encodings[enc_type].keys()) & set(sgm.encodings[enc_type].keys())])
                             for enc_type in enc_types}
 
         por['overlap'] = sum([por['enc_types'][enc_type] for enc_type in por['enc_types']])
@@ -122,12 +122,12 @@ class SDR(object):
 
         return por
 
-    def distance(self, sdr, search_types: set = None) -> dict:
+    def distance(self, sgm, search_types: set = None) -> dict:
 
         por: dict
 
-        por = self.overlap(sdr=sdr, search_types=search_types)
-        por['max_distance'] = max(self.get_max_distance(search_types=search_types), sdr.get_max_distance(search_types=search_types))
+        por = self.overlap(sgm=sgm, search_types=search_types)
+        por['max_distance'] = max(self.get_max_distance(search_types=search_types), sgm.get_max_distance(search_types=search_types))
         por['distance'] = por['max_distance'] - por['overlap']
         if por['max_distance'] > 0.0:
             por['similarity'] = por['overlap'] / por['max_distance']
@@ -136,7 +136,7 @@ class SDR(object):
 
         return por
 
-    def learn(self, sdr, learn_rate: float =1.0, learn_types: set = None, prune: float = 0.01):
+    def learn(self, sgm, learn_rate: float = 1.0, learn_types: set = None, prune: float = 0.01):
 
         enc_type: str
         enc_types: set
@@ -145,7 +145,7 @@ class SDR(object):
         bit: int
         prop: str
 
-        # if this sdr is empty then learn at fastest rate
+        # if this sgm is empty then learn at fastest rate
         #
         if len(self.encodings) == 0:
             learn_rate = 1.0
@@ -155,24 +155,24 @@ class SDR(object):
                          for enc_type in self.encodings.keys()
                          if enc_type in learn_types} |
                          {enc_type
-                          for enc_type in sdr.encodings.keys()
+                          for enc_type in sgm.encodings.keys()
                           if enc_type in learn_types})
 
         else:
-            enc_types = set(self.encodings.keys()) | set(sdr.encodings.keys())
+            enc_types = set(self.encodings.keys()) | set(sgm.encodings.keys())
 
         for enc_type in enc_types:
-            if enc_type in self.encodings and enc_type in sdr.encodings:
+            if enc_type in self.encodings and enc_type in sgm.encodings:
                 self_bits = set(self.encodings[enc_type].keys())
-                sdr_bits = set(sdr.encodings[enc_type].keys())
+                sdr_bits = set(sgm.encodings[enc_type].keys())
                 bits = self_bits | sdr_bits
                 for bit in bits:
-                    if bit in self.encodings[enc_type] and bit in sdr.encodings[enc_type]:
-                        self.encodings[enc_type][bit] += (sdr.encodings[enc_type][bit] - self.encodings[enc_type][bit]) * learn_rate
+                    if bit in self.encodings[enc_type] and bit in sgm.encodings[enc_type]:
+                        self.encodings[enc_type][bit] += (sgm.encodings[enc_type][bit] - self.encodings[enc_type][bit]) * learn_rate
                     elif bit in self.encodings[enc_type]:
                         self.encodings[enc_type][bit] -= self.encodings[enc_type][bit] * learn_rate
                     else:
-                        self.encodings[enc_type][bit] = sdr.encodings[enc_type][bit] * learn_rate
+                        self.encodings[enc_type][bit] = sgm.encodings[enc_type][bit] * learn_rate
 
                     # prune if required
                     #
@@ -188,11 +188,11 @@ class SDR(object):
                     if self.encodings[enc_type][bit] < prune:
                         del self.encodings[enc_type][bit]
             else:
-                self.encodings[enc_type] = {bit: sdr.encodings[enc_type][bit] * learn_rate for bit in sdr.encodings[enc_type]}
+                self.encodings[enc_type] = {bit: sgm.encodings[enc_type][bit] * learn_rate for bit in sgm.encodings[enc_type]}
 
                 # copy over the properties
                 #
-                self.properties[enc_type] = {prop: sdr.properties[enc_type][prop] for prop in sdr.properties[enc_type]}
+                self.properties[enc_type] = {prop: sgm.properties[enc_type][prop] for prop in sgm.properties[enc_type]}
 
             # prune the bit type if empty
             #
@@ -200,14 +200,14 @@ class SDR(object):
                 del self.encodings[enc_type]
                 del self.properties[enc_type]
 
-    def merge(self, sdr, weight: float = 1.0, enc_type_prefix: str = None):
+    def merge(self, sgm, weight: float = 1.0, enc_type_prefix: str = None):
         enc_type: str
         enc_types: set
         por: dict
         bit: int
         prop: str
 
-        for enc_type in sdr.encodings:
+        for enc_type in sgm.encodings:
 
             if enc_type_prefix is not None:
                 self_enc_type = f'{enc_type_prefix}_{enc_type}'
@@ -215,17 +215,17 @@ class SDR(object):
                 self_enc_type = enc_type
 
             if self_enc_type in self.encodings:
-                for bit in sdr.encodings[enc_type].keys():
+                for bit in sgm.encodings[enc_type].keys():
                     if bit in self.encodings[self_enc_type]:
-                        self.encodings[self_enc_type][bit] += sdr.encodings[enc_type][bit] * weight
+                        self.encodings[self_enc_type][bit] += sgm.encodings[enc_type][bit] * weight
                     else:
-                        self.encodings[self_enc_type][bit] = sdr.encodings[enc_type][bit] * weight
+                        self.encodings[self_enc_type][bit] = sgm.encodings[enc_type][bit] * weight
             else:
-                self.encodings[self_enc_type] = {bit: sdr.encodings[enc_type][bit] * weight for bit in sdr.encodings[enc_type]}
+                self.encodings[self_enc_type] = {bit: sgm.encodings[enc_type][bit] * weight for bit in sgm.encodings[enc_type]}
 
                 # copy over the properties
                 #
-                self.properties[self_enc_type] = {prop: sdr.properties[enc_type][prop] for prop in sdr.properties[enc_type]}
+                self.properties[self_enc_type] = {prop: sgm.properties[enc_type][prop] for prop in sgm.properties[enc_type]}
 
 
 if __name__ == '__main__':
@@ -237,51 +237,51 @@ if __name__ == '__main__':
                              enc_size=2048,
                              seed=12345)
 
-    sdr_1 = SDR(enc_type='volume', value=100, encoder=encoder)
+    sgm_1 = SGM(enc_type='volume', value=100, encoder=encoder)
 
-    sdr_2 = SDR(enc_type='volume', value=210, encoder=encoder)
+    sgm_2 = SGM(enc_type='volume', value=210, encoder=encoder)
 
-    d = sdr_1.distance(sdr_2)
+    d = sgm_1.distance(sgm_2)
 
-    o = sdr_1.overlap(sdr_2)
+    o = sgm_1.overlap(sgm_2)
 
-    m_dist = sdr_1.get_max_distance()
+    m_dist = sgm_1.get_max_distance()
 
-    sdr_3 = SDR(sdr=sdr_2)
+    sgm_3 = SGM(sgm=sgm_2)
 
-    sdr_3.learn(sdr_1, learn_rate=0.7, prune=0.01)
+    sgm_3.learn(sgm_1, learn_rate=0.7, prune=0.01)
 
-    d_1 = sdr_1.distance(sdr=sdr_3)
+    d_1 = sgm_1.distance(sgm=sgm_3)
 
-    sdr_3.learn(sdr_1, learn_rate=0.7, prune=0.01)
+    sgm_3.learn(sgm_1, learn_rate=0.7, prune=0.01)
 
-    d_2 = sdr_1.distance(sdr=sdr_3)
+    d_2 = sgm_1.distance(sgm=sgm_3)
 
-    sdr_3.learn(sdr_1, learn_rate=0.7, prune=0.01)
+    sgm_3.learn(sgm_1, learn_rate=0.7, prune=0.01)
 
-    d_3 = sdr_1.distance(sdr=sdr_3)
+    d_3 = sgm_1.distance(sgm=sgm_3)
 
-    sdr_4 = SDR()
+    sgm_4 = SGM()
 
-    sdr_3.learn(sdr_4, learn_rate=0.7, prune=0.01)
+    sgm_3.learn(sgm_4, learn_rate=0.7, prune=0.01)
 
     start_time = time.time()
     for i in range(1000):
-        d_4 = sdr_1.distance(sdr=sdr_3)
+        d_4 = sgm_1.distance(sgm=sgm_3)
     end_time = time.time()
     print((end_time - start_time)/1000)
 
-    sdr_3.learn(sdr_4, learn_rate=0.7, prune=0.01)
+    sgm_3.learn(sgm_4, learn_rate=0.7, prune=0.01)
 
-    d_5 = sdr_1.distance(sdr=sdr_3)
+    d_5 = sgm_1.distance(sgm=sgm_3)
 
-    sdr_3.learn(sdr_4, learn_rate=0.7, prune=0.01)
+    sgm_3.learn(sgm_4, learn_rate=0.7, prune=0.01)
 
-    d_6 = sdr_1.distance(sdr=sdr_3)
+    d_6 = sgm_1.distance(sgm=sgm_3)
 
-    sdr_3.learn(sdr_4, learn_rate=0.7, prune=0.01)
+    sgm_3.learn(sgm_4, learn_rate=0.7, prune=0.01)
 
-    d_7 = sdr_1.distance(sdr=sdr_3)
+    d_7 = sgm_1.distance(sgm=sgm_3)
 
 
     print('finished')
