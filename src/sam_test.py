@@ -42,8 +42,7 @@ def moon_test():
               anomaly_threshold_factor=3.0,
               similarity_ema_alpha=0.1,
               learn_rate_decay=0.3,
-              prune_threshold=0.01,
-              prune_neurons=False)
+              prune_threshold=0.01)
 
     pors = []
 
@@ -98,8 +97,7 @@ def swiss_roll_test():
               anomaly_threshold_factor=3.0,
               similarity_ema_alpha=0.1,
               learn_rate_decay=0.3,
-              prune_threshold=0.01,
-              prune_neurons=False)
+              prune_threshold=0.01)
 
     pors = []
 
@@ -160,7 +158,7 @@ def colours_test():
         t_sgm.add_encoding('g', value=record['g'], encoder=numeric_encoder)
         t_sgm.add_encoding('b', value=record['b'], encoder=numeric_encoder)
         t_sgm.add_encoding('label', value=record['label'], encoder=label_encoder)
-        r_data = [record['r'], record['g'], record['b']]
+        r_data = [record['r'], record['g'], record['b'], record['label']]
 
         training_graphs[record['client']].append((record['trade_id'], t_sgm, r_data))
 
@@ -170,12 +168,11 @@ def colours_test():
     for client in training_graphs:
         pors = []
         sam = SAM(name=client,
-                  similarity_threshold=0.75,
+                  similarity_threshold=0.50,
                   anomaly_threshold_factor=3.0,
                   similarity_ema_alpha=0.1,
                   learn_rate_decay=0.3,
-                  prune_threshold=0.01,
-                  prune_neurons=False)
+                  prune_threshold=0.01)
 
         sams[client] = {'sam': sam}
 
@@ -193,7 +190,7 @@ def colours_test():
 
         sam_dict = sam.to_dict(decode=True)
 
-        rn_data = [t_data[2] for t_data in training_graphs[client]]
+        rn_data = [t_data[2][:3] for t_data in training_graphs[client]]
         cycle_data = []
         for cycle in range(n_cycles):
             cycle_data.extend(rn_data)
@@ -210,6 +207,6 @@ def colours_test():
 
 if __name__ == '__main__':
 
-    colours_test()
+    #colours_test()
     #moon_test()
-    #swiss_roll_test()
+    swiss_roll_test()

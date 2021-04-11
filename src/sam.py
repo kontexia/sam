@@ -13,8 +13,7 @@ class SAM(object):
                  anomaly_threshold_factor: float = 4.0,
                  similarity_ema_alpha: float = 0.1,
                  learn_rate_decay: float = 0.3,
-                 prune_threshold: float = 0.01,
-                 prune_neurons: bool = False):
+                 prune_threshold: float = 0.01):
         self.name = name
         self.anomaly_threshold_factor: float = anomaly_threshold_factor
         self.similarity_ema_alpha = similarity_ema_alpha
@@ -30,7 +29,6 @@ class SAM(object):
         self.ema_variance: float = 0.0
         self.motif_threshold: float = 1.0
         self.motifs: dict = {}
-        self.prune_neurons: bool = prune_neurons
         self.updated: bool = True
         self.similarity_threshold = similarity_threshold
 
@@ -73,7 +71,6 @@ class SAM(object):
                  'anomalies': self.anomalies,
                  'motif_threshold': self.motif_threshold,
                  'motifs': self.motifs,
-                 'prune_neurons': self.prune_neurons,
                  'neurons': deepcopy(self.neurons)
                  }
         # replace neuron sdrs with dict (decoded as required)
@@ -83,7 +80,7 @@ class SAM(object):
 
         return d_sam
 
-    def update_similarity(self, bmu_key: str, bmu_similarity: float, ref_id: str, new_neuron: bool = False) -> Tuple[bool, bool]:
+    def check_anomaly_motif(self, bmu_key: str, bmu_similarity: float, ref_id: str, new_neuron: bool = False) -> Tuple[bool, bool]:
 
         # update the ema error and variance using the slow_alpha
         #
@@ -121,8 +118,6 @@ class SAM(object):
         por = {'sam': self.name,
                'ref_id': ref_id,
                'bmu_key': None,
-               'bmu_distance': None,
-               'bmu_distance_threshold': 0.0,
                'bmu_similarity': 0.0,
                'new_neuron_key': None,
                'nn_neurons': [],
@@ -132,6 +127,7 @@ class SAM(object):
                'ema_variance': self.ema_variance,
                'anomaly_threshold': self.anomaly_threshold,
                'motif_threshold': self.motif_threshold,
+               'activations': {},
                'deleted_neuron_key': None}
 
         self.update_id += 1
@@ -143,67 +139,45 @@ class SAM(object):
             new_neuron_key = self.add_neuron(sgm=sgm)
 
             por['new_neuron_key'] = new_neuron_key
+            por['activations'][new_neuron_key] = self.neurons[new_neuron_key]['activation']
         else:
 
-            # calc the distance of the sgm to the existing neurons
+            # calc the similarity of the sgm to the existing neurons
             #
-            distances = [(neuron_key,
-                          self.neurons[neuron_key]['sgm'].distance(sgm=sgm, search_types=search_types),
-                          self.neurons[neuron_key]['n_bmu'])
-                         for neuron_key in self.neurons]
+            similarities = [(neuron_key,
+                             self.neurons[neuron_key]['sgm'].similarity(sgm=sgm, search_types=search_types),
+                             self.neurons[neuron_key]['n_bmu'])
+                            for neuron_key in self.neurons]
 
-            # sort in ascending order of actual distance and descending order of number of times bmu
+            # sort in descending order of similarity and number of times bmu
             #
-            distances.sort(key=lambda x: (x[1]['distance'], -x[2]))
+            similarities.sort(key=lambda x: (x[1]['similarity'], x[2]), reverse=True)
 
             # the bmu is the closest and thus the top of the list
             #
-            bmu_key = distances[0][0]
-            bmu_distance = distances[0][1]['distance']
-            bmu_similarity = distances[0][1]['similarity']
+            bmu_key = similarities[0][0]
+            bmu_similarity = similarities[0][1]['similarity']
 
             por['bmu_key'] = bmu_key
-            por['bmu_distance'] = bmu_distance
             por['bmu_similarity'] = bmu_similarity
-            por['bmu_distance_threshold'] = distances[0][1]['max_distance'] * (1 - self.similarity_threshold)
 
-            # if the distance is larger than the neuron's threshold then add a new neuron
+            por['activations'][bmu_key] = bmu_similarity
+
+            # if the similarity is smaller than the threshold then add a new neuron
             #
-            if bmu_distance > por['bmu_distance_threshold']:
+            if bmu_similarity < self.similarity_threshold:
 
                 # add new neuron
                 #
                 new_neuron_key = self.add_neuron(sgm=sgm)
 
                 por['new_neuron_key'] = new_neuron_key
+                por['activations'][new_neuron_key] = self.neurons[new_neuron_key]['activation']
 
-                # connect the new neuron to the bmu neuron and remember the distance
+                # connect the new neuron to the bmu neuron and remember the similarity
                 #
-                self.neurons[bmu_key]['nn'][new_neuron_key] = bmu_distance
-                self.neurons[new_neuron_key]['nn'][bmu_key] = bmu_distance
-
-                if self.prune_neurons:
-                    # get first neuron that has aged enough to be deleted
-                    #
-                    neuron_to_deactivate = []
-                    for neuron_key in self.neurons:
-                        if neuron_key not in [new_neuron_key, bmu_key]:
-
-                            # decay the activation with rate the depends on its current learn_rate and the learn_rate_decay
-                            #
-                            self.neurons[neuron_key]['activation'] -= (self.neurons[neuron_key]['activation'] * self.learn_rate_decay * self.neurons[neuron_key]['learn_rate'])
-                            if self.neurons[neuron_key]['activation'] < self.prune_threshold:
-                                neuron_to_deactivate.append(neuron_key)
-
-                                # only need first 1 so beak out of loop
-                                #
-                                break
-
-                    if len(neuron_to_deactivate) > 0:
-                        for nn_key in self.neurons[neuron_to_deactivate[0]]:
-                            del self.neurons[nn_key]['nn'][neuron_to_deactivate[0]]
-                        del self.neurons[neuron_to_deactivate[0]]
-                        por['deleted_neuron_key'] = neuron_to_deactivate[0]
+                self.neurons[bmu_key]['nn'][new_neuron_key] = bmu_similarity
+                self.neurons[new_neuron_key]['nn'][bmu_key] = bmu_similarity
 
             else:
 
@@ -230,37 +204,31 @@ class SAM(object):
                                                    learn_rate=self.neurons[bmu_key]['learn_rate'],
                                                    learn_types=learn_types)
 
-                # reset the bmu activation to full strength
-                #
-                self.neurons[bmu_key]['activation'] = 1.0
-
                 updated_neurons = set()
 
                 updated_neurons.add(bmu_key)
 
-                if len(distances) > 1:
+                if len(similarities) > 1:
 
-                    nn_idx = 1
-                    finished = False
-                    while not finished:
+                    # process the rest of the neurons
+                    #
+                    for nn_idx in range(1, len(similarities)):
 
-                        nn_key = distances[nn_idx][0]
-                        nn_distance = distances[nn_idx][1]['distance']
+                        nn_key = similarities[nn_idx][0]
+                        nn_similarity = similarities[nn_idx][1]['similarity']
+                        self.neurons[nn_key]['activation'] = nn_similarity
+                        por['activations'][nn_key] = nn_similarity
 
-                        # if the neuron is close enough to the incoming data
+                        # if the neurons is similar enough then learn
                         #
-                        nn_distance_threshold = distances[nn_idx][1]['max_distance'] * (1 - self.similarity_threshold)
-                        if nn_distance <= nn_distance_threshold:
+                        if nn_similarity >= self.similarity_threshold:
 
                             updated_neurons.add(nn_key)
-                            por['nn_neurons'].append({'nn_distance': nn_distance, 'nn_key': nn_key, 'nn_distance_threshold': nn_distance_threshold})
+                            por['nn_neurons'].append({'nn_key': nn_key,
+                                                      'nn_similarity': nn_similarity})
 
                             self.neurons[nn_key]['n_runner_up'] += 1
                             self.neurons[nn_key]['last_runner_up'] = self.update_id
-
-                            # reset the neighbour activation to full strength
-                            #
-                            self.neurons[nn_key]['activation'] = 1.0
 
                             # the learning rate for a neighbour needs to be much less that the bmu - hence the product of learning rates and 0.1 factor
                             #
@@ -271,29 +239,8 @@ class SAM(object):
                             self.neurons[nn_key]['sgm'].learn(sgm=sgm,
                                                               learn_rate=nn_learn_rate,
                                                               learn_types=learn_types)
-                            nn_idx += 1
-                            if nn_idx >= len(distances):
-                                finished = True
-                        else:
-                            finished = True
 
-                    # recalculate the distances between updated neurons
-                    #
-                    nn_processed = set()
-                    for neuron_key in updated_neurons:
-                        for nn_key in self.neurons[neuron_key]['nn']:
-                            pair = (min(neuron_key, nn_key), max(neuron_key, nn_key))
-                            if pair not in nn_processed:
-                                nn_processed.add(pair)
-                                distance = self.neurons[neuron_key]['sgm'].distance(sgm=self.neurons[nn_key]['sgm'],
-                                                                                    search_types=search_types)
-
-                                # set the distance
-                                #
-                                self.neurons[neuron_key]['nn'][nn_key] = distance['distance']
-                                self.neurons[nn_key]['nn'][neuron_key] = distance['distance']
-
-            anomaly, motif = self.update_similarity(bmu_key=bmu_key, bmu_similarity=bmu_similarity, ref_id=ref_id, new_neuron=por['new_neuron_key'])
+            anomaly, motif = self.check_anomaly_motif(bmu_key=bmu_key, bmu_similarity=bmu_similarity, ref_id=ref_id, new_neuron=por['new_neuron_key'])
             por['anomaly'] = anomaly
             por['motif'] = motif
 
@@ -309,40 +256,32 @@ class SAM(object):
 
         # calc the distance of the sgm to the existing neurons
         #
-        distances = [(neuron_key,
-                      self.neurons[neuron_key]['sgm'].distance(sgm=sgm,
-                                                               search_types=search_types),
-                      self.neurons[neuron_key]['n_bmu'],
-                      self.neurons[neuron_key]['sgm'],
-                      self.neurons[neuron_key]['sgm'].get_max_distance(search_types=search_types) * (1 - self.similarity_threshold))
-                     for neuron_key in self.neurons]
+        similarities = [(neuron_key,
+                         self.neurons[neuron_key]['sgm'].similarity(sgm=sgm, search_types=search_types),
+                         self.neurons[neuron_key]['n_bmu'],
+                         self.neurons[neuron_key]['sgm'])
+                        for neuron_key in self.neurons]
 
-        # sort in ascending order of distance and descending order of number of times bmu
+        # sort in descending order of similarity and number of times bmu
         #
-        distances.sort(key=lambda x: (x[1]['distance'], -x[2]))
+        similarities.sort(key=lambda x: (x[1]['similarity'], x[2]), reverse=True)
 
         # get closest neuron and all other 'activated neurons'
         #
-        activated_neurons = [distances[n_idx]
-                             for n_idx in range(len(distances))
-                             if n_idx == 0 or distances[n_idx][1]['distance'] <= distances[n_idx][4]]
+        activated_neurons = [similarities[n_idx]
+                             for n_idx in range(len(similarities))
+                             if n_idx == 0 or similarities[n_idx][1]['similarity'] >= self.similarity_threshold]
 
         por = {'sam': self.name}
 
         if len(activated_neurons) > 0:
 
-            sum_distance = sum([n[1]['distance'] for n in activated_neurons])
-
             # select the bmu
             #
-            if bmu_only or sum_distance == 0 or len(activated_neurons) == 1:
+            if bmu_only or len(activated_neurons) == 1:
                 por['sgm'] = activated_neurons[0][3]
 
-                if sum_distance > 0 and len(activated_neurons) > 1:
-                    por['neurons'] = [{'neuron_key': n[0], 'weight': 1 - (n[1]['distance'] / sum_distance)}
-                                      for n in activated_neurons]
-                else:
-                    por['neurons'] = [{'neuron_key': n[0], 'weight': 1.0} for n in activated_neurons]
+                por['neurons'] = [{'neuron_key': n[0], 'similarity': n[1]['similarity']} for n in activated_neurons]
 
             # else create a weighted average of neurons
             #
@@ -350,9 +289,8 @@ class SAM(object):
                 por['sgm'] = SGM()
                 por['neurons'] = []
                 for n in activated_neurons:
-                    weight = 1 - (n[1]['distance'] / sum_distance)
-                    por['sgm'].merge(sgm=n[3], weight=weight)
-                    por['neurons'].append({'neuron_key': n[0], 'weight': weight})
+                    por['sgm'].merge(sgm=n[3], weight=n[1]['similarity'])
+                    por['neurons'].append({'neuron_key': n[0], 'similarity': n[1]['similarity']})
 
         return por
 

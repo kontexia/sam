@@ -24,17 +24,6 @@ class SGM(object):
         elif enc_type is not None and value is not None and encoder is not None:
             self.add_encoding(enc_type=enc_type, value=value, encoder=encoder, enc_properties=enc_properties, bit_weight=bit_weight)
 
-    def get_max_distance(self, search_types: set = None) -> float:
-
-        enc_type: str
-        dist: float
-
-        dist = sum([self.properties[enc_type]['encoder'].n_bits
-                    for enc_type in self.properties
-                    if search_types is None or enc_type in search_types])
-
-        return dist
-
     def remove_prefix(self, enc_type_prefix: str):
         enc_type: str
 
@@ -90,7 +79,7 @@ class SGM(object):
         d_sdr['properties'] = {enc_type: {prop: self.properties[enc_type][prop] for prop in self.properties[enc_type]} for enc_type in self.properties}
         return d_sdr
 
-    def overlap(self, sgm, search_types: set = None) -> dict:
+    def similarity(self, sgm, search_types: set = None) -> dict:
 
         enc_type: str
         enc_types: set
@@ -108,31 +97,33 @@ class SGM(object):
                           if enc_type in search_types})
         else:
             enc_types = set(self.encodings.keys()) & set(sgm.encodings.keys())
+            search_types = set(self.encodings.keys()) | set(sgm.encodings.keys())
 
-        por = {'overlap': 0, 'norm_overlap': 0.0}
+        por = dict()
 
+        # the overlap per enc_type
+        #
         por['enc_types'] = {enc_type: sum([min(self.encodings[enc_type][bit], sgm.encodings[enc_type][bit])
                                            for bit in set(self.encodings[enc_type].keys()) & set(sgm.encodings[enc_type].keys())])
                             for enc_type in enc_types}
 
+        # the total overlap
+        #
         por['overlap'] = sum([por['enc_types'][enc_type] for enc_type in por['enc_types']])
 
-        if len(enc_types) > 0:
-            por['norm_overlap'] = por['overlap'] / len(enc_types)
+        # the maximum overlap is the sum of the number of bits used to encode the enc_types to search for
+        # need to cope with the possibility that enc_type isn't in either sgm
+        #
+        por['max_overlap'] = sum([self.properties[enc_type]['encoder'].n_bits if enc_type in self.properties else sgm.properties[enc_type]['encoder'].n_bits
+                                  for enc_type in search_types
+                                  if enc_type in self.properties or enc_type in sgm.properties])
 
-        return por
-
-    def distance(self, sgm, search_types: set = None) -> dict:
-
-        por: dict
-
-        por = self.overlap(sgm=sgm, search_types=search_types)
-        por['max_distance'] = max(self.get_max_distance(search_types=search_types), sgm.get_max_distance(search_types=search_types))
-        por['distance'] = por['max_distance'] - por['overlap']
-        if por['max_distance'] > 0.0:
-            por['similarity'] = por['overlap'] / por['max_distance']
+        if por['max_overlap'] > 0:
+            por['similarity'] = por['overlap'] / por['max_overlap']
+            por['distance'] = por['max_overlap'] - por['overlap']
         else:
             por['similarity'] = 0.0
+            por['distance'] = None
 
         return por
 
@@ -241,25 +232,21 @@ if __name__ == '__main__':
 
     sgm_2 = SGM(enc_type='volume', value=210, encoder=encoder)
 
-    d = sgm_1.distance(sgm_2)
-
-    o = sgm_1.overlap(sgm_2)
-
-    m_dist = sgm_1.get_max_distance()
+    d = sgm_1.similarity(sgm_2)
 
     sgm_3 = SGM(sgm=sgm_2)
 
     sgm_3.learn(sgm_1, learn_rate=0.7, prune=0.01)
 
-    d_1 = sgm_1.distance(sgm=sgm_3)
+    d_1 = sgm_1.similarity(sgm=sgm_3)
 
     sgm_3.learn(sgm_1, learn_rate=0.7, prune=0.01)
 
-    d_2 = sgm_1.distance(sgm=sgm_3)
+    d_2 = sgm_1.similarity(sgm=sgm_3)
 
     sgm_3.learn(sgm_1, learn_rate=0.7, prune=0.01)
 
-    d_3 = sgm_1.distance(sgm=sgm_3)
+    d_3 = sgm_1.similarity(sgm=sgm_3)
 
     sgm_4 = SGM()
 
@@ -267,21 +254,21 @@ if __name__ == '__main__':
 
     start_time = time.time()
     for i in range(1000):
-        d_4 = sgm_1.distance(sgm=sgm_3)
+        d_4 = sgm_1.similarity(sgm=sgm_3)
     end_time = time.time()
     print((end_time - start_time)/1000)
 
     sgm_3.learn(sgm_4, learn_rate=0.7, prune=0.01)
 
-    d_5 = sgm_1.distance(sgm=sgm_3)
+    d_5 = sgm_1.similarity(sgm=sgm_3)
 
     sgm_3.learn(sgm_4, learn_rate=0.7, prune=0.01)
 
-    d_6 = sgm_1.distance(sgm=sgm_3)
+    d_6 = sgm_1.similarity(sgm=sgm_3)
 
     sgm_3.learn(sgm_4, learn_rate=0.7, prune=0.01)
 
-    d_7 = sgm_1.distance(sgm=sgm_3)
+    d_7 = sgm_1.similarity(sgm=sgm_3)
 
 
     print('finished')

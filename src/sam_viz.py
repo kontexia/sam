@@ -157,6 +157,7 @@ def plot_pors(pors, name=None):
         final_neurons = pors[-1]['nos_neurons']
 
     for x in range(len(pors)):
+
         x_values.append(x)
         if name is not None:
             por = pors[x][name]
