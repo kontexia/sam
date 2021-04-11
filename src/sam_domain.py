@@ -30,8 +30,6 @@ class SAMDomain(object):
 
         self.temporal_search_types = {f'{z}_{enc_type}' for enc_type in spatial_search_types for z in ['z0', 'z1', 'z2']}
         self.temporal_learn_types = {f'{z}_{enc_type}' for enc_type in spatial_learn_types for z in ['z0', 'z1', 'z2']}
-        self.temporal_z1_learn_types = {f'z1_{enc_type}' for enc_type in spatial_learn_types}
-        self.temporal_z2_learn_types = {f'z2_{enc_type}' for enc_type in spatial_learn_types}
 
         self.spatial_similarity_threshold = spatial_similarity_threshold
         self.community_similarity_threshold = community_similarity_threshold
@@ -41,17 +39,9 @@ class SAMDomain(object):
         self.learn_rate_decay = learn_rate_decay
         self.prune_threshold = prune_threshold
 
-        # long short term memory of sparse generalised memories
+        # short term memory of sparse generalised memories
         #
-        self.lstm = SGM()
-
-        # alpha for short term temporal memory
-        #
-        self.short_term_alpha = 0.7
-
-        # alpha for long term temporal memory
-        #
-        self.long_term_alpha = 0.3
+        self.lstm = []
 
         self.sams['spatial'] = SAM(name=f'spatial_{domain}',
                                    similarity_threshold=self.spatial_similarity_threshold,
@@ -91,7 +81,10 @@ class SAMDomain(object):
 
         # add association sgm to the current long short term memory and train
         #
-        temporal_sgm = SGM(sgm=self.lstm)
+        temporal_sgm = SGM()
+        for idx in range(len(self.lstm)):
+            temporal_sgm.merge(sgm=self.lstm[idx], weight=1, enc_type_prefix=f'z{len(self.lstm)-idx}')
+
         temporal_sgm.merge(sgm=sgm, weight=1.0, enc_type_prefix='z0')
 
         pors['temporal'] = self.sams['temporal'].train(sgm=temporal_sgm,
@@ -101,19 +94,14 @@ class SAMDomain(object):
 
         # now update lstm for next step
         #
-        temporal_sgm = SGM()
-        temporal_sgm.copy(sgm=sgm, enc_type_prefix='z1')
-        self.lstm.learn(sgm=temporal_sgm,
-                        learn_rate=self.short_term_alpha,
-                        learn_types=self.temporal_z1_learn_types,
-                        prune=self.prune_threshold)
+        if pors['community']['new_neuron_key'] is not None:
+            c_sgm = SGM(sgm=self.sams['community'].neurons[pors['community']['new_neuron_key']]['sgm'])
+        else:
+            c_sgm = SGM(sgm=self.sams['community'].neurons[pors['community']['bmu_key']]['sgm'])
 
-        temporal_sgm = SGM()
-        temporal_sgm.copy(sgm=sgm, enc_type_prefix='z2')
-        self.lstm.learn(sgm=temporal_sgm,
-                        learn_rate=self.long_term_alpha,
-                        learn_types=self.temporal_z2_learn_types,
-                        prune=self.prune_threshold)
+        self.lstm.append(c_sgm)
+        if len(self.lstm) > 2:
+            self.lstm.pop(0)
 
         return pors
 
@@ -129,23 +117,12 @@ class SAMDomain(object):
 
     def query_temporal(self, context_sgms, bmu_only=True):
 
-        lstm = SGM()
-        for sgm in context_sgms:
-            temporal_sgm = SGM()
-            temporal_sgm.copy(sgm=sgm, enc_type_prefix='z1')
-            lstm.learn(sgm=temporal_sgm,
-                       learn_rate=self.short_term_alpha,
-                       learn_types=self.temporal_z1_learn_types,
-                       prune=self.prune_threshold)
+        temporal_sgm = SGM()
 
-            temporal_sgm = SGM()
-            temporal_sgm.copy(sgm=sgm, enc_type_prefix='z2')
-            lstm.learn(sgm=temporal_sgm,
-                       learn_rate=self.long_term_alpha,
-                       learn_types=self.temporal_z2_learn_types,
-                       prune=self.prune_threshold)
+        for idx in range(len(context_sgms)):
+            temporal_sgm.merge(sgm=context_sgms[idx], weight=1, enc_type_prefix=f'z{len(self.lstm)-idx}')
 
-        por = self.sams['temporal'].query(sgm=lstm, bmu_only=bmu_only)
+        por = self.sams['temporal'].query(sgm=temporal_sgm, bmu_only=bmu_only)
 
         return por
 
