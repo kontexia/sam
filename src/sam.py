@@ -31,8 +31,9 @@ class SAM(object):
         self.motifs: dict = {}
         self.updated: bool = True
         self.similarity_threshold = similarity_threshold
+        self.communities = {}
 
-    def add_neuron(self, sgm: SGM) -> str:
+    def add_neuron(self, sgm: SGM, community='default') -> str:
         neuron_key = f'{self.next_neuron_id}'
         self.next_neuron_id += 1
 
@@ -49,7 +50,13 @@ class SAM(object):
                                     'last_runner_up': None,
                                     'activation': 1.0,
                                     'learn_rate': 1.0,
-                                    'nn': {}}
+                                    'community': community,
+                                    'nn': set()}
+
+        if community not in self.communities:
+            self.communities[community] = {neuron_key}
+        else:
+            self.communities[community].add(neuron_key)
 
         self.last_bmu_key = neuron_key
 
@@ -71,12 +78,22 @@ class SAM(object):
                  'anomalies': self.anomalies,
                  'motif_threshold': self.motif_threshold,
                  'motifs': self.motifs,
-                 'neurons': deepcopy(self.neurons)
+                 'neurons': deepcopy(self.neurons),
+                 'communities': deepcopy(self.communities)
                  }
+
         # replace neuron sdrs with dict (decoded as required)
         #
         for neuron_key in d_sam['neurons']:
             d_sam['neurons'][neuron_key]['sgm'] = d_sam['neurons'][neuron_key]['sgm'].to_dict(decode=decode)
+
+        for community in d_sam['communities']:
+            if community != 'default':
+                for neuron_key_1 in d_sam['communities'][community]:
+                    for neuron_key_2 in d_sam['communities'][community]:
+                        if neuron_key_1 != neuron_key_2:
+                            d_sam['neurons'][neuron_key_1]['nn'].add(neuron_key_2)
+                            d_sam['neurons'][neuron_key_2]['nn'].add(neuron_key_1)
 
         return d_sam
 
@@ -114,7 +131,7 @@ class SAM(object):
 
         return anomaly, motif
 
-    def train(self, sgm, ref_id: str, search_types: set, learn_types: set) -> dict:
+    def train(self, sgm, ref_id: str, search_types: set, learn_types: set, community='default') -> dict:
         por = {'sam': self.name,
                'ref_id': ref_id,
                'bmu_key': None,
@@ -136,7 +153,7 @@ class SAM(object):
         if len(self.neurons) == 0:
             # add new neuron
             #
-            new_neuron_key = self.add_neuron(sgm=sgm)
+            new_neuron_key = self.add_neuron(sgm=sgm, community=community)
 
             por['new_neuron_key'] = new_neuron_key
             por['activations'][new_neuron_key] = self.neurons[new_neuron_key]['activation']
@@ -169,15 +186,10 @@ class SAM(object):
 
                 # add new neuron
                 #
-                new_neuron_key = self.add_neuron(sgm=sgm)
+                new_neuron_key = self.add_neuron(sgm=sgm, community=community)
 
                 por['new_neuron_key'] = new_neuron_key
                 por['activations'][new_neuron_key] = self.neurons[new_neuron_key]['activation']
-
-                # connect the new neuron to the bmu neuron and remember the similarity
-                #
-                self.neurons[bmu_key]['nn'][new_neuron_key] = bmu_similarity
-                self.neurons[new_neuron_key]['nn'][bmu_key] = bmu_similarity
 
             else:
 
@@ -186,6 +198,15 @@ class SAM(object):
                 #
                 self.neurons[bmu_key]['n_bmu'] += 1
                 self.neurons[bmu_key]['last_bmu'] = self.update_id
+
+                if self.neurons[bmu_key]['community'] != community:
+                    self.communities[self.neurons[bmu_key]['community']].discard(bmu_key)
+
+                self.neurons[bmu_key]['community'] = community
+                if community not in self.communities:
+                    self.communities[community] = {bmu_key}
+                else:
+                    self.communities[community].add(bmu_key)
 
                 # a neuron's similarity for mapped data is the exponential moving average of the similarity.
                 #
@@ -239,6 +260,15 @@ class SAM(object):
                             self.neurons[nn_key]['sgm'].learn(sgm=sgm,
                                                               learn_rate=nn_learn_rate,
                                                               learn_types=learn_types)
+                            self.neurons[nn_key]['community'] = community
+
+                            if self.neurons[nn_key]['community'] != community:
+                                self.communities[self.neurons[nn_key]['community']].discard(nn_key)
+
+                            if community not in self.communities:
+                                self.communities[community] = {nn_key}
+                            else:
+                                self.communities[community].add(nn_key)
 
             anomaly, motif = self.check_anomaly_motif(bmu_key=bmu_key, bmu_similarity=bmu_similarity, ref_id=ref_id, new_neuron=por['new_neuron_key'])
             por['anomaly'] = anomaly

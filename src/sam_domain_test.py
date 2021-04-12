@@ -32,7 +32,7 @@ def colours_test():
 
     print('raw data record:', raw_data[:1])
 
-    numeric_encoder = NumericEncoder(min_step=1,
+    numeric_encoder = NumericEncoder(min_step=2,
                                      n_bits=40,
                                      enc_size=2048,
                                      seed=123)
@@ -64,11 +64,12 @@ def colours_test():
             domains[client] = {'fabric': SAMDomain(domain=client,
                                                    spatial_search_types={'r', 'g', 'b'},
                                                    spatial_learn_types={'r', 'g', 'b', 'label'},
-                                                   spatial_similarity_threshold=0.7,
-                                                   community_similarity_threshold=0.5,
-                                                   temporal_similarity_threshold=0.7,
+                                                   spatial_similarity_threshold=0.75,
+                                                   community_similarity_threshold=0.6,
+                                                   temporal_similarity_threshold=0.75,
+                                                   temporal_memory=10,
                                                    anomaly_threshold_factor=3.0,
-                                                   similarity_ema_alpha=0.1,
+                                                   similarity_ema_alpha=0.3,
                                                    learn_rate_decay=0.3,
                                                    prune_threshold=0.01)}
 
@@ -110,10 +111,10 @@ def colours_test():
                  xyz_types=['z0_r', 'z0_g', 'z0_b'],
                  colour_nodes=None)
 
-        start_idx = 50
-        por_qry = domains[client]['fabric'].query_temporal(context_sgms=[training_graphs[client][q_idx][1] for q_idx in range(start_idx, start_idx + 4)], bmu_only=False)
+        start_idx = 58
+        por_qry = domains[client]['fabric'].query_temporal(context_sgms=[training_graphs[client][q_idx][1] for q_idx in range(start_idx, start_idx + 2)], bmu_only=False)
         actual_sdr = por_qry['sgm'].to_dict(decode=True)
-        target_sdr = training_graphs[client][start_idx + 4][1].to_dict(decode=True)
+        target_sdr = training_graphs[client][start_idx + 2][1].to_dict(decode=True)
 
         print(f'finished {client}')
 
