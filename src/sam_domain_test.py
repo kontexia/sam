@@ -8,8 +8,6 @@ from src.string_encoder import StringEncoder
 from src.sam_domain import SAMDomain
 
 from src.sam_viz import plot_sam, plot_pors
-import time
-
 
 
 def colours_test():
@@ -65,7 +63,7 @@ def colours_test():
                                                    spatial_search_types={'r', 'g', 'b'},
                                                    spatial_learn_types={'r', 'g', 'b', 'label'},
                                                    spatial_similarity_threshold=0.75,
-                                                   community_similarity_threshold=0.6,
+                                                   community_similarity_threshold=0.05,
                                                    temporal_similarity_threshold=0.75,
                                                    temporal_memory=10,
                                                    anomaly_threshold_factor=3.0,
@@ -84,11 +82,9 @@ def colours_test():
         domains[client]['pors'] = pors
 
         plot_pors(pors=pors, name='spatial')
-        plot_pors(pors=pors, name='community')
         plot_pors(pors=pors, name='temporal')
 
         spatial_dict = domains[client]['fabric'].sams['spatial'].to_dict(decode=True)
-        community_dict = domains[client]['fabric'].sams['community'].to_dict(decode=True)
         temporal_dict = domains[client]['fabric'].sams['temporal'].to_dict(decode=True)
 
         rn_data = [t_data[2][:3] for t_data in training_graphs[client]]
@@ -97,11 +93,6 @@ def colours_test():
             cycle_data.extend(rn_data)
 
         plot_sam(sam=spatial_dict,
-                 raw_data=cycle_data,
-                 xyz_types=['r', 'g', 'b'],
-                 colour_nodes=None)
-
-        plot_sam(sam=community_dict,
                  raw_data=cycle_data,
                  xyz_types=['r', 'g', 'b'],
                  colour_nodes=None)

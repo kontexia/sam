@@ -3,7 +3,6 @@
 
 from src.sam import SAM
 from src.sgm import SGM
-from src.numeric_encoder import NumericEncoder
 
 
 class SAMDomain(object):
@@ -12,11 +11,11 @@ class SAMDomain(object):
                  spatial_search_types,
                  spatial_learn_types,
                  spatial_similarity_threshold: float = 0.75,
-                 community_similarity_threshold: float = 0.5,
-                 temporal_similarity_threshold: float = 0.5,
-                 temporal_memory: int = 5,
+                 community_similarity_threshold: float = 0.05,
+                 temporal_similarity_threshold: float = 0.75,
+                 temporal_memory: int = 10,
                  anomaly_threshold_factor: float = 4.0,
-                 similarity_ema_alpha: float = 0.1,
+                 similarity_ema_alpha: float = 0.3,
                  learn_rate_decay: float = 0.3,
                  prune_threshold: float = 0.01,
                  ):
@@ -53,23 +52,16 @@ class SAMDomain(object):
 
         self.sams['spatial'] = SAM(name=f'spatial_{domain}',
                                    similarity_threshold=self.spatial_similarity_threshold,
+                                   community_threshold=self.spatial_similarity_threshold - self.community_similarity_threshold,
                                    anomaly_threshold_factor=self.anomaly_threshold_factor,
                                    similarity_ema_alpha=self.similarity_ema_alpha,
                                    learn_rate_decay=self.learn_rate_decay,
                                    prune_threshold=self.prune_threshold)
 
-        community_name = f'community_{self.domain}'
-
-        self.sams['community'] = SAM(name=community_name,
-                                     similarity_threshold=self.community_similarity_threshold,
-                                     anomaly_threshold_factor=self.anomaly_threshold_factor,
-                                     similarity_ema_alpha=self.similarity_ema_alpha,
-                                     learn_rate_decay=self.learn_rate_decay,
-                                     prune_threshold=self.prune_threshold)
-
         temporal_name = f'temporal_{self.domain}'
         self.sams['temporal'] = SAM(name=temporal_name,
                                     similarity_threshold=self.temporal_similarity_threshold,
+                                    community_threshold=self.temporal_similarity_threshold - self.community_similarity_threshold,
                                     anomaly_threshold_factor=self.anomaly_threshold_factor,
                                     similarity_ema_alpha=self.similarity_ema_alpha,
                                     learn_rate_decay=self.learn_rate_decay,
@@ -79,27 +71,12 @@ class SAMDomain(object):
 
         pors = dict()
 
-        # train a "defocused" spatial sam to identify communities
-        #
-        pors['community'] = self.sams['community'].train(sgm=sgm,
-                                                         ref_id=ref_id,
-                                                         search_types=self.spatial_search_types,
-                                                         learn_types=self.spatial_learn_types)
-
-        # the coummnity of incoming data is the neuron_key from the commnunity sam
-        #
-        if pors['community']['new_neuron_key'] is not None:
-            community = pors['community']['new_neuron_key']
-        else:
-            community = pors['community']['bmu_key']
-
         # train the spatial sam
         #
         pors['spatial'] = self.sams['spatial'].train(sgm=sgm,
                                                      ref_id=ref_id,
                                                      search_types=self.spatial_search_types,
-                                                     learn_types=self.spatial_learn_types,
-                                                     community=community)
+                                                     learn_types=self.spatial_learn_types)
 
         # train temporal memory if required
         #
@@ -129,11 +106,6 @@ class SAMDomain(object):
     def query_spatial(self, sgm, bmu_only=True) -> dict:
 
         por = self.sams['spatial'].query(sgm=sgm, bmu_only=bmu_only)
-        return por
-
-    def query_community(self, sgm, bmu_only=True) -> dict:
-
-        por = self.sams['community'].query(sgm=sgm, bmu_only=bmu_only)
         return por
 
     def query_temporal(self, context_sgms, bmu_only=True):

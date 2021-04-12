@@ -139,7 +139,7 @@ def colours_test():
 
     print('raw data record:', raw_data[:1])
 
-    numeric_encoder = NumericEncoder(min_step=1,
+    numeric_encoder = NumericEncoder(min_step=2,
                                      n_bits=40,
                                      enc_size=2048,
                                      seed=123)
@@ -168,9 +168,10 @@ def colours_test():
     for client in training_graphs:
         pors = []
         sam = SAM(name=client,
-                  similarity_threshold=0.50,
+                  similarity_threshold=0.75,
+                  community_threshold=0.70,
                   anomaly_threshold_factor=3.0,
-                  similarity_ema_alpha=0.1,
+                  similarity_ema_alpha=0.3,
                   learn_rate_decay=0.3,
                   prune_threshold=0.01)
 
@@ -207,6 +208,6 @@ def colours_test():
 
 if __name__ == '__main__':
 
-    #colours_test()
+    colours_test()
     #moon_test()
-    swiss_roll_test()
+    #swiss_roll_test()
