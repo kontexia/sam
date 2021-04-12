@@ -11,7 +11,7 @@ class SAMDomain(object):
                  spatial_search_types,
                  spatial_learn_types,
                  spatial_similarity_threshold: float = 0.75,
-                 community_similarity_threshold: float = 0.05,
+                 community_threshold_adj: float = 0.05,
                  temporal_similarity_threshold: float = 0.75,
                  temporal_memory: int = 10,
                  anomaly_threshold_factor: float = 4.0,
@@ -30,7 +30,7 @@ class SAMDomain(object):
         self.spatial_learn_types = spatial_learn_types
 
         self.spatial_similarity_threshold = spatial_similarity_threshold
-        self.community_similarity_threshold = community_similarity_threshold
+        self.community_threshold_adj = community_threshold_adj
         self.temporal_similarity_threshold = temporal_similarity_threshold
         self.anomaly_threshold_factor = anomaly_threshold_factor
         self.similarity_ema_alpha = similarity_ema_alpha
@@ -52,7 +52,7 @@ class SAMDomain(object):
 
         self.sams['spatial'] = SAM(name=f'spatial_{domain}',
                                    similarity_threshold=self.spatial_similarity_threshold,
-                                   community_threshold=self.spatial_similarity_threshold - self.community_similarity_threshold,
+                                   community_threshold_adj=self.community_threshold_adj,
                                    anomaly_threshold_factor=self.anomaly_threshold_factor,
                                    similarity_ema_alpha=self.similarity_ema_alpha,
                                    learn_rate_decay=self.learn_rate_decay,
@@ -61,7 +61,7 @@ class SAMDomain(object):
         temporal_name = f'temporal_{self.domain}'
         self.sams['temporal'] = SAM(name=temporal_name,
                                     similarity_threshold=self.temporal_similarity_threshold,
-                                    community_threshold=self.temporal_similarity_threshold - self.community_similarity_threshold,
+                                    community_threshold_adj=self.community_threshold_adj,
                                     anomaly_threshold_factor=self.anomaly_threshold_factor,
                                     similarity_ema_alpha=self.similarity_ema_alpha,
                                     learn_rate_decay=self.learn_rate_decay,

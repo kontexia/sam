@@ -63,7 +63,7 @@ def colours_test():
                                                    spatial_search_types={'r', 'g', 'b'},
                                                    spatial_learn_types={'r', 'g', 'b', 'label'},
                                                    spatial_similarity_threshold=0.75,
-                                                   community_similarity_threshold=0.05,
+                                                   community_threshold_adj=0.05,
                                                    temporal_similarity_threshold=0.75,
                                                    temporal_memory=10,
                                                    anomaly_threshold_factor=3.0,

@@ -10,7 +10,7 @@ class SAM(object):
     def __init__(self,
                  name,
                  similarity_threshold: float = 0.75,
-                 community_threshold: float = 0.70,
+                 community_threshold_adj: float = 0.05,
                  anomaly_threshold_factor: float = 3.0,
                  similarity_ema_alpha: float = 0.3,
                  learn_rate_decay: float = 0.3,
@@ -32,7 +32,7 @@ class SAM(object):
         self.motifs: dict = {}
         self.updated: bool = True
         self.similarity_threshold = similarity_threshold
-        self.community_threshold = community_threshold
+        self.community_threshold = max(similarity_threshold - community_threshold_adj, 0.0)
         self.communities = {}
         self.community_max_count = 0
 
@@ -320,11 +320,11 @@ if __name__ == '__main__':
 
     ng = SAM(name='test',
              similarity_threshold=0.75,
+             community_threshold_adj=0.05,
              anomaly_threshold_factor=6.0,
              similarity_ema_alpha=0.1,
              learn_rate_decay=0.3,
-             prune_threshold=0.01,
-             prune_neurons=False)
+             prune_threshold=0.01)
 
     str_enc = StringEncoder(n_bits=40,
                             enc_size=2048,
