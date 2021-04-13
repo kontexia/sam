@@ -10,7 +10,7 @@ class SAM(object):
     def __init__(self,
                  name,
                  similarity_threshold: float = 0.75,
-                 community_threshold_adj: float = 0.05,
+                 community_threshold: float = 0.05,
                  anomaly_threshold_factor: float = 3.0,
                  similarity_ema_alpha: float = 0.3,
                  learn_rate_decay: float = 0.3,
@@ -32,8 +32,7 @@ class SAM(object):
         self.motifs: dict = {}
         self.updated: bool = True
         self.similarity_threshold = similarity_threshold
-        self.community_threshold = max(similarity_threshold - community_threshold_adj, 0.0)
-        self.communities = {}
+        self.community_threshold = community_threshold
         self.community_max_count = 1
 
     def add_neuron(self, sgm: SGM) -> str:
@@ -63,6 +62,8 @@ class SAM(object):
         d_sam = {'name': self.name,
                  'similarity_ema_alpha': self.similarity_ema_alpha,
                  'similarity_threshold': self.similarity_threshold,
+                 'community_threshold': self.community_threshold,
+                 'community_max_count': self.community_max_count,
                  'learn_rate_decay': self.learn_rate_decay,
                  'prune_threshold': self.prune_threshold,
                  'update_id': self.update_id,
@@ -82,6 +83,9 @@ class SAM(object):
         #
         for neuron_key in d_sam['neurons']:
             d_sam['neurons'][neuron_key]['sgm'] = d_sam['neurons'][neuron_key]['sgm'].to_dict(decode=decode)
+
+            # convert the tally count to a weight
+            #
             d_sam['neurons'][neuron_key]['nn'] = {nn_key: d_sam['neurons'][neuron_key]['nn'][nn_key] / self.community_max_count
                                                   for nn_key in d_sam['neurons'][neuron_key]['nn']}
 
@@ -172,14 +176,11 @@ class SAM(object):
 
             # get neurons within the community threshold
             #
-            #community = [similarities[idx][0] for idx in range(len(similarities))
-            #             if sum([1 for enc_type in similarities[idx][1]['enc_types'] if similarities[idx][1]['enc_types'][enc_type]['similarity'] < self.community_threshold]) == 0]
             community = [similarities[idx][0] for idx in range(len(similarities)) if similarities[idx][1]['similarity'] >= self.community_threshold]
 
             # if the similarity is smaller than the threshold then add a new neuron
             #
             if bmu_similarity < self.similarity_threshold:
-            #if sum([1 for enc_type in similarities[0][1]['enc_types'] if similarities[0][1]['enc_types'][enc_type]['similarity'] < self.similarity_threshold]) > 0:
                 # add new neuron
                 #
                 new_neuron_key = self.add_neuron(sgm=sgm)
@@ -187,6 +188,8 @@ class SAM(object):
                 por['new_neuron_key'] = new_neuron_key
                 por['activations'][new_neuron_key] = self.neurons[new_neuron_key]['activation']
 
+                # add the new neuron to the community
+                #
                 community.append(new_neuron_key)
 
             else:
@@ -232,7 +235,6 @@ class SAM(object):
                         # if the neurons is similar enough then learn
                         #
                         if nn_similarity >= self.similarity_threshold:
-                        #if sum([1 for enc_type in similarities[nn_idx][1]['enc_types'] if similarities[nn_idx][1]['enc_types'][enc_type]['similarity'] < self.similarity_threshold]) == 0:
 
                             updated_neurons.add(nn_key)
                             por['nn_neurons'].append({'nn_key': nn_key,
@@ -251,6 +253,8 @@ class SAM(object):
                                                               learn_rate=nn_learn_rate,
                                                               learn_types=learn_types)
 
+            # connect the neurons in the same community
+            #
             for neuron_key_1 in community:
                 for neuron_key_2 in community:
                     if neuron_key_1 != neuron_key_2:
@@ -258,6 +262,9 @@ class SAM(object):
                             self.neurons[neuron_key_1]['nn'][neuron_key_2] = 1
                         else:
                             self.neurons[neuron_key_1]['nn'][neuron_key_2] += 1
+
+                            # keep track of the largest tally
+                            #
                             if self.neurons[neuron_key_1]['nn'][neuron_key_2] > self.community_max_count:
                                 self.community_max_count = self.neurons[neuron_key_1]['nn'][neuron_key_2]
 
@@ -287,7 +294,7 @@ class SAM(object):
         #
         similarities.sort(key=lambda x: (x[1]['similarity'], x[2]), reverse=True)
 
-        # get closest neuron and all other 'activated neurons'
+        # get closest neuron and all other 'activated neurons' within the same community
         #
         activated_neurons = [similarities[n_idx]
                              for n_idx in range(len(similarities))
@@ -323,7 +330,7 @@ if __name__ == '__main__':
 
     ng = SAM(name='test',
              similarity_threshold=0.75,
-             community_threshold_adj=0.05,
+             community_threshold=0.05,
              anomaly_threshold_factor=6.0,
              similarity_ema_alpha=0.1,
              learn_rate_decay=0.3,

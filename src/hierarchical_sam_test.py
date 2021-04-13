@@ -60,10 +60,12 @@ def colours_test():
         pors = []
         if client not in domains:
             domains[client] = {'fabric': HSAM(domain=client,
-                                              spatial_search_types={'r', 'g', 'b'},
-                                              spatial_learn_types={'r', 'g', 'b', 'label'},
-                                              spatial_similarity_threshold=0.75,
-                                              community_threshold_adj=0.3,
+                                              search_types={'r', 'g', 'b'},
+                                              learn_types={'r', 'g', 'b', 'label'},
+                                              layer_1_similarity_threshold=0.6,
+                                              layer_1_community_threshold=0.5,
+                                              layer_2_similarity_threshold=0.75,
+                                              layer_2_community_threshold=0.6,
                                               anomaly_threshold_factor=3.0,
                                               similarity_ema_alpha=0.3,
                                               learn_rate_decay=0.3,

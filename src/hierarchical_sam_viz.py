@@ -25,13 +25,16 @@ def plot_sam(sam, raw_data, xyz_types, colour_nodes, norm_colour=False):
     y_min_max = {'min': None, 'max': None}
     z_min_max = {'min': None, 'max': None}
 
+    nos_mapped_data = 0
+
     neuron_xyz = {}
     for neuron_key in sam['neurons']:
+        nos_mapped_data += sam['neurons'][neuron_key]['n_bmu']
         for enc_type in sam['neurons'][neuron_key]['sgm']['encodings']:
             if enc_type == xyz_types[0]:
                 node_x.append(sam['neurons'][neuron_key]['sgm']['encodings'][enc_type])
                 if neuron_key not in neuron_xyz:
-                    neuron_xyz[neuron_key]={'x': sam['neurons'][neuron_key]['sgm']['encodings'][enc_type], 'z': 0.0, 'y': 0.0}
+                    neuron_xyz[neuron_key] = {'x': sam['neurons'][neuron_key]['sgm']['encodings'][enc_type], 'z': 0.0, 'y': 0.0}
                 else:
                     neuron_xyz[neuron_key]['x'] = sam['neurons'][neuron_key]['sgm']['encodings'][enc_type]
             elif enc_type == xyz_types[1]:
@@ -136,10 +139,13 @@ def plot_sam(sam, raw_data, xyz_types, colour_nodes, norm_colour=False):
 
     fig = go.Figure(data=[raw_scatter, edge_scatter, neuron_scatter])
 
-    compression_ratio = round(len(sam["neurons"]) / len(raw_data), 2)
+    if nos_mapped_data > 0:
+        compression_ratio = round(len(sam["neurons"]) / nos_mapped_data, 2)
+    else:
+        compression_ratio = 1.0
 
     fig.update_layout(width=1200, height=1200,
-                      title=dict(text=f'{sam["name"]} Nos Neurons: {len(sam["neurons"])} Nos Raw Data:{len(raw_data)} Ratio: {compression_ratio}'))
+                      title=dict(text=f'{sam["name"]} Nos Neurons: {len(sam["neurons"])} Nos Raw Data:{nos_mapped_data} Ratio: {compression_ratio}'))
     fig.show()
 
 
