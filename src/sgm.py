@@ -85,76 +85,41 @@ class SGM(object):
         d_sdr['properties'] = {enc_type: {prop: self.properties[enc_type][prop] for prop in self.properties[enc_type]} for enc_type in self.properties}
         return d_sdr
 
-    def similarity_v1(self, sgm, search_types: set = None) -> dict:
-
-        enc_type: str
-        enc_types: set
-        por: dict
-        bit: int
-
-        # get the filtered intersection of enc_types to compare
-        #
-        if search_types is not None:
-            enc_types = ({enc_type
-                          for enc_type in self.encodings.keys()
-                          if enc_type in search_types} &
-                         {enc_type
-                          for enc_type in sgm.encodings.keys()
-                          if enc_type in search_types})
-        else:
-            enc_types = set(self.encodings.keys()) & set(sgm.encodings.keys())
-            search_types = set(self.encodings.keys()) | set(sgm.encodings.keys())
-
-        por = dict()
-
-        # the overlap per enc_type
-        #
-        por['enc_types'] = {enc_type: sum([min(self.encodings[enc_type][bit], sgm.encodings[enc_type][bit])
-                                           for bit in set(self.encodings[enc_type].keys()) & set(sgm.encodings[enc_type].keys())])
-                            for enc_type in enc_types}
-
-        # the total overlap
-        #
-        por['overlap'] = sum([por['enc_types'][enc_type] for enc_type in por['enc_types']])
-
-        # the maximum overlap is the sum of the number of bits used to encode the enc_types to search for
-        # need to cope with the possibility that enc_type isn't in either sgm
-        #
-        por['max_overlap'] = sum([self.properties[enc_type]['encoder'].n_bits if enc_type in self.properties else sgm.properties[enc_type]['encoder'].n_bits
-                                  for enc_type in search_types
-                                  if enc_type in self.properties or enc_type in sgm.properties])
-
-        if por['max_overlap'] > 0:
-            por['similarity'] = por['overlap'] / por['max_overlap']
-            por['distance'] = por['max_overlap'] - por['overlap']
-        else:
-            por['similarity'] = 0.0
-            por['distance'] = None
-
-        return por
-
     def similarity(self, sgm, search_types: set = None) -> dict:
 
         enc_type: str
         por: dict
         bit: int
 
+        # if no search_types provided get union of types from both sgms
+        #
         if search_types is None:
             search_types = set(self.encodings.keys()) | set(sgm.encodings.keys())
 
         por = {'enc_types': {}, 'similarity': 0.0}
+
+        # for each enc_type calculate the overlap in bits - which is the sum of minimum weights of each bit
+        #
         for enc_type in search_types:
+
             if enc_type in self.encodings and enc_type in sgm.encodings:
                 por['enc_types'][enc_type] = {'overlap': sum([min(self.encodings[enc_type][bit], sgm.encodings[enc_type][bit])
                                                               for bit in set(self.encodings[enc_type].keys()) & set(sgm.encodings[enc_type].keys())])}
             else:
+                # if the enc_type is not in both then overlap must be 0
+                #
                 por['enc_types'][enc_type] = {'overlap': 0}
+
+            # similarity is the overlap divided by the maximum number of bits
+            #
             if self.max_bits > 0:
                 por['enc_types'][enc_type]['similarity'] = por['enc_types'][enc_type]['overlap'] / self.max_bits
                 por['similarity'] += por['enc_types'][enc_type]['similarity']
             else:
                 por['enc_types'][enc_type]['similarity'] = 0.0
 
+        # calc the average similarity across the enc_types
+        #
         if len(por['enc_types']) > 0:
             por['similarity'] = por['similarity'] / len(por['enc_types'])
 
@@ -174,6 +139,8 @@ class SGM(object):
         if len(self.encodings) == 0:
             learn_rate = 1.0
 
+        # get the enc_types to learn
+        #
         if learn_types is not None:
             enc_types = ({enc_type
                          for enc_type in self.encodings.keys()
@@ -186,16 +153,26 @@ class SGM(object):
             enc_types = set(self.encodings.keys()) | set(sgm.encodings.keys())
 
         for enc_type in enc_types:
+
             if enc_type in self.encodings and enc_type in sgm.encodings:
+
+                # learn te bit weights - ie self bits will move towards the sgm bit weights. if a bit does exist in the sgm encoding then self bit weight is reduced
+                #
                 self_bits = set(self.encodings[enc_type].keys())
                 sdr_bits = set(sgm.encodings[enc_type].keys())
                 bits = self_bits | sdr_bits
                 for bit in bits:
                     if bit in self.encodings[enc_type] and bit in sgm.encodings[enc_type]:
+                        # move the weighting towards the sgm bit weight
+                        #
                         self.encodings[enc_type][bit] += (sgm.encodings[enc_type][bit] - self.encodings[enc_type][bit]) * learn_rate
                     elif bit in self.encodings[enc_type]:
+                        # reduce the weighting towards zero
+                        #
                         self.encodings[enc_type][bit] -= self.encodings[enc_type][bit] * learn_rate
                     else:
+                        # learn the weight for this new bit
+                        #
                         self.encodings[enc_type][bit] = sgm.encodings[enc_type][bit] * learn_rate
 
                     # prune if required
@@ -204,6 +181,9 @@ class SGM(object):
                         del self.encodings[enc_type][bit]
 
             elif enc_type in self.encodings:
+                # as this enc_type doesn't exist in the sgm then reduce the bit weights towards zero
+                # note as we can prune the bit we iterate over a copy list
+                #
                 for bit in list(self.encodings[enc_type]):
                     self.encodings[enc_type][bit] -= (self.encodings[enc_type][bit] * learn_rate)
 
@@ -212,13 +192,15 @@ class SGM(object):
                     if self.encodings[enc_type][bit] < prune:
                         del self.encodings[enc_type][bit]
             else:
+                # learn the weights of the new bits
+                #
                 self.encodings[enc_type] = {bit: sgm.encodings[enc_type][bit] * learn_rate for bit in sgm.encodings[enc_type]}
 
                 # copy over the properties
                 #
                 self.properties[enc_type] = {prop: sgm.properties[enc_type][prop] for prop in sgm.properties[enc_type]}
 
-            # prune the bit type if empty
+            # prune the enc type if it has no bits
             #
             if len(self.encodings[enc_type]) == 0:
                 del self.encodings[enc_type]
@@ -226,8 +208,6 @@ class SGM(object):
 
     def merge(self, sgm, weight: float = 1.0, enc_type_prefix: str = None):
         enc_type: str
-        enc_types: set
-        por: dict
         bit: int
         prop: str
 
