@@ -34,7 +34,7 @@ class SAM(object):
         self.similarity_threshold = similarity_threshold
         self.community_threshold = max(similarity_threshold - community_threshold_adj, 0.0)
         self.communities = {}
-        self.community_max_count = 0
+        self.community_max_count = 1
 
     def add_neuron(self, sgm: SGM) -> str:
         neuron_key = f'{self.next_neuron_id}'
@@ -172,12 +172,14 @@ class SAM(object):
 
             # get neurons within the community threshold
             #
+            #community = [similarities[idx][0] for idx in range(len(similarities))
+            #             if sum([1 for enc_type in similarities[idx][1]['enc_types'] if similarities[idx][1]['enc_types'][enc_type]['similarity'] < self.community_threshold]) == 0]
             community = [similarities[idx][0] for idx in range(len(similarities)) if similarities[idx][1]['similarity'] >= self.community_threshold]
 
             # if the similarity is smaller than the threshold then add a new neuron
             #
             if bmu_similarity < self.similarity_threshold:
-
+            #if sum([1 for enc_type in similarities[0][1]['enc_types'] if similarities[0][1]['enc_types'][enc_type]['similarity'] < self.similarity_threshold]) > 0:
                 # add new neuron
                 #
                 new_neuron_key = self.add_neuron(sgm=sgm)
@@ -230,6 +232,7 @@ class SAM(object):
                         # if the neurons is similar enough then learn
                         #
                         if nn_similarity >= self.similarity_threshold:
+                        #if sum([1 for enc_type in similarities[nn_idx][1]['enc_types'] if similarities[nn_idx][1]['enc_types'][enc_type]['similarity'] < self.similarity_threshold]) == 0:
 
                             updated_neurons.add(nn_key)
                             por['nn_neurons'].append({'nn_key': nn_key,

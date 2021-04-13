@@ -170,7 +170,7 @@ def colours_test():
     for client in training_graphs:
         pors = []
         sam = SAM(name=client,
-                  similarity_threshold=0.75,
+                  similarity_threshold=0.5,
                   community_threshold_adj=0.05,
                   anomaly_threshold_factor=3.0,
                   similarity_ema_alpha=0.3,
@@ -183,8 +183,8 @@ def colours_test():
             for t_idx in range(len(training_graphs[client])):
                 por = sam.train(sgm=training_graphs[client][t_idx][1],
                                 ref_id=str(t_idx),
-                                search_types={'r', 'g', 'b', 'colour'},
-                                learn_types={'r', 'g', 'b', 'colour'})
+                                search_types={'r', 'g', 'b'},
+                                learn_types={'r', 'g', 'b', 'label'})
                 pors.append(por)
 
         sams[client]['por'] = pors
@@ -210,6 +210,6 @@ def colours_test():
 
 if __name__ == '__main__':
 
-    #colours_test()
-    moon_test()
-    swiss_roll_test()
+    colours_test()
+    #moon_test()
+    #swiss_roll_test()

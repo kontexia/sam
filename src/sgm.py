@@ -7,11 +7,13 @@ import cython
 class SGM(object):
     encodings = cython.declare(dict, visibility='public')
     properties = cython.declare(dict, visibility='public')
+    max_bits = cython.declare(int, visibility='public')
 
     def __init__(self, sgm=None, enc_type=None, value=None, enc_properties=None, encoder=None, bit_weight=1.0):
 
         self.encodings = {}
         self.properties = {}
+        self.max_bits = 0
 
         # copy an sgm if provided
         # note don't copy encoder just take reference
@@ -33,6 +35,7 @@ class SGM(object):
     def copy(self, sgm, enc_type_prefix: str = None):
         enc_type: str
         prop: str
+        self.max_bits = sgm.max_bits
 
         if enc_type_prefix is not None:
             self.encodings = {f'{enc_type_prefix}_{enc_type}': deepcopy(sgm.encodings[enc_type]) for enc_type in sgm.encodings}
@@ -50,6 +53,9 @@ class SGM(object):
             self.properties[enc_type] = {prop: enc_properties[prop] for prop in enc_properties}
 
         self.properties[enc_type] = {'encoder': encoder}
+
+        if encoder.n_bits > self.max_bits:
+            self.max_bits = encoder.n_bits
 
         enc = encoder.encode(value)
         self.encodings[enc_type] = {bit: bit_weight for bit in enc}
@@ -79,7 +85,7 @@ class SGM(object):
         d_sdr['properties'] = {enc_type: {prop: self.properties[enc_type][prop] for prop in self.properties[enc_type]} for enc_type in self.properties}
         return d_sdr
 
-    def similarity(self, sgm, search_types: set = None) -> dict:
+    def similarity_v1(self, sgm, search_types: set = None) -> dict:
 
         enc_type: str
         enc_types: set
@@ -124,6 +130,33 @@ class SGM(object):
         else:
             por['similarity'] = 0.0
             por['distance'] = None
+
+        return por
+
+    def similarity(self, sgm, search_types: set = None) -> dict:
+
+        enc_type: str
+        por: dict
+        bit: int
+
+        if search_types is None:
+            search_types = set(self.encodings.keys()) | set(sgm.encodings.keys())
+
+        por = {'enc_types': {}, 'similarity': 0.0}
+        for enc_type in search_types:
+            if enc_type in self.encodings and enc_type in sgm.encodings:
+                por['enc_types'][enc_type] = {'overlap': sum([min(self.encodings[enc_type][bit], sgm.encodings[enc_type][bit])
+                                                              for bit in set(self.encodings[enc_type].keys()) & set(sgm.encodings[enc_type].keys())])}
+            else:
+                por['enc_types'][enc_type] = {'overlap': 0}
+            if self.max_bits > 0:
+                por['enc_types'][enc_type]['similarity'] = por['enc_types'][enc_type]['overlap'] / self.max_bits
+                por['similarity'] += por['enc_types'][enc_type]['similarity']
+            else:
+                por['enc_types'][enc_type]['similarity'] = 0.0
+
+        if len(por['enc_types']) > 0:
+            por['similarity'] = por['similarity'] / len(por['enc_types'])
 
         return por
 
@@ -217,58 +250,3 @@ class SGM(object):
                 # copy over the properties
                 #
                 self.properties[self_enc_type] = {prop: sgm.properties[enc_type][prop] for prop in sgm.properties[enc_type]}
-
-
-if __name__ == '__main__':
-    from src.numeric_encoder import NumericEncoder
-    import time
-
-    encoder = NumericEncoder(min_step=1,
-                             n_bits=40,
-                             enc_size=2048,
-                             seed=12345)
-
-    sgm_1 = SGM(enc_type='volume', value=100, encoder=encoder)
-
-    sgm_2 = SGM(enc_type='volume', value=210, encoder=encoder)
-
-    d = sgm_1.similarity(sgm_2)
-
-    sgm_3 = SGM(sgm=sgm_2)
-
-    sgm_3.learn(sgm_1, learn_rate=0.7, prune=0.01)
-
-    d_1 = sgm_1.similarity(sgm=sgm_3)
-
-    sgm_3.learn(sgm_1, learn_rate=0.7, prune=0.01)
-
-    d_2 = sgm_1.similarity(sgm=sgm_3)
-
-    sgm_3.learn(sgm_1, learn_rate=0.7, prune=0.01)
-
-    d_3 = sgm_1.similarity(sgm=sgm_3)
-
-    sgm_4 = SGM()
-
-    sgm_3.learn(sgm_4, learn_rate=0.7, prune=0.01)
-
-    start_time = time.time()
-    for i in range(1000):
-        d_4 = sgm_1.similarity(sgm=sgm_3)
-    end_time = time.time()
-    print((end_time - start_time)/1000)
-
-    sgm_3.learn(sgm_4, learn_rate=0.7, prune=0.01)
-
-    d_5 = sgm_1.similarity(sgm=sgm_3)
-
-    sgm_3.learn(sgm_4, learn_rate=0.7, prune=0.01)
-
-    d_6 = sgm_1.similarity(sgm=sgm_3)
-
-    sgm_3.learn(sgm_4, learn_rate=0.7, prune=0.01)
-
-    d_7 = sgm_1.similarity(sgm=sgm_3)
-
-
-    print('finished')

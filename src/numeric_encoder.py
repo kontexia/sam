@@ -122,71 +122,104 @@ class NumericEncoder(Encoder):
 
     def encode(self, numeric) -> set:
 
-        # round the numeric to the minimum step
+        # if its none then create special encoding that has no similarity to other numbers
         #
-        round_numeric = round(numeric / self.min_step)
+        if numeric is None:
 
-        # if no existing encodings then create first one
+            if numeric not in self.encodings:
+                # set the state of the random generator
+                #
+                random.setstate(Encoder.rand_states['numeric'])
+
+                # create a list of random numbers to represent the bits set
+                #
+                new_enc = list(random.sample(population=range(self.enc_size), k=self.n_bits))
+
+                Encoder.rand_states['numeric'] = random.getstate()
+
+                self.encodings[numeric] = new_enc
+
+                # maintain the mapping of bits to bucket to allow for easy decoding
+                #
+                for bit in new_enc:
+                    if bit not in self.bits:
+                        self.bits[bit] = {numeric}
+                    else:
+                        self.bits[bit].add(numeric)
+
+                enc = set(self.encodings[numeric])
+
+            else:
+                enc = set(self.encodings[numeric])
+
+        # assume its a numeric
         #
-        if len(self.encodings) == 0:
-
-            bucket = 0
-
-            # setup up the zero bucket association with real number
-            #
-            self.zero_bucket = round_numeric
-
-            # set the state of the random generator
-            #
-            random.setstate(Encoder.rand_states['numeric'])
-
-            # create a list of random numbers to represent the bits set
-            #
-            new_enc = list(random.sample(population=range(self.enc_size), k=self.n_bits))
-
-            Encoder.rand_states['numeric'] = random.getstate()
-
-            self.encodings[bucket] = new_enc
-
-            # the max bucket that exists along with the next offset in list of bits to change
-            #
-            self.max = bucket
-            self.max_next_idx = 0
-
-            # the min bucket that exists along with the next offset in list of bits to change
-            #
-            self.min = bucket
-            self.min_next_idx = 0
-
-            # maintain the mapping of bits to bucket to allow for easy decoding
-            #
-            for bit in new_enc:
-                if bit not in self.bits:
-                    self.bits[bit] = {bucket}
-                else:
-                    self.bits[bit].add(bucket)
-
-            enc = set(self.encodings[bucket])
-
-            self.create_encoding(target_bucket=1)
-            self.create_encoding(target_bucket=-1)
         else:
-
-            # calculate the bucket associated with the encoding
+            # round the numeric to the minimum step
             #
-            target_bucket = round_numeric - self.zero_bucket
+            round_numeric = round(numeric / self.min_step)
 
-            # just return encoding if bucket exists
+            # if no existing encodings then create first one
             #
-            if target_bucket in self.encodings:
-                enc = set(self.encodings[target_bucket])
+            if self.zero_bucket is None:
+
+                bucket = 0
+
+                # setup up the zero bucket association with real number
+                #
+                self.zero_bucket = round_numeric
+
+                # set the state of the random generator
+                #
+                random.setstate(Encoder.rand_states['numeric'])
+
+                # create a list of random numbers to represent the bits set
+                #
+                new_enc = list(random.sample(population=range(self.enc_size), k=self.n_bits))
+
+                Encoder.rand_states['numeric'] = random.getstate()
+
+                self.encodings[bucket] = new_enc
+
+                # the max bucket that exists along with the next offset in list of bits to change
+                #
+                self.max = bucket
+                self.max_next_idx = 0
+
+                # the min bucket that exists along with the next offset in list of bits to change
+                #
+                self.min = bucket
+                self.min_next_idx = 0
+
+                # maintain the mapping of bits to bucket to allow for easy decoding
+                #
+                for bit in new_enc:
+                    if bit not in self.bits:
+                        self.bits[bit] = {bucket}
+                    else:
+                        self.bits[bit].add(bucket)
+
+                enc = set(self.encodings[bucket])
+
+                self.create_encoding(target_bucket=1)
+                self.create_encoding(target_bucket=-1)
             else:
 
-                self.create_encoding(target_bucket=target_bucket)
-
-                # the encoding required
+                # calculate the bucket associated with the encoding
                 #
-                enc = set(self.encodings[target_bucket])
+                target_bucket = round_numeric - self.zero_bucket
+
+                # just return encoding if bucket exists
+                #
+                if target_bucket in self.encodings:
+                    enc = set(self.encodings[target_bucket])
+                else:
+
+                    self.create_encoding(target_bucket=target_bucket)
+
+                    # the encoding required
+                    #
+                    enc = set(self.encodings[target_bucket])
 
         return enc
 
@@ -213,20 +246,28 @@ class NumericEncoder(Encoder):
             buckets = [(n, buckets[n]) for n in buckets]
             buckets.sort(key=lambda x: x[1], reverse=True)
 
+            # get weighted average of bucket value if not None
             best_weight = buckets[0][1]
             if best_weight < self.n_bits:
-                value = 0.0
+                value = None
                 total_weight = 0.0
 
                 # look only at the top 3 buckets which should contain the most relevant values
-                #
+                # if any of these are None then return None
                 for idx in range(min(3, len(buckets))):
-                    value += (buckets[idx][0] + self.zero_bucket) * self.min_step * buckets[idx][1]
-                    total_weight += buckets[idx][1]
+                    if buckets[idx][0] is not None:
+                        if value is None:
+                            value = 0
+                        value += (buckets[idx][0] + self.zero_bucket) * self.min_step * buckets[idx][1]
+                        total_weight += buckets[idx][1]
 
-                value = value / total_weight
+                if value is not None:
+                    value = value / total_weight
             else:
-                value = (buckets[0][0] * self.min_step) + (self.zero_bucket * self.min_step)
+                if buckets[0][0] is not None:
+                    value = (buckets[0][0] * self.min_step) + (self.zero_bucket * self.min_step)
+                else:
+                    value = None
         else:
             value = None
         return value
@@ -235,6 +276,11 @@ class NumericEncoder(Encoder):
 if __name__ == '__main__':
 
     encoder = NumericEncoder(min_step=0.5, n_bits=40, enc_size=2048)
+
+    enc_n = encoder.encode(None)
+    val_n = encoder.decode(enc_n)
+
+    enc_n = encoder.encode(None)
 
     enc_1 = encoder.encode(100)
     enc_4 = encoder.encode(120.0)
