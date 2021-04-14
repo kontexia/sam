@@ -39,7 +39,7 @@ def moon_test():
 
     sam = SAM(name='MoonTest',
               similarity_threshold=0.75,
-              community_threshold_adj=0.05,
+              community_threshold=0.65,
               anomaly_threshold_factor=3.0,
               similarity_ema_alpha=0.3,
               learn_rate_decay=0.3,
@@ -95,7 +95,7 @@ def swiss_roll_test():
 
     sam = SAM(name='SwissTest',
               similarity_threshold=0.75,
-              community_threshold_adj=0.05,
+              community_threshold=0.65,
               anomaly_threshold_factor=3.0,
               similarity_ema_alpha=0.3,
               learn_rate_decay=0.3,
@@ -171,7 +171,7 @@ def colours_test():
         pors = []
         sam = SAM(name=client,
                   similarity_threshold=0.5,
-                  community_threshold_adj=0.05,
+                  community_threshold=0.4,
                   anomaly_threshold_factor=3.0,
                   similarity_ema_alpha=0.3,
                   learn_rate_decay=0.3,

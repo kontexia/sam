@@ -6,8 +6,68 @@ from src.sgm import SGM
 from src.numeric_encoder import NumericEncoder
 from src.string_encoder import StringEncoder
 from src.hierarchical_sam import HSAM
+from sklearn.datasets import make_moons, make_swiss_roll
 
 from src.hierarchical_sam_viz import plot_sam, plot_pors
+
+
+def moon_test():
+    data_set, labels = make_moons(n_samples=200,
+                                  noise=0.01,
+                                  random_state=0)
+
+    training_graphs = []
+
+    numeric_encoder = NumericEncoder(min_step=0.005,
+                                     n_bits=40,
+                                     enc_size=2048,
+                                     seed=123)
+
+    label_encoder = StringEncoder(n_bits=40,
+                                  enc_size=2048,
+                                  seed=456)
+
+    for idx in range(len(data_set)):
+
+        t_sgm = SGM()
+        t_sgm.add_encoding('x', value=data_set[idx][0], encoder=numeric_encoder)
+        t_sgm.add_encoding('y', value=data_set[idx][1], encoder=numeric_encoder)
+        t_sgm.add_encoding('label', value=str(labels[idx]), encoder=label_encoder)
+
+        training_graphs.append(t_sgm)
+
+    sam = HSAM(domain='MoonTest',
+               search_types={'x', 'y', 'label'},
+               learn_types={'x', 'y', 'label'},
+               layer_1_similarity_threshold=0.75,
+               layer_1_community_threshold=0.65,
+               layer_2_similarity_threshold=0.75,
+               layer_2_community_threshold=0.65,
+               anomaly_threshold_factor=3.0,
+               similarity_ema_alpha=0.3,
+               learn_rate_decay=0.3,
+               prune_threshold=0.01,)
+
+    pors = []
+
+    for t_idx in range(len(training_graphs)):
+        por = sam.train(sgm=training_graphs[t_idx],
+                        ref_id=str(t_idx))
+        pors.append(por)
+
+    for domain in sam.sams:
+        plot_pors(pors=pors, name=domain)
+
+        spatial_dict = sam.sams[domain].to_dict(decode=True)
+
+        plot_sam(sam=spatial_dict,
+                 raw_data=data_set,
+                 xyz_types=['x', 'y'],
+                 colour_nodes='label')
+
+    print('Finished')
+
+
 
 
 def colours_test():
@@ -101,4 +161,5 @@ def colours_test():
 
 if __name__ == '__main__':
 
-    colours_test()
+    moon_test()
+    #colours_test()
