@@ -17,12 +17,15 @@ ext_modules = []
 
 if use_cython:
     ext_modules += [
-        Extension("src.sgm", ["src/sgm.py"])
+        Extension("src.sparse_generalised_memory", ["src/sparse_generalised_memory.py"]),
+        Extension("src.sparse_neurons", ["src/sparse_neurons.py"])
+
     ]
     cmdclass.update({'build_ext': build_ext})
 else:
     ext_modules += [
-        Extension("src.sgm", ["src/sgm.c"])
+        Extension("src.sparse_generalised_memory", ["src/sparse_generalised_memory.c"]),
+        Extension("src.sparse_neurons", ["src/sparse_neurons.c"])
     ]
 
 setup(
