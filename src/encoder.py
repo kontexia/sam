@@ -9,6 +9,7 @@ class Encoder(object):
     rand_states = {}
 
     def __init__(self, encoder_type, n_bits: int = 40, enc_size: int = 2048, seed=None):
+        self.type = encoder_type
         self.encodings = {}
         self.bits = {}
         self.n_bits = n_bits
