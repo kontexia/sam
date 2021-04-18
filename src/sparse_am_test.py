@@ -2,14 +2,14 @@
 # -*- encoding: utf-8 -*-
 
 
-from src.sam import SAM
-from src.sgm import SGM
+import json
+from src.sparse_associative_memory import SAM
+from src.sparse_generalised_memory import SGM
 from src.numeric_encoder import NumericEncoder
 from src.string_encoder import StringEncoder
-from src.sam_viz import plot_sam, plot_pors
+from src.sparse_am_viz import plot_pors, plot_sam
 
 from sklearn.datasets import make_moons, make_swiss_roll
-import json
 
 
 def moon_test():
@@ -31,27 +31,23 @@ def moon_test():
     for idx in range(len(data_set)):
 
         t_sgm = SGM()
-        t_sgm.add_encoding('x', value=data_set[idx][0], encoder=numeric_encoder)
-        t_sgm.add_encoding('y', value=data_set[idx][1], encoder=numeric_encoder)
-        t_sgm.add_encoding('label', value=str(labels[idx]), encoder=label_encoder)
+        t_sgm.add_encoding(enc_key='x', value=data_set[idx][0], encoder=numeric_encoder)
+        t_sgm.add_encoding(enc_key='y', value=data_set[idx][1], encoder=numeric_encoder)
+        t_sgm.add_encoding(enc_key='label', value=str(labels[idx]), encoder=label_encoder)
 
         training_graphs.append(t_sgm)
 
-    sam = SAM(name='MoonTest',
-              similarity_threshold=0.75,
-              community_threshold=0.65,
-              anomaly_threshold_factor=3.0,
-              similarity_ema_alpha=0.3,
-              learn_rate_decay=0.3,
-              prune_threshold=0.01)
+    sam = SAM(name='Moon',
+              similarity_threshold=0.7,
+              learn_rate=0.6,
+              learn_temporal=False,
+              n_bits=40)
 
     pors = []
 
     for t_idx in range(len(training_graphs)):
         por = sam.train(sgm=training_graphs[t_idx],
-                        ref_id=str(t_idx),
-                        search_types={'x', 'y', 'label'},
-                        learn_types={'x', 'y', 'label'})
+                        activation_enc_keys={'x', 'y'})
         pors.append(por)
 
     sam_dict = sam.to_dict(decode=True)
@@ -59,9 +55,7 @@ def moon_test():
     plot_sam(sam=sam_dict,
              raw_data=data_set,
              xyz_types=['x', 'y'],
-             colour_nodes='label')
-
-    plot_pors(pors=pors)
+             colour_nodes=None)
 
     print('Finished')
 
@@ -85,29 +79,25 @@ def swiss_roll_test():
     for idx in range(len(data_set)):
 
         t_sgm = SGM()
-        t_sgm.add_encoding('x', value=data_set[idx][0], encoder=numeric_encoder)
-        t_sgm.add_encoding('y', value=data_set[idx][1], encoder=numeric_encoder)
-        t_sgm.add_encoding('z', value=data_set[idx][2], encoder=numeric_encoder)
+        t_sgm.add_encoding(enc_key='x', value=data_set[idx][0], encoder=numeric_encoder)
+        t_sgm.add_encoding(enc_key='y', value=data_set[idx][1], encoder=numeric_encoder)
+        t_sgm.add_encoding(enc_key='z', value=data_set[idx][2], encoder=numeric_encoder)
 
-        t_sgm.add_encoding('label', value=str(labels[idx]), encoder=label_encoder)
+        t_sgm.add_encoding(enc_key='label', value=str(labels[idx]), encoder=label_encoder)
 
         training_graphs.append(t_sgm)
 
-    sam = SAM(name='SwissTest',
-              similarity_threshold=0.75,
-              community_threshold=0.65,
-              anomaly_threshold_factor=3.0,
-              similarity_ema_alpha=0.3,
-              learn_rate_decay=0.3,
-              prune_threshold=0.01)
+    sam = SAM(name='Swiss',
+              similarity_threshold=0.7,
+              learn_rate=0.6,
+              learn_temporal=False,
+              n_bits=40)
 
     pors = []
 
     for t_idx in range(len(training_graphs)):
         por = sam.train(sgm=training_graphs[t_idx],
-                        ref_id=str(t_idx),
-                        search_types={'x', 'y', 'z'},
-                        learn_types={'x', 'y', 'z'})
+                        activation_enc_keys={'x', 'y', 'z'})
         pors.append(por)
 
     sam_dict = sam.to_dict(decode=True)
@@ -117,12 +107,10 @@ def swiss_roll_test():
              xyz_types=['x', 'y', 'z'],
              colour_nodes=None)
 
-    plot_pors(pors=pors)
-
     print('Finished')
 
 
-def colours_test():
+def colours():
     colours = {'RED': {'r': 255, 'b': 0, 'g': 0},
                'ORANGE': {'r': 255, 'b': 129, 'g': 0},
                'YELLOW': {'r': 255, 'b': 233, 'g': 0},
@@ -156,10 +144,10 @@ def colours_test():
             training_graphs[record['client']] = []
 
         t_sgm = SGM()
-        t_sgm.add_encoding('r', value=record['r'], encoder=numeric_encoder)
-        t_sgm.add_encoding('g', value=record['g'], encoder=numeric_encoder)
-        t_sgm.add_encoding('b', value=record['b'], encoder=numeric_encoder)
-        t_sgm.add_encoding('label', value=record['label'], encoder=label_encoder)
+        t_sgm.add_encoding(enc_key='r', value=record['r'], encoder=numeric_encoder)
+        t_sgm.add_encoding(enc_key='g', value=record['g'], encoder=numeric_encoder)
+        t_sgm.add_encoding(enc_key='b', value=record['b'], encoder=numeric_encoder)
+        t_sgm.add_encoding(enc_key='label', value=record['label'], encoder=label_encoder)
         r_data = [record['r'], record['g'], record['b'], record['label']]
 
         training_graphs[record['client']].append((record['trade_id'], t_sgm, r_data))
@@ -170,26 +158,22 @@ def colours_test():
     for client in training_graphs:
         pors = []
         sam = SAM(name=client,
-                  similarity_threshold=0.5,
-                  community_threshold=0.4,
-                  anomaly_threshold_factor=3.0,
-                  similarity_ema_alpha=0.3,
-                  learn_rate_decay=0.3,
-                  prune_threshold=0.01)
+                  similarity_threshold=0.9,
+                  learn_rate=0.6,
+                  learn_temporal=False,
+                  n_bits=40)
 
         sams[client] = {'sam': sam}
 
         for cycle in range(n_cycles):
             for t_idx in range(len(training_graphs[client])):
                 por = sam.train(sgm=training_graphs[client][t_idx][1],
-                                ref_id=str(t_idx),
-                                search_types={'r', 'g', 'b'},
-                                learn_types={'r', 'g', 'b', 'label'})
+                                activation_enc_keys={'r', 'g', 'b'})
                 pors.append(por)
 
         sams[client]['por'] = pors
 
-        plot_pors(pors=pors)
+        plot_pors(pors)
 
         sam_dict = sam.to_dict(decode=True)
 
@@ -201,15 +185,14 @@ def colours_test():
         plot_sam(sam=sam_dict,
                  raw_data=cycle_data,
                  xyz_types=['r', 'g', 'b'],
-                 colour_nodes=None)
+                 colour_nodes=None,
+                 temporal_key=0)
 
         print(f'finished {client}')
 
 
-
-
 if __name__ == '__main__':
 
-    colours_test()
     #moon_test()
     #swiss_roll_test()
+    colours()
