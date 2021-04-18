@@ -202,3 +202,47 @@ def plot_pors(pors, name=None):
     fig.update_layout(width=1200, height=1200,
                       title=dict(text=f'{por["sam"]} nos neurons: {final_neurons} Nos Raw_data: {len(pors)} Ratio: {compression_ratio}'))
     fig.show()
+
+def plot_pors_dsam(pors, name=None):
+    ema_similarity = []
+    ema_stdev = []
+
+    x_values = []
+    anomaly_score = []
+    nos_neurons = []
+
+    if name is not None:
+        final_neurons = pors[-1][name]['nos_neurons']
+    else:
+        final_neurons = pors[-1]['nos_neurons']
+
+    for x in range(len(pors)):
+
+        x_values.append(x)
+        if name is not None:
+            por = pors[x][name]
+        else:
+            por = pors[x]
+
+        anomaly_score.append(por['anomaly_score'])
+        nos_neurons.append(por['nos_neurons'] / final_neurons)
+        ema_similarity.append(por['ema_similarity'])
+        ema_stdev.append(pow(por['ema_variance'], 0.5))
+
+    anomaly_score_scatter = go.Scatter(x=x_values, y=anomaly_score, mode='lines', name='anomaly_score', line=dict(width=2, color='black'))
+    nos_neurons_scatter = go.Scatter(x=x_values, y=nos_neurons, mode='lines', name='nos neurons', line=dict(width=2, color='orange'))
+
+    ema_similarity_scatter = go.Scatter(x=x_values, y=ema_similarity, mode='lines', name='ema similarity', line=dict(width=2, color='blue'))
+    ema_stdev_scatter = go.Scatter(x=x_values, y=ema_stdev, mode='lines', name='stdev similarity', line=dict(width=2, color='purple'))
+
+    fig = go.Figure(data=[nos_neurons_scatter, anomaly_score_scatter, ema_similarity_scatter,ema_stdev_scatter])
+
+    if name is not None:
+        por = pors[-1][name]
+    else:
+        por = pors[-1]
+
+    compression_ratio = round(final_neurons / len(pors), 2)
+    fig.update_layout(width=1200, height=1200,
+                      title=dict(text=f'{por["sam"]} nos neurons: {final_neurons} Nos Raw_data: {len(pors)} Ratio: {compression_ratio}'))
+    fig.show()

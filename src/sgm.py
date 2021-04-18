@@ -230,3 +230,7 @@ class SGM(object):
                 # copy over the properties
                 #
                 self.properties[self_enc_type] = {prop: sgm.properties[enc_type][prop] for prop in sgm.properties[enc_type]}
+
+        # copy over max bits
+        #
+        self.max_bits = sgm.max_bits
