@@ -1443,6 +1443,7 @@ static const char __pyx_k_SGM_copy_from[] = "SGM.copy_from";
 static const char __pyx_k_reduce_cython[] = "__reduce_cython__";
 static const char __pyx_k_temporal_keys[] = "temporal_keys";
 static const char __pyx_k_learn_enc_keys[] = "learn_enc_keys";
+static const char __pyx_k_prune_threshold[] = "prune_threshold";
 static const char __pyx_k_pyx_PickleError[] = "__pyx_PickleError";
 static const char __pyx_k_setstate_cython[] = "__setstate_cython__";
 static const char __pyx_k_to_temporal_key[] = "to_temporal_key";
@@ -1500,6 +1501,7 @@ static PyObject *__pyx_n_s_main;
 static PyObject *__pyx_n_s_name;
 static PyObject *__pyx_n_s_new;
 static PyObject *__pyx_n_s_pickle;
+static PyObject *__pyx_n_s_prune_threshold;
 static PyObject *__pyx_n_s_pyx_PickleError;
 static PyObject *__pyx_n_s_pyx_checksum;
 static PyObject *__pyx_n_s_pyx_result;
@@ -1535,7 +1537,7 @@ static PyObject *__pyx_pf_3src_25sparse_generalised_memory_3SGM_4copy(struct __p
 static PyObject *__pyx_pf_3src_25sparse_generalised_memory_3SGM_6copy_from(struct __pyx_obj_3src_25sparse_generalised_memory_SGM *__pyx_v_self, PyObject *__pyx_v_sgm, PyObject *__pyx_v_from_temporal_key, PyObject *__pyx_v_to_temporal_key); /* proto */
 static PyObject *__pyx_pf_3src_25sparse_generalised_memory_3SGM_8add_encoding(struct __pyx_obj_3src_25sparse_generalised_memory_SGM *__pyx_v_self, PyObject *__pyx_v_value, PyObject *__pyx_v_enc_key, PyObject *__pyx_v_encoder, PyObject *__pyx_v_temporal_key); /* proto */
 static PyObject *__pyx_pf_3src_25sparse_generalised_memory_3SGM_10decode(struct __pyx_obj_3src_25sparse_generalised_memory_SGM *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_3src_25sparse_generalised_memory_3SGM_12learn(struct __pyx_obj_3src_25sparse_generalised_memory_SGM *__pyx_v_self, PyObject *__pyx_v_sgm, PyObject *__pyx_v_learn_temporal_keys, PyObject *__pyx_v_learn_enc_keys, double __pyx_v_learn_rate); /* proto */
+static PyObject *__pyx_pf_3src_25sparse_generalised_memory_3SGM_12learn(struct __pyx_obj_3src_25sparse_generalised_memory_SGM *__pyx_v_self, PyObject *__pyx_v_sgm, PyObject *__pyx_v_learn_temporal_keys, PyObject *__pyx_v_learn_enc_keys, double __pyx_v_learn_rate, double __pyx_v_prune_threshold); /* proto */
 static PyObject *__pyx_pf_3src_25sparse_generalised_memory_3SGM_8encoding___get__(struct __pyx_obj_3src_25sparse_generalised_memory_SGM *__pyx_v_self); /* proto */
 static int __pyx_pf_3src_25sparse_generalised_memory_3SGM_8encoding_2__set__(struct __pyx_obj_3src_25sparse_generalised_memory_SGM *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
 static int __pyx_pf_3src_25sparse_generalised_memory_3SGM_8encoding_4__del__(struct __pyx_obj_3src_25sparse_generalised_memory_SGM *__pyx_v_self); /* proto */
@@ -3534,7 +3536,7 @@ static PyObject *__pyx_pf_3src_25sparse_generalised_memory_3SGM_10decode(struct 
  *                for temporal_key in self.encoding}
  *         return dec             # <<<<<<<<<<<<<<
  * 
- *     def learn(self, sgm, learn_temporal_keys: set = None, learn_enc_keys: set = None, learn_rate: float = 1.0):
+ *     def learn(self, sgm, learn_temporal_keys: set = None, learn_enc_keys: set = None, learn_rate: float = 1.0, prune_threshold: float = 0.01):
  */
   __Pyx_XDECREF(__pyx_r);
   __Pyx_INCREF(__pyx_v_dec);
@@ -3573,7 +3575,7 @@ static PyObject *__pyx_pf_3src_25sparse_generalised_memory_3SGM_10decode(struct 
 /* "src/sparse_generalised_memory.py":82
  *         return dec
  * 
- *     def learn(self, sgm, learn_temporal_keys: set = None, learn_enc_keys: set = None, learn_rate: float = 1.0):             # <<<<<<<<<<<<<<
+ *     def learn(self, sgm, learn_temporal_keys: set = None, learn_enc_keys: set = None, learn_rate: float = 1.0, prune_threshold: float = 0.01):             # <<<<<<<<<<<<<<
  *         temporal_keys: set
  *         temporal_key: int
  */
@@ -3586,6 +3588,7 @@ static PyObject *__pyx_pw_3src_25sparse_generalised_memory_3SGM_13learn(PyObject
   PyObject *__pyx_v_learn_temporal_keys = 0;
   PyObject *__pyx_v_learn_enc_keys = 0;
   double __pyx_v_learn_rate;
+  double __pyx_v_prune_threshold;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -3593,14 +3596,16 @@ static PyObject *__pyx_pw_3src_25sparse_generalised_memory_3SGM_13learn(PyObject
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("learn (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_sgm,&__pyx_n_s_learn_temporal_keys,&__pyx_n_s_learn_enc_keys,&__pyx_n_s_learn_rate,0};
-    PyObject* values[4] = {0,0,0,0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_sgm,&__pyx_n_s_learn_temporal_keys,&__pyx_n_s_learn_enc_keys,&__pyx_n_s_learn_rate,&__pyx_n_s_prune_threshold,0};
+    PyObject* values[5] = {0,0,0,0,0};
     values[1] = ((PyObject*)Py_None);
     values[2] = ((PyObject*)Py_None);
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
       const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
       switch (pos_args) {
+        case  5: values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
+        CYTHON_FALLTHROUGH;
         case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
         CYTHON_FALLTHROUGH;
         case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
@@ -3635,12 +3640,20 @@ static PyObject *__pyx_pw_3src_25sparse_generalised_memory_3SGM_13learn(PyObject
           PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_learn_rate);
           if (value) { values[3] = value; kw_args--; }
         }
+        CYTHON_FALLTHROUGH;
+        case  4:
+        if (kw_args > 0) {
+          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_prune_threshold);
+          if (value) { values[4] = value; kw_args--; }
+        }
       }
       if (unlikely(kw_args > 0)) {
         if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "learn") < 0)) __PYX_ERR(0, 82, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
+        case  5: values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
+        CYTHON_FALLTHROUGH;
         case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
         CYTHON_FALLTHROUGH;
         case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
@@ -3660,10 +3673,15 @@ static PyObject *__pyx_pw_3src_25sparse_generalised_memory_3SGM_13learn(PyObject
     } else {
       __pyx_v_learn_rate = ((double)1.0);
     }
+    if (values[4]) {
+      __pyx_v_prune_threshold = __pyx_PyFloat_AsDouble(values[4]); if (unlikely((__pyx_v_prune_threshold == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 82, __pyx_L3_error)
+    } else {
+      __pyx_v_prune_threshold = ((double)0.01);
+    }
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("learn", 0, 1, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 82, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("learn", 0, 1, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 82, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("src.sparse_generalised_memory.SGM.learn", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -3671,7 +3689,7 @@ static PyObject *__pyx_pw_3src_25sparse_generalised_memory_3SGM_13learn(PyObject
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_learn_temporal_keys), (&PySet_Type), 1, "learn_temporal_keys", 1))) __PYX_ERR(0, 82, __pyx_L1_error)
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_learn_enc_keys), (&PySet_Type), 1, "learn_enc_keys", 1))) __PYX_ERR(0, 82, __pyx_L1_error)
-  __pyx_r = __pyx_pf_3src_25sparse_generalised_memory_3SGM_12learn(((struct __pyx_obj_3src_25sparse_generalised_memory_SGM *)__pyx_v_self), __pyx_v_sgm, __pyx_v_learn_temporal_keys, __pyx_v_learn_enc_keys, __pyx_v_learn_rate);
+  __pyx_r = __pyx_pf_3src_25sparse_generalised_memory_3SGM_12learn(((struct __pyx_obj_3src_25sparse_generalised_memory_SGM *)__pyx_v_self), __pyx_v_sgm, __pyx_v_learn_temporal_keys, __pyx_v_learn_enc_keys, __pyx_v_learn_rate, __pyx_v_prune_threshold);
 
   /* function exit code */
   goto __pyx_L0;
@@ -3682,7 +3700,7 @@ static PyObject *__pyx_pw_3src_25sparse_generalised_memory_3SGM_13learn(PyObject
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_3src_25sparse_generalised_memory_3SGM_12learn(struct __pyx_obj_3src_25sparse_generalised_memory_SGM *__pyx_v_self, PyObject *__pyx_v_sgm, PyObject *__pyx_v_learn_temporal_keys, PyObject *__pyx_v_learn_enc_keys, double __pyx_v_learn_rate) {
+static PyObject *__pyx_pf_3src_25sparse_generalised_memory_3SGM_12learn(struct __pyx_obj_3src_25sparse_generalised_memory_SGM *__pyx_v_self, PyObject *__pyx_v_sgm, PyObject *__pyx_v_learn_temporal_keys, PyObject *__pyx_v_learn_enc_keys, double __pyx_v_learn_rate, double __pyx_v_prune_threshold) {
   PyObject *__pyx_v_temporal_keys = 0;
   PyObject *__pyx_v_temporal_key = 0;
   PyObject *__pyx_v_enc_key = 0;
@@ -3819,7 +3837,7 @@ static PyObject *__pyx_pf_3src_25sparse_generalised_memory_3SGM_12learn(struct _
  *                 #
  *                 if temporal_key not in self.encoding:             # <<<<<<<<<<<<<<
  *                     self.encoding[temporal_key] = {enc_key: {bit: sgm.encoding[temporal_key][enc_key][bit] * learn_rate
- *                                                              for bit in sgm.encoding[temporal_key][enc_key]}
+ *                                                              for bit in sgm.encoding[temporal_key][enc_key]
  */
       if (unlikely(__pyx_v_self->encoding == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
@@ -3833,32 +3851,32 @@ static PyObject *__pyx_pf_3src_25sparse_generalised_memory_3SGM_12learn(struct _
  *                 #
  *                 if temporal_key not in self.encoding:
  *                     self.encoding[temporal_key] = {enc_key: {bit: sgm.encoding[temporal_key][enc_key][bit] * learn_rate             # <<<<<<<<<<<<<<
- *                                                              for bit in sgm.encoding[temporal_key][enc_key]}
- *                                                    for enc_key in sgm.encoding[temporal_key]
+ *                                                              for bit in sgm.encoding[temporal_key][enc_key]
+ *                                                              if sgm.encoding[temporal_key][enc_key][bit] * learn_rate > prune_threshold}
  */
         { /* enter inner scope */
           __pyx_t_4 = PyDict_New(); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 100, __pyx_L11_error)
           __Pyx_GOTREF(__pyx_t_4);
 
-          /* "src/sparse_generalised_memory.py":102
- *                     self.encoding[temporal_key] = {enc_key: {bit: sgm.encoding[temporal_key][enc_key][bit] * learn_rate
- *                                                              for bit in sgm.encoding[temporal_key][enc_key]}
+          /* "src/sparse_generalised_memory.py":103
+ *                                                              for bit in sgm.encoding[temporal_key][enc_key]
+ *                                                              if sgm.encoding[temporal_key][enc_key][bit] * learn_rate > prune_threshold}
  *                                                    for enc_key in sgm.encoding[temporal_key]             # <<<<<<<<<<<<<<
  *                                                    if learn_enc_keys is None or enc_key in learn_enc_keys}
  *                 else:
  */
-          __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encoding); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 102, __pyx_L11_error)
+          __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encoding); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 103, __pyx_L11_error)
           __Pyx_GOTREF(__pyx_t_2);
-          __pyx_t_3 = __Pyx_PyObject_GetItem(__pyx_t_2, __pyx_v_temporal_key); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 102, __pyx_L11_error)
+          __pyx_t_3 = __Pyx_PyObject_GetItem(__pyx_t_2, __pyx_v_temporal_key); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 103, __pyx_L11_error)
           __Pyx_GOTREF(__pyx_t_3);
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
           if (likely(PyList_CheckExact(__pyx_t_3)) || PyTuple_CheckExact(__pyx_t_3)) {
             __pyx_t_2 = __pyx_t_3; __Pyx_INCREF(__pyx_t_2); __pyx_t_12 = 0;
             __pyx_t_13 = NULL;
           } else {
-            __pyx_t_12 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 102, __pyx_L11_error)
+            __pyx_t_12 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 103, __pyx_L11_error)
             __Pyx_GOTREF(__pyx_t_2);
-            __pyx_t_13 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 102, __pyx_L11_error)
+            __pyx_t_13 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 103, __pyx_L11_error)
           }
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
           for (;;) {
@@ -3866,17 +3884,17 @@ static PyObject *__pyx_pf_3src_25sparse_generalised_memory_3SGM_12learn(struct _
               if (likely(PyList_CheckExact(__pyx_t_2))) {
                 if (__pyx_t_12 >= PyList_GET_SIZE(__pyx_t_2)) break;
                 #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-                __pyx_t_3 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_12); __Pyx_INCREF(__pyx_t_3); __pyx_t_12++; if (unlikely(0 < 0)) __PYX_ERR(0, 102, __pyx_L11_error)
+                __pyx_t_3 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_12); __Pyx_INCREF(__pyx_t_3); __pyx_t_12++; if (unlikely(0 < 0)) __PYX_ERR(0, 103, __pyx_L11_error)
                 #else
-                __pyx_t_3 = PySequence_ITEM(__pyx_t_2, __pyx_t_12); __pyx_t_12++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 102, __pyx_L11_error)
+                __pyx_t_3 = PySequence_ITEM(__pyx_t_2, __pyx_t_12); __pyx_t_12++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 103, __pyx_L11_error)
                 __Pyx_GOTREF(__pyx_t_3);
                 #endif
               } else {
                 if (__pyx_t_12 >= PyTuple_GET_SIZE(__pyx_t_2)) break;
                 #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-                __pyx_t_3 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_12); __Pyx_INCREF(__pyx_t_3); __pyx_t_12++; if (unlikely(0 < 0)) __PYX_ERR(0, 102, __pyx_L11_error)
+                __pyx_t_3 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_12); __Pyx_INCREF(__pyx_t_3); __pyx_t_12++; if (unlikely(0 < 0)) __PYX_ERR(0, 103, __pyx_L11_error)
                 #else
-                __pyx_t_3 = PySequence_ITEM(__pyx_t_2, __pyx_t_12); __pyx_t_12++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 102, __pyx_L11_error)
+                __pyx_t_3 = PySequence_ITEM(__pyx_t_2, __pyx_t_12); __pyx_t_12++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 103, __pyx_L11_error)
                 __Pyx_GOTREF(__pyx_t_3);
                 #endif
               }
@@ -3886,18 +3904,18 @@ static PyObject *__pyx_pf_3src_25sparse_generalised_memory_3SGM_12learn(struct _
                 PyObject* exc_type = PyErr_Occurred();
                 if (exc_type) {
                   if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-                  else __PYX_ERR(0, 102, __pyx_L11_error)
+                  else __PYX_ERR(0, 103, __pyx_L11_error)
                 }
                 break;
               }
               __Pyx_GOTREF(__pyx_t_3);
             }
-            if (!(likely(PyString_CheckExact(__pyx_t_3))||((__pyx_t_3) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_3)->tp_name), 0))) __PYX_ERR(0, 102, __pyx_L11_error)
+            if (!(likely(PyString_CheckExact(__pyx_t_3))||((__pyx_t_3) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_3)->tp_name), 0))) __PYX_ERR(0, 103, __pyx_L11_error)
             __Pyx_XDECREF_SET(__pyx_9genexpr11__pyx_v_enc_key, ((PyObject*)__pyx_t_3));
             __pyx_t_3 = 0;
 
-            /* "src/sparse_generalised_memory.py":103
- *                                                              for bit in sgm.encoding[temporal_key][enc_key]}
+            /* "src/sparse_generalised_memory.py":104
+ *                                                              if sgm.encoding[temporal_key][enc_key][bit] * learn_rate > prune_threshold}
  *                                                    for enc_key in sgm.encoding[temporal_key]
  *                                                    if learn_enc_keys is None or enc_key in learn_enc_keys}             # <<<<<<<<<<<<<<
  *                 else:
@@ -3912,9 +3930,9 @@ static PyObject *__pyx_pf_3src_25sparse_generalised_memory_3SGM_12learn(struct _
             }
             if (unlikely(__pyx_v_learn_enc_keys == Py_None)) {
               PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-              __PYX_ERR(0, 103, __pyx_L11_error)
+              __PYX_ERR(0, 104, __pyx_L11_error)
             }
-            __pyx_t_11 = (__Pyx_PySet_ContainsTF(__pyx_9genexpr11__pyx_v_enc_key, __pyx_v_learn_enc_keys, Py_EQ)); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 103, __pyx_L11_error)
+            __pyx_t_11 = (__Pyx_PySet_ContainsTF(__pyx_9genexpr11__pyx_v_enc_key, __pyx_v_learn_enc_keys, Py_EQ)); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 104, __pyx_L11_error)
             __pyx_t_9 = (__pyx_t_11 != 0);
             __pyx_t_10 = __pyx_t_9;
             __pyx_L15_bool_binop_done:;
@@ -3924,8 +3942,8 @@ static PyObject *__pyx_pf_3src_25sparse_generalised_memory_3SGM_12learn(struct _
  *                 #
  *                 if temporal_key not in self.encoding:
  *                     self.encoding[temporal_key] = {enc_key: {bit: sgm.encoding[temporal_key][enc_key][bit] * learn_rate             # <<<<<<<<<<<<<<
- *                                                              for bit in sgm.encoding[temporal_key][enc_key]}
- *                                                    for enc_key in sgm.encoding[temporal_key]
+ *                                                              for bit in sgm.encoding[temporal_key][enc_key]
+ *                                                              if sgm.encoding[temporal_key][enc_key][bit] * learn_rate > prune_threshold}
  */
               { /* enter inner scope */
                 __pyx_t_3 = PyDict_New(); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 100, __pyx_L19_error)
@@ -3934,9 +3952,9 @@ static PyObject *__pyx_pf_3src_25sparse_generalised_memory_3SGM_12learn(struct _
                 /* "src/sparse_generalised_memory.py":101
  *                 if temporal_key not in self.encoding:
  *                     self.encoding[temporal_key] = {enc_key: {bit: sgm.encoding[temporal_key][enc_key][bit] * learn_rate
- *                                                              for bit in sgm.encoding[temporal_key][enc_key]}             # <<<<<<<<<<<<<<
+ *                                                              for bit in sgm.encoding[temporal_key][enc_key]             # <<<<<<<<<<<<<<
+ *                                                              if sgm.encoding[temporal_key][enc_key][bit] * learn_rate > prune_threshold}
  *                                                    for enc_key in sgm.encoding[temporal_key]
- *                                                    if learn_enc_keys is None or enc_key in learn_enc_keys}
  */
                 __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encoding); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 101, __pyx_L19_error)
                 __Pyx_GOTREF(__pyx_t_14);
@@ -3989,54 +4007,96 @@ static PyObject *__pyx_pf_3src_25sparse_generalised_memory_3SGM_12learn(struct _
                   __Pyx_XDECREF_SET(__pyx_9genexpr12__pyx_v_bit, __pyx_t_14);
                   __pyx_t_14 = 0;
 
-                  /* "src/sparse_generalised_memory.py":100
- *                 #
- *                 if temporal_key not in self.encoding:
- *                     self.encoding[temporal_key] = {enc_key: {bit: sgm.encoding[temporal_key][enc_key][bit] * learn_rate             # <<<<<<<<<<<<<<
- *                                                              for bit in sgm.encoding[temporal_key][enc_key]}
+                  /* "src/sparse_generalised_memory.py":102
+ *                     self.encoding[temporal_key] = {enc_key: {bit: sgm.encoding[temporal_key][enc_key][bit] * learn_rate
+ *                                                              for bit in sgm.encoding[temporal_key][enc_key]
+ *                                                              if sgm.encoding[temporal_key][enc_key][bit] * learn_rate > prune_threshold}             # <<<<<<<<<<<<<<
  *                                                    for enc_key in sgm.encoding[temporal_key]
+ *                                                    if learn_enc_keys is None or enc_key in learn_enc_keys}
  */
-                  __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encoding); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 100, __pyx_L19_error)
+                  __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encoding); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 102, __pyx_L19_error)
                   __Pyx_GOTREF(__pyx_t_14);
-                  __pyx_t_18 = __Pyx_PyObject_GetItem(__pyx_t_14, __pyx_v_temporal_key); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 100, __pyx_L19_error)
+                  __pyx_t_18 = __Pyx_PyObject_GetItem(__pyx_t_14, __pyx_v_temporal_key); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 102, __pyx_L19_error)
                   __Pyx_GOTREF(__pyx_t_18);
                   __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-                  __pyx_t_14 = __Pyx_PyObject_Dict_GetItem(__pyx_t_18, __pyx_9genexpr11__pyx_v_enc_key); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 100, __pyx_L19_error)
+                  __pyx_t_14 = __Pyx_PyObject_Dict_GetItem(__pyx_t_18, __pyx_9genexpr11__pyx_v_enc_key); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 102, __pyx_L19_error)
                   __Pyx_GOTREF(__pyx_t_14);
                   __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
-                  __pyx_t_18 = __Pyx_PyObject_GetItem(__pyx_t_14, __pyx_9genexpr12__pyx_v_bit); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 100, __pyx_L19_error)
+                  __pyx_t_18 = __Pyx_PyObject_GetItem(__pyx_t_14, __pyx_9genexpr12__pyx_v_bit); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 102, __pyx_L19_error)
                   __Pyx_GOTREF(__pyx_t_18);
                   __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-                  __pyx_t_14 = PyFloat_FromDouble(__pyx_v_learn_rate); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 100, __pyx_L19_error)
+                  __pyx_t_14 = PyFloat_FromDouble(__pyx_v_learn_rate); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 102, __pyx_L19_error)
                   __Pyx_GOTREF(__pyx_t_14);
-                  __pyx_t_19 = PyNumber_Multiply(__pyx_t_18, __pyx_t_14); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 100, __pyx_L19_error)
+                  __pyx_t_19 = PyNumber_Multiply(__pyx_t_18, __pyx_t_14); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 102, __pyx_L19_error)
                   __Pyx_GOTREF(__pyx_t_19);
                   __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
                   __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-                  if (unlikely(PyDict_SetItem(__pyx_t_3, (PyObject*)__pyx_9genexpr12__pyx_v_bit, (PyObject*)__pyx_t_19))) __PYX_ERR(0, 100, __pyx_L19_error)
+                  __pyx_t_14 = PyFloat_FromDouble(__pyx_v_prune_threshold); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 102, __pyx_L19_error)
+                  __Pyx_GOTREF(__pyx_t_14);
+                  __pyx_t_18 = PyObject_RichCompare(__pyx_t_19, __pyx_t_14, Py_GT); __Pyx_XGOTREF(__pyx_t_18); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 102, __pyx_L19_error)
                   __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
+                  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+                  __pyx_t_10 = __Pyx_PyObject_IsTrue(__pyx_t_18); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 102, __pyx_L19_error)
+                  __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
+                  if (__pyx_t_10) {
+
+                    /* "src/sparse_generalised_memory.py":100
+ *                 #
+ *                 if temporal_key not in self.encoding:
+ *                     self.encoding[temporal_key] = {enc_key: {bit: sgm.encoding[temporal_key][enc_key][bit] * learn_rate             # <<<<<<<<<<<<<<
+ *                                                              for bit in sgm.encoding[temporal_key][enc_key]
+ *                                                              if sgm.encoding[temporal_key][enc_key][bit] * learn_rate > prune_threshold}
+ */
+                    __pyx_t_18 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encoding); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 100, __pyx_L19_error)
+                    __Pyx_GOTREF(__pyx_t_18);
+                    __pyx_t_14 = __Pyx_PyObject_GetItem(__pyx_t_18, __pyx_v_temporal_key); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 100, __pyx_L19_error)
+                    __Pyx_GOTREF(__pyx_t_14);
+                    __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
+                    __pyx_t_18 = __Pyx_PyObject_Dict_GetItem(__pyx_t_14, __pyx_9genexpr11__pyx_v_enc_key); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 100, __pyx_L19_error)
+                    __Pyx_GOTREF(__pyx_t_18);
+                    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+                    __pyx_t_14 = __Pyx_PyObject_GetItem(__pyx_t_18, __pyx_9genexpr12__pyx_v_bit); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 100, __pyx_L19_error)
+                    __Pyx_GOTREF(__pyx_t_14);
+                    __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
+                    __pyx_t_18 = PyFloat_FromDouble(__pyx_v_learn_rate); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 100, __pyx_L19_error)
+                    __Pyx_GOTREF(__pyx_t_18);
+                    __pyx_t_19 = PyNumber_Multiply(__pyx_t_14, __pyx_t_18); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 100, __pyx_L19_error)
+                    __Pyx_GOTREF(__pyx_t_19);
+                    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+                    __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
+                    if (unlikely(PyDict_SetItem(__pyx_t_3, (PyObject*)__pyx_9genexpr12__pyx_v_bit, (PyObject*)__pyx_t_19))) __PYX_ERR(0, 100, __pyx_L19_error)
+                    __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
+
+                    /* "src/sparse_generalised_memory.py":102
+ *                     self.encoding[temporal_key] = {enc_key: {bit: sgm.encoding[temporal_key][enc_key][bit] * learn_rate
+ *                                                              for bit in sgm.encoding[temporal_key][enc_key]
+ *                                                              if sgm.encoding[temporal_key][enc_key][bit] * learn_rate > prune_threshold}             # <<<<<<<<<<<<<<
+ *                                                    for enc_key in sgm.encoding[temporal_key]
+ *                                                    if learn_enc_keys is None or enc_key in learn_enc_keys}
+ */
+                  }
 
                   /* "src/sparse_generalised_memory.py":101
  *                 if temporal_key not in self.encoding:
  *                     self.encoding[temporal_key] = {enc_key: {bit: sgm.encoding[temporal_key][enc_key][bit] * learn_rate
- *                                                              for bit in sgm.encoding[temporal_key][enc_key]}             # <<<<<<<<<<<<<<
+ *                                                              for bit in sgm.encoding[temporal_key][enc_key]             # <<<<<<<<<<<<<<
+ *                                                              if sgm.encoding[temporal_key][enc_key][bit] * learn_rate > prune_threshold}
  *                                                    for enc_key in sgm.encoding[temporal_key]
- *                                                    if learn_enc_keys is None or enc_key in learn_enc_keys}
  */
                 }
                 __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
                 __Pyx_XDECREF(__pyx_9genexpr12__pyx_v_bit); __pyx_9genexpr12__pyx_v_bit = 0;
-                goto __pyx_L22_exit_scope;
+                goto __pyx_L23_exit_scope;
                 __pyx_L19_error:;
                 __Pyx_XDECREF(__pyx_9genexpr12__pyx_v_bit); __pyx_9genexpr12__pyx_v_bit = 0;
                 goto __pyx_L11_error;
-                __pyx_L22_exit_scope:;
+                __pyx_L23_exit_scope:;
               } /* exit inner scope */
               if (unlikely(PyDict_SetItem(__pyx_t_4, (PyObject*)__pyx_9genexpr11__pyx_v_enc_key, (PyObject*)__pyx_t_3))) __PYX_ERR(0, 100, __pyx_L11_error)
               __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-              /* "src/sparse_generalised_memory.py":103
- *                                                              for bit in sgm.encoding[temporal_key][enc_key]}
+              /* "src/sparse_generalised_memory.py":104
+ *                                                              if sgm.encoding[temporal_key][enc_key][bit] * learn_rate > prune_threshold}
  *                                                    for enc_key in sgm.encoding[temporal_key]
  *                                                    if learn_enc_keys is None or enc_key in learn_enc_keys}             # <<<<<<<<<<<<<<
  *                 else:
@@ -4044,9 +4104,9 @@ static PyObject *__pyx_pf_3src_25sparse_generalised_memory_3SGM_12learn(struct _
  */
             }
 
-            /* "src/sparse_generalised_memory.py":102
- *                     self.encoding[temporal_key] = {enc_key: {bit: sgm.encoding[temporal_key][enc_key][bit] * learn_rate
- *                                                              for bit in sgm.encoding[temporal_key][enc_key]}
+            /* "src/sparse_generalised_memory.py":103
+ *                                                              for bit in sgm.encoding[temporal_key][enc_key]
+ *                                                              if sgm.encoding[temporal_key][enc_key][bit] * learn_rate > prune_threshold}
  *                                                    for enc_key in sgm.encoding[temporal_key]             # <<<<<<<<<<<<<<
  *                                                    if learn_enc_keys is None or enc_key in learn_enc_keys}
  *                 else:
@@ -4054,19 +4114,19 @@ static PyObject *__pyx_pf_3src_25sparse_generalised_memory_3SGM_12learn(struct _
           }
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
           __Pyx_XDECREF(__pyx_9genexpr11__pyx_v_enc_key); __pyx_9genexpr11__pyx_v_enc_key = 0;
-          goto __pyx_L23_exit_scope;
+          goto __pyx_L24_exit_scope;
           __pyx_L11_error:;
           __Pyx_XDECREF(__pyx_9genexpr11__pyx_v_enc_key); __pyx_9genexpr11__pyx_v_enc_key = 0;
           goto __pyx_L1_error;
-          __pyx_L23_exit_scope:;
+          __pyx_L24_exit_scope:;
         } /* exit inner scope */
 
         /* "src/sparse_generalised_memory.py":100
  *                 #
  *                 if temporal_key not in self.encoding:
  *                     self.encoding[temporal_key] = {enc_key: {bit: sgm.encoding[temporal_key][enc_key][bit] * learn_rate             # <<<<<<<<<<<<<<
- *                                                              for bit in sgm.encoding[temporal_key][enc_key]}
- *                                                    for enc_key in sgm.encoding[temporal_key]
+ *                                                              for bit in sgm.encoding[temporal_key][enc_key]
+ *                                                              if sgm.encoding[temporal_key][enc_key][bit] * learn_rate > prune_threshold}
  */
         if (unlikely(__pyx_v_self->encoding == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
@@ -4080,12 +4140,12 @@ static PyObject *__pyx_pf_3src_25sparse_generalised_memory_3SGM_12learn(struct _
  *                 #
  *                 if temporal_key not in self.encoding:             # <<<<<<<<<<<<<<
  *                     self.encoding[temporal_key] = {enc_key: {bit: sgm.encoding[temporal_key][enc_key][bit] * learn_rate
- *                                                              for bit in sgm.encoding[temporal_key][enc_key]}
+ *                                                              for bit in sgm.encoding[temporal_key][enc_key]
  */
         goto __pyx_L8;
       }
 
-      /* "src/sparse_generalised_memory.py":108
+      /* "src/sparse_generalised_memory.py":109
  *                     # get the union of enc_keys in this temporal key to deal with new or existing enc_keys
  *                     #
  *                     enc_keys = set(self.encoding[temporal_key]) | set(sgm.encoding[temporal_key])             # <<<<<<<<<<<<<<
@@ -4095,29 +4155,29 @@ static PyObject *__pyx_pf_3src_25sparse_generalised_memory_3SGM_12learn(struct _
       /*else*/ {
         if (unlikely(__pyx_v_self->encoding == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-          __PYX_ERR(0, 108, __pyx_L1_error)
+          __PYX_ERR(0, 109, __pyx_L1_error)
         }
-        __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_temporal_key); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 108, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_temporal_key); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 109, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
-        __pyx_t_2 = PySet_New(__pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 108, __pyx_L1_error)
+        __pyx_t_2 = PySet_New(__pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 109, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-        __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encoding); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 108, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encoding); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 109, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
-        __pyx_t_3 = __Pyx_PyObject_GetItem(__pyx_t_4, __pyx_v_temporal_key); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 108, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PyObject_GetItem(__pyx_t_4, __pyx_v_temporal_key); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 109, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-        __pyx_t_4 = PySet_New(__pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 108, __pyx_L1_error)
+        __pyx_t_4 = PySet_New(__pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 109, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        __pyx_t_3 = PyNumber_Or(__pyx_t_2, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 108, __pyx_L1_error)
+        __pyx_t_3 = PyNumber_Or(__pyx_t_2, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 109, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
         __Pyx_XDECREF_SET(__pyx_v_enc_keys, ((PyObject*)__pyx_t_3));
         __pyx_t_3 = 0;
 
-        /* "src/sparse_generalised_memory.py":109
+        /* "src/sparse_generalised_memory.py":110
  *                     #
  *                     enc_keys = set(self.encoding[temporal_key]) | set(sgm.encoding[temporal_key])
  *                     for enc_key in enc_keys:             # <<<<<<<<<<<<<<
@@ -4125,7 +4185,7 @@ static PyObject *__pyx_pf_3src_25sparse_generalised_memory_3SGM_12learn(struct _
  *                         # make sure we have an encoder
  */
         __pyx_t_12 = 0;
-        __pyx_t_4 = __Pyx_set_iterator(__pyx_v_enc_keys, 1, (&__pyx_t_16), (&__pyx_t_8)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 109, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_set_iterator(__pyx_v_enc_keys, 1, (&__pyx_t_16), (&__pyx_t_8)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 110, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_XDECREF(__pyx_t_3);
         __pyx_t_3 = __pyx_t_4;
@@ -4133,46 +4193,46 @@ static PyObject *__pyx_pf_3src_25sparse_generalised_memory_3SGM_12learn(struct _
         while (1) {
           __pyx_t_20 = __Pyx_set_iter_next(__pyx_t_3, __pyx_t_16, &__pyx_t_12, &__pyx_t_4, __pyx_t_8);
           if (unlikely(__pyx_t_20 == 0)) break;
-          if (unlikely(__pyx_t_20 == -1)) __PYX_ERR(0, 109, __pyx_L1_error)
+          if (unlikely(__pyx_t_20 == -1)) __PYX_ERR(0, 110, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
-          if (!(likely(PyString_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_4)->tp_name), 0))) __PYX_ERR(0, 109, __pyx_L1_error)
+          if (!(likely(PyString_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_4)->tp_name), 0))) __PYX_ERR(0, 110, __pyx_L1_error)
           __Pyx_XDECREF_SET(__pyx_v_enc_key, ((PyObject*)__pyx_t_4));
           __pyx_t_4 = 0;
 
-          /* "src/sparse_generalised_memory.py":113
+          /* "src/sparse_generalised_memory.py":114
  *                         # make sure we have an encoder
  *                         #
  *                         if enc_key in sgm.encoders:             # <<<<<<<<<<<<<<
  *                             self.encoders[enc_key] = sgm.encoders[enc_key]
  * 
  */
-          __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encoders); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 113, __pyx_L1_error)
+          __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encoders); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 114, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
-          __pyx_t_10 = (__Pyx_PySequence_ContainsTF(__pyx_v_enc_key, __pyx_t_4, Py_EQ)); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 113, __pyx_L1_error)
+          __pyx_t_10 = (__Pyx_PySequence_ContainsTF(__pyx_v_enc_key, __pyx_t_4, Py_EQ)); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 114, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
           __pyx_t_9 = (__pyx_t_10 != 0);
           if (__pyx_t_9) {
 
-            /* "src/sparse_generalised_memory.py":114
+            /* "src/sparse_generalised_memory.py":115
  *                         #
  *                         if enc_key in sgm.encoders:
  *                             self.encoders[enc_key] = sgm.encoders[enc_key]             # <<<<<<<<<<<<<<
  * 
  *                         # only learn required enc_keys
  */
-            __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encoders); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 114, __pyx_L1_error)
+            __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encoders); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 115, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_4);
-            __pyx_t_2 = __Pyx_PyObject_Dict_GetItem(__pyx_t_4, __pyx_v_enc_key); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 114, __pyx_L1_error)
+            __pyx_t_2 = __Pyx_PyObject_Dict_GetItem(__pyx_t_4, __pyx_v_enc_key); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 115, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_2);
             __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
             if (unlikely(__pyx_v_self->encoders == Py_None)) {
               PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-              __PYX_ERR(0, 114, __pyx_L1_error)
+              __PYX_ERR(0, 115, __pyx_L1_error)
             }
-            if (unlikely(PyDict_SetItem(__pyx_v_self->encoders, __pyx_v_enc_key, __pyx_t_2) < 0)) __PYX_ERR(0, 114, __pyx_L1_error)
+            if (unlikely(PyDict_SetItem(__pyx_v_self->encoders, __pyx_v_enc_key, __pyx_t_2) < 0)) __PYX_ERR(0, 115, __pyx_L1_error)
             __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-            /* "src/sparse_generalised_memory.py":113
+            /* "src/sparse_generalised_memory.py":114
  *                         # make sure we have an encoder
  *                         #
  *                         if enc_key in sgm.encoders:             # <<<<<<<<<<<<<<
@@ -4181,7 +4241,7 @@ static PyObject *__pyx_pf_3src_25sparse_generalised_memory_3SGM_12learn(struct _
  */
           }
 
-          /* "src/sparse_generalised_memory.py":118
+          /* "src/sparse_generalised_memory.py":119
  *                         # only learn required enc_keys
  *                         #
  *                         if learn_enc_keys is None or enc_key in learn_enc_keys:             # <<<<<<<<<<<<<<
@@ -4193,69 +4253,69 @@ static PyObject *__pyx_pf_3src_25sparse_generalised_memory_3SGM_12learn(struct _
           if (!__pyx_t_11) {
           } else {
             __pyx_t_9 = __pyx_t_11;
-            goto __pyx_L28_bool_binop_done;
+            goto __pyx_L29_bool_binop_done;
           }
           if (unlikely(__pyx_v_learn_enc_keys == Py_None)) {
             PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-            __PYX_ERR(0, 118, __pyx_L1_error)
+            __PYX_ERR(0, 119, __pyx_L1_error)
           }
-          __pyx_t_11 = (__Pyx_PySet_ContainsTF(__pyx_v_enc_key, __pyx_v_learn_enc_keys, Py_EQ)); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 118, __pyx_L1_error)
+          __pyx_t_11 = (__Pyx_PySet_ContainsTF(__pyx_v_enc_key, __pyx_v_learn_enc_keys, Py_EQ)); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 119, __pyx_L1_error)
           __pyx_t_10 = (__pyx_t_11 != 0);
           __pyx_t_9 = __pyx_t_10;
-          __pyx_L28_bool_binop_done:;
+          __pyx_L29_bool_binop_done:;
           if (__pyx_t_9) {
 
-            /* "src/sparse_generalised_memory.py":122
+            /* "src/sparse_generalised_memory.py":123
  *                             # if the enc_key is not in this sgm then copy over incoming data
  *                             #
  *                             if enc_key not in self.encoding[temporal_key]:             # <<<<<<<<<<<<<<
  *                                 self.encoding[temporal_key][enc_key] = {bit: sgm.encoding[temporal_key][enc_key][bit] * learn_rate
- *                                                                         for bit in sgm.encoding[temporal_key][enc_key]}
+ *                                                                         for bit in sgm.encoding[temporal_key][enc_key]
  */
             if (unlikely(__pyx_v_self->encoding == Py_None)) {
               PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-              __PYX_ERR(0, 122, __pyx_L1_error)
+              __PYX_ERR(0, 123, __pyx_L1_error)
             }
-            __pyx_t_2 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_temporal_key); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 122, __pyx_L1_error)
+            __pyx_t_2 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_temporal_key); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 123, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_2);
-            __pyx_t_9 = (__Pyx_PySequence_ContainsTF(__pyx_v_enc_key, __pyx_t_2, Py_NE)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 122, __pyx_L1_error)
+            __pyx_t_9 = (__Pyx_PySequence_ContainsTF(__pyx_v_enc_key, __pyx_t_2, Py_NE)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 123, __pyx_L1_error)
             __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
             __pyx_t_10 = (__pyx_t_9 != 0);
             if (__pyx_t_10) {
 
-              /* "src/sparse_generalised_memory.py":123
+              /* "src/sparse_generalised_memory.py":124
  *                             #
  *                             if enc_key not in self.encoding[temporal_key]:
  *                                 self.encoding[temporal_key][enc_key] = {bit: sgm.encoding[temporal_key][enc_key][bit] * learn_rate             # <<<<<<<<<<<<<<
- *                                                                         for bit in sgm.encoding[temporal_key][enc_key]}
- *                             else:
+ *                                                                         for bit in sgm.encoding[temporal_key][enc_key]
+ *                                                                         if sgm.encoding[temporal_key][enc_key][bit] * learn_rate > prune_threshold}
  */
               { /* enter inner scope */
-                __pyx_t_2 = PyDict_New(); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 123, __pyx_L33_error)
+                __pyx_t_2 = PyDict_New(); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 124, __pyx_L34_error)
                 __Pyx_GOTREF(__pyx_t_2);
 
-                /* "src/sparse_generalised_memory.py":124
+                /* "src/sparse_generalised_memory.py":125
  *                             if enc_key not in self.encoding[temporal_key]:
  *                                 self.encoding[temporal_key][enc_key] = {bit: sgm.encoding[temporal_key][enc_key][bit] * learn_rate
- *                                                                         for bit in sgm.encoding[temporal_key][enc_key]}             # <<<<<<<<<<<<<<
+ *                                                                         for bit in sgm.encoding[temporal_key][enc_key]             # <<<<<<<<<<<<<<
+ *                                                                         if sgm.encoding[temporal_key][enc_key][bit] * learn_rate > prune_threshold}
  *                             else:
- *                                 # get union of bits to deal with existing and new bits
  */
-                __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encoding); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 124, __pyx_L33_error)
+                __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encoding); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 125, __pyx_L34_error)
                 __Pyx_GOTREF(__pyx_t_4);
-                __pyx_t_15 = __Pyx_PyObject_GetItem(__pyx_t_4, __pyx_v_temporal_key); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 124, __pyx_L33_error)
+                __pyx_t_15 = __Pyx_PyObject_GetItem(__pyx_t_4, __pyx_v_temporal_key); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 125, __pyx_L34_error)
                 __Pyx_GOTREF(__pyx_t_15);
                 __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-                __pyx_t_4 = __Pyx_PyObject_Dict_GetItem(__pyx_t_15, __pyx_v_enc_key); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 124, __pyx_L33_error)
+                __pyx_t_4 = __Pyx_PyObject_Dict_GetItem(__pyx_t_15, __pyx_v_enc_key); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 125, __pyx_L34_error)
                 __Pyx_GOTREF(__pyx_t_4);
                 __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
                 if (likely(PyList_CheckExact(__pyx_t_4)) || PyTuple_CheckExact(__pyx_t_4)) {
                   __pyx_t_15 = __pyx_t_4; __Pyx_INCREF(__pyx_t_15); __pyx_t_21 = 0;
                   __pyx_t_13 = NULL;
                 } else {
-                  __pyx_t_21 = -1; __pyx_t_15 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 124, __pyx_L33_error)
+                  __pyx_t_21 = -1; __pyx_t_15 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 125, __pyx_L34_error)
                   __Pyx_GOTREF(__pyx_t_15);
-                  __pyx_t_13 = Py_TYPE(__pyx_t_15)->tp_iternext; if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 124, __pyx_L33_error)
+                  __pyx_t_13 = Py_TYPE(__pyx_t_15)->tp_iternext; if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 125, __pyx_L34_error)
                 }
                 __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
                 for (;;) {
@@ -4263,17 +4323,17 @@ static PyObject *__pyx_pf_3src_25sparse_generalised_memory_3SGM_12learn(struct _
                     if (likely(PyList_CheckExact(__pyx_t_15))) {
                       if (__pyx_t_21 >= PyList_GET_SIZE(__pyx_t_15)) break;
                       #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-                      __pyx_t_4 = PyList_GET_ITEM(__pyx_t_15, __pyx_t_21); __Pyx_INCREF(__pyx_t_4); __pyx_t_21++; if (unlikely(0 < 0)) __PYX_ERR(0, 124, __pyx_L33_error)
+                      __pyx_t_4 = PyList_GET_ITEM(__pyx_t_15, __pyx_t_21); __Pyx_INCREF(__pyx_t_4); __pyx_t_21++; if (unlikely(0 < 0)) __PYX_ERR(0, 125, __pyx_L34_error)
                       #else
-                      __pyx_t_4 = PySequence_ITEM(__pyx_t_15, __pyx_t_21); __pyx_t_21++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 124, __pyx_L33_error)
+                      __pyx_t_4 = PySequence_ITEM(__pyx_t_15, __pyx_t_21); __pyx_t_21++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 125, __pyx_L34_error)
                       __Pyx_GOTREF(__pyx_t_4);
                       #endif
                     } else {
                       if (__pyx_t_21 >= PyTuple_GET_SIZE(__pyx_t_15)) break;
                       #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-                      __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_15, __pyx_t_21); __Pyx_INCREF(__pyx_t_4); __pyx_t_21++; if (unlikely(0 < 0)) __PYX_ERR(0, 124, __pyx_L33_error)
+                      __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_15, __pyx_t_21); __Pyx_INCREF(__pyx_t_4); __pyx_t_21++; if (unlikely(0 < 0)) __PYX_ERR(0, 125, __pyx_L34_error)
                       #else
-                      __pyx_t_4 = PySequence_ITEM(__pyx_t_15, __pyx_t_21); __pyx_t_21++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 124, __pyx_L33_error)
+                      __pyx_t_4 = PySequence_ITEM(__pyx_t_15, __pyx_t_21); __pyx_t_21++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 125, __pyx_L34_error)
                       __Pyx_GOTREF(__pyx_t_4);
                       #endif
                     }
@@ -4283,7 +4343,7 @@ static PyObject *__pyx_pf_3src_25sparse_generalised_memory_3SGM_12learn(struct _
                       PyObject* exc_type = PyErr_Occurred();
                       if (exc_type) {
                         if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-                        else __PYX_ERR(0, 124, __pyx_L33_error)
+                        else __PYX_ERR(0, 125, __pyx_L34_error)
                       }
                       break;
                     }
@@ -4292,78 +4352,120 @@ static PyObject *__pyx_pf_3src_25sparse_generalised_memory_3SGM_12learn(struct _
                   __Pyx_XDECREF_SET(__pyx_9genexpr13__pyx_v_bit, __pyx_t_4);
                   __pyx_t_4 = 0;
 
-                  /* "src/sparse_generalised_memory.py":123
+                  /* "src/sparse_generalised_memory.py":126
+ *                                 self.encoding[temporal_key][enc_key] = {bit: sgm.encoding[temporal_key][enc_key][bit] * learn_rate
+ *                                                                         for bit in sgm.encoding[temporal_key][enc_key]
+ *                                                                         if sgm.encoding[temporal_key][enc_key][bit] * learn_rate > prune_threshold}             # <<<<<<<<<<<<<<
+ *                             else:
+ *                                 # get union of bits to deal with existing and new bits
+ */
+                  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encoding); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 126, __pyx_L34_error)
+                  __Pyx_GOTREF(__pyx_t_4);
+                  __pyx_t_19 = __Pyx_PyObject_GetItem(__pyx_t_4, __pyx_v_temporal_key); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 126, __pyx_L34_error)
+                  __Pyx_GOTREF(__pyx_t_19);
+                  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+                  __pyx_t_4 = __Pyx_PyObject_Dict_GetItem(__pyx_t_19, __pyx_v_enc_key); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 126, __pyx_L34_error)
+                  __Pyx_GOTREF(__pyx_t_4);
+                  __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
+                  __pyx_t_19 = __Pyx_PyObject_GetItem(__pyx_t_4, __pyx_9genexpr13__pyx_v_bit); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 126, __pyx_L34_error)
+                  __Pyx_GOTREF(__pyx_t_19);
+                  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+                  __pyx_t_4 = PyFloat_FromDouble(__pyx_v_learn_rate); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 126, __pyx_L34_error)
+                  __Pyx_GOTREF(__pyx_t_4);
+                  __pyx_t_18 = PyNumber_Multiply(__pyx_t_19, __pyx_t_4); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 126, __pyx_L34_error)
+                  __Pyx_GOTREF(__pyx_t_18);
+                  __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
+                  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+                  __pyx_t_4 = PyFloat_FromDouble(__pyx_v_prune_threshold); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 126, __pyx_L34_error)
+                  __Pyx_GOTREF(__pyx_t_4);
+                  __pyx_t_19 = PyObject_RichCompare(__pyx_t_18, __pyx_t_4, Py_GT); __Pyx_XGOTREF(__pyx_t_19); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 126, __pyx_L34_error)
+                  __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
+                  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+                  __pyx_t_10 = __Pyx_PyObject_IsTrue(__pyx_t_19); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 126, __pyx_L34_error)
+                  __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
+                  if (__pyx_t_10) {
+
+                    /* "src/sparse_generalised_memory.py":124
  *                             #
  *                             if enc_key not in self.encoding[temporal_key]:
  *                                 self.encoding[temporal_key][enc_key] = {bit: sgm.encoding[temporal_key][enc_key][bit] * learn_rate             # <<<<<<<<<<<<<<
- *                                                                         for bit in sgm.encoding[temporal_key][enc_key]}
- *                             else:
+ *                                                                         for bit in sgm.encoding[temporal_key][enc_key]
+ *                                                                         if sgm.encoding[temporal_key][enc_key][bit] * learn_rate > prune_threshold}
  */
-                  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encoding); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 123, __pyx_L33_error)
-                  __Pyx_GOTREF(__pyx_t_4);
-                  __pyx_t_19 = __Pyx_PyObject_GetItem(__pyx_t_4, __pyx_v_temporal_key); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 123, __pyx_L33_error)
-                  __Pyx_GOTREF(__pyx_t_19);
-                  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-                  __pyx_t_4 = __Pyx_PyObject_Dict_GetItem(__pyx_t_19, __pyx_v_enc_key); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 123, __pyx_L33_error)
-                  __Pyx_GOTREF(__pyx_t_4);
-                  __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
-                  __pyx_t_19 = __Pyx_PyObject_GetItem(__pyx_t_4, __pyx_9genexpr13__pyx_v_bit); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 123, __pyx_L33_error)
-                  __Pyx_GOTREF(__pyx_t_19);
-                  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-                  __pyx_t_4 = PyFloat_FromDouble(__pyx_v_learn_rate); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 123, __pyx_L33_error)
-                  __Pyx_GOTREF(__pyx_t_4);
-                  __pyx_t_14 = PyNumber_Multiply(__pyx_t_19, __pyx_t_4); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 123, __pyx_L33_error)
-                  __Pyx_GOTREF(__pyx_t_14);
-                  __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
-                  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-                  if (unlikely(PyDict_SetItem(__pyx_t_2, (PyObject*)__pyx_9genexpr13__pyx_v_bit, (PyObject*)__pyx_t_14))) __PYX_ERR(0, 123, __pyx_L33_error)
-                  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+                    __pyx_t_19 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encoding); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 124, __pyx_L34_error)
+                    __Pyx_GOTREF(__pyx_t_19);
+                    __pyx_t_4 = __Pyx_PyObject_GetItem(__pyx_t_19, __pyx_v_temporal_key); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 124, __pyx_L34_error)
+                    __Pyx_GOTREF(__pyx_t_4);
+                    __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
+                    __pyx_t_19 = __Pyx_PyObject_Dict_GetItem(__pyx_t_4, __pyx_v_enc_key); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 124, __pyx_L34_error)
+                    __Pyx_GOTREF(__pyx_t_19);
+                    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+                    __pyx_t_4 = __Pyx_PyObject_GetItem(__pyx_t_19, __pyx_9genexpr13__pyx_v_bit); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 124, __pyx_L34_error)
+                    __Pyx_GOTREF(__pyx_t_4);
+                    __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
+                    __pyx_t_19 = PyFloat_FromDouble(__pyx_v_learn_rate); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 124, __pyx_L34_error)
+                    __Pyx_GOTREF(__pyx_t_19);
+                    __pyx_t_18 = PyNumber_Multiply(__pyx_t_4, __pyx_t_19); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 124, __pyx_L34_error)
+                    __Pyx_GOTREF(__pyx_t_18);
+                    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+                    __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
+                    if (unlikely(PyDict_SetItem(__pyx_t_2, (PyObject*)__pyx_9genexpr13__pyx_v_bit, (PyObject*)__pyx_t_18))) __PYX_ERR(0, 124, __pyx_L34_error)
+                    __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
 
-                  /* "src/sparse_generalised_memory.py":124
- *                             if enc_key not in self.encoding[temporal_key]:
+                    /* "src/sparse_generalised_memory.py":126
  *                                 self.encoding[temporal_key][enc_key] = {bit: sgm.encoding[temporal_key][enc_key][bit] * learn_rate
- *                                                                         for bit in sgm.encoding[temporal_key][enc_key]}             # <<<<<<<<<<<<<<
+ *                                                                         for bit in sgm.encoding[temporal_key][enc_key]
+ *                                                                         if sgm.encoding[temporal_key][enc_key][bit] * learn_rate > prune_threshold}             # <<<<<<<<<<<<<<
  *                             else:
  *                                 # get union of bits to deal with existing and new bits
+ */
+                  }
+
+                  /* "src/sparse_generalised_memory.py":125
+ *                             if enc_key not in self.encoding[temporal_key]:
+ *                                 self.encoding[temporal_key][enc_key] = {bit: sgm.encoding[temporal_key][enc_key][bit] * learn_rate
+ *                                                                         for bit in sgm.encoding[temporal_key][enc_key]             # <<<<<<<<<<<<<<
+ *                                                                         if sgm.encoding[temporal_key][enc_key][bit] * learn_rate > prune_threshold}
+ *                             else:
  */
                 }
                 __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
                 __Pyx_XDECREF(__pyx_9genexpr13__pyx_v_bit); __pyx_9genexpr13__pyx_v_bit = 0;
-                goto __pyx_L36_exit_scope;
-                __pyx_L33_error:;
+                goto __pyx_L38_exit_scope;
+                __pyx_L34_error:;
                 __Pyx_XDECREF(__pyx_9genexpr13__pyx_v_bit); __pyx_9genexpr13__pyx_v_bit = 0;
                 goto __pyx_L1_error;
-                __pyx_L36_exit_scope:;
+                __pyx_L38_exit_scope:;
               } /* exit inner scope */
 
-              /* "src/sparse_generalised_memory.py":123
+              /* "src/sparse_generalised_memory.py":124
  *                             #
  *                             if enc_key not in self.encoding[temporal_key]:
  *                                 self.encoding[temporal_key][enc_key] = {bit: sgm.encoding[temporal_key][enc_key][bit] * learn_rate             # <<<<<<<<<<<<<<
- *                                                                         for bit in sgm.encoding[temporal_key][enc_key]}
- *                             else:
+ *                                                                         for bit in sgm.encoding[temporal_key][enc_key]
+ *                                                                         if sgm.encoding[temporal_key][enc_key][bit] * learn_rate > prune_threshold}
  */
               if (unlikely(__pyx_v_self->encoding == Py_None)) {
                 PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-                __PYX_ERR(0, 123, __pyx_L1_error)
+                __PYX_ERR(0, 124, __pyx_L1_error)
               }
-              __pyx_t_15 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_temporal_key); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 123, __pyx_L1_error)
+              __pyx_t_15 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_temporal_key); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 124, __pyx_L1_error)
               __Pyx_GOTREF(__pyx_t_15);
-              if (unlikely(PyObject_SetItem(__pyx_t_15, __pyx_v_enc_key, __pyx_t_2) < 0)) __PYX_ERR(0, 123, __pyx_L1_error)
+              if (unlikely(PyObject_SetItem(__pyx_t_15, __pyx_v_enc_key, __pyx_t_2) < 0)) __PYX_ERR(0, 124, __pyx_L1_error)
               __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
               __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-              /* "src/sparse_generalised_memory.py":122
+              /* "src/sparse_generalised_memory.py":123
  *                             # if the enc_key is not in this sgm then copy over incoming data
  *                             #
  *                             if enc_key not in self.encoding[temporal_key]:             # <<<<<<<<<<<<<<
  *                                 self.encoding[temporal_key][enc_key] = {bit: sgm.encoding[temporal_key][enc_key][bit] * learn_rate
- *                                                                         for bit in sgm.encoding[temporal_key][enc_key]}
+ *                                                                         for bit in sgm.encoding[temporal_key][enc_key]
  */
-              goto __pyx_L30;
+              goto __pyx_L31;
             }
 
-            /* "src/sparse_generalised_memory.py":128
+            /* "src/sparse_generalised_memory.py":130
  *                                 # get union of bits to deal with existing and new bits
  *                                 #
  *                                 bits = set(self.encoding[temporal_key][enc_key]) | set(sgm.encoding[temporal_key][enc_key])             # <<<<<<<<<<<<<<
@@ -4373,35 +4475,35 @@ static PyObject *__pyx_pf_3src_25sparse_generalised_memory_3SGM_12learn(struct _
             /*else*/ {
               if (unlikely(__pyx_v_self->encoding == Py_None)) {
                 PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-                __PYX_ERR(0, 128, __pyx_L1_error)
+                __PYX_ERR(0, 130, __pyx_L1_error)
               }
-              __pyx_t_2 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_temporal_key); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 128, __pyx_L1_error)
+              __pyx_t_2 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_temporal_key); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 130, __pyx_L1_error)
               __Pyx_GOTREF(__pyx_t_2);
-              __pyx_t_15 = __Pyx_PyObject_Dict_GetItem(__pyx_t_2, __pyx_v_enc_key); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 128, __pyx_L1_error)
+              __pyx_t_15 = __Pyx_PyObject_Dict_GetItem(__pyx_t_2, __pyx_v_enc_key); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 130, __pyx_L1_error)
               __Pyx_GOTREF(__pyx_t_15);
               __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-              __pyx_t_2 = PySet_New(__pyx_t_15); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 128, __pyx_L1_error)
+              __pyx_t_2 = PySet_New(__pyx_t_15); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 130, __pyx_L1_error)
               __Pyx_GOTREF(__pyx_t_2);
               __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
-              __pyx_t_15 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encoding); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 128, __pyx_L1_error)
+              __pyx_t_15 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encoding); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 130, __pyx_L1_error)
               __Pyx_GOTREF(__pyx_t_15);
-              __pyx_t_14 = __Pyx_PyObject_GetItem(__pyx_t_15, __pyx_v_temporal_key); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 128, __pyx_L1_error)
-              __Pyx_GOTREF(__pyx_t_14);
+              __pyx_t_18 = __Pyx_PyObject_GetItem(__pyx_t_15, __pyx_v_temporal_key); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 130, __pyx_L1_error)
+              __Pyx_GOTREF(__pyx_t_18);
               __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
-              __pyx_t_15 = __Pyx_PyObject_Dict_GetItem(__pyx_t_14, __pyx_v_enc_key); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 128, __pyx_L1_error)
+              __pyx_t_15 = __Pyx_PyObject_Dict_GetItem(__pyx_t_18, __pyx_v_enc_key); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 130, __pyx_L1_error)
               __Pyx_GOTREF(__pyx_t_15);
-              __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-              __pyx_t_14 = PySet_New(__pyx_t_15); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 128, __pyx_L1_error)
-              __Pyx_GOTREF(__pyx_t_14);
+              __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
+              __pyx_t_18 = PySet_New(__pyx_t_15); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 130, __pyx_L1_error)
+              __Pyx_GOTREF(__pyx_t_18);
               __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
-              __pyx_t_15 = PyNumber_Or(__pyx_t_2, __pyx_t_14); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 128, __pyx_L1_error)
+              __pyx_t_15 = PyNumber_Or(__pyx_t_2, __pyx_t_18); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 130, __pyx_L1_error)
               __Pyx_GOTREF(__pyx_t_15);
               __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-              __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+              __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
               __Pyx_XDECREF_SET(__pyx_v_bits, ((PyObject*)__pyx_t_15));
               __pyx_t_15 = 0;
 
-              /* "src/sparse_generalised_memory.py":129
+              /* "src/sparse_generalised_memory.py":131
  *                                 #
  *                                 bits = set(self.encoding[temporal_key][enc_key]) | set(sgm.encoding[temporal_key][enc_key])
  *                                 for bit in bits:             # <<<<<<<<<<<<<<
@@ -4409,20 +4511,20 @@ static PyObject *__pyx_pf_3src_25sparse_generalised_memory_3SGM_12learn(struct _
  *                                     # copy over bit weight if new
  */
               __pyx_t_21 = 0;
-              __pyx_t_14 = __Pyx_set_iterator(__pyx_v_bits, 1, (&__pyx_t_22), (&__pyx_t_20)); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 129, __pyx_L1_error)
-              __Pyx_GOTREF(__pyx_t_14);
+              __pyx_t_18 = __Pyx_set_iterator(__pyx_v_bits, 1, (&__pyx_t_22), (&__pyx_t_20)); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 131, __pyx_L1_error)
+              __Pyx_GOTREF(__pyx_t_18);
               __Pyx_XDECREF(__pyx_t_15);
-              __pyx_t_15 = __pyx_t_14;
-              __pyx_t_14 = 0;
+              __pyx_t_15 = __pyx_t_18;
+              __pyx_t_18 = 0;
               while (1) {
-                __pyx_t_23 = __Pyx_set_iter_next(__pyx_t_15, __pyx_t_22, &__pyx_t_21, &__pyx_t_14, __pyx_t_20);
+                __pyx_t_23 = __Pyx_set_iter_next(__pyx_t_15, __pyx_t_22, &__pyx_t_21, &__pyx_t_18, __pyx_t_20);
                 if (unlikely(__pyx_t_23 == 0)) break;
-                if (unlikely(__pyx_t_23 == -1)) __PYX_ERR(0, 129, __pyx_L1_error)
-                __Pyx_GOTREF(__pyx_t_14);
-                __Pyx_XDECREF_SET(__pyx_v_bit, __pyx_t_14);
-                __pyx_t_14 = 0;
+                if (unlikely(__pyx_t_23 == -1)) __PYX_ERR(0, 131, __pyx_L1_error)
+                __Pyx_GOTREF(__pyx_t_18);
+                __Pyx_XDECREF_SET(__pyx_v_bit, __pyx_t_18);
+                __pyx_t_18 = 0;
 
-                /* "src/sparse_generalised_memory.py":133
+                /* "src/sparse_generalised_memory.py":135
  *                                     # copy over bit weight if new
  *                                     #
  *                                     if bit not in self.encoding[temporal_key][enc_key]:             # <<<<<<<<<<<<<<
@@ -4431,86 +4533,86 @@ static PyObject *__pyx_pf_3src_25sparse_generalised_memory_3SGM_12learn(struct _
  */
                 if (unlikely(__pyx_v_self->encoding == Py_None)) {
                   PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-                  __PYX_ERR(0, 133, __pyx_L1_error)
+                  __PYX_ERR(0, 135, __pyx_L1_error)
                 }
-                __pyx_t_14 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_temporal_key); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 133, __pyx_L1_error)
-                __Pyx_GOTREF(__pyx_t_14);
-                __pyx_t_2 = __Pyx_PyObject_Dict_GetItem(__pyx_t_14, __pyx_v_enc_key); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 133, __pyx_L1_error)
+                __pyx_t_18 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_temporal_key); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 135, __pyx_L1_error)
+                __Pyx_GOTREF(__pyx_t_18);
+                __pyx_t_2 = __Pyx_PyObject_Dict_GetItem(__pyx_t_18, __pyx_v_enc_key); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 135, __pyx_L1_error)
                 __Pyx_GOTREF(__pyx_t_2);
-                __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-                __pyx_t_10 = (__Pyx_PySequence_ContainsTF(__pyx_v_bit, __pyx_t_2, Py_NE)); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 133, __pyx_L1_error)
+                __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
+                __pyx_t_10 = (__Pyx_PySequence_ContainsTF(__pyx_v_bit, __pyx_t_2, Py_NE)); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 135, __pyx_L1_error)
                 __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
                 __pyx_t_9 = (__pyx_t_10 != 0);
                 if (__pyx_t_9) {
 
-                  /* "src/sparse_generalised_memory.py":134
+                  /* "src/sparse_generalised_memory.py":136
  *                                     #
  *                                     if bit not in self.encoding[temporal_key][enc_key]:
  *                                         self.encoding[temporal_key][enc_key][bit] = sgm.encoding[temporal_key][enc_key][bit] * learn_rate             # <<<<<<<<<<<<<<
  * 
  *                                     # else if bit not in incoming data the decay existing bit weight
  */
-                  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encoding); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 134, __pyx_L1_error)
+                  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encoding); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 136, __pyx_L1_error)
                   __Pyx_GOTREF(__pyx_t_2);
-                  __pyx_t_14 = __Pyx_PyObject_GetItem(__pyx_t_2, __pyx_v_temporal_key); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 134, __pyx_L1_error)
-                  __Pyx_GOTREF(__pyx_t_14);
+                  __pyx_t_18 = __Pyx_PyObject_GetItem(__pyx_t_2, __pyx_v_temporal_key); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 136, __pyx_L1_error)
+                  __Pyx_GOTREF(__pyx_t_18);
                   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-                  __pyx_t_2 = __Pyx_PyObject_Dict_GetItem(__pyx_t_14, __pyx_v_enc_key); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 134, __pyx_L1_error)
+                  __pyx_t_2 = __Pyx_PyObject_Dict_GetItem(__pyx_t_18, __pyx_v_enc_key); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 136, __pyx_L1_error)
                   __Pyx_GOTREF(__pyx_t_2);
-                  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-                  __pyx_t_14 = __Pyx_PyObject_GetItem(__pyx_t_2, __pyx_v_bit); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 134, __pyx_L1_error)
-                  __Pyx_GOTREF(__pyx_t_14);
+                  __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
+                  __pyx_t_18 = __Pyx_PyObject_GetItem(__pyx_t_2, __pyx_v_bit); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 136, __pyx_L1_error)
+                  __Pyx_GOTREF(__pyx_t_18);
                   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-                  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_learn_rate); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 134, __pyx_L1_error)
+                  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_learn_rate); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 136, __pyx_L1_error)
                   __Pyx_GOTREF(__pyx_t_2);
-                  __pyx_t_4 = PyNumber_Multiply(__pyx_t_14, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 134, __pyx_L1_error)
-                  __Pyx_GOTREF(__pyx_t_4);
-                  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+                  __pyx_t_19 = PyNumber_Multiply(__pyx_t_18, __pyx_t_2); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 136, __pyx_L1_error)
+                  __Pyx_GOTREF(__pyx_t_19);
+                  __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
                   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
                   if (unlikely(__pyx_v_self->encoding == Py_None)) {
                     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-                    __PYX_ERR(0, 134, __pyx_L1_error)
+                    __PYX_ERR(0, 136, __pyx_L1_error)
                   }
-                  __pyx_t_2 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_temporal_key); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 134, __pyx_L1_error)
+                  __pyx_t_2 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_temporal_key); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 136, __pyx_L1_error)
                   __Pyx_GOTREF(__pyx_t_2);
-                  __pyx_t_14 = __Pyx_PyObject_Dict_GetItem(__pyx_t_2, __pyx_v_enc_key); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 134, __pyx_L1_error)
-                  __Pyx_GOTREF(__pyx_t_14);
+                  __pyx_t_18 = __Pyx_PyObject_Dict_GetItem(__pyx_t_2, __pyx_v_enc_key); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 136, __pyx_L1_error)
+                  __Pyx_GOTREF(__pyx_t_18);
                   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-                  if (unlikely(PyObject_SetItem(__pyx_t_14, __pyx_v_bit, __pyx_t_4) < 0)) __PYX_ERR(0, 134, __pyx_L1_error)
-                  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-                  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+                  if (unlikely(PyObject_SetItem(__pyx_t_18, __pyx_v_bit, __pyx_t_19) < 0)) __PYX_ERR(0, 136, __pyx_L1_error)
+                  __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
+                  __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
 
-                  /* "src/sparse_generalised_memory.py":133
+                  /* "src/sparse_generalised_memory.py":135
  *                                     # copy over bit weight if new
  *                                     #
  *                                     if bit not in self.encoding[temporal_key][enc_key]:             # <<<<<<<<<<<<<<
  *                                         self.encoding[temporal_key][enc_key][bit] = sgm.encoding[temporal_key][enc_key][bit] * learn_rate
  * 
  */
-                  goto __pyx_L39;
+                  goto __pyx_L41;
                 }
 
-                /* "src/sparse_generalised_memory.py":138
+                /* "src/sparse_generalised_memory.py":140
  *                                     # else if bit not in incoming data the decay existing bit weight
  *                                     #
  *                                     elif bit not in sgm.encoding[temporal_key][enc_key]:             # <<<<<<<<<<<<<<
  *                                         self.encoding[temporal_key][enc_key][bit] -= self.encoding[temporal_key][enc_key][bit] * learn_rate
  * 
  */
-                __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encoding); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 138, __pyx_L1_error)
-                __Pyx_GOTREF(__pyx_t_4);
-                __pyx_t_14 = __Pyx_PyObject_GetItem(__pyx_t_4, __pyx_v_temporal_key); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 138, __pyx_L1_error)
-                __Pyx_GOTREF(__pyx_t_14);
-                __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-                __pyx_t_4 = __Pyx_PyObject_Dict_GetItem(__pyx_t_14, __pyx_v_enc_key); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 138, __pyx_L1_error)
-                __Pyx_GOTREF(__pyx_t_4);
-                __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-                __pyx_t_9 = (__Pyx_PySequence_ContainsTF(__pyx_v_bit, __pyx_t_4, Py_NE)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 138, __pyx_L1_error)
-                __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+                __pyx_t_19 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encoding); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 140, __pyx_L1_error)
+                __Pyx_GOTREF(__pyx_t_19);
+                __pyx_t_18 = __Pyx_PyObject_GetItem(__pyx_t_19, __pyx_v_temporal_key); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 140, __pyx_L1_error)
+                __Pyx_GOTREF(__pyx_t_18);
+                __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
+                __pyx_t_19 = __Pyx_PyObject_Dict_GetItem(__pyx_t_18, __pyx_v_enc_key); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 140, __pyx_L1_error)
+                __Pyx_GOTREF(__pyx_t_19);
+                __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
+                __pyx_t_9 = (__Pyx_PySequence_ContainsTF(__pyx_v_bit, __pyx_t_19, Py_NE)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 140, __pyx_L1_error)
+                __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
                 __pyx_t_10 = (__pyx_t_9 != 0);
                 if (__pyx_t_10) {
 
-                  /* "src/sparse_generalised_memory.py":139
+                  /* "src/sparse_generalised_memory.py":141
  *                                     #
  *                                     elif bit not in sgm.encoding[temporal_key][enc_key]:
  *                                         self.encoding[temporal_key][enc_key][bit] -= self.encoding[temporal_key][enc_key][bit] * learn_rate             # <<<<<<<<<<<<<<
@@ -4519,122 +4621,176 @@ static PyObject *__pyx_pf_3src_25sparse_generalised_memory_3SGM_12learn(struct _
  */
                   if (unlikely(__pyx_v_self->encoding == Py_None)) {
                     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-                    __PYX_ERR(0, 139, __pyx_L1_error)
+                    __PYX_ERR(0, 141, __pyx_L1_error)
                   }
-                  __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_temporal_key); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 139, __pyx_L1_error)
-                  __Pyx_GOTREF(__pyx_t_4);
-                  __pyx_t_14 = __Pyx_PyObject_Dict_GetItem(__pyx_t_4, __pyx_v_enc_key); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 139, __pyx_L1_error)
-                  __Pyx_GOTREF(__pyx_t_14);
-                  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+                  __pyx_t_19 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_temporal_key); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 141, __pyx_L1_error)
+                  __Pyx_GOTREF(__pyx_t_19);
+                  __pyx_t_18 = __Pyx_PyObject_Dict_GetItem(__pyx_t_19, __pyx_v_enc_key); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 141, __pyx_L1_error)
+                  __Pyx_GOTREF(__pyx_t_18);
+                  __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
                   __Pyx_INCREF(__pyx_v_bit);
-                  __pyx_t_4 = __pyx_v_bit;
-                  __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_t_14, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 139, __pyx_L1_error)
+                  __pyx_t_19 = __pyx_v_bit;
+                  __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_t_18, __pyx_t_19); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 141, __pyx_L1_error)
                   __Pyx_GOTREF(__pyx_t_2);
                   if (unlikely(__pyx_v_self->encoding == Py_None)) {
                     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-                    __PYX_ERR(0, 139, __pyx_L1_error)
+                    __PYX_ERR(0, 141, __pyx_L1_error)
                   }
-                  __pyx_t_19 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_temporal_key); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 139, __pyx_L1_error)
-                  __Pyx_GOTREF(__pyx_t_19);
-                  __pyx_t_18 = __Pyx_PyObject_Dict_GetItem(__pyx_t_19, __pyx_v_enc_key); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 139, __pyx_L1_error)
-                  __Pyx_GOTREF(__pyx_t_18);
-                  __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
-                  __pyx_t_19 = __Pyx_PyObject_GetItem(__pyx_t_18, __pyx_v_bit); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 139, __pyx_L1_error)
-                  __Pyx_GOTREF(__pyx_t_19);
-                  __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
-                  __pyx_t_18 = PyFloat_FromDouble(__pyx_v_learn_rate); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 139, __pyx_L1_error)
-                  __Pyx_GOTREF(__pyx_t_18);
-                  __pyx_t_24 = PyNumber_Multiply(__pyx_t_19, __pyx_t_18); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 139, __pyx_L1_error)
+                  __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_temporal_key); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 141, __pyx_L1_error)
+                  __Pyx_GOTREF(__pyx_t_4);
+                  __pyx_t_14 = __Pyx_PyObject_Dict_GetItem(__pyx_t_4, __pyx_v_enc_key); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 141, __pyx_L1_error)
+                  __Pyx_GOTREF(__pyx_t_14);
+                  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+                  __pyx_t_4 = __Pyx_PyObject_GetItem(__pyx_t_14, __pyx_v_bit); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 141, __pyx_L1_error)
+                  __Pyx_GOTREF(__pyx_t_4);
+                  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+                  __pyx_t_14 = PyFloat_FromDouble(__pyx_v_learn_rate); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 141, __pyx_L1_error)
+                  __Pyx_GOTREF(__pyx_t_14);
+                  __pyx_t_24 = PyNumber_Multiply(__pyx_t_4, __pyx_t_14); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 141, __pyx_L1_error)
                   __Pyx_GOTREF(__pyx_t_24);
-                  __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
-                  __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
-                  __pyx_t_18 = PyNumber_InPlaceSubtract(__pyx_t_2, __pyx_t_24); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 139, __pyx_L1_error)
-                  __Pyx_GOTREF(__pyx_t_18);
-                  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-                  __Pyx_DECREF(__pyx_t_24); __pyx_t_24 = 0;
-                  if (unlikely(PyObject_SetItem(__pyx_t_14, __pyx_t_4, __pyx_t_18) < 0)) __PYX_ERR(0, 139, __pyx_L1_error)
-                  __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
                   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
                   __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+                  __pyx_t_14 = PyNumber_InPlaceSubtract(__pyx_t_2, __pyx_t_24); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 141, __pyx_L1_error)
+                  __Pyx_GOTREF(__pyx_t_14);
+                  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+                  __Pyx_DECREF(__pyx_t_24); __pyx_t_24 = 0;
+                  if (unlikely(PyObject_SetItem(__pyx_t_18, __pyx_t_19, __pyx_t_14) < 0)) __PYX_ERR(0, 141, __pyx_L1_error)
+                  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+                  __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
+                  __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
 
-                  /* "src/sparse_generalised_memory.py":138
+                  /* "src/sparse_generalised_memory.py":140
  *                                     # else if bit not in incoming data the decay existing bit weight
  *                                     #
  *                                     elif bit not in sgm.encoding[temporal_key][enc_key]:             # <<<<<<<<<<<<<<
  *                                         self.encoding[temporal_key][enc_key][bit] -= self.encoding[temporal_key][enc_key][bit] * learn_rate
  * 
  */
-                  goto __pyx_L39;
+                  goto __pyx_L41;
                 }
 
-                /* "src/sparse_generalised_memory.py":144
+                /* "src/sparse_generalised_memory.py":146
  *                                     #
  *                                     else:
  *                                         self.encoding[temporal_key][enc_key][bit] += (sgm.encoding[temporal_key][enc_key][bit] - self.encoding[temporal_key][enc_key][bit]) * learn_rate             # <<<<<<<<<<<<<<
+ * 
+ *                                     # delete the bit if falls below threshold
  */
                 /*else*/ {
                   if (unlikely(__pyx_v_self->encoding == Py_None)) {
                     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-                    __PYX_ERR(0, 144, __pyx_L1_error)
+                    __PYX_ERR(0, 146, __pyx_L1_error)
                   }
-                  __pyx_t_14 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_temporal_key); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 144, __pyx_L1_error)
-                  __Pyx_GOTREF(__pyx_t_14);
-                  __pyx_t_4 = __Pyx_PyObject_Dict_GetItem(__pyx_t_14, __pyx_v_enc_key); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 144, __pyx_L1_error)
-                  __Pyx_GOTREF(__pyx_t_4);
-                  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-                  __Pyx_INCREF(__pyx_v_bit);
-                  __pyx_t_14 = __pyx_v_bit;
-                  __pyx_t_18 = __Pyx_PyObject_GetItem(__pyx_t_4, __pyx_t_14); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 144, __pyx_L1_error)
+                  __pyx_t_18 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_temporal_key); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 146, __pyx_L1_error)
                   __Pyx_GOTREF(__pyx_t_18);
-                  __pyx_t_24 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encoding); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 144, __pyx_L1_error)
+                  __pyx_t_19 = __Pyx_PyObject_Dict_GetItem(__pyx_t_18, __pyx_v_enc_key); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 146, __pyx_L1_error)
+                  __Pyx_GOTREF(__pyx_t_19);
+                  __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
+                  __Pyx_INCREF(__pyx_v_bit);
+                  __pyx_t_18 = __pyx_v_bit;
+                  __pyx_t_14 = __Pyx_PyObject_GetItem(__pyx_t_19, __pyx_t_18); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 146, __pyx_L1_error)
+                  __Pyx_GOTREF(__pyx_t_14);
+                  __pyx_t_24 = __Pyx_PyObject_GetAttrStr(__pyx_v_sgm, __pyx_n_s_encoding); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 146, __pyx_L1_error)
                   __Pyx_GOTREF(__pyx_t_24);
-                  __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_t_24, __pyx_v_temporal_key); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 144, __pyx_L1_error)
+                  __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_t_24, __pyx_v_temporal_key); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 146, __pyx_L1_error)
                   __Pyx_GOTREF(__pyx_t_2);
                   __Pyx_DECREF(__pyx_t_24); __pyx_t_24 = 0;
-                  __pyx_t_24 = __Pyx_PyObject_Dict_GetItem(__pyx_t_2, __pyx_v_enc_key); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 144, __pyx_L1_error)
+                  __pyx_t_24 = __Pyx_PyObject_Dict_GetItem(__pyx_t_2, __pyx_v_enc_key); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 146, __pyx_L1_error)
                   __Pyx_GOTREF(__pyx_t_24);
                   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-                  __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_t_24, __pyx_v_bit); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 144, __pyx_L1_error)
+                  __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_t_24, __pyx_v_bit); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 146, __pyx_L1_error)
                   __Pyx_GOTREF(__pyx_t_2);
                   __Pyx_DECREF(__pyx_t_24); __pyx_t_24 = 0;
                   if (unlikely(__pyx_v_self->encoding == Py_None)) {
                     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-                    __PYX_ERR(0, 144, __pyx_L1_error)
+                    __PYX_ERR(0, 146, __pyx_L1_error)
                   }
-                  __pyx_t_24 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_temporal_key); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 144, __pyx_L1_error)
+                  __pyx_t_24 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_temporal_key); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 146, __pyx_L1_error)
                   __Pyx_GOTREF(__pyx_t_24);
-                  __pyx_t_19 = __Pyx_PyObject_Dict_GetItem(__pyx_t_24, __pyx_v_enc_key); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 144, __pyx_L1_error)
-                  __Pyx_GOTREF(__pyx_t_19);
+                  __pyx_t_4 = __Pyx_PyObject_Dict_GetItem(__pyx_t_24, __pyx_v_enc_key); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 146, __pyx_L1_error)
+                  __Pyx_GOTREF(__pyx_t_4);
                   __Pyx_DECREF(__pyx_t_24); __pyx_t_24 = 0;
-                  __pyx_t_24 = __Pyx_PyObject_GetItem(__pyx_t_19, __pyx_v_bit); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 144, __pyx_L1_error)
+                  __pyx_t_24 = __Pyx_PyObject_GetItem(__pyx_t_4, __pyx_v_bit); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 146, __pyx_L1_error)
                   __Pyx_GOTREF(__pyx_t_24);
-                  __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
-                  __pyx_t_19 = PyNumber_Subtract(__pyx_t_2, __pyx_t_24); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 144, __pyx_L1_error)
-                  __Pyx_GOTREF(__pyx_t_19);
-                  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-                  __Pyx_DECREF(__pyx_t_24); __pyx_t_24 = 0;
-                  __pyx_t_24 = PyFloat_FromDouble(__pyx_v_learn_rate); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 144, __pyx_L1_error)
-                  __Pyx_GOTREF(__pyx_t_24);
-                  __pyx_t_2 = PyNumber_Multiply(__pyx_t_19, __pyx_t_24); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 144, __pyx_L1_error)
-                  __Pyx_GOTREF(__pyx_t_2);
-                  __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
-                  __Pyx_DECREF(__pyx_t_24); __pyx_t_24 = 0;
-                  __pyx_t_24 = PyNumber_InPlaceAdd(__pyx_t_18, __pyx_t_2); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 144, __pyx_L1_error)
-                  __Pyx_GOTREF(__pyx_t_24);
-                  __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
-                  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-                  if (unlikely(PyObject_SetItem(__pyx_t_4, __pyx_t_14, __pyx_t_24) < 0)) __PYX_ERR(0, 144, __pyx_L1_error)
-                  __Pyx_DECREF(__pyx_t_24); __pyx_t_24 = 0;
-                  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
                   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+                  __pyx_t_4 = PyNumber_Subtract(__pyx_t_2, __pyx_t_24); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 146, __pyx_L1_error)
+                  __Pyx_GOTREF(__pyx_t_4);
+                  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+                  __Pyx_DECREF(__pyx_t_24); __pyx_t_24 = 0;
+                  __pyx_t_24 = PyFloat_FromDouble(__pyx_v_learn_rate); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 146, __pyx_L1_error)
+                  __Pyx_GOTREF(__pyx_t_24);
+                  __pyx_t_2 = PyNumber_Multiply(__pyx_t_4, __pyx_t_24); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 146, __pyx_L1_error)
+                  __Pyx_GOTREF(__pyx_t_2);
+                  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+                  __Pyx_DECREF(__pyx_t_24); __pyx_t_24 = 0;
+                  __pyx_t_24 = PyNumber_InPlaceAdd(__pyx_t_14, __pyx_t_2); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 146, __pyx_L1_error)
+                  __Pyx_GOTREF(__pyx_t_24);
+                  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+                  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+                  if (unlikely(PyObject_SetItem(__pyx_t_19, __pyx_t_18, __pyx_t_24) < 0)) __PYX_ERR(0, 146, __pyx_L1_error)
+                  __Pyx_DECREF(__pyx_t_24); __pyx_t_24 = 0;
+                  __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
+                  __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
                 }
-                __pyx_L39:;
+                __pyx_L41:;
+
+                /* "src/sparse_generalised_memory.py":150
+ *                                     # delete the bit if falls below threshold
+ *                                     #
+ *                                     if self.encoding[temporal_key][enc_key][bit] <= prune_threshold:             # <<<<<<<<<<<<<<
+ *                                         del self.encoding[temporal_key][enc_key][bit]
+ */
+                if (unlikely(__pyx_v_self->encoding == Py_None)) {
+                  PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+                  __PYX_ERR(0, 150, __pyx_L1_error)
+                }
+                __pyx_t_19 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_temporal_key); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 150, __pyx_L1_error)
+                __Pyx_GOTREF(__pyx_t_19);
+                __pyx_t_18 = __Pyx_PyObject_Dict_GetItem(__pyx_t_19, __pyx_v_enc_key); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 150, __pyx_L1_error)
+                __Pyx_GOTREF(__pyx_t_18);
+                __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
+                __pyx_t_19 = __Pyx_PyObject_GetItem(__pyx_t_18, __pyx_v_bit); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 150, __pyx_L1_error)
+                __Pyx_GOTREF(__pyx_t_19);
+                __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
+                __pyx_t_18 = PyFloat_FromDouble(__pyx_v_prune_threshold); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 150, __pyx_L1_error)
+                __Pyx_GOTREF(__pyx_t_18);
+                __pyx_t_24 = PyObject_RichCompare(__pyx_t_19, __pyx_t_18, Py_LE); __Pyx_XGOTREF(__pyx_t_24); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 150, __pyx_L1_error)
+                __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
+                __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
+                __pyx_t_10 = __Pyx_PyObject_IsTrue(__pyx_t_24); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 150, __pyx_L1_error)
+                __Pyx_DECREF(__pyx_t_24); __pyx_t_24 = 0;
+                if (__pyx_t_10) {
+
+                  /* "src/sparse_generalised_memory.py":151
+ *                                     #
+ *                                     if self.encoding[temporal_key][enc_key][bit] <= prune_threshold:
+ *                                         del self.encoding[temporal_key][enc_key][bit]             # <<<<<<<<<<<<<<
+ */
+                  if (unlikely(__pyx_v_self->encoding == Py_None)) {
+                    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+                    __PYX_ERR(0, 151, __pyx_L1_error)
+                  }
+                  __pyx_t_24 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_temporal_key); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 151, __pyx_L1_error)
+                  __Pyx_GOTREF(__pyx_t_24);
+                  __pyx_t_18 = __Pyx_PyObject_Dict_GetItem(__pyx_t_24, __pyx_v_enc_key); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 151, __pyx_L1_error)
+                  __Pyx_GOTREF(__pyx_t_18);
+                  __Pyx_DECREF(__pyx_t_24); __pyx_t_24 = 0;
+                  if (unlikely(PyObject_DelItem(__pyx_t_18, __pyx_v_bit) < 0)) __PYX_ERR(0, 151, __pyx_L1_error)
+                  __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
+
+                  /* "src/sparse_generalised_memory.py":150
+ *                                     # delete the bit if falls below threshold
+ *                                     #
+ *                                     if self.encoding[temporal_key][enc_key][bit] <= prune_threshold:             # <<<<<<<<<<<<<<
+ *                                         del self.encoding[temporal_key][enc_key][bit]
+ */
+                }
               }
               __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
             }
-            __pyx_L30:;
+            __pyx_L31:;
 
-            /* "src/sparse_generalised_memory.py":118
+            /* "src/sparse_generalised_memory.py":119
  *                         # only learn required enc_keys
  *                         #
  *                         if learn_enc_keys is None or enc_key in learn_enc_keys:             # <<<<<<<<<<<<<<
@@ -4661,7 +4817,7 @@ static PyObject *__pyx_pf_3src_25sparse_generalised_memory_3SGM_12learn(struct _
   /* "src/sparse_generalised_memory.py":82
  *         return dec
  * 
- *     def learn(self, sgm, learn_temporal_keys: set = None, learn_enc_keys: set = None, learn_rate: float = 1.0):             # <<<<<<<<<<<<<<
+ *     def learn(self, sgm, learn_temporal_keys: set = None, learn_enc_keys: set = None, learn_rate: float = 1.0, prune_threshold: float = 0.01):             # <<<<<<<<<<<<<<
  *         temporal_keys: set
  *         temporal_key: int
  */
@@ -5886,6 +6042,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_name, __pyx_k_name, sizeof(__pyx_k_name), 0, 0, 1, 1},
   {&__pyx_n_s_new, __pyx_k_new, sizeof(__pyx_k_new), 0, 0, 1, 1},
   {&__pyx_n_s_pickle, __pyx_k_pickle, sizeof(__pyx_k_pickle), 0, 0, 1, 1},
+  {&__pyx_n_s_prune_threshold, __pyx_k_prune_threshold, sizeof(__pyx_k_prune_threshold), 0, 0, 1, 1},
   {&__pyx_n_s_pyx_PickleError, __pyx_k_pyx_PickleError, sizeof(__pyx_k_pyx_PickleError), 0, 0, 1, 1},
   {&__pyx_n_s_pyx_checksum, __pyx_k_pyx_checksum, sizeof(__pyx_k_pyx_checksum), 0, 0, 1, 1},
   {&__pyx_n_s_pyx_result, __pyx_k_pyx_result, sizeof(__pyx_k_pyx_result), 0, 0, 1, 1},
@@ -5988,14 +6145,14 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   /* "src/sparse_generalised_memory.py":82
  *         return dec
  * 
- *     def learn(self, sgm, learn_temporal_keys: set = None, learn_enc_keys: set = None, learn_rate: float = 1.0):             # <<<<<<<<<<<<<<
+ *     def learn(self, sgm, learn_temporal_keys: set = None, learn_enc_keys: set = None, learn_rate: float = 1.0, prune_threshold: float = 0.01):             # <<<<<<<<<<<<<<
  *         temporal_keys: set
  *         temporal_key: int
  */
-  __pyx_tuple__11 = PyTuple_Pack(14, __pyx_n_s_self, __pyx_n_s_sgm, __pyx_n_s_learn_temporal_keys, __pyx_n_s_learn_enc_keys, __pyx_n_s_learn_rate, __pyx_n_s_temporal_keys, __pyx_n_s_temporal_key, __pyx_n_s_enc_key, __pyx_n_s_bit, __pyx_n_s_enc_keys, __pyx_n_s_bits, __pyx_n_s_enc_key, __pyx_n_s_bit, __pyx_n_s_bit); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(0, 82, __pyx_L1_error)
+  __pyx_tuple__11 = PyTuple_Pack(15, __pyx_n_s_self, __pyx_n_s_sgm, __pyx_n_s_learn_temporal_keys, __pyx_n_s_learn_enc_keys, __pyx_n_s_learn_rate, __pyx_n_s_prune_threshold, __pyx_n_s_temporal_keys, __pyx_n_s_temporal_key, __pyx_n_s_enc_key, __pyx_n_s_bit, __pyx_n_s_enc_keys, __pyx_n_s_bits, __pyx_n_s_enc_key, __pyx_n_s_bit, __pyx_n_s_bit); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(0, 82, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__11);
   __Pyx_GIVEREF(__pyx_tuple__11);
-  __pyx_codeobj__12 = (PyObject*)__Pyx_PyCode_New(5, 0, 14, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__11, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sparse_generalised_memory_py, __pyx_n_s_learn, 82, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__12)) __PYX_ERR(0, 82, __pyx_L1_error)
+  __pyx_codeobj__12 = (PyObject*)__Pyx_PyCode_New(6, 0, 15, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__11, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sparse_generalised_memory_py, __pyx_n_s_learn, 82, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__12)) __PYX_ERR(0, 82, __pyx_L1_error)
 
   /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
@@ -6439,15 +6596,16 @@ if (!__Pyx_RefNanny) {
   /* "src/sparse_generalised_memory.py":82
  *         return dec
  * 
- *     def learn(self, sgm, learn_temporal_keys: set = None, learn_enc_keys: set = None, learn_rate: float = 1.0):             # <<<<<<<<<<<<<<
+ *     def learn(self, sgm, learn_temporal_keys: set = None, learn_enc_keys: set = None, learn_rate: float = 1.0, prune_threshold: float = 0.01):             # <<<<<<<<<<<<<<
  *         temporal_keys: set
  *         temporal_key: int
  */
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 82, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 82, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_learn_temporal_keys, __pyx_n_u_set) < 0) __PYX_ERR(0, 82, __pyx_L1_error)
   if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_learn_enc_keys, __pyx_n_u_set) < 0) __PYX_ERR(0, 82, __pyx_L1_error)
   if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_learn_rate, __pyx_n_u_float) < 0) __PYX_ERR(0, 82, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_prune_threshold, __pyx_n_u_float) < 0) __PYX_ERR(0, 82, __pyx_L1_error)
   __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_3src_25sparse_generalised_memory_3SGM_13learn, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SGM_learn, NULL, __pyx_n_s_src_sparse_generalised_memory, __pyx_d, ((PyObject *)__pyx_codeobj__12)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 82, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_1, __pyx_t_2);
