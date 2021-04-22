@@ -136,12 +136,24 @@ class SparseNeurons(object):
             for enc_key in neuron_sgm.encoding[temporal_key]:
                 if enc_key not in self.bit_to_neuron[temporal_key]:
                     self.bit_to_neuron[temporal_key][enc_key] = {}
+                else:
+                    # remove the connection if bit not in neuron_sgm - it may have been pruned
+                    #
+                    for bit in self.bit_to_neuron[temporal_key][enc_key]:
+                        if bit not in neuron_sgm.encoding[temporal_key][enc_key]:
+                            self.bit_to_neuron[temporal_key][enc_key][bit].discard(neuron_key)
 
+                # make sure all bits in neuron_sgm have a connection to this neuron
+                #
                 for bit in neuron_sgm.encoding[temporal_key][enc_key]:
                     if bit not in self.bit_to_neuron[temporal_key][enc_key]:
                         self.bit_to_neuron[temporal_key][enc_key][bit] = {neuron_key}
                     else:
                         self.bit_to_neuron[temporal_key][enc_key][bit].add(neuron_key)
+
+
+
+
 
     def add_neuron(self, sgm: SGM) -> int:
         
@@ -162,7 +174,7 @@ class SparseNeurons(object):
 
         return neuron_key
 
-    def learn(self, activated_neuron_list: list, sgm: SGM, learn_enc_keys: set = None):
+    def learn(self, activated_neuron_list: list, sgm: SGM, learn_enc_keys: set = None, prune_threshold: float = 0.01):
 
         idx: int
         neuron_key: int
@@ -198,7 +210,7 @@ class SparseNeurons(object):
             # update the neurons's sparse generalised memory with the incoming data
             # note always learn whole of temporal memory but not always all enc_keys
             #
-            self.neuron_to_bit[neuron_key]['sgm'].learn(sgm=sgm, learn_rate=learn_rate, learn_enc_keys=learn_enc_keys)
+            self.neuron_to_bit[neuron_key]['sgm'].learn(sgm=sgm, learn_rate=learn_rate, learn_enc_keys=learn_enc_keys, prune_threshold=prune_threshold)
 
             # finally make sure the bits are connected to this neuron
             #

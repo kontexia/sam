@@ -38,7 +38,7 @@ def moon_test():
         training_graphs.append(t_sgm)
 
     sam = SAM(name='Moon',
-              similarity_threshold=0.7,
+              similarity_threshold=0.5,
               learn_rate=0.6,
               learn_temporal=False,
               n_bits=40)
@@ -88,7 +88,7 @@ def swiss_roll_test():
         training_graphs.append(t_sgm)
 
     sam = SAM(name='Swiss',
-              similarity_threshold=0.7,
+              similarity_threshold=0.85,
               learn_rate=0.6,
               learn_temporal=False,
               n_bits=40)
@@ -158,9 +158,9 @@ def colours():
     for client in training_graphs:
         pors = []
         sam = SAM(name=client,
-                  similarity_threshold=0.9,
+                  similarity_threshold=0.7,
                   learn_rate=0.6,
-                  learn_temporal=False,
+                  learn_temporal=True,
                   n_bits=40)
 
         sams[client] = {'sam': sam}
@@ -193,6 +193,6 @@ def colours():
 
 if __name__ == '__main__':
 
-    #moon_test()
-    #swiss_roll_test()
+    moon_test()
+    swiss_roll_test()
     colours()

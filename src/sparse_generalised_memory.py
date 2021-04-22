@@ -79,7 +79,7 @@ class SGM(object):
                for temporal_key in self.encoding}
         return dec
 
-    def learn(self, sgm, learn_temporal_keys: set = None, learn_enc_keys: set = None, learn_rate: float = 1.0):
+    def learn(self, sgm, learn_temporal_keys: set = None, learn_enc_keys: set = None, learn_rate: float = 1.0, prune_threshold: float = 0.01):
         temporal_keys: set
         temporal_key: int
         enc_key: str
@@ -98,7 +98,8 @@ class SGM(object):
                 #
                 if temporal_key not in self.encoding:
                     self.encoding[temporal_key] = {enc_key: {bit: sgm.encoding[temporal_key][enc_key][bit] * learn_rate
-                                                             for bit in sgm.encoding[temporal_key][enc_key]}
+                                                             for bit in sgm.encoding[temporal_key][enc_key]
+                                                             if sgm.encoding[temporal_key][enc_key][bit] * learn_rate > prune_threshold}
                                                    for enc_key in sgm.encoding[temporal_key]
                                                    if learn_enc_keys is None or enc_key in learn_enc_keys}
                 else:
@@ -121,7 +122,8 @@ class SGM(object):
                             #
                             if enc_key not in self.encoding[temporal_key]:
                                 self.encoding[temporal_key][enc_key] = {bit: sgm.encoding[temporal_key][enc_key][bit] * learn_rate
-                                                                        for bit in sgm.encoding[temporal_key][enc_key]}
+                                                                        for bit in sgm.encoding[temporal_key][enc_key]
+                                                                        if sgm.encoding[temporal_key][enc_key][bit] * learn_rate > prune_threshold}
                             else:
                                 # get union of bits to deal with existing and new bits
                                 #
@@ -142,3 +144,8 @@ class SGM(object):
                                     #
                                     else:
                                         self.encoding[temporal_key][enc_key][bit] += (sgm.encoding[temporal_key][enc_key][bit] - self.encoding[temporal_key][enc_key][bit]) * learn_rate
+
+                                    # delete the bit if falls below threshold
+                                    #
+                                    if self.encoding[temporal_key][enc_key][bit] <= prune_threshold:
+                                        del self.encoding[temporal_key][enc_key][bit]

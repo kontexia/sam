@@ -12,7 +12,8 @@ class SAM(object):
                  similarity_threshold: float = 0.75,
                  learn_rate: float = 0.6,
                  learn_temporal: bool = False,
-                 n_bits: int = 40):
+                 n_bits: int = 40,
+                 prune_threshold=0.01):
 
         self.neurons = SparseNeurons(n_bits=n_bits, learn_rate=learn_rate)
         self.name = name
@@ -20,6 +21,7 @@ class SAM(object):
         self.learn_rate = learn_rate
         self.learn_temporal = learn_temporal
         self.temporal_sgm = SGM()
+        self.prune_threshold = prune_threshold
 
         self.n_update = 0
         self.avg_bmu_similarity = 0.0
@@ -30,6 +32,7 @@ class SAM(object):
                  'similarity_threshold': self.similarity_threshold,
                  'learn_rate': self.learn_rate,
                  'learn_temporal': self.learn_temporal,
+                 'prune_threshold': self.prune_threshold,
                  'temporal_sgm': self.temporal_sgm.to_dict(decode=decode),
                  'n_update': self.n_update,
                  'avg_bmu_similarity': self.avg_bmu_similarity,
@@ -63,14 +66,14 @@ class SAM(object):
                 activated_neurons = activated_neurons[:1]
         else:
             activated_neurons = [activation for activation in activated_neurons if activation['similarity'] >= self.similarity_threshold]
-            self.neurons.learn(activated_neuron_list=activated_neurons, sgm=train_sgm)
+            self.neurons.learn(activated_neuron_list=activated_neurons, sgm=train_sgm, prune_threshold=self.prune_threshold)
             bmu_similarity = activated_neurons[0]['similarity']
 
         self.avg_bmu_similarity += (bmu_similarity - self.avg_bmu_similarity) * 0.3
         self.variance_bmu_similarity = ((pow(bmu_similarity - self.avg_bmu_similarity, 2)) - self.variance_bmu_similarity) * 0.3
 
         if self.learn_temporal:
-            self.temporal_sgm.learn(sgm=sgm, learn_rate=self.learn_rate, learn_enc_keys=activation_enc_keys)
+            self.temporal_sgm.learn(sgm=sgm, learn_rate=self.learn_rate, learn_enc_keys=activation_enc_keys, prune_threshold=self.prune_threshold)
 
         por['bmu_similarity']= bmu_similarity
         por['avg_bmu_similarity'] = self.avg_bmu_similarity

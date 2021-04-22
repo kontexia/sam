@@ -1,4 +1,4 @@
-Row_id,Client,Order_id,Product,RGB_Red,RGB_Green,RGB_Blue
+Row_id,Client,Order_id,Product,RGB_Red,RGB_Blue,RGB_Green
 0,GHI,0,RED,244,4,18
 1,DEF,1,RED,244,14,2
 2,DEF,1,ORANGE,238,4,144

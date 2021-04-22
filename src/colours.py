@@ -10,19 +10,19 @@ def make_colours():
     seq = ['RED', 'ORANGE', 'YELLOW', 'GREEN', 'BLUE']
     anomalies = ['PURPLE', 'BROWN', 'GREY', 'BLACK', 'TURQUOISE']
 
-    colours = {'RED': {'r': 255, 'b': 0, 'g': 0},
-               'ORANGE': {'r': 255, 'b': 129, 'g': 0},
-               'YELLOW': {'r': 255, 'b': 233, 'g': 0},
-               'GREEN': {'r': 0, 'b': 202, 'g': 14},
-               'BLUE': {'r': 22, 'b': 93, 'g': 239},
-               'PURPLE': {'r': 166, 'b': 1, 'g': 214},
-               'BROWN': {'r': 151, 'b': 76, 'g': 2},
-               'GREY': {'r': 128, 'b': 128, 'g': 128},
-               'BLACK': {'r': 0, 'b': 0, 'g': 0},
-               'TURQUOISE': {'r': 150, 'b': 255, 'g': 255},
+    colours = {'RED': {'r': 255, 'g': 0, 'b': 0},
+               'ORANGE': {'r': 255, 'g': 129, 'b': 0},
+               'YELLOW': {'r': 255, 'g': 233, 'b': 0},
+               'GREEN': {'r': 0, 'g': 202, 'b': 14},
+               'BLUE': {'r': 22, 'g': 93, 'b': 239},
+               'PURPLE': {'r': 166, 'g': 1, 'b': 214},
+               'BROWN': {'r': 151, 'g': 76, 'b': 2},
+               'GREY': {'r': 128, 'g': 128, 'b': 128},
+               'BLACK': {'r': 0, 'g': 0, 'b': 0},
+               'TURQUOISE': {'r': 150, 'g': 255, 'b': 255},
                }
 
-    noise = 20
+    noise = 40
     rows = []
     row_id = 0
     for order_id in range(100):
@@ -38,7 +38,7 @@ def make_colours():
             rows.append(row)
             row_id += 1
 
-    with open('training.csv', 'w', newline='') as csvfile:
+    with open('training_40.csv', 'w', newline='') as csvfile:
         fieldnames = list(rows[0].keys())
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
@@ -74,7 +74,7 @@ def make_colours():
                 rows.append(row)
                 row_id += 1
 
-    with open('test.csv', 'w', newline='') as csvfile:
+    with open('test_40.csv', 'w', newline='') as csvfile:
         fieldnames = list(rows[0].keys())
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
