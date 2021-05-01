@@ -6,8 +6,8 @@ from src.encoder import Encoder
 
 
 class StringEncoder(Encoder):
-    def __init__(self, n_bits: int = 40, enc_size: int = 2048, seed=12345):
-        Encoder.__init__(self, encoder_type='string', n_bits=n_bits, enc_size=enc_size, seed=seed)
+    def __init__(self, name: str = 'sting', n_bits: int = 40, enc_size: int = 2048, bit_offset: int = 0, seed=12345):
+        Encoder.__init__(self, encoder_type='string', name=name, n_bits=n_bits, enc_size=enc_size, bit_offset=bit_offset, seed=seed)
 
     def encode(self, string):
 
@@ -17,11 +17,11 @@ class StringEncoder(Encoder):
 
             # set the state of the random generator
             #
-            random.setstate(Encoder.rand_states['string'])
+            random.setstate(Encoder.rand_states[self.name])
 
-            enc = set(random.sample(population=range(self.enc_size), k=self.n_bits))
+            enc = set(random.sample(population=self.bit_population, k=self.n_bits))
 
-            Encoder.rand_states['string'] = random.getstate()
+            Encoder.rand_states[self.name] = random.getstate()
 
             self.encodings[string] = enc
 
@@ -58,39 +58,3 @@ class StringEncoder(Encoder):
         strings.sort(key=lambda x: x[1], reverse=True)
 
         return strings
-
-
-if __name__ == '__main__':
-
-    from src.sgm import SDR
-
-    encoder = StringEncoder(n_bits=40, enc_size=2048)
-
-    sdr_1 = SDR(enc_type='test', value='hello', encoder=encoder)
-    sdr_2 = SDR(enc_type='test', value='world', encoder=encoder)
-
-    d = sdr_1.distance(sdr_2)
-    o = sdr_1.overlap(sdr_2)
-
-    sdr_3 = SDR()
-
-    sdr_3.learn(sdr_1, learn_rate=0.7, prune=0.01)
-
-    sdr_3.learn(sdr_1, learn_rate=0.7, prune=0.01)
-
-    sdr_3.learn(sdr_1, learn_rate=0.7, prune=0.01)
-
-    sdr_4 = SDR()
-
-    sdr_3.learn(sdr_4, learn_rate=0.7, prune=0.01)
-
-    sdr_3.learn(sdr_4, learn_rate=0.7, prune=0.01)
-
-    sdr_3.learn(sdr_4, learn_rate=0.7, prune=0.01)
-
-    sdr_3.learn(sdr_4, learn_rate=0.7, prune=0.01)
-
-    print('finished')
-
-
-

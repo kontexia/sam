@@ -3,10 +3,10 @@
 
 from copy import deepcopy
 import cython
-from src.sparse_generalised_memory import SGM
+from src.sparse_distributed_representation import SDR
 
 @cython.cclass
-class SparseNeurons(object):
+class Neurons(object):
     n_bits = cython.declare(int, visibility='public')
     next_neuron_key = cython.declare(int, visibility='public')
     learn_rate = cython.declare(float, visibility='public')
@@ -14,7 +14,7 @@ class SparseNeurons(object):
     neuron_to_bit = cython.declare(dict, visibility='public')
 
     def __init__(self,
-                 n_bits:int = 40,
+                 n_bits: int = 40,
                  learn_rate: float = 0.6):
 
         self.n_bits = n_bits
@@ -38,18 +38,18 @@ class SparseNeurons(object):
         neuron_key: int
         prop: str
 
-        d_sparse_neurons = {'n_bits': self.n_bits,
-                            'learn_rate': self.learn_rate,
-                            'bit_to_neuron': deepcopy(self.bit_to_neuron),
-                            'next_neuron_key': self.next_neuron_key,
-                            'neuron_to_bit': {neuron_key: {prop: self.neuron_to_bit[neuron_key][prop] if prop != 'sgm' else self.neuron_to_bit[neuron_key][prop].to_dict(decode=decode)
-                                                           for prop in self.neuron_to_bit[neuron_key]}
-                                              for neuron_key in self.neuron_to_bit}}
+        d_neurons = {'n_bits': self.n_bits,
+                     'learn_rate': self.learn_rate,
+                     'bit_to_neuron': deepcopy(self.bit_to_neuron),
+                     'next_neuron_key': self.next_neuron_key,
+                     'neuron_to_bit': {neuron_key: {prop: self.neuron_to_bit[neuron_key][prop] if prop != 'sdr' else self.neuron_to_bit[neuron_key][prop].to_dict(decode=decode)
+                                                    for prop in self.neuron_to_bit[neuron_key]}
+                                       for neuron_key in self.neuron_to_bit}}
 
-        return d_sparse_neurons
+        return d_neurons
 
     def feed_forward(self,
-                     sgm: SGM,
+                     sdr: SDR,
                      activation_temporal_keys: set = None,
                      activation_enc_keys: set = None) -> list:
 
@@ -62,7 +62,7 @@ class SparseNeurons(object):
         bit: int
 
         if activation_temporal_keys is None:
-            activation_temporal_keys = set(self.bit_to_neuron.keys()) | set(sgm.encoding.keys())
+            activation_temporal_keys = set(self.bit_to_neuron.keys()) | set(sdr.encoding.keys())
 
         if activation_enc_keys is None:
             activation_enc_keys = ({enc_key
@@ -76,7 +76,7 @@ class SparseNeurons(object):
 
         normalisation_factor = len(activation_temporal_keys) * len(activation_enc_keys) * self.n_bits
 
-        for temporal_key in sgm.encoding:
+        for temporal_key in sdr.encoding:
 
             if temporal_key not in self.bit_to_neuron:
                 self.bit_to_neuron[temporal_key] = {}
@@ -85,7 +85,7 @@ class SparseNeurons(object):
             #
             if activation_temporal_keys is None or temporal_key in activation_temporal_keys:
 
-                for enc_key in sgm.encoding[temporal_key]:
+                for enc_key in sdr.encoding[temporal_key]:
 
                     if enc_key not in self.bit_to_neuron[temporal_key]:
                         self.bit_to_neuron[temporal_key][enc_key] = {}
@@ -94,7 +94,7 @@ class SparseNeurons(object):
                     #
                     if activation_enc_keys is None or enc_key in activation_enc_keys:
 
-                        for bit in sgm.encoding[temporal_key][enc_key]:
+                        for bit in sdr.encoding[temporal_key][enc_key]:
 
                             if bit not in self.bit_to_neuron[temporal_key][enc_key]:
                                 self.bit_to_neuron[temporal_key][enc_key][bit] = set()
@@ -105,11 +105,11 @@ class SparseNeurons(object):
                                 #
                                 if neuron_key not in activated_neurons:
 
-                                    activated_neurons[neuron_key] = (sgm.encoding[temporal_key][enc_key][bit] *
-                                                                     self.neuron_to_bit[neuron_key]['sgm'].encoding[temporal_key][enc_key][bit])
+                                    activated_neurons[neuron_key] = (sdr.encoding[temporal_key][enc_key][bit] *
+                                                                     self.neuron_to_bit[neuron_key]['sdr'].encoding[temporal_key][enc_key][bit])
                                 else:
-                                    activated_neurons[neuron_key] += (sgm.encoding[temporal_key][enc_key][bit] *
-                                                                      self.neuron_to_bit[neuron_key]['sgm'].encoding[temporal_key][enc_key][bit])
+                                    activated_neurons[neuron_key] += (sdr.encoding[temporal_key][enc_key][bit] *
+                                                                      self.neuron_to_bit[neuron_key]['sdr'].encoding[temporal_key][enc_key][bit])
 
         # normalise activation and place in list so we can sort
         #
@@ -127,35 +127,31 @@ class SparseNeurons(object):
         enc_key: str
         bit: int
 
-        neuron_sgm: SGM = self.neuron_to_bit[neuron_key]['sgm']
+        neuron_sdr: SDR = self.neuron_to_bit[neuron_key]['sdr']
 
-        for temporal_key in neuron_sgm.encoding:
+        for temporal_key in neuron_sdr.encoding:
             if temporal_key not in self.bit_to_neuron:
                 self.bit_to_neuron[temporal_key] = {}
 
-            for enc_key in neuron_sgm.encoding[temporal_key]:
+            for enc_key in neuron_sdr.encoding[temporal_key]:
                 if enc_key not in self.bit_to_neuron[temporal_key]:
                     self.bit_to_neuron[temporal_key][enc_key] = {}
                 else:
-                    # remove the connection if bit not in neuron_sgm - it may have been pruned
+                    # remove the connection if bit not in neuron_sdr - it may have been pruned
                     #
                     for bit in self.bit_to_neuron[temporal_key][enc_key]:
-                        if bit not in neuron_sgm.encoding[temporal_key][enc_key]:
+                        if bit not in neuron_sdr.encoding[temporal_key][enc_key]:
                             self.bit_to_neuron[temporal_key][enc_key][bit].discard(neuron_key)
 
-                # make sure all bits in neuron_sgm have a connection to this neuron
+                # make sure all bits in neuron_sdr have a connection to this neuron
                 #
-                for bit in neuron_sgm.encoding[temporal_key][enc_key]:
+                for bit in neuron_sdr.encoding[temporal_key][enc_key]:
                     if bit not in self.bit_to_neuron[temporal_key][enc_key]:
                         self.bit_to_neuron[temporal_key][enc_key][bit] = {neuron_key}
                     else:
                         self.bit_to_neuron[temporal_key][enc_key][bit].add(neuron_key)
 
-
-
-
-
-    def add_neuron(self, sgm: SGM) -> int:
+    def add_neuron(self, sdr: SDR) -> int:
         
         # get next neuron key to use
         #
@@ -164,7 +160,7 @@ class SparseNeurons(object):
         
         # add the neuron to bit mapping
         #
-        self.neuron_to_bit[neuron_key] = {'sgm': SGM(sgm),
+        self.neuron_to_bit[neuron_key] = {'sdr': SDR(sdr),
                                           'n_bmu': 1,
                                           'sum_similarity': 1.0,
                                           'avg_similarity': 1.0,
@@ -174,7 +170,7 @@ class SparseNeurons(object):
 
         return neuron_key
 
-    def learn(self, activated_neuron_list: list, sgm: SGM, learn_enc_keys: set = None, prune_threshold: float = 0.01):
+    def learn(self, activated_neuron_list: list, sdr: SDR, learn_enc_keys: set = None, prune_threshold: float = 0.01):
 
         idx: int
         neuron_key: int
@@ -210,7 +206,7 @@ class SparseNeurons(object):
             # update the neurons's sparse generalised memory with the incoming data
             # note always learn whole of temporal memory but not always all enc_keys
             #
-            self.neuron_to_bit[neuron_key]['sgm'].learn(sgm=sgm, learn_rate=learn_rate, learn_enc_keys=learn_enc_keys, prune_threshold=prune_threshold)
+            self.neuron_to_bit[neuron_key]['sdr'].learn(sdr=sdr, learn_rate=learn_rate, learn_enc_keys=learn_enc_keys, prune_threshold=prune_threshold)
 
             # finally make sure the bits are connected to this neuron
             #
@@ -219,21 +215,21 @@ class SparseNeurons(object):
 
 if __name__ == '__main__':
 
-    t_1 = SGM()
+    t_1 = SDR()
     t_1.encoding = {0: {'a': {0: 1.0, 1: 1.0}}}
-    t_2 = SGM()
+    t_2 = SDR()
     t_2.encoding = {0: {'a': {2: 1.0, 1: 1.0}}}
 
-    fabric = SparseNeurons(n_bits=2)
+    fabric = Neurons(n_bits=2)
 
-    fabric.add_neuron(sgm=t_1)
-    fabric.add_neuron(sgm=t_2)
+    fabric.add_neuron(sdr=t_1)
+    fabric.add_neuron(sdr=t_2)
 
-    t_3 = SGM()
+    t_3 = SDR()
     t_3.encoding = {0: {'a': {2: 1.0, 3: 1.0}}}
 
-    activated_neurons = fabric.feed_forward(sgm=t_3)
+    activated_neurons = fabric.feed_forward(sdr=t_3)
 
-    fabric.learn(activated_neuron_list=activated_neurons, sgm=t_3)
+    fabric.learn(activated_neuron_list=activated_neurons, sdr=t_3)
 
     print('finished')

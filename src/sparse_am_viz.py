@@ -28,27 +28,33 @@ def plot_sam(sam, raw_data, xyz_types, colour_nodes, temporal_key=0):
     neuron_xyz = {}
     neurons = sam['neurons']['neuron_to_bit']
     for neuron_key in neurons:
-        for enc_key in neurons[neuron_key]['sgm']['encoding'][temporal_key]:
+        for enc_key in neurons[neuron_key]['sdr']['encoding'][temporal_key]:
+            if isinstance(neurons[neuron_key]['sdr']['encoding'][temporal_key][enc_key], dict):
+                val = neurons[neuron_key]['sdr']['encoding'][temporal_key][enc_key]['value']
+            else:
+                val = neurons[neuron_key]['sdr']['encoding'][temporal_key][enc_key]
+
             if enc_key == xyz_types[0]:
-                node_x.append(neurons[neuron_key]['sgm']['encoding'][temporal_key][enc_key])
+                node_x.append(val)
                 if neuron_key not in neuron_xyz:
-                    neuron_xyz[neuron_key] = {'x': neurons[neuron_key]['sgm']['encoding'][temporal_key][enc_key], 'z': 0.0, 'y': 0.0}
+                    neuron_xyz[neuron_key] = {'x': val, 'z': 0.0, 'y': 0.0}
                 else:
-                    neuron_xyz[neuron_key]['x'] = neurons[neuron_key]['sgm']['encoding'][temporal_key][enc_key]
+                    neuron_xyz[neuron_key]['x'] = val
             elif enc_key == xyz_types[1]:
-                node_y.append(neurons[neuron_key]['sgm']['encoding'][temporal_key][enc_key])
+
+                node_y.append(val)
                 if neuron_key not in neuron_xyz:
-                    neuron_xyz[neuron_key] = {'y': neurons[neuron_key]['sgm']['encoding'][temporal_key][enc_key], 'x': 0.0, 'z': 0.0}
+                    neuron_xyz[neuron_key] = {'y': val, 'x': 0.0, 'z': 0.0}
                 else:
-                    neuron_xyz[neuron_key]['y'] = neurons[neuron_key]['sgm']['encoding'][temporal_key][enc_key]
+                    neuron_xyz[neuron_key]['y'] = val
 
             elif len(xyz_types) == 3 and enc_key == xyz_types[2]:
 
-                node_z.append(neurons[neuron_key]['sgm']['encoding'][temporal_key][enc_key])
+                node_z.append(val)
                 if neuron_key not in neuron_xyz:
-                    neuron_xyz[neuron_key] = {'z': neurons[neuron_key]['sgm']['encoding'][temporal_key][enc_key], 'x': 0.0, 'y': 0.0}
+                    neuron_xyz[neuron_key] = {'z': val, 'x': 0.0, 'y': 0.0}
                 else:
-                    neuron_xyz[neuron_key]['z'] = neurons[neuron_key]['sgm']['encoding'][temporal_key][enc_key]
+                    neuron_xyz[neuron_key]['z'] = val
 
             if colour_nodes is not None and enc_key == colour_nodes:
                 if enc_key not in colour_labels:

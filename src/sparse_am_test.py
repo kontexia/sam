@@ -4,7 +4,7 @@
 
 import json
 from src.sparse_associative_memory import SAM
-from src.sparse_generalised_memory import SGM
+from src.sparse_distributed_representation import SDR
 from src.numeric_encoder import NumericEncoder
 from src.string_encoder import StringEncoder
 from src.sparse_am_viz import plot_pors, plot_sam
@@ -30,12 +30,12 @@ def moon_test():
 
     for idx in range(len(data_set)):
 
-        t_sgm = SGM()
-        t_sgm.add_encoding(enc_key='x', value=data_set[idx][0], encoder=numeric_encoder)
-        t_sgm.add_encoding(enc_key='y', value=data_set[idx][1], encoder=numeric_encoder)
-        t_sgm.add_encoding(enc_key='label', value=str(labels[idx]), encoder=label_encoder)
+        t_sdr = SDR()
+        t_sdr.add_encoding(enc_key='x', value=data_set[idx][0], encoder=numeric_encoder)
+        t_sdr.add_encoding(enc_key='y', value=data_set[idx][1], encoder=numeric_encoder)
+        t_sdr.add_encoding(enc_key='label', value=str(labels[idx]), encoder=label_encoder)
 
-        training_graphs.append(t_sgm)
+        training_graphs.append(t_sdr)
 
     sam = SAM(name='Moon',
               similarity_threshold=0.5,
@@ -46,7 +46,7 @@ def moon_test():
     pors = []
 
     for t_idx in range(len(training_graphs)):
-        por = sam.train(sgm=training_graphs[t_idx],
+        por = sam.train(sdr=training_graphs[t_idx],
                         activation_enc_keys={'x', 'y'})
         pors.append(por)
 
@@ -78,14 +78,14 @@ def swiss_roll_test():
 
     for idx in range(len(data_set)):
 
-        t_sgm = SGM()
-        t_sgm.add_encoding(enc_key='x', value=data_set[idx][0], encoder=numeric_encoder)
-        t_sgm.add_encoding(enc_key='y', value=data_set[idx][1], encoder=numeric_encoder)
-        t_sgm.add_encoding(enc_key='z', value=data_set[idx][2], encoder=numeric_encoder)
+        t_sdr = SDR()
+        t_sdr.add_encoding(enc_key='x', value=data_set[idx][0], encoder=numeric_encoder)
+        t_sdr.add_encoding(enc_key='y', value=data_set[idx][1], encoder=numeric_encoder)
+        t_sdr.add_encoding(enc_key='z', value=data_set[idx][2], encoder=numeric_encoder)
 
-        t_sgm.add_encoding(enc_key='label', value=str(labels[idx]), encoder=label_encoder)
+        t_sdr.add_encoding(enc_key='label', value=str(labels[idx]), encoder=label_encoder)
 
-        training_graphs.append(t_sgm)
+        training_graphs.append(t_sdr)
 
     sam = SAM(name='Swiss',
               similarity_threshold=0.85,
@@ -96,7 +96,7 @@ def swiss_roll_test():
     pors = []
 
     for t_idx in range(len(training_graphs)):
-        por = sam.train(sgm=training_graphs[t_idx],
+        por = sam.train(sdr=training_graphs[t_idx],
                         activation_enc_keys={'x', 'y', 'z'})
         pors.append(por)
 
@@ -143,14 +143,14 @@ def colours():
         if record['client'] not in training_graphs:
             training_graphs[record['client']] = []
 
-        t_sgm = SGM()
-        t_sgm.add_encoding(enc_key='r', value=record['r'], encoder=numeric_encoder)
-        t_sgm.add_encoding(enc_key='g', value=record['g'], encoder=numeric_encoder)
-        t_sgm.add_encoding(enc_key='b', value=record['b'], encoder=numeric_encoder)
-        t_sgm.add_encoding(enc_key='label', value=record['label'], encoder=label_encoder)
+        t_sdr = SDR()
+        t_sdr.add_encoding(enc_key='r', value=record['r'], encoder=numeric_encoder)
+        t_sdr.add_encoding(enc_key='g', value=record['g'], encoder=numeric_encoder)
+        t_sdr.add_encoding(enc_key='b', value=record['b'], encoder=numeric_encoder)
+        t_sdr.add_encoding(enc_key='label', value=record['label'], encoder=label_encoder)
         r_data = [record['r'], record['g'], record['b'], record['label']]
 
-        training_graphs[record['client']].append((record['trade_id'], t_sgm, r_data))
+        training_graphs[record['client']].append((record['trade_id'], t_sdr, r_data))
 
     n_cycles = 1
 
@@ -167,7 +167,7 @@ def colours():
 
         for cycle in range(n_cycles):
             for t_idx in range(len(training_graphs[client])):
-                por = sam.train(sgm=training_graphs[client][t_idx][1],
+                por = sam.train(sdr=training_graphs[client][t_idx][1],
                                 activation_enc_keys={'r', 'g', 'b'})
                 pors.append(por)
 

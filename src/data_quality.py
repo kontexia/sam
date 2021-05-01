@@ -4,11 +4,9 @@
 
 import pandas as pd
 from src.sparse_associative_memory import SAM
-from src.sparse_generalised_memory import SGM
-from src.numeric_encoder import NumericEncoder
-from src.string_encoder import StringEncoder
+from src.sparse_distributed_representation import SDR
+from src.value_encoder import ValueEncoder
 from src.sparse_am_viz import plot_pors, plot_sam
-
 
 
 def train():
@@ -19,70 +17,52 @@ def train():
 
     print('raw data record:', train_data[:1])
 
-    numeric_encoder = NumericEncoder(min_step=2,
-                                     n_bits=40,
-                                     enc_size=2048,
-                                     seed=123)
-
-    label_encoder = StringEncoder(n_bits=40,
-                                  enc_size=2048,
-                                  seed=456)
+    encoder = ValueEncoder(name='dq_encoder',
+                           n_bits=40,
+                           enc_size=2048,
+                           numeric_step=1.0)
 
     training_graphs = {'column': {}, 'row': []}
 
     sams = {'row': {'sam': SAM(name='row',
                                similarity_threshold=0.7,
                                learn_rate=0.6,
-                               learn_temporal=True,
-                               n_bits=40),
+                               learn_temporal=False,
+                               n_bits=80),
                     'por': []
                     },
             'column': {}
             }
     for record in train_data:
 
-        t_sgm = SGM()
-        t_sgm.add_encoding(enc_key='RGB_Red', value=record['RGB_Red'], encoder=numeric_encoder)
-        t_sgm.add_encoding(enc_key='RGB_Green', value=record['RGB_Green'], encoder=numeric_encoder)
-        t_sgm.add_encoding(enc_key='RGB_Blue', value=record['RGB_Blue'], encoder=numeric_encoder)
-        t_sgm.add_encoding(enc_key='Product', value=record['Product'], encoder=label_encoder)
+        t_sgm = SDR()
+        t_sgm.add_encoding(enc_key='RGB_Red', value=record['RGB_Red'], encoder=encoder)
+        t_sgm.add_encoding(enc_key='RGB_Green', value=record['RGB_Green'], encoder=encoder)
+        t_sgm.add_encoding(enc_key='RGB_Blue', value=record['RGB_Blue'], encoder=encoder)
+        t_sgm.add_encoding(enc_key='Product', value=record['Product'], encoder=encoder)
         r_data = [record['RGB_Red'], record['RGB_Green'], record['RGB_Blue'], record['Product']]
 
         training_graphs['row'].append((record['Row_id'], t_sgm, r_data))
 
-        for column in ['Client', 'Product']:
-            if column not in sams['column']:
-                sams['column'][column] = {'sam': SAM(name=column,
-                                                     similarity_threshold=0.7,
-                                                     learn_rate=0.6,
-                                                     learn_temporal=True,
-                                                     n_bits=40),
-                                          'por': []}
+        for column in record:
+            if column != 'Row_id':
+                if column not in sams['column']:
+                    sams['column'][column] = {'sam': SAM(name=column,
+                                                         similarity_threshold=0.7,
+                                                         learn_rate=0.6,
+                                                         learn_temporal=False,
+                                                         n_bits=80),
+                                              'por': []}
 
-            t_sgm = SGM()
-            t_sgm.add_encoding(enc_key=column, value=record[column], encoder=label_encoder)
-            if column not in training_graphs['column']:
-                training_graphs['column'][column] = []
-            training_graphs['column'][column].append((record['Row_id'], t_sgm, record[column]))
-
-        for column in ['RGB_Red', 'RGB_Green', 'RGB_Blue']:
-            if column not in sams['column']:
-                sams['column'][column] = {'sam': SAM(name=column,
-                                                     similarity_threshold=0.7,
-                                                     learn_rate=0.6,
-                                                     learn_temporal=True,
-                                                     n_bits=40),
-                                          'por': []}
-
-            t_sgm = SGM()
-            t_sgm.add_encoding(enc_key=column, value=record[column], encoder=numeric_encoder)
-            if column not in training_graphs['column']:
-                training_graphs['column'][column] = []
-            training_graphs['column'][column].append((record['Row_id'], t_sgm, record[column]))
+                t_sgm = SDR()
+                t_sgm.add_encoding(enc_key=column, value=record[column], encoder=encoder)
+                if column not in training_graphs['column']:
+                    training_graphs['column'][column] = []
+                training_graphs['column'][column].append((record['Row_id'], t_sgm, record[column]))
 
     row_data = []
     for record in training_graphs['row']:
-        por = sams['row']['sam'].train(sgm=record[1])
+        por = sams['row']['sam'].train(sdr=record[1])
         sams['row']['por'].append(por)
         row_data.append(record[2][:3])
     row_dict = sams['row']['sam'].to_dict(decode=True)
@@ -97,7 +77,7 @@ def train():
     column_dict = {}
     for column in training_graphs['column']:
         for record in training_graphs['column'][column]:
-            por = sams['column'][column]['sam'].train(sgm=record[1])
+            por = sams['column'][column]['sam'].train(sdr=record[1])
             sams['column'][column]['por'].append(por)
         column_dict[column] = sams['column'][column]['sam'].to_dict(decode=True)
     print('finished')
@@ -110,34 +90,26 @@ def train():
 
     for record in test_data:
 
-        t_sgm = SGM()
-        t_sgm.add_encoding(enc_key='RGB_Red', value=record['RGB_Red'], encoder=numeric_encoder)
-        t_sgm.add_encoding(enc_key='RGB_Green', value=record['RGB_Green'], encoder=numeric_encoder)
-        t_sgm.add_encoding(enc_key='RGB_Blue', value=record['RGB_Blue'], encoder=numeric_encoder)
-        t_sgm.add_encoding(enc_key='Product', value=record['Product'], encoder=label_encoder)
+        t_sgm = SDR()
+        t_sgm.add_encoding(enc_key='RGB_Red', value=record['RGB_Red'], encoder=encoder)
+        t_sgm.add_encoding(enc_key='RGB_Green', value=record['RGB_Green'], encoder=encoder)
+        t_sgm.add_encoding(enc_key='RGB_Blue', value=record['RGB_Blue'], encoder=encoder)
+        t_sgm.add_encoding(enc_key='Product', value=record['Product'], encoder=encoder)
         r_data = [record['RGB_Red'], record['RGB_Green'], record['RGB_Blue'], record['Product']]
 
         test_graphs['row'].append((record['Row_id'], t_sgm, r_data))
 
-        for column in ['Client', 'Product']:
-
-            t_sgm = SGM()
-            t_sgm.add_encoding(enc_key=column, value=record[column], encoder=label_encoder)
-            if column not in test_graphs['column']:
-                test_graphs['column'][column] = []
-            test_graphs['column'][column].append((record['Row_id'], t_sgm, record[column]))
-
-        for column in ['RGB_Red', 'RGB_Green', 'RGB_Blue']:
-
-            t_sgm = SGM()
-            t_sgm.add_encoding(enc_key=column, value=record[column], encoder=numeric_encoder)
-            if column not in test_graphs['column']:
-                test_graphs['column'][column] = []
-            test_graphs['column'][column].append((record['Row_id'], t_sgm, record[column]))
+        for column in record:
+            if column != 'Row_id':
+                t_sgm = SDR()
+                t_sgm.add_encoding(enc_key=column, value=record[column], encoder=encoder)
+                if column not in test_graphs['column']:
+                    test_graphs['column'][column] = []
+                test_graphs['column'][column].append((record['Row_id'], t_sgm, record[column]))
 
     row_data = []
     for record in test_graphs['row']:
-        por = sams['row']['sam'].train(sgm=record[1])
+        por = sams['row']['sam'].train(sdr=record[1])
         sams['row']['por'].append(por)
         row_data.append(record[2][:3])
     row_dict = sams['row']['sam'].to_dict(decode=True)
@@ -152,7 +124,7 @@ def train():
     column_dict = {}
     for column in test_graphs['column']:
         for record in test_graphs['column'][column]:
-            por = sams['column'][column]['sam'].train(sgm=record[1])
+            por = sams['column'][column]['sam'].train(sdr=record[1])
             sams['column'][column]['por'].append(por)
         column_dict[column] = sams['column'][column]['sam'].to_dict(decode=True)
     print('finished')

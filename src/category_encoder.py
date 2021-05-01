@@ -1,18 +1,22 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
+from src.encoder import Encoder
+import random
 
-class CategoryEncoder(object):
-    def __init__(self, categories=None, n_bits: int = 40, enc_size: int = 2048, periodic=False):
-        self.encodings = {}
-        self.bits = {}
+
+class CategoryEncoder(Encoder):
+    def __init__(self, name='category', semantic_categories=None, n_bits: int = 40, enc_size: int = 2048, bit_offset: int = 0, periodic=False, seed=12345):
+        Encoder.__init__(self, encoder_type='category', name=name, n_bits=n_bits, enc_size=enc_size, bit_offset=bit_offset, seed=seed)
+
         self.periodic = periodic
-        self.n_bits = n_bits
-        self.enc_size = enc_size
-        if categories is not None:
-            self.set_categories(categories=categories)
+        self.semantic = False
 
-    def set_categories(self, categories):
+        if semantic_categories is not None:
+            self.set_semantic_categories(categories=semantic_categories)
+
+    def set_semantic_categories(self, categories):
+        self.semantic = True
 
         if len(categories) < self.n_bits and self.periodic:
             step = int(self.n_bits / 2)
@@ -62,10 +66,40 @@ class CategoryEncoder(object):
                 start_bit += step
 
     def encode(self, category) -> set:
+
+        # if the category already exists then retrieve
+        #
         if category in self.encodings:
             enc = set(self.encodings[category])
         else:
-            enc = set()
+            # if not then assume not a semantic category so create random distribution
+            #
+
+            # set the state of the random generator
+            #
+            random.setstate(Encoder.rand_states[self.name])
+
+            # calculate the bit population once
+            #
+            offset = self.bit_offset * self.enc_size
+            bit_population = [i for i in range(offset, offset + self.enc_size)]
+
+            # get the encoded bits
+            #
+            enc = set(random.sample(population=bit_population, k=self.n_bits))
+
+            Encoder.rand_states[self.name] = random.getstate()
+
+            self.encodings[category] = set(enc)
+
+            # maintain the mapping of bits to bucket
+            #
+            for bit in enc:
+                if bit not in self.bits:
+                    self.bits[bit] = {category}
+                else:
+                    self.bits[bit].add(category)
+
         return enc
 
     def decode(self, enc) -> list:
@@ -80,14 +114,18 @@ class CategoryEncoder(object):
         #
         total_weight = 0.0
         for bit in enc:
-            for category in self.bits[bit]:
-                if category not in categories:
-                    categories[category] = enc[bit]
-                else:
-                    categories[category] += enc[bit]
-                total_weight += enc[bit]
+            # only process bits from this encoder
+            #
+            if bit in self.bits:
+                for category in self.bits[bit]:
+                    if category not in categories:
+                        categories[category] = enc[bit]
+                    else:
+                        categories[category] += enc[bit]
+                    total_weight += enc[bit]
 
-        categories = [(category, categories[category] / total_weight) for category in categories]
+        categories = [(category, categories[category] / self.n_bits) for category in categories]
+
         categories.sort(key=lambda x: x[1], reverse=True)
 
         return categories
@@ -96,7 +134,8 @@ class CategoryEncoder(object):
 if __name__ == '__main__':
 
     categories = [c for c in range(20)]
-    encoder_1 = CategoryEncoder(categories=categories,
+    encoder_1 = CategoryEncoder(name='semantic_1',
+                                semantic_categories=categories,
                                 n_bits=40,
                                 enc_size=2048,
                                 periodic=False)
@@ -105,7 +144,8 @@ if __name__ == '__main__':
 
     decode_1 = encoder_1.decode(enc=enc_1)
 
-    encoder_2 = CategoryEncoder(categories=categories,
+    encoder_2 = CategoryEncoder(name='semantic_2',
+                                semantic_categories=categories,
                                 n_bits=40,
                                 enc_size=2048,
                                 periodic=True)

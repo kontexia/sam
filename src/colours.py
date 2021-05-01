@@ -4,6 +4,7 @@
 from random import choices, choice, randint, random
 import csv
 
+
 def make_colours():
 
     clients = ['ABC', 'DEF', 'GHI']
@@ -46,12 +47,13 @@ def make_colours():
         for row in rows:
             writer.writerow(row)
 
-    noise = 20
+    noise = 40
     rows = []
     row_id = 0
     for order_id in range(10):
         client = choice(clients)
         if random() < 0.9:
+            # normal data
             for i in range(randint(1, len(seq))):
                 row = {'Row_id': row_id,
                        'Client': client,
@@ -63,6 +65,9 @@ def make_colours():
                 rows.append(row)
                 row_id += 1
         else:
+            # abnormal data
+            #
+            print('abnormal order:', order_id)
             for i in range(randint(1, len(anomalies))):
                 row = {'Row_id': row_id,
                        'Client': client,
