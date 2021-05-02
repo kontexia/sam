@@ -4,6 +4,7 @@
 from copy import deepcopy
 import cython
 
+
 @cython.cclass
 class SDR(object):
 
@@ -35,7 +36,7 @@ class SDR(object):
     def copy(self, sdr):
         temporal_key: int
         enc_key: str
-        bit: int
+        bit: cython.int
 
         self.encoding = {temporal_key: {enc_key: {bit: sdr.encoding[temporal_key][enc_key][bit]
                                                   for bit in sdr.encoding[temporal_key][enc_key]}
@@ -44,9 +45,9 @@ class SDR(object):
 
         self.encoders = {enc_key: sdr.encoders[enc_key] for enc_key in sdr.encoders}
 
-    def copy_from(self, sdr, from_temporal_key: int = 0, to_temporal_key: int = 0):
+    def copy_from(self, sdr, from_temporal_key: cython.int = 0, to_temporal_key: cython.int = 0):
         enc_key: str
-        bit: int
+        bit: cython.int
 
         if from_temporal_key in sdr.encoding:
             self.encoding[to_temporal_key] = {enc_key: {bit: sdr.encoding[from_temporal_key][enc_key][bit]
@@ -57,10 +58,10 @@ class SDR(object):
             if enc_key not in self.encoders:
                 self.encoders[enc_key] = sdr.encoders[enc_key]
 
-    def add_encoding(self, value, enc_key: str, encoder, temporal_key: int = 0):
+    def add_encoding(self, value, enc_key: str, encoder, temporal_key: cython.int = 0):
 
         enc_key: str
-        bit: int
+        bit: cython.int
 
         if temporal_key not in self.encoding:
             self.encoding[temporal_key] = {enc_key: {bit: 1.0 for bit in encoder.encode(value)}}
@@ -70,7 +71,7 @@ class SDR(object):
         self.encoders[enc_key] = encoder
 
     def decode(self) -> dict:
-        temporal_key: int
+        temporal_key: cython.int
         enc_key: str
         dec_sdr: dict
 
@@ -81,9 +82,9 @@ class SDR(object):
 
     def learn(self, sdr, learn_temporal_keys: set = None, learn_enc_keys: set = None, learn_rate: float = 1.0, prune_threshold: float = 0.01):
         temporal_keys: set
-        temporal_key: int
+        temporal_key: cython.int
         enc_key: str
-        bit: int
+        bit: cython.int
 
         # get the union of temporal keys to deal with new or existing temporal keys
         #

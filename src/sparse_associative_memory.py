@@ -10,16 +10,16 @@ class SAM(object):
     def __init__(self,
                  name,
                  similarity_threshold: float = 0.75,
-                 learn_rate: float = 0.6,
-                 learn_temporal: bool = False,
+                 temporal_learn_rate: float = 1.0,
                  n_bits: int = 40,
                  prune_threshold=0.01):
 
-        self.neurons = Neurons(n_bits=n_bits, learn_rate=learn_rate)
+        # Note: relate the decay factor of the learning rate to the similarity factor
+        #
+        self.neurons = Neurons(n_bits=n_bits, learning_rate_decay_factor=(1 - similarity_threshold))
         self.name = name
         self.similarity_threshold = similarity_threshold
-        self.learn_rate = learn_rate
-        self.learn_temporal = learn_temporal
+        self.temporal_learn_rate = temporal_learn_rate
         self.temporal_sdr = SDR()
         self.prune_threshold = prune_threshold
 
@@ -30,8 +30,7 @@ class SAM(object):
     def to_dict(self, decode: bool = True):
         d_sam = {'name': self.name,
                  'similarity_threshold': self.similarity_threshold,
-                 'learn_rate': self.learn_rate,
-                 'learn_temporal': self.learn_temporal,
+                 'temporal_learn_rate': self.temporal_learn_rate,
                  'prune_threshold': self.prune_threshold,
                  'temporal_sdr': self.temporal_sdr.to_dict(decode=decode),
                  'n_update': self.n_update,
@@ -51,7 +50,7 @@ class SAM(object):
 
         # if we are learning temporal sequences then add in the temporal memory
         #
-        if self.learn_temporal:
+        if self.temporal_learn_rate < 1.0:
             train_sdr.copy_from(sdr=self.temporal_sdr, from_temporal_key=0, to_temporal_key=1)
 
         activated_neurons = self.neurons.feed_forward(sdr=train_sdr,
@@ -65,15 +64,14 @@ class SAM(object):
                 bmu_similarity = activated_neurons[0]['similarity']
                 activated_neurons = activated_neurons[:1]
         else:
-            activated_neurons = [activation for activation in activated_neurons if activation['similarity'] >= self.similarity_threshold]
-            self.neurons.learn(activated_neuron_list=activated_neurons, sdr=train_sdr, prune_threshold=self.prune_threshold)
+            self.neurons.learn(activated_neuron_list=activated_neurons[:1], sdr=train_sdr, prune_threshold=self.prune_threshold)
             bmu_similarity = activated_neurons[0]['similarity']
 
         self.avg_bmu_similarity += (bmu_similarity - self.avg_bmu_similarity) * 0.3
         self.variance_bmu_similarity = ((pow(bmu_similarity - self.avg_bmu_similarity, 2)) - self.variance_bmu_similarity) * 0.3
 
-        if self.learn_temporal:
-            self.temporal_sdr.learn(sdr=sdr, learn_rate=self.learn_rate, learn_enc_keys=activation_enc_keys, prune_threshold=self.prune_threshold)
+        if self.temporal_learn_rate < 1.0:
+            self.temporal_sdr.learn(sdr=sdr, learn_rate=self.temporal_learn_rate, learn_enc_keys=activation_enc_keys, prune_threshold=self.prune_threshold)
 
         por['bmu_similarity'] = bmu_similarity
         por['avg_bmu_similarity'] = self.avg_bmu_similarity
@@ -92,13 +90,13 @@ class SAM(object):
 
         query_sdr = SDR()
 
-        if isinstance(sdr, list) and self.learn_temporal:
+        if isinstance(sdr, list) and self.temporal_learn_rate < 1.0:
             temporal_sdr = None
             for idx in range(len(sdr)):
                 if idx == 0:
                     temporal_sdr = SDR(sdr[0])
                 else:
-                    temporal_sdr.learn(sdr=sdr[idx], learn_rate=self.learn_rate)
+                    temporal_sdr.learn(sdr=sdr[idx], learn_rate=self.temporal_learn_rate)
 
             query_sdr.copy_from(sdr=temporal_sdr, from_temporal_key=0, to_temporal_key=1)
         else:

@@ -6,7 +6,7 @@ import json
 from src.sparse_associative_memory import SAM
 from src.sparse_distributed_representation import SDR
 from src.numeric_encoder import NumericEncoder
-from src.string_encoder import StringEncoder
+from src.category_encoder import CategoryEncoder
 from src.sparse_am_viz import plot_pors, plot_sam
 
 from sklearn.datasets import make_moons, make_swiss_roll
@@ -24,9 +24,9 @@ def moon_test():
                                      enc_size=2048,
                                      seed=123)
 
-    label_encoder = StringEncoder(n_bits=40,
-                                  enc_size=2048,
-                                  seed=456)
+    label_encoder = CategoryEncoder(n_bits=40,
+                                    enc_size=2048,
+                                    seed=456)
 
     for idx in range(len(data_set)):
 
@@ -38,9 +38,8 @@ def moon_test():
         training_graphs.append(t_sdr)
 
     sam = SAM(name='Moon',
-              similarity_threshold=0.5,
-              learn_rate=0.6,
-              learn_temporal=False,
+              similarity_threshold=0.7,
+              temporal_learn_rate=1.0,
               n_bits=40)
 
     pors = []
@@ -72,9 +71,9 @@ def swiss_roll_test():
                                      enc_size=2048,
                                      seed=123)
 
-    label_encoder = StringEncoder(n_bits=40,
-                                  enc_size=2048,
-                                  seed=456)
+    label_encoder = CategoryEncoder(n_bits=40,
+                                    enc_size=2048,
+                                    seed=456)
 
     for idx in range(len(data_set)):
 
@@ -88,9 +87,8 @@ def swiss_roll_test():
         training_graphs.append(t_sdr)
 
     sam = SAM(name='Swiss',
-              similarity_threshold=0.85,
-              learn_rate=0.6,
-              learn_temporal=False,
+              similarity_threshold=0.7,
+              temporal_learn_rate=1.0,
               n_bits=40)
 
     pors = []
@@ -134,9 +132,9 @@ def colours():
                                      enc_size=2048,
                                      seed=123)
 
-    label_encoder = StringEncoder(n_bits=40,
-                                  enc_size=2048,
-                                  seed=456)
+    label_encoder = CategoryEncoder(n_bits=40,
+                                    enc_size=2048,
+                                    seed=456)
 
     training_graphs = {}
     for record in raw_data:
@@ -159,8 +157,7 @@ def colours():
         pors = []
         sam = SAM(name=client,
                   similarity_threshold=0.7,
-                  learn_rate=0.6,
-                  learn_temporal=True,
+                  temporal_learn_rate=0.6,
                   n_bits=40)
 
         sams[client] = {'sam': sam}

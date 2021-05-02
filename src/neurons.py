@@ -4,22 +4,24 @@
 from copy import deepcopy
 import cython
 from src.sparse_distributed_representation import SDR
+from math import exp
+
 
 @cython.cclass
 class Neurons(object):
-    n_bits = cython.declare(int, visibility='public')
-    next_neuron_key = cython.declare(int, visibility='public')
-    learn_rate = cython.declare(float, visibility='public')
+    n_bits = cython.declare(cython.int, visibility='public')
+    next_neuron_key = cython.declare(cython.int, visibility='public')
+    learning_rate_decay_factor = cython.declare(cython.int, visibility='public')
     bit_to_neuron = cython.declare(dict, visibility='public')
     neuron_to_bit = cython.declare(dict, visibility='public')
 
     def __init__(self,
-                 n_bits: int = 40,
-                 learn_rate: float = 0.6):
+                 n_bits: cython.int = 40,
+                 learning_rate_decay_factor: cython.int = 10):
 
         self.n_bits = n_bits
 
-        self.learn_rate = learn_rate
+        self.learning_rate_decay_factor = pow(learning_rate_decay_factor, 2)
 
         # this maps bits to neurons
         #
@@ -35,11 +37,11 @@ class Neurons(object):
 
     def to_dict(self, decode: bool = True) -> dict:
 
-        neuron_key: int
+        neuron_key: cython.int
         prop: str
 
         d_neurons = {'n_bits': self.n_bits,
-                     'learn_rate': self.learn_rate,
+                     'learning_rate_decay_factor': self.learning_rate_decay_factor,
                      'bit_to_neuron': deepcopy(self.bit_to_neuron),
                      'next_neuron_key': self.next_neuron_key,
                      'neuron_to_bit': {neuron_key: {prop: self.neuron_to_bit[neuron_key][prop] if prop != 'sdr' else self.neuron_to_bit[neuron_key][prop].to_dict(decode=decode)
@@ -56,10 +58,10 @@ class Neurons(object):
         activated_neurons: dict = {}
         activated_neuron_list: list
 
-        temporal_key: int
+        temporal_key: cython.int
         enc_key: str
-        normalisation_factor: int
-        bit: int
+        normalisation_factor: cython.int
+        bit: cython.int
 
         if activation_temporal_keys is None:
             activation_temporal_keys = set(self.bit_to_neuron.keys()) | set(sdr.encoding.keys())
@@ -122,10 +124,10 @@ class Neurons(object):
 
         return activated_neuron_list
 
-    def update_bit_to_neuron(self, neuron_key: int):
-        temporal_key: int
+    def update_bit_to_neuron(self, neuron_key: cython.int):
+        temporal_key: cython.int
         enc_key: str
-        bit: int
+        bit: cython.int
 
         neuron_sdr: SDR = self.neuron_to_bit[neuron_key]['sdr']
 
@@ -151,20 +153,20 @@ class Neurons(object):
                     else:
                         self.bit_to_neuron[temporal_key][enc_key][bit].add(neuron_key)
 
-    def add_neuron(self, sdr: SDR) -> int:
+    def add_neuron(self, sdr: SDR) -> cython.int:
         
         # get next neuron key to use
         #
-        neuron_key: int = self.next_neuron_key
+        neuron_key: cython.int = self.next_neuron_key
         self.next_neuron_key += 1
         
         # add the neuron to bit mapping
         #
         self.neuron_to_bit[neuron_key] = {'sdr': SDR(sdr),
                                           'n_bmu': 1,
+                                          'learn_rate': 1.0,
                                           'sum_similarity': 1.0,
-                                          'avg_similarity': 1.0,
-                                          'n_runner_up': 0}
+                                          'avg_similarity': 1.0}
 
         self.update_bit_to_neuron(neuron_key)
 
@@ -172,41 +174,30 @@ class Neurons(object):
 
     def learn(self, activated_neuron_list: list, sdr: SDR, learn_enc_keys: set = None, prune_threshold: float = 0.01):
 
-        idx: int
-        neuron_key: int
+        idx: cython.int
+        neuron_key: cython.int
         learn_rate: float
 
         for idx in range(len(activated_neuron_list)):
             neuron_key = activated_neuron_list[idx]['neuron_key']
 
-            if idx == 0:
+            # keep track of the number of times this neurons has been the bmu
+            #
+            self.neuron_to_bit[neuron_key]['n_bmu'] += 1
 
-                # keep track of the number of times this neurons has been the bmu
-                #
-                self.neuron_to_bit[neuron_key]['n_bmu'] += 1
+            # the learning rate for the activated neuron depends inversely on the number of times this neuron has been mapped to
+            #
+            self.neuron_to_bit[neuron_key]['learn_rate'] = exp(-self.neuron_to_bit[neuron_key]['n_bmu'] * self.learning_rate_decay_factor)
 
-                # the learning rate for the bmu
-                #
-                learn_rate = self.learn_rate
-
-                # keep track of the similarity of data mapped to this generalised memory
-                #
-                self.neuron_to_bit[neuron_key]['sum_similarity'] += activated_neuron_list[idx]['similarity']
-                self.neuron_to_bit[neuron_key]['avg_similarity'] = self.neuron_to_bit[neuron_key]['sum_similarity'] / self.neuron_to_bit[neuron_key]['n_bmu']
-
-            else:
-                # not a bmu so learning rate must be less than bmu
-                #
-                learn_rate = self.learn_rate * 0.1
-
-                # keep track of the number of times this neurons has been the updated when not a bmu
-                #
-                self.neuron_to_bit[neuron_key]['n_runner_up'] += 1
+            # keep track of the similarity of data mapped to this generalised memory
+            #
+            self.neuron_to_bit[neuron_key]['sum_similarity'] += activated_neuron_list[idx]['similarity']
+            self.neuron_to_bit[neuron_key]['avg_similarity'] = self.neuron_to_bit[neuron_key]['sum_similarity'] / self.neuron_to_bit[neuron_key]['n_bmu']
 
             # update the neurons's sparse generalised memory with the incoming data
             # note always learn whole of temporal memory but not always all enc_keys
             #
-            self.neuron_to_bit[neuron_key]['sdr'].learn(sdr=sdr, learn_rate=learn_rate, learn_enc_keys=learn_enc_keys, prune_threshold=prune_threshold)
+            self.neuron_to_bit[neuron_key]['sdr'].learn(sdr=sdr, learn_rate=self.neuron_to_bit[neuron_key]['learn_rate'], learn_enc_keys=learn_enc_keys, prune_threshold=prune_threshold)
 
             # finally make sure the bits are connected to this neuron
             #

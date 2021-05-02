@@ -25,9 +25,8 @@ def train():
     training_graphs = {'column': {}, 'row': []}
 
     sams = {'row': {'sam': SAM(name='row',
-                               similarity_threshold=0.7,
-                               learn_rate=0.6,
-                               learn_temporal=False,
+                               similarity_threshold=0.8,
+                               temporal_learn_rate=1.0,
                                n_bits=80),
                     'por': []
                     },
@@ -48,9 +47,8 @@ def train():
             if column != 'Row_id':
                 if column not in sams['column']:
                     sams['column'][column] = {'sam': SAM(name=column,
-                                                         similarity_threshold=0.7,
-                                                         learn_rate=0.6,
-                                                         learn_temporal=False,
+                                                         similarity_threshold=0.8,
+                                                         temporal_learn_rate=1.0,
                                                          n_bits=80),
                                               'por': []}
 
