@@ -70,7 +70,7 @@ class SAMFabric(object):
 
                 # create an enc key between region_1 and the region in the sdr
                 #
-                enc_key = (region_1, sdr_key[1][0])
+                enc_key = (region_1, sdr_key[ENC_IDX][0])
                 training_association_sdr.add_encoding(enc_key=enc_key, encoding=neuron['association_sdr'].encoding[sdr_key])
 
         pors['association'] = self.sams['association'].learn_pattern(sdr=training_association_sdr)

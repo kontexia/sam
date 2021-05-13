@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
-
 import pandas as pd
-from src.sparse_associative_memory import SAM
+from src.sparse_associative_memory import SAMRegion
 from src.sparse_distributed_representation import SDR
 from src.value_encoder import ValueEncoder
 from src.sparse_am_viz import plot_pors, plot_sam
@@ -24,10 +23,9 @@ def train():
 
     training_graphs = {'column': {}, 'row': []}
 
-    sams = {'row': {'sam': SAM(name='row',
-                               similarity_threshold=0.8,
-                               temporal_learn_rate=1.0,
-                               n_bits=80),
+    sams = {'row': {'sam': SAMRegion(name='row',
+                                     similarity_threshold=0.8,
+                                     temporal_learn_rate=1.0),
                     'por': []
                     },
             'column': {}
@@ -46,10 +44,9 @@ def train():
         for column in record:
             if column != 'Row_id':
                 if column not in sams['column']:
-                    sams['column'][column] = {'sam': SAM(name=column,
-                                                         similarity_threshold=0.8,
-                                                         temporal_learn_rate=1.0,
-                                                         n_bits=80),
+                    sams['column'][column] = {'sam': SAMRegion(name=column,
+                                                               similarity_threshold=0.8,
+                                                               temporal_learn_rate=1.0),
                                               'por': []}
 
                 t_sgm = SDR()
@@ -60,7 +57,7 @@ def train():
 
     row_data = []
     for record in training_graphs['row']:
-        por = sams['row']['sam'].train(sdr=record[1])
+        por = sams['row']['sam'].learn_pattern(sdr=record[1])
         sams['row']['por'].append(por)
         row_data.append(record[2][:3])
     row_dict = sams['row']['sam'].to_dict(decode=True)
@@ -107,13 +104,13 @@ def train():
 
     row_data = []
     for record in test_graphs['row']:
-        por = sams['row']['sam'].train(sdr=record[1])
+        por = sams['row']['sam'].learn_pattern(sdr=record[1])
         sams['row']['por'].append(por)
         row_data.append(record[2][:3])
     row_dict = sams['row']['sam'].to_dict(decode=True)
     plot_sam(sam_region=row_dict,
              raw_data=row_data,
-             xyz_types=['RGB_Red', 'RGB_Green', 'RGB_Blue'],
+             xyz_types=[('RGB_Red',), ('RGB_Green',), ('RGB_Blue',)],
              colour_nodes=None,
              temporal_key=0)
 

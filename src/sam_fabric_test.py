@@ -218,9 +218,8 @@ def colours():
         print(f'finished {client}')
 
 
-
 if __name__ == '__main__':
 
     moon_test()
     swiss_roll_test()
-    #colours()
+    colours()

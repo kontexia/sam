@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
-from random import choices, choice, randint, random
+from random import choice, randint, random
 import csv
 
 

@@ -10,3 +10,6 @@ scipy==1.6.1
 six==1.15.0
 sklearn==0.0
 threadpoolctl==2.1.0
+
+pandas~=1.2.4
+setuptools~=41.2.0
