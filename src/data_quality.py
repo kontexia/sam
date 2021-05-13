@@ -35,10 +35,10 @@ def train():
     for record in train_data:
 
         t_sgm = SDR()
-        t_sgm.add_encoding(enc_key='RGB_Red', value=record['RGB_Red'], encoder=encoder)
-        t_sgm.add_encoding(enc_key='RGB_Green', value=record['RGB_Green'], encoder=encoder)
-        t_sgm.add_encoding(enc_key='RGB_Blue', value=record['RGB_Blue'], encoder=encoder)
-        t_sgm.add_encoding(enc_key='Product', value=record['Product'], encoder=encoder)
+        t_sgm.add_encoding(enc_key=('RGB_Red',), value=record['RGB_Red'], encoder=encoder)
+        t_sgm.add_encoding(enc_key=('RGB_Green',), value=record['RGB_Green'], encoder=encoder)
+        t_sgm.add_encoding(enc_key=('RGB_Blue',), value=record['RGB_Blue'], encoder=encoder)
+        t_sgm.add_encoding(enc_key=('Product',), value=record['Product'], encoder=encoder)
         r_data = [record['RGB_Red'], record['RGB_Green'], record['RGB_Blue'], record['Product']]
 
         training_graphs['row'].append((record['Row_id'], t_sgm, r_data))
@@ -64,9 +64,9 @@ def train():
         sams['row']['por'].append(por)
         row_data.append(record[2][:3])
     row_dict = sams['row']['sam'].to_dict(decode=True)
-    plot_sam(sam=row_dict,
+    plot_sam(sam_region=row_dict,
              raw_data=row_data,
-             xyz_types=['RGB_Red', 'RGB_Green', 'RGB_Blue'],
+             xyz_types=[('RGB_Red',), ('RGB_Green',), ('RGB_Blue',)],
              colour_nodes=None,
              temporal_key=0)
 
@@ -89,10 +89,10 @@ def train():
     for record in test_data:
 
         t_sgm = SDR()
-        t_sgm.add_encoding(enc_key='RGB_Red', value=record['RGB_Red'], encoder=encoder)
-        t_sgm.add_encoding(enc_key='RGB_Green', value=record['RGB_Green'], encoder=encoder)
-        t_sgm.add_encoding(enc_key='RGB_Blue', value=record['RGB_Blue'], encoder=encoder)
-        t_sgm.add_encoding(enc_key='Product', value=record['Product'], encoder=encoder)
+        t_sgm.add_encoding(enc_key=('RGB_Red',), value=record['RGB_Red'], encoder=encoder)
+        t_sgm.add_encoding(enc_key=('RGB_Green',), value=record['RGB_Green'], encoder=encoder)
+        t_sgm.add_encoding(enc_key=('RGB_Blue',), value=record['RGB_Blue'], encoder=encoder)
+        t_sgm.add_encoding(enc_key=('Product',), value=record['Product'], encoder=encoder)
         r_data = [record['RGB_Red'], record['RGB_Green'], record['RGB_Blue'], record['Product']]
 
         test_graphs['row'].append((record['Row_id'], t_sgm, r_data))
@@ -111,7 +111,7 @@ def train():
         sams['row']['por'].append(por)
         row_data.append(record[2][:3])
     row_dict = sams['row']['sam'].to_dict(decode=True)
-    plot_sam(sam=row_dict,
+    plot_sam(sam_region=row_dict,
              raw_data=row_data,
              xyz_types=['RGB_Red', 'RGB_Green', 'RGB_Blue'],
              colour_nodes=None,

@@ -3,9 +3,10 @@
 
 
 import plotly.graph_objects as go
+from src.sparse_distributed_representation import TEMPORAL_IDX, ENC_IDX
 
 
-def plot_sam(sam, raw_data, xyz_types, colour_nodes, temporal_key=0):
+def plot_sam(sam_region, raw_data, xyz_types, colour_nodes, temporal_key=0):
 
     node_x = []
     node_y = []
@@ -26,44 +27,45 @@ def plot_sam(sam, raw_data, xyz_types, colour_nodes, temporal_key=0):
     z_min_max = {'min': None, 'max': None}
 
     neuron_xyz = {}
-    neurons = sam['neurons']['neuron_to_bit']
+    neurons = sam_region['neural_graph']['neurons']
     for neuron_key in neurons:
-        for enc_key in neurons[neuron_key]['sdr']['encoding'][temporal_key]:
-            if isinstance(neurons[neuron_key]['sdr']['encoding'][temporal_key][enc_key], dict):
-                val = neurons[neuron_key]['sdr']['encoding'][temporal_key][enc_key]['value']
-            else:
-                val = neurons[neuron_key]['sdr']['encoding'][temporal_key][enc_key]
-
-            if enc_key == xyz_types[0]:
-                node_x.append(val)
-                if neuron_key not in neuron_xyz:
-                    neuron_xyz[neuron_key] = {'x': val, 'z': 0.0, 'y': 0.0}
+        for key in neurons[neuron_key]['pattern_sdr']['encoding']:
+            if key[TEMPORAL_IDX] == temporal_key:
+                if isinstance(neurons[neuron_key]['pattern_sdr']['encoding'][key], dict):
+                    val = neurons[neuron_key]['pattern_sdr']['encoding'][key]['value']
                 else:
-                    neuron_xyz[neuron_key]['x'] = val
-            elif enc_key == xyz_types[1]:
+                    val = neurons[neuron_key]['pattern_sdr']['encoding'][key]
 
-                node_y.append(val)
-                if neuron_key not in neuron_xyz:
-                    neuron_xyz[neuron_key] = {'y': val, 'x': 0.0, 'z': 0.0}
-                else:
-                    neuron_xyz[neuron_key]['y'] = val
+                if key[ENC_IDX] == xyz_types[0]:
+                    node_x.append(val)
+                    if neuron_key not in neuron_xyz:
+                        neuron_xyz[neuron_key] = {'x': val, 'z': 0.0, 'y': 0.0}
+                    else:
+                        neuron_xyz[neuron_key]['x'] = val
+                elif key[ENC_IDX] == xyz_types[1]:
 
-            elif len(xyz_types) == 3 and enc_key == xyz_types[2]:
+                    node_y.append(val)
+                    if neuron_key not in neuron_xyz:
+                        neuron_xyz[neuron_key] = {'y': val, 'x': 0.0, 'z': 0.0}
+                    else:
+                        neuron_xyz[neuron_key]['y'] = val
 
-                node_z.append(val)
-                if neuron_key not in neuron_xyz:
-                    neuron_xyz[neuron_key] = {'z': val, 'x': 0.0, 'y': 0.0}
-                else:
-                    neuron_xyz[neuron_key]['z'] = val
+                elif len(xyz_types) == 3 and key[ENC_IDX] == xyz_types[2]:
 
-            if colour_nodes is not None and enc_key == colour_nodes:
-                if enc_key not in colour_labels:
-                    colour = next_color
-                    colour_labels[enc_key] = next_color
-                    next_color += 1
-                else:
-                    colour = colour_labels[enc_key]
-                node_colour.append(colour)
+                    node_z.append(val)
+                    if neuron_key not in neuron_xyz:
+                        neuron_xyz[neuron_key] = {'z': val, 'x': 0.0, 'y': 0.0}
+                    else:
+                        neuron_xyz[neuron_key]['z'] = val
+
+                if colour_nodes is not None and key[ENC_IDX] == colour_nodes:
+                    if key[ENC_IDX] not in colour_labels:
+                        colour = next_color
+                        colour_labels[key[ENC_IDX]] = next_color
+                        next_color += 1
+                    else:
+                        colour = colour_labels[key[ENC_IDX]]
+                    node_colour.append(colour)
 
         if len(xyz_types) == 2:
             node_z.append(0.0)
@@ -86,10 +88,9 @@ def plot_sam(sam, raw_data, xyz_types, colour_nodes, temporal_key=0):
         node_label.append(neuron_key)
         node_size.append(10 + neurons[neuron_key]['n_bmu'])
 
-    """
     pairs = set()
     for neuron_key in neurons:
-        for nn_key in neurons[neuron_key]['nn']:
+        for nn_key in neurons[neuron_key]['community']:
             pair = (min(neuron_key, nn_key), max(neuron_key, nn_key))
             if pair not in pairs:
                 pairs.add(pair)
@@ -109,7 +110,6 @@ def plot_sam(sam, raw_data, xyz_types, colour_nodes, temporal_key=0):
                     edge_z.append(0.0)
 
                 edge_z.append(None)
-    """
 
     if colour_nodes is None:
         for idx in range(len(node_x)):
@@ -145,7 +145,7 @@ def plot_sam(sam, raw_data, xyz_types, colour_nodes, temporal_key=0):
     compression_ratio = round(len(neurons) / len(raw_data), 2)
 
     fig.update_layout(width=1200, height=1200,
-                      title=dict(text=f'{sam["name"]} Nos Neurons: {len(neurons)} Nos Raw Data:{len(raw_data)} Ratio: {compression_ratio}'))
+                      title=dict(text=f'{sam_region["name"]} Nos Neurons: {len(neurons)} Nos Raw Data:{len(raw_data)} Ratio: {compression_ratio}'))
     fig.show()
 
 

@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
-
 import json
-from src.sparse_associative_memory import SAMRegion
 from src.sparse_distributed_representation import SDR
 from src.numeric_encoder import NumericEncoder
 from src.category_encoder import CategoryEncoder
+from src.sam_fabric import SAMFabric
 from src.sparse_am_viz import plot_pors, plot_sam
+
 
 from sklearn.datasets import make_moons, make_swiss_roll
 
@@ -30,31 +30,42 @@ def moon_test():
 
     for idx in range(len(data_set)):
 
-        t_sdr = SDR()
-        t_sdr.add_encoding(enc_key=('x',), value=data_set[idx][0], encoder=numeric_encoder)
-        t_sdr.add_encoding(enc_key=('y',), value=data_set[idx][1], encoder=numeric_encoder)
-        t_sdr.add_encoding(enc_key=('label',), value=str(labels[idx]), encoder=label_encoder)
+        xy_sdr = SDR()
+        xy_sdr.add_encoding(enc_key=('x',), value=data_set[idx][0], encoder=numeric_encoder)
+        xy_sdr.add_encoding(enc_key=('y',), value=data_set[idx][1], encoder=numeric_encoder)
+        label_sdr = SDR()
+        label_sdr.add_encoding(enc_key=('label',), value=str(labels[idx]), encoder=label_encoder)
 
-        training_graphs.append(t_sdr)
+        training_graphs.append({'xy': xy_sdr, 'label': label_sdr})
 
-    sam = SAMRegion(name='Moon',
-                    similarity_threshold=0.7,
-                    community_threshold=0.8,
-                    temporal_learn_rate=1.0)
+    sam_params = {'similarity_threshold': 0.7,
+                  'community_threshold': 0.9,
+                  'temporal_learning_rate': 1.0,
+                  'prune_threshold': 0.01,
+                  'activation_enc_keys': None,
+                  'association_learn_rate': 0.6}
+
+    sam_fabric = SAMFabric(association_params=sam_params)
+
+    region_params = {'xy': sam_params,
+                     'label': sam_params}
 
     pors = []
 
     for t_idx in range(len(training_graphs)):
-        por = sam.learn_pattern(sdr=training_graphs[t_idx],
-                                activation_enc_keys={('x',), ('y',)})
+        por = sam_fabric.train(region_sdrs=training_graphs[t_idx], region_sam_params=region_params)
         pors.append(por)
 
-    sam_dict = sam.to_dict(decode=True)
+    sam_dict = sam_fabric.to_dict(decode=True)
 
-    plot_sam(sam_region=sam_dict,
+    plot_sam(sam_region=sam_dict['xy'],
              raw_data=data_set,
              xyz_types=[('x',), ('y',)],
              colour_nodes=None)
+
+    xy_pors = [por['xy'] for por in pors]
+
+    plot_pors(xy_pors)
 
     print('Finished')
 
@@ -77,30 +88,33 @@ def swiss_roll_test():
 
     for idx in range(len(data_set)):
 
-        t_sdr = SDR()
-        t_sdr.add_encoding(enc_key=('x',), value=data_set[idx][0], encoder=numeric_encoder)
-        t_sdr.add_encoding(enc_key=('y',), value=data_set[idx][1], encoder=numeric_encoder)
-        t_sdr.add_encoding(enc_key=('z',), value=data_set[idx][2], encoder=numeric_encoder)
+        xyz_sdr = SDR()
+        xyz_sdr.add_encoding(enc_key=('x',), value=data_set[idx][0], encoder=numeric_encoder)
+        xyz_sdr.add_encoding(enc_key=('y',), value=data_set[idx][1], encoder=numeric_encoder)
+        xyz_sdr.add_encoding(enc_key=('z',), value=data_set[idx][2], encoder=numeric_encoder)
 
-        t_sdr.add_encoding(enc_key=('label',), value=str(labels[idx]), encoder=label_encoder)
+        training_graphs.append({'xyz': xyz_sdr})
 
-        training_graphs.append(t_sdr)
+    sam_params = {'similarity_threshold': 0.7,
+                  'community_threshold': 0.9,
+                  'temporal_learning_rate': 1.0,
+                  'prune_threshold': 0.01,
+                  'activation_enc_keys': None,
+                  'association_learn_rate': 0.6}
 
-    sam = SAMRegion(name='Swiss',
-                    similarity_threshold=0.85,
-                    community_threshold=0.9,
-                    temporal_learn_rate=1.0)
+    sam_fabric = SAMFabric(association_params=sam_params)
+
+    region_params = {'xyz': sam_params}
 
     pors = []
 
     for t_idx in range(len(training_graphs)):
-        por = sam.learn_pattern(sdr=training_graphs[t_idx],
-                                activation_enc_keys={('x',), ('y',), ('z',)})
+        por = sam_fabric.train(region_sdrs=training_graphs[t_idx], region_sam_params=region_params)
         pors.append(por)
 
-    sam_dict = sam.to_dict(decode=True)
+    sam_dict = sam_fabric.to_dict(decode=True)
 
-    plot_sam(sam_region=sam_dict,
+    plot_sam(sam_region=sam_dict['xyz'],
              raw_data=data_set,
              xyz_types=[('x',), ('y',), ('z',)],
              colour_nodes=None)
@@ -141,45 +155,61 @@ def colours():
         if record['client'] not in training_graphs:
             training_graphs[record['client']] = []
 
-        t_sdr = SDR()
-        t_sdr.add_encoding(enc_key=('r',), value=record['r'], encoder=numeric_encoder)
-        t_sdr.add_encoding(enc_key=('g',), value=record['g'], encoder=numeric_encoder)
-        t_sdr.add_encoding(enc_key=('b',), value=record['b'], encoder=numeric_encoder)
-        t_sdr.add_encoding(enc_key=('label',), value=record['label'], encoder=label_encoder)
+        rgb_sdr = SDR()
+        rgb_sdr.add_encoding(enc_key=('r',), value=record['r'], encoder=numeric_encoder)
+        rgb_sdr.add_encoding(enc_key=('g',), value=record['g'], encoder=numeric_encoder)
+        rgb_sdr.add_encoding(enc_key=('b',), value=record['b'], encoder=numeric_encoder)
+
+        label_sdr = SDR()
+        label_sdr.add_encoding(enc_key=('label',), value=record['label'], encoder=label_encoder)
         r_data = [record['r'], record['g'], record['b'], record['label']]
 
-        training_graphs[record['client']].append((record['trade_id'], t_sdr, r_data))
+        training_graphs[record['client']].append((record['trade_id'], {'rgb': rgb_sdr, 'label': label_sdr}, r_data))
 
     n_cycles = 1
+
+    sam_params = {'similarity_threshold': 0.7,
+                  'community_threshold': 0.9,
+                  'temporal_learning_rate': 1.0,
+                  'prune_threshold': 0.01,
+                  'activation_enc_keys': None,
+                  'association_learn_rate': 0.6}
+
+    region_params = {'rgb': sam_params,
+                     'label': sam_params}
 
     sams = {}
     for client in training_graphs:
         pors = []
-        sam = SAMRegion(name=client,
-                        similarity_threshold=0.7,
-                        community_threshold=0.9,
-                        temporal_learn_rate=0.6)
+        sam_fabric = SAMFabric(association_params=sam_params)
 
-        sams[client] = {'sam': sam}
+        sams[client] = {'sam': sam_fabric}
 
         for cycle in range(n_cycles):
             for t_idx in range(len(training_graphs[client])):
-                por = sam.learn_pattern(sdr=training_graphs[client][t_idx][1],
-                                        activation_enc_keys={('r',), ('g',), ('b',)})
+                por = sam_fabric.train(region_sdrs=training_graphs[client][t_idx][1], region_sam_params=region_params)
                 pors.append(por)
 
         sams[client]['por'] = pors
 
-        plot_pors(pors)
+        rgb_pors = [por['rgb'] for por in pors]
 
-        sam_dict = sam.to_dict(decode=True)
+        plot_pors(rgb_pors)
+
+
+        assoc_pors = [por['association'] for por in pors]
+
+        plot_pors(assoc_pors)
+
+
+        sam_dict = sam_fabric.to_dict(decode=True)
 
         rn_data = [t_data[2][:3] for t_data in training_graphs[client]]
         cycle_data = []
         for cycle in range(n_cycles):
             cycle_data.extend(rn_data)
 
-        plot_sam(sam_region=sam_dict,
+        plot_sam(sam_region=sam_dict['rgb'],
                  raw_data=cycle_data,
                  xyz_types=[('r',), ('g',), ('b',)],
                  colour_nodes=None,
@@ -188,8 +218,9 @@ def colours():
         print(f'finished {client}')
 
 
+
 if __name__ == '__main__':
 
     moon_test()
     swiss_roll_test()
-    colours()
+    #colours()
