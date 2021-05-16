@@ -1,16 +1,16 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
-from src.neurons import NeuralGraph
+from src.neural_graph import NeuralGraph
 from src.sparse_distributed_representation import SDR
 
 
-class SAMRegion(object):
+class SAM(object):
 
     def __init__(self,
                  name,
                  similarity_threshold: float = 0.7,
-                 community_threshold: float = 0.7,
+                 community_factor: float = 0.7,
                  temporal_learn_rate: float = 1.0,
                  prune_threshold=0.01):
 
@@ -19,7 +19,7 @@ class SAMRegion(object):
         self.neural_graph = NeuralGraph(learning_rate_decay_factor=(1 - similarity_threshold))
         self.name = name
         self.similarity_threshold = similarity_threshold
-        self.community_threshold = community_threshold * similarity_threshold
+        self.community_threshold = community_factor * similarity_threshold
         self.temporal_learn_rate = temporal_learn_rate
         self.temporal_sdr = SDR()
         self.prune_threshold = prune_threshold
@@ -40,8 +40,8 @@ class SAMRegion(object):
                     'neural_graph': self.neural_graph.to_dict(decode=decode)}
         return dict_sam
 
-    def get_neuron(self, neuron_key):
-        return self.neural_graph.get_neuron(neuron_key=neuron_key)
+    def get_neuron(self, neuron_key, decode: bool = False):
+        return self.neural_graph.get_neuron(neuron_key=neuron_key, decode=decode)
 
     def learn_pattern(self, sdr, activation_enc_keys: set = None):
 
@@ -146,7 +146,7 @@ class SAMRegion(object):
 
         if len(por['activations']) > 0:
             por['bmu_key'] = por['activations'][0]['neuron_key']
-            por['sdr'] = self.neural_graph.neuron_to_bit[por['bmu_key']]['sdr']
+            por['sdr'] = self.neural_graph.neurons[por['bmu_key']]['pattern_sdr']
             if decode:
                 por['sdr'] = por['sdr'].decode()
 

@@ -6,7 +6,7 @@ import plotly.graph_objects as go
 from src.sparse_distributed_representation import TEMPORAL_IDX, ENC_IDX
 
 
-def plot_sam(sam_region, raw_data, xyz_types, colour_nodes, temporal_key=0):
+def plot_sam(sam_region, raw_data, xyz_types, colour_nodes, temporal_key=0, title = None):
 
     node_x = []
     node_y = []
@@ -144,12 +144,15 @@ def plot_sam(sam_region, raw_data, xyz_types, colour_nodes, temporal_key=0):
 
     compression_ratio = round(len(neurons) / len(raw_data), 2)
 
+    if title is None:
+        title = sam_region["name"]
+
     fig.update_layout(width=1200, height=1200,
-                      title=dict(text=f'{sam_region["name"]} Nos Neurons: {len(neurons)} Nos Raw Data:{len(raw_data)} Ratio: {compression_ratio}'))
+                      title=dict(text=f'{title} Nos Neurons: {len(neurons)} Nos Raw Data:{len(raw_data)} Ratio: {compression_ratio}'))
     fig.show()
 
 
-def plot_pors(pors):
+def plot_pors(pors, title=None):
     ema_similarity = []
     ema_stdev = []
 
@@ -180,6 +183,10 @@ def plot_pors(pors):
     por = pors[-1]
 
     compression_ratio = round(final_neurons / len(pors), 2)
+
+    if title is None:
+        title = por["name"]
+
     fig.update_layout(width=1200, height=1200,
-                      title=dict(text=f'{por["name"]} nos neurons: {final_neurons} Nos Raw_data: {len(pors)} Ratio: {compression_ratio}'))
+                      title=dict(text=f'{title} nos neurons: {final_neurons} Nos Raw_data: {len(pors)} Ratio: {compression_ratio}'))
     fig.show()

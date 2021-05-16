@@ -2,7 +2,7 @@
 # -*- encoding: utf-8 -*-
 
 import pandas as pd
-from src.sparse_associative_memory import SAMRegion
+from src.sparse_associative_memory import SAM
 from src.sparse_distributed_representation import SDR
 from src.value_encoder import ValueEncoder
 from src.sparse_am_viz import plot_pors, plot_sam
@@ -23,9 +23,10 @@ def train():
 
     training_graphs = {'column': {}, 'row': []}
 
-    sams = {'row': {'sam': SAMRegion(name='row',
-                                     similarity_threshold=0.8,
-                                     temporal_learn_rate=1.0),
+    sams = {'row': {'sam': SAM(name='row',
+                               similarity_threshold=0.8,
+                               community_factor=0.8,
+                               temporal_learn_rate=1.0),
                     'por': []
                     },
             'column': {}
@@ -44,9 +45,10 @@ def train():
         for column in record:
             if column != 'Row_id':
                 if column not in sams['column']:
-                    sams['column'][column] = {'sam': SAMRegion(name=column,
-                                                               similarity_threshold=0.8,
-                                                               temporal_learn_rate=1.0),
+                    sams['column'][column] = {'sam': SAM(name=column,
+                                                         similarity_threshold=0.8,
+                                                         community_factor=0.8,
+                                                         temporal_learn_rate=1.0),
                                               'por': []}
 
                 t_sgm = SDR()

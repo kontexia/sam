@@ -194,10 +194,11 @@ class NeuralGraph(object):
                 if idx_1 != idx_2:
                     self.neurons[activated_neurons[idx_1]['neuron_key']]['community'].add(activated_neurons[idx_2]['neuron_key'])
 
-    def get_neuron(self, neuron_key: cython.int) -> dict:
+    def get_neuron(self, neuron_key: cython.int, decode: bool = False) -> dict:
         neuron = None
         if neuron_key in self.neurons:
-            neuron = self.neurons[neuron_key]
+            neuron = {prop: self.neurons[neuron_key][prop] if 'sdr' not in prop else self.neurons[neuron_key][prop].to_dict(decode=decode)
+                      for prop in self.neurons[neuron_key]}
         return neuron
 
 

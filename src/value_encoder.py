@@ -1,12 +1,22 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
+import cython
 from src.numeric_encoder import NumericEncoder
 from src.category_encoder import CategoryEncoder
 
 
+@cython.cclass
 class ValueEncoder(object):
-    def __init__(self, name: str,
+
+    name = cython.declare(str, visibility='public')
+    type = cython.declare(str, visibility='public')
+    n_bits = cython.declare(int, visibility='public')
+    enc_size = cython.declare(int, visibility='public')
+    encoders = cython.declare(dict, visibility='public')
+
+    def __init__(self,
+                 name: str,
                  n_bits: int = 40,
                  enc_size: int = 2048,
                  numeric_step: float = 1.0):
@@ -32,6 +42,9 @@ class ValueEncoder(object):
                          }
 
     def encode(self, value) -> set:
+
+        enc: set
+
         if value is None:
 
             # string length
@@ -40,7 +53,7 @@ class ValueEncoder(object):
 
             # string value
             #
-            enc.update(self.encoders['string'].encode(category=None))
+            enc.update(self.encoders['string'].encode(category=value))
 
         elif isinstance(value, int) or isinstance(value, float):
             # string length of 0
@@ -61,7 +74,9 @@ class ValueEncoder(object):
             enc.update(self.encoders['string'].encode(category=value))
         return enc
 
-    def decode(self, enc):
+    def decode(self, enc) -> dict:
+
+        bit: int
 
         # add default weights if not given any
         #

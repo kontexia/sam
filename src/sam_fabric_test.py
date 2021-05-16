@@ -39,7 +39,7 @@ def moon_test():
         training_graphs.append({'xy': xy_sdr, 'label': label_sdr})
 
     sam_params = {'similarity_threshold': 0.7,
-                  'community_threshold': 0.9,
+                  'community_factor': 0.9,
                   'temporal_learning_rate': 1.0,
                   'prune_threshold': 0.01,
                   'activation_enc_keys': None,
@@ -61,7 +61,8 @@ def moon_test():
     plot_sam(sam_region=sam_dict['xy'],
              raw_data=data_set,
              xyz_types=[('x',), ('y',)],
-             colour_nodes=None)
+             colour_nodes=None,
+             title='Moons')
 
     xy_pors = [por['xy'] for por in pors]
 
@@ -96,7 +97,7 @@ def swiss_roll_test():
         training_graphs.append({'xyz': xyz_sdr})
 
     sam_params = {'similarity_threshold': 0.7,
-                  'community_threshold': 0.9,
+                  'community_factor': 0.9,
                   'temporal_learning_rate': 1.0,
                   'prune_threshold': 0.01,
                   'activation_enc_keys': None,
@@ -117,7 +118,8 @@ def swiss_roll_test():
     plot_sam(sam_region=sam_dict['xyz'],
              raw_data=data_set,
              xyz_types=[('x',), ('y',), ('z',)],
-             colour_nodes=None)
+             colour_nodes=None,
+             title='Swiss Roll')
 
     print('Finished')
 
@@ -169,7 +171,7 @@ def colours():
     n_cycles = 1
 
     sam_params = {'similarity_threshold': 0.7,
-                  'community_threshold': 0.9,
+                  'community_factor': 0.9,
                   'temporal_learning_rate': 1.0,
                   'prune_threshold': 0.01,
                   'activation_enc_keys': None,
@@ -183,7 +185,7 @@ def colours():
         pors = []
         sam_fabric = SAMFabric(association_params=sam_params)
 
-        sams[client] = {'sam': sam_fabric}
+        sams[client] = {'sam': sam_fabric, 'por': []}
 
         for cycle in range(n_cycles):
             for t_idx in range(len(training_graphs[client])):
@@ -194,13 +196,11 @@ def colours():
 
         rgb_pors = [por['rgb'] for por in pors]
 
-        plot_pors(rgb_pors)
-
+        plot_pors(rgb_pors, title=client)
 
         assoc_pors = [por['association'] for por in pors]
 
         plot_pors(assoc_pors)
-
 
         sam_dict = sam_fabric.to_dict(decode=True)
 
@@ -213,9 +213,12 @@ def colours():
                  raw_data=cycle_data,
                  xyz_types=[('r',), ('g',), ('b',)],
                  colour_nodes=None,
-                 temporal_key=0)
+                 temporal_key=0,
+                 title=client)
 
-        print(f'finished {client}')
+        query_pors = sam_fabric.query(region_sdr={'label': training_graphs[client][10][1]['label']})
+
+        print('finished')
 
 
 if __name__ == '__main__':

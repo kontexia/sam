@@ -3,7 +3,7 @@
 
 
 import json
-from src.sparse_associative_memory import SAMRegion
+from src.sparse_associative_memory import SAM
 from src.sparse_distributed_representation import SDR
 from src.numeric_encoder import NumericEncoder
 from src.category_encoder import CategoryEncoder
@@ -37,10 +37,10 @@ def moon_test():
 
         training_graphs.append(t_sdr)
 
-    sam = SAMRegion(name='Moon',
-                    similarity_threshold=0.7,
-                    community_threshold=0.8,
-                    temporal_learn_rate=1.0)
+    sam = SAM(name='Moon',
+              similarity_threshold=0.7,
+              community_factor=0.8,
+              temporal_learn_rate=1.0)
 
     pors = []
 
@@ -54,7 +54,8 @@ def moon_test():
     plot_sam(sam_region=sam_dict,
              raw_data=data_set,
              xyz_types=[('x',), ('y',)],
-             colour_nodes=None)
+             colour_nodes=None,
+             title='Moons')
 
     print('Finished')
 
@@ -86,10 +87,10 @@ def swiss_roll_test():
 
         training_graphs.append(t_sdr)
 
-    sam = SAMRegion(name='Swiss',
-                    similarity_threshold=0.85,
-                    community_threshold=0.9,
-                    temporal_learn_rate=1.0)
+    sam = SAM(name='Swiss',
+              similarity_threshold=0.85,
+              community_factor=0.9,
+              temporal_learn_rate=1.0)
 
     pors = []
 
@@ -103,7 +104,8 @@ def swiss_roll_test():
     plot_sam(sam_region=sam_dict,
              raw_data=data_set,
              xyz_types=[('x',), ('y',), ('z',)],
-             colour_nodes=None)
+             colour_nodes=None,
+             title='Swiss Roll')
 
     print('Finished')
 
@@ -155,10 +157,10 @@ def colours():
     sams = {}
     for client in training_graphs:
         pors = []
-        sam = SAMRegion(name=client,
-                        similarity_threshold=0.7,
-                        community_threshold=0.9,
-                        temporal_learn_rate=0.6)
+        sam = SAM(name=client,
+                  similarity_threshold=0.7,
+                  community_factor=0.9,
+                  temporal_learn_rate=0.6)
 
         sams[client] = {'sam': sam}
 
@@ -170,7 +172,7 @@ def colours():
 
         sams[client]['por'] = pors
 
-        plot_pors(pors)
+        plot_pors(pors, title=client)
 
         sam_dict = sam.to_dict(decode=True)
 
@@ -183,7 +185,8 @@ def colours():
                  raw_data=cycle_data,
                  xyz_types=[('r',), ('g',), ('b',)],
                  colour_nodes=None,
-                 temporal_key=0)
+                 temporal_key=0,
+                 title=client)
 
         print(f'finished {client}')
 
