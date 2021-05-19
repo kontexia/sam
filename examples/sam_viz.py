@@ -6,7 +6,7 @@ import plotly.graph_objects as go
 from src.sparse_distributed_representation import TEMPORAL_IDX, ENC_IDX
 
 
-def plot_sam(sam_region, raw_data, xyz_types, colour_nodes, temporal_key=0, title = None):
+def plot_sam(sam_region, raw_data, xyz_types, colour_nodes, temporal_key=0, title=None):
 
     node_x = []
     node_y = []

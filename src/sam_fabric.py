@@ -54,6 +54,8 @@ class SAMFabric(object):
         #
         for region_1 in pors:
 
+            region_1_neuron_key = pors[region_1]['activations'][0]['neuron_key']
+
             # create an sdr to associate region_1 with all other regions
             #
             region_association_sdr = SDR()
@@ -61,18 +63,19 @@ class SAMFabric(object):
                 if region_1 != region_2:
                     region_association_sdr.add_encoding(enc_key=(region_2,), encoding={pors[region_2]['activations'][0]['neuron_key']: 1.0})
 
-            # train region_1 associations
+            # train region_1 bmu neuron's associations
             #
-            self.sams[region_1].associate(neuron_key=pors[region_1]['activations'][0]['neuron_key'], sdr=region_association_sdr, learn_rate=self.association_params['association_learn_rate'])
+            self.sams[region_1].associate(neuron_key=region_1_neuron_key, sdr=region_association_sdr, learn_rate=self.association_params['association_learn_rate'])
 
-            neuron = self.sams[region_1].get_neuron(neuron_key=pors[region_1]['activations'][0]['neuron_key'])
+            neuron = self.sams[region_1].get_neuron(neuron_key=region_1_neuron_key)
 
             # collect up the association links
+            #
             for sdr_key in neuron['association_sdr']['encoding']:
 
-                # create an enc key between region_1 and the region in the sdr
+                # create an enc key between region_1 neuron and the region in the sdr
                 #
-                enc_key = (region_1, sdr_key[ENC_IDX][0])
+                enc_key = (region_1, region_1_neuron_key, sdr_key[ENC_IDX][0])
                 training_association_sdr.add_encoding(enc_key=enc_key, encoding=neuron['association_sdr']['encoding'][sdr_key])
 
         pors['association'] = self.sams['association'].learn_pattern(sdr=training_association_sdr)

@@ -144,7 +144,8 @@ class SDR(object):
                 # sdr_key only in self so decay bit values, deleting if below prune threshold
                 #
                 else:
-                    for bit in self.encoding[sdr_key]:
+                    bits_to_process = list(self.encoding[sdr_key].keys())
+                    for bit in bits_to_process:
                         bit_value = self.encoding[sdr_key][bit] - (self.encoding[sdr_key][bit] * learn_rate)
                         if bit_value > prune_threshold:
                             self.encoding[sdr_key][bit] = bit_value

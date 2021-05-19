@@ -49,29 +49,29 @@ class ValueEncoder(object):
 
             # string length
             #
-            enc = self.encoders['strlen'].encode(numeric=0)
+            enc = self.encoders['strlen'].encode(0)
 
             # string value
             #
-            enc.update(self.encoders['string'].encode(category=value))
+            enc.update(self.encoders['string'].encode(value))
 
         elif isinstance(value, int) or isinstance(value, float):
             # string length of 0
             #
-            enc = self.encoders['strlen'].encode(numeric=0)
+            enc = self.encoders['strlen'].encode(0)
 
             # the value
             #
-            enc.update(self.encoders['numeric'].encode(numeric=value))
+            enc.update(self.encoders['numeric'].encode(value))
 
         else:
             # string length
             #
-            enc = self.encoders['strlen'].encode(numeric=len(value))
+            enc = self.encoders['strlen'].encode(len(value))
 
             # string value
             #
-            enc.update(self.encoders['string'].encode(category=value))
+            enc.update(self.encoders['string'].encode(value))
         return enc
 
     def decode(self, enc) -> dict:
@@ -84,11 +84,11 @@ class ValueEncoder(object):
             enc = {bit: 1.0 for bit in enc}
 
         decoding = dict()
-        decoding['strlen'] = self.encoders['strlen'].decode(enc=enc)
+        decoding['strlen'] = self.encoders['strlen'].decode(enc)
         if decoding['strlen'] == 0:
-            decoding['value'] = self.encoders['numeric'].decode(enc=enc)
+            decoding['value'] = self.encoders['numeric'].decode(enc)
         else:
-            decoding['value'] = self.encoders['string'].decode(enc=enc)
+            decoding['value'] = self.encoders['string'].decode(enc)
         return decoding
 
 
