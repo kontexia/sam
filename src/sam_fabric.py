@@ -8,10 +8,23 @@ from typing import Union
 
 
 class SAMFabric(object):
+    """
+    SAMFabric defines a collection of sam regions which are trained together and related through association connections
+
+    """
+
     def __init__(self, association_params: dict):
 
+        # a map fo regions to sams
+        #
         self.sams = {}
+
+        # the parameters for the association sam
+        #
         self.association_params = association_params
+
+        # instantiate the association sam
+        #
         self.sams['association'] = SAM(name='association',
                                        similarity_threshold=association_params['similarity_threshold'],
                                        community_factor=association_params['community_factor'],
@@ -46,7 +59,7 @@ class SAMFabric(object):
             pors[region] = self.sams[region].learn_pattern(sdr=region_sdrs[region],
                                                            activation_enc_keys=region_sam_params[region]['activation_enc_keys'])
 
-        # create an sdr to learn the patterns of association connections
+        # an sdr to learn the patterns of association connections between the bmu neurons in each region
         #
         training_association_sdr = SDR()
 
