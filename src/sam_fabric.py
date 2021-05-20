@@ -39,7 +39,7 @@ class SAMFabric(object):
             dict_fabric[region] = self.sams[region].to_dict(decode=decode)
         return dict_fabric
 
-    def train(self, region_sdrs: dict, region_sam_params: dict):
+    def train_v1(self, region_sdrs: dict, region_sam_params: dict):
 
         pors = {}
 
@@ -95,7 +95,55 @@ class SAMFabric(object):
 
         return pors
 
-    def query(self, region_sdr: Union[list, dict], similarity_threshold: float = None, decode: bool = True) -> dict:
+    def train(self, region_sdrs: dict, region_sam_params: dict):
+
+        pors = {}
+
+        for region in region_sdrs:
+
+            # create a region sam if required
+            #
+            if region not in self.sams:
+                self.sams[region] = SAM(name=region,
+                                        similarity_threshold=region_sam_params[region]['similarity_threshold'],
+                                        community_factor=region_sam_params[region]['community_factor'],
+                                        temporal_learn_rate=region_sam_params[region]['temporal_learning_rate'],
+                                        prune_threshold=region_sam_params[region]['prune_threshold'])
+
+            # train this region
+            #
+            pors[region] = self.sams[region].learn_pattern(sdr=region_sdrs[region],
+                                                           activation_enc_keys=region_sam_params[region]['activation_enc_keys'])
+
+        # an sdr to learn the patterns of association connections between the bmu neurons in each region
+        #
+        training_association_sdr = SDR()
+
+        # associate winning neurons with each other
+        #
+        for region_1 in pors:
+
+            region_1_neuron_key = pors[region_1]['activations'][0]['neuron_key']
+
+            # create an sdr to associate region_1 with all other regions
+            #
+            region_association_sdr = SDR()
+            for region_2 in pors:
+                if region_1 != region_2:
+                    region_association_sdr.add_encoding(enc_key=(region_2,), encoding={pors[region_2]['activations'][0]['neuron_key']: 1.0})
+
+            # train region_1 bmu neuron's associations
+            #
+            self.sams[region_1].associate(neuron_key=region_1_neuron_key, sdr=region_association_sdr, learn_rate=self.association_params['association_learn_rate'])
+
+            region_1_activations = {pors[region_1]['activations'][n_idx]['neuron_key']: pors[region_1]['activations'][n_idx]['similarity']for n_idx in range(len(pors[region_1]['activations']))}
+            training_association_sdr.add_encoding(enc_key=(region_1,), encoding=region_1_activations)
+
+        pors['association'] = self.sams['association'].learn_pattern(sdr=training_association_sdr)
+
+        return pors
+
+    def query_v1(self, region_sdr: Union[list, dict], similarity_threshold: float = None, decode: bool = True) -> dict:
         pors = {}
         if isinstance(region_sdr, list):
 
@@ -156,4 +204,50 @@ class SAMFabric(object):
 
         return pors
 
+    def query(self, region_sdr: Union[list, dict], similarity_threshold: float = None, decode: bool = True) -> dict:
+        pors = {}
+        if isinstance(region_sdr, list):
+
+            # prepare the lists of sdrs for each region
+            #
+            region_sdrs = {}
+            for item in region_sdr:
+                for region in item:
+                    if region not in region_sdrs:
+                        region_sdrs[region] = [item[region]]
+                    else:
+                        region_sdrs[region].append(item[region])
+
+            for region in region_sdrs:
+                pors[region] = self.sams[region].query(sdr=region_sdrs[region],
+                                                       similarity_threshold=similarity_threshold,
+                                                       decode=decode)
+
+        else:
+            for region in region_sdr:
+                pors[region] = self.sams[region].query(sdr=region_sdr[region],
+                                                       similarity_threshold=similarity_threshold,
+                                                       decode=decode)
+
+        # build up the association sdr to query
+        #
+        association_query_sdr = SDR()
+        for region in pors:
+
+            region_activations = {pors[region]['activations'][n_idx]['neuron_key']: pors[region]['activations'][n_idx]['similarity'] for n_idx in range(len(pors[region]['activations']))}
+            association_query_sdr.add_encoding(enc_key=(region,), encoding=region_activations)
+
+        pors['association'] = self.sams['association'].query(sdr=association_query_sdr,
+                                                             similarity_threshold=similarity_threshold,
+                                                             decode=decode)
+
+        for enc_type in pors['association']['sdr']:
+            region = enc_type[ENC_IDX][0]
+            if region not in pors:
+                pors[region] = {'activations': [{'neuron_key': neuron_key, 'similarity': pors['association']['sdr'][enc_type][neuron_key]} for neuron_key in pors['association']['sdr'][enc_type]]}
+                pors[region]['activations'].sort(key=lambda x: x['similarity'], reverse=True)
+                pors[region]['bmu_key'] = pors[region]['activations'][0]['neuron_key']
+                pors[region]['sdr'] = self.sams[region].get_neuron(neuron_key=pors[region]['bmu_key'], decode=decode)['pattern_sdr']
+
+        return pors
 

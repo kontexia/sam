@@ -47,7 +47,7 @@ class NeuralGraph(object):
 
         return dict_neural_graph
 
-    def feed_forward_pattern(self,
+    def feed_forward_pattern_v1(self,
                              sdr: SDR,
                              activation_temporal_keys: set = None,
                              activation_enc_keys: set = None) -> list:
@@ -83,6 +83,55 @@ class NeuralGraph(object):
 
         if normalisation_factor == 0.0:
             normalisation_factor = 1.0
+
+        # normalise activation and place in list so we can sort
+        #
+        activated_neuron_list = [{'neuron_key': neuron_key,
+                                  'similarity': activated_neurons[neuron_key] / normalisation_factor,
+                                  'last_updated': self.neurons[neuron_key]['last_updated'],
+                                  'association_sdr': self.neurons[neuron_key]['association_sdr']}
+                                 for neuron_key in activated_neurons]
+
+        # sort by most similar with tie break bias towards most recently updated
+        #
+        activated_neuron_list.sort(key=lambda x: (x['similarity'], x['last_updated']), reverse=True)
+
+        return activated_neuron_list
+
+    def feed_forward_pattern(self,
+                             sdr: SDR,
+                             activation_temporal_keys: set = None,
+                             activation_enc_keys: set = None) -> list:
+
+        activated_neurons: dict = {}
+        activated_neuron_list: list
+
+        normalisation_factor: float
+        sdr_key: tuple
+        bit: cython.int
+        neuron_key: cython.int
+
+        for sdr_key in sdr.encoding:
+            if ((activation_temporal_keys is None or sdr_key[TEMPORAL_IDX] in activation_temporal_keys) and
+                    (activation_enc_keys is None or sdr_key[ENC_IDX] in activation_enc_keys)):
+
+                normalisation_factor = sum([sdr.encoding[sdr_key][bit] for bit in sdr.encoding[sdr_key]])
+                for bit in sdr.encoding[sdr_key]:
+
+                    # if this key and bit have been mapped then process
+                    #
+                    if sdr_key in self.pattern_to_neuron and bit in self.pattern_to_neuron[sdr_key]:
+                        for neuron_key in self.pattern_to_neuron[sdr_key][bit]:
+
+                            # activation depends on weight of connection between bit and neuron and magnitude of incoming Bit
+                            #
+                            if neuron_key not in activated_neurons:
+
+                                activated_neurons[neuron_key] = (sdr.encoding[sdr_key][bit] * self.neurons[neuron_key]['pattern_sdr'].encoding[sdr_key][bit] / normalisation_factor)
+                            else:
+                                activated_neurons[neuron_key] += (sdr.encoding[sdr_key][bit] * self.neurons[neuron_key]['pattern_sdr'].encoding[sdr_key][bit] / normalisation_factor)
+
+        normalisation_factor = float(len(sdr.encoding))
 
         # normalise activation and place in list so we can sort
         #
