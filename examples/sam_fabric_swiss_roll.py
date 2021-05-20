@@ -4,9 +4,8 @@
 
 from src.sparse_distributed_representation import SDR
 from src.numeric_encoder import NumericEncoder
-from src.category_encoder import CategoryEncoder
 from src.sam_fabric import SAMFabric
-from src.sparse_am_viz import plot_sam
+from examples.sam_viz import plot_sam
 
 
 from sklearn.datasets import make_swiss_roll
