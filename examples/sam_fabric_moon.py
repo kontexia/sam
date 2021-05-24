@@ -5,7 +5,7 @@
 from src.sparse_distributed_representation import SDR
 from src.numeric_encoder import NumericEncoder
 from src.category_encoder import CategoryEncoder
-from src.sam_fabric import SAMFabric
+from src.sam_fabric import SAM
 from examples.sam_viz import plot_pors, plot_sam
 
 
@@ -57,41 +57,47 @@ def moon_test():
 
         training_graphs.append({'xy': xy_sdr, 'label': label_sdr})
 
-    # the xy_sdr and label_sdr will be trained in different regions of the SAMFabric
+    # the xy_sdr and label_sdr will be trained in different regions of the SAM
     # but associated with each other because they occur at the same time
     # The sam_params is a default config for each region of the SAMFabric
     #
-    sam_params = {
+    regional_sam_params = {
         # an incoming training sdr must be at least 70% similar to a neuron to be mapped to it
         'similarity_threshold': 0.7,
 
         # neurons that are at least 63% (0.7 * 0.9) similar to the incoming sdr are considered to be in the same community
         'community_factor': 0.9,
 
-        # setting a temporal_learning_rate to 1.0 effectively turns off temporal learning as 100% is learned from the
-        # incoming sdr and 0% (1 - 1.0) is remembered from the previous SDRs
-        'temporal_learning_rate': 1.0,
-
         # the level below which a weight is considered zero and will be deleted
         'prune_threshold': 0.01,
 
         # a set of enc_type tuples to be used in learning - settin to None implies all enc_types will be learned
-        'activation_enc_keys': None,
+        'activation_enc_keys': None}
 
-        # the learning rate of associative connections between neurons of different regions
-        'association_learn_rate': 0.6}
+    association_sam_params = {
+        # an incoming training sdr must be at least 50% similar to a neuron to be mapped to it
+        'similarity_threshold': 0.5,
 
-    sam_fabric = SAMFabric(association_params=sam_params)
+        # neurons that are at least 45% (0.5 * 0.9) similar to the incoming sdr are considered to be in the same community
+        'community_factor': 0.9,
+
+        # the level below which a weight is considered zero and will be deleted
+        'prune_threshold': 0.01,
+
+        # a set of enc_type tuples to be used in learning - setting to None implies all enc_types will be learned
+        'activation_enc_keys': None}
 
     # we have the possibility of having different configurations per region
     #
-    region_params = {'xy': sam_params,
-                     'label': sam_params}
+    region_params = {'xy': regional_sam_params,
+                     'label': regional_sam_params}
+
+    sam_fabric = SAM(spatial_params=region_params, association_params=association_sam_params)
 
     pors = []
 
     for t_idx in range(len(training_graphs)):
-        por = sam_fabric.train(region_sdrs=training_graphs[t_idx], region_sam_params=region_params)
+        por = sam_fabric.train(sdrs=training_graphs[t_idx])
         pors.append(por)
 
     sam_dict = sam_fabric.to_dict(decode=True)

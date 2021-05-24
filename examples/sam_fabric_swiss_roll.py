@@ -4,7 +4,7 @@
 
 from src.sparse_distributed_representation import SDR
 from src.numeric_encoder import NumericEncoder
-from src.sam_fabric import SAMFabric
+from src.sam_fabric import SAM
 from examples.sam_viz import plot_sam
 
 
@@ -18,7 +18,6 @@ def swiss_roll_test():
     data_set, labels = make_swiss_roll(n_samples=200,
                                        noise=0.01,
                                        random_state=0)
-
 
     # create a numeric encoder
     #
@@ -51,34 +50,28 @@ def swiss_roll_test():
 
     # configuration for the sam fabric
     #
-    sam_params = {
-        # an incoming training sdr must be at least 70% similar to a neuron to be mapped to it
-        'similarity_threshold': 0.85,
+    sam_params = {'xyz':
+        {
+            # an incoming training sdr must be at least 85% similar to a neuron to be mapped to it
+            'similarity_threshold': 0.85,
 
-        # neurons that are at least 76.5% (0.85 * 0.9) similar to the incoming sdr are considered to be in the same community
-        'community_factor': 0.9,
+            # neurons that are at least 76.5% (0.85 * 0.9) similar to the incoming sdr are considered to be in the same community
+            'community_factor': 0.9,
 
-        # setting a temporal_learning_rate to 1.0 effectively turns off temporal learning as 100% is learned from the
-        # incoming sdr and 0% (1 - 1.0) is remembered from the previous SDRs
-        'temporal_learning_rate': 1.0,
+            # the level below which a weight is considered zero and will be deleted
+            'prune_threshold': 0.01,
 
-        # the level below which a weight is considered zero and will be deleted
-        'prune_threshold': 0.01,
+            # a set of enc_type tuples to be used in learning - settin to None implies all enc_types will be learned
+            'activation_enc_keys': None
+        }
+    }
 
-        # a set of enc_type tuples to be used in learning - settin to None implies all enc_types will be learned
-        'activation_enc_keys': None,
-
-        # the learning rate of associative connections between neurons of different regions
-        'association_learn_rate': 0.6}
-
-    sam_fabric = SAMFabric(association_params=sam_params)
-
-    region_params = {'xyz': sam_params}
+    sam_fabric = SAM(spatial_params=sam_params)
 
     pors = []
 
     for t_idx in range(len(training_graphs)):
-        por = sam_fabric.train(region_sdrs=training_graphs[t_idx], region_sam_params=region_params)
+        por = sam_fabric.train(sdrs=training_graphs[t_idx])
         pors.append(por)
 
     sam_dict = sam_fabric.to_dict(decode=True)

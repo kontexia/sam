@@ -5,7 +5,7 @@
 from src.sparse_distributed_representation import SDR
 from src.numeric_encoder import NumericEncoder
 from src.category_encoder import CategoryEncoder
-from src.sam_fabric import SAMFabric
+from src.sam_fabric import SAM
 from examples.sam_viz import plot_pors, plot_sam
 import json
 
@@ -62,43 +62,49 @@ def rainbow():
 
         training_graphs[record['client']].append((record['trade_id'], {'rgb': rgb_sdr, 'label': label_sdr}, r_data))
 
-    sam_params = {
+    # the xy_sdr and label_sdr will be trained in different regions of the SAM
+    # but associated with each other because they occur at the same time
+    # The sam_params is a default config for each region of the SAMFabric
+    #
+    regional_sam_params = {
         # an incoming training sdr must be at least 70% similar to a neuron to be mapped to it
         'similarity_threshold': 0.7,
 
         # neurons that are at least 63% (0.7 * 0.9) similar to the incoming sdr are considered to be in the same community
         'community_factor': 0.9,
 
-        # setting a temporal_learning_rate to 1.0 effectively turns off temporal learning as 100% is learned from the
-        # incoming sdr and 0% (1 - 1.0) is remembered from the previous SDRs
-        'temporal_learning_rate': 1.0,
-
         # the level below which a weight is considered zero and will be deleted
         'prune_threshold': 0.01,
 
         # a set of enc_type tuples to be used in learning - settin to None implies all enc_types will be learned
-        'activation_enc_keys': None,
+        'activation_enc_keys': None}
 
-        # the learning rate of associative connections between neurons of different regions
-        'association_learn_rate': 0.6}
+    association_sam_params = {
+        'similarity_threshold': 0.5,
+        'community_factor': 0.9,
+        'prune_threshold': 0.01}
+
+    temporal_sam_params = {
+        'similarity_threshold': 0.25,
+        'community_factor': 0.9,
+        'prune_threshold': 0.01}
 
     # we have the possibility of having different configurations per region
     #
-    region_params = {'rgb': sam_params,
-                     'label': sam_params}
-
+    region_params = {'rgb': regional_sam_params,
+                     'label': regional_sam_params}
 
     n_cycles = 1
     sams = {}
     for client in training_graphs:
         pors = []
-        sam_fabric = SAMFabric(association_params=sam_params)
+        sam_fabric = SAM(spatial_params=region_params, association_params=association_sam_params, temporal_params=temporal_sam_params)
 
         sams[client] = {'sam': sam_fabric, 'por': []}
 
         for cycle in range(n_cycles):
             for t_idx in range(len(training_graphs[client])):
-                por = sam_fabric.train(region_sdrs=training_graphs[client][t_idx][1], region_sam_params=region_params)
+                por = sam_fabric.train(sdrs=training_graphs[client][t_idx][1])
                 pors.append(por)
 
         sams[client]['por'] = pors
@@ -107,9 +113,13 @@ def rainbow():
 
         plot_pors(rgb_pors, title=client)
 
-        assoc_pors = [por['association'] for por in pors]
+        assoc_pors = [por['_association'] for por in pors]
 
         plot_pors(assoc_pors)
+
+        temporal_pors = [por['_temporal'] for por in pors]
+
+        plot_pors(temporal_pors)
 
         sam_dict = sam_fabric.to_dict(decode=True)
 
@@ -127,7 +137,7 @@ def rainbow():
 
         # query the sam using only the label to find the associated rainbow trades
         #
-        query_pors = sam_fabric.query(region_sdr={'label': training_graphs[client][10][1]['label']})
+        query_pors = sam_fabric.query(sdrs={'label': training_graphs[client][10][1]['label']})
 
         print(query_pors)
 

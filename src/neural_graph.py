@@ -47,57 +47,6 @@ class NeuralGraph(object):
 
         return dict_neural_graph
 
-    def feed_forward_pattern_v1(self,
-                             sdr: SDR,
-                             activation_temporal_keys: set = None,
-                             activation_enc_keys: set = None) -> list:
-
-        activated_neurons: dict = {}
-        activated_neuron_list: list
-
-        normalisation_factor: float = 0.0
-        sdr_key: tuple
-        bit: cython.int
-        neuron_key: cython.int
-
-        for sdr_key in sdr.encoding:
-            if ((activation_temporal_keys is None or sdr_key[TEMPORAL_IDX] in activation_temporal_keys) and
-                    (activation_enc_keys is None or sdr_key[ENC_IDX] in activation_enc_keys)):
-
-                for bit in sdr.encoding[sdr_key]:
-
-                    normalisation_factor += sdr.encoding[sdr_key][bit]
-
-                    # if this key and bit have been mapped then process
-                    #
-                    if sdr_key in self.pattern_to_neuron and bit in self.pattern_to_neuron[sdr_key]:
-                        for neuron_key in self.pattern_to_neuron[sdr_key][bit]:
-
-                            # activation depends on weight of connection between bit and neuron and magnitude of incoming Bit
-                            #
-                            if neuron_key not in activated_neurons:
-
-                                activated_neurons[neuron_key] = (sdr.encoding[sdr_key][bit] * self.neurons[neuron_key]['pattern_sdr'].encoding[sdr_key][bit])
-                            else:
-                                activated_neurons[neuron_key] += (sdr.encoding[sdr_key][bit] * self.neurons[neuron_key]['pattern_sdr'].encoding[sdr_key][bit])
-
-        if normalisation_factor == 0.0:
-            normalisation_factor = 1.0
-
-        # normalise activation and place in list so we can sort
-        #
-        activated_neuron_list = [{'neuron_key': neuron_key,
-                                  'similarity': activated_neurons[neuron_key] / normalisation_factor,
-                                  'last_updated': self.neurons[neuron_key]['last_updated'],
-                                  'association_sdr': self.neurons[neuron_key]['association_sdr']}
-                                 for neuron_key in activated_neurons]
-
-        # sort by most similar with tie break bias towards most recently updated
-        #
-        activated_neuron_list.sort(key=lambda x: (x['similarity'], x['last_updated']), reverse=True)
-
-        return activated_neuron_list
-
     def feed_forward_pattern(self,
                              sdr: SDR,
                              activation_temporal_keys: set = None,
@@ -115,7 +64,10 @@ class NeuralGraph(object):
             if ((activation_temporal_keys is None or sdr_key[TEMPORAL_IDX] in activation_temporal_keys) and
                     (activation_enc_keys is None or sdr_key[ENC_IDX] in activation_enc_keys)):
 
+                # need to normalise by the total weight of all bits in enc_type
+                #
                 normalisation_factor = sum([sdr.encoding[sdr_key][bit] for bit in sdr.encoding[sdr_key]])
+
                 for bit in sdr.encoding[sdr_key]:
 
                     # if this key and bit have been mapped then process
@@ -131,14 +83,16 @@ class NeuralGraph(object):
                             else:
                                 activated_neurons[neuron_key] += (sdr.encoding[sdr_key][bit] * self.neurons[neuron_key]['pattern_sdr'].encoding[sdr_key][bit] / normalisation_factor)
 
+        # now normalise across the number of enc_types to give a similarity between 0.0 and 1.0
+        #
         normalisation_factor = float(len(sdr.encoding))
 
         # normalise activation and place in list so we can sort
         #
         activated_neuron_list = [{'neuron_key': neuron_key,
-                                  'similarity': activated_neurons[neuron_key] / normalisation_factor,
+                                  'similarity': max(min(activated_neurons[neuron_key] / normalisation_factor, 1.0), 0.0),
                                   'last_updated': self.neurons[neuron_key]['last_updated'],
-                                  'association_sdr': self.neurons[neuron_key]['association_sdr']}
+                                  'sdr': self.neurons[neuron_key]['pattern_sdr']}
                                  for neuron_key in activated_neurons]
 
         # sort by most similar with tie break bias towards most recently updated
@@ -181,7 +135,6 @@ class NeuralGraph(object):
         # add the neuron to bit mapping
         #
         self.neurons[neuron_key] = {'pattern_sdr': SDR(sdr),
-                                    'association_sdr': SDR(),
                                     'n_bmu': 1,
                                     'learn_rate': 1.0,
                                     'sum_similarity': 1.0,
@@ -220,7 +173,7 @@ class NeuralGraph(object):
             self.neurons[neuron_key]['sum_similarity'] += activated_neuron_list[idx]['similarity']
             self.neurons[neuron_key]['avg_similarity'] = self.neurons[neuron_key]['sum_similarity'] / self.neurons[neuron_key]['n_bmu']
 
-            # update the neurons's sparse generalised memory with the incoming data
+            # update the neuron's sparse generalised memory with the incoming data
             # note always learn whole of temporal memory but not always all enc_keys
             #
             self.neurons[neuron_key]['pattern_sdr'].learn(sdr=sdr, learn_rate=self.neurons[neuron_key]['learn_rate'], learn_enc_keys=learn_enc_keys, prune_threshold=prune_threshold)
@@ -228,10 +181,6 @@ class NeuralGraph(object):
             # finally make sure the pattern bits are connected to this neuron
             #
             self.update_pattern_to_neuron(neuron_key)
-
-    def learn_association(self, neuron_key: cython.int, sdr: SDR, learn_rate: float = 0.5, learn_enc_keys: set = None, prune_threshold: float = 0.01):
-        if neuron_key in self.neurons:
-            self.neurons[neuron_key]['association_sdr'].learn(sdr=sdr, learn_rate=learn_rate, learn_enc_keys=learn_enc_keys, prune_threshold=prune_threshold)
 
     def update_communities(self, activated_neurons: list):
 

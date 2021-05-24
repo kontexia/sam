@@ -2,252 +2,290 @@
 # -*- encoding: utf-8 -*-
 
 
-from src.sparse_associative_memory import SAM
-from src.sparse_distributed_representation import SDR, ENC_IDX
+from src.spatial_pooler import SpatialPooler
+from src.sparse_distributed_representation import SDR, ENC_IDX, TEMPORAL_IDX
 from typing import Union
 
 
-class SAMFabric(object):
+class SAM(object):
     """
     SAMFabric defines a collection of sam regions which are trained together and related through association connections
 
     """
 
-    def __init__(self, association_params: dict):
+    def __init__(self, spatial_params: dict, association_params: dict = None, temporal_params: dict = None):
 
-        # a map fo regions to sams
+        # a map of poolers
         #
-        self.sams = {}
+        self.poolers = {}
 
-        # the parameters for the association sam
+        # the parameters for the spatial poolers
+        #
+        self.spatial_params = spatial_params
+
+        for region in self.spatial_params:
+            if 'similarity_threshold' not in self.spatial_params[region]:
+                self.spatial_params[region]['similarity_threshold'] = None
+            if 'community_factor' not in self.spatial_params[region]:
+                self.spatial_params[region]['community_factor'] = None
+            if 'prune_threshold' not in self.spatial_params[region]:
+                self.spatial_params[region]['prune_threshold'] = None
+            if 'activation_enc_keys' not in self.spatial_params[region]:
+                self.spatial_params[region]['activation_enc_keys'] = None
+
+        # the parameters for the association pooler
         #
         self.association_params = association_params
 
-        # instantiate the association sam
+        # the parameters for the temporal pooler
         #
-        self.sams['association'] = SAM(name='association',
-                                       similarity_threshold=association_params['similarity_threshold'],
-                                       community_factor=association_params['community_factor'],
-                                       temporal_learn_rate=association_params['temporal_learning_rate'],
-                                       prune_threshold=association_params['prune_threshold'])
+        self.temporal_params = temporal_params
+
+        # instantiate the association pooler if required
+        #
+        if self.association_params is not None:
+            if 'similarity_threshold' not in self.association_params:
+                self.association_params['similarity_threshold'] = None
+            if 'community_factor' not in self.association_params:
+                self.association_params['community_factor'] = None
+            if 'prune_threshold' not in self.association_params:
+                self.association_params['prune_threshold'] = None
+
+            self.poolers['_association'] = SpatialPooler(name='_association',
+                                                         similarity_threshold=self.association_params['similarity_threshold'],
+                                                         community_factor=self.association_params['community_factor'],
+                                                         prune_threshold=self.association_params['prune_threshold'])
+
+        # instantiate the temporal pooler if required
+        #
+        if self.temporal_params is not None:
+            if 'similarity_threshold' not in self.temporal_params:
+                self.temporal_params['similarity_threshold'] = None
+            if 'community_factor' not in self.temporal_params:
+                self.temporal_params['community_factor'] = None
+            if 'prune_threshold' not in self.temporal_params:
+                self.temporal_params['prune_threshold'] = None
+            if 'lstm_learn_rate' not in self.temporal_params:
+                self.temporal_params['lstm_learn_rate'] = 0.6
+
+            self.poolers['_temporal'] = SpatialPooler(name='_temporal',
+                                                      similarity_threshold=self.temporal_params['similarity_threshold'],
+                                                      community_factor=self.temporal_params['community_factor'],
+                                                      prune_threshold=self.temporal_params['prune_threshold'])
+            self.lstm_sdr = SDR()
+        else:
+            self.lstm_sdr = None
 
     def to_dict(self, decode: bool = True) -> dict:
 
-        dict_fabric = {'association_params': {param: self.association_params[param]
-                                              for param in self.association_params}}
-        for region in self.sams:
-            dict_fabric[region] = self.sams[region].to_dict(decode=decode)
+        dict_fabric = {'association_params': self.association_params,
+                       'temporal_params': self.temporal_params,
+                       'lstm_sdr': None}
+
+        if self.lstm_sdr is not None:
+            dict_fabric['lstm_sdr'] = self.lstm_sdr.to_dict(decode=decode)
+
+        for pooler in self.poolers:
+            dict_fabric[pooler] = self.poolers[pooler].to_dict(decode=decode)
+
         return dict_fabric
 
-    def train_v1(self, region_sdrs: dict, region_sam_params: dict):
+    def train(self, sdrs: dict):
 
         pors = {}
 
-        for region in region_sdrs:
-
-            # create a region sam if required
-            #
-            if region not in self.sams:
-                self.sams[region] = SAM(name=region,
-                                        similarity_threshold=region_sam_params[region]['similarity_threshold'],
-                                        community_factor=region_sam_params[region]['community_factor'],
-                                        temporal_learn_rate=region_sam_params[region]['temporal_learning_rate'],
-                                        prune_threshold=region_sam_params[region]['prune_threshold'])
-
-            # train this region
-            #
-            pors[region] = self.sams[region].learn_pattern(sdr=region_sdrs[region],
-                                                           activation_enc_keys=region_sam_params[region]['activation_enc_keys'])
-
-        # an sdr to learn the patterns of association connections between the bmu neurons in each region
+        # assume the key in sdrs identifies a region in the fabric
         #
-        training_association_sdr = SDR()
+        for region in sdrs:
 
-        # associate winning neurons with each other
-        #
-        for region_1 in pors:
-
-            region_1_neuron_key = pors[region_1]['activations'][0]['neuron_key']
-
-            # create an sdr to associate region_1 with all other regions
-            #
-            region_association_sdr = SDR()
-            for region_2 in pors:
-                if region_1 != region_2:
-                    region_association_sdr.add_encoding(enc_key=(region_2,), encoding={pors[region_2]['activations'][0]['neuron_key']: 1.0})
-
-            # train region_1 bmu neuron's associations
-            #
-            self.sams[region_1].associate(neuron_key=region_1_neuron_key, sdr=region_association_sdr, learn_rate=self.association_params['association_learn_rate'])
-
-            neuron = self.sams[region_1].get_neuron(neuron_key=region_1_neuron_key)
-
-            # collect up the association links
-            #
-            for sdr_key in neuron['association_sdr']['encoding']:
-
-                # create an enc key between region_1 neuron and the region in the sdr
-                #
-                enc_key = (region_1, region_1_neuron_key, sdr_key[ENC_IDX][0])
-                training_association_sdr.add_encoding(enc_key=enc_key, encoding=neuron['association_sdr']['encoding'][sdr_key])
-
-        pors['association'] = self.sams['association'].learn_pattern(sdr=training_association_sdr)
-
-        return pors
-
-    def train(self, region_sdrs: dict, region_sam_params: dict):
-
-        pors = {}
-
-        for region in region_sdrs:
-
-            # create a region sam if required
-            #
-            if region not in self.sams:
-                self.sams[region] = SAM(name=region,
-                                        similarity_threshold=region_sam_params[region]['similarity_threshold'],
-                                        community_factor=region_sam_params[region]['community_factor'],
-                                        temporal_learn_rate=region_sam_params[region]['temporal_learning_rate'],
-                                        prune_threshold=region_sam_params[region]['prune_threshold'])
-
-            # train this region
-            #
-            pors[region] = self.sams[region].learn_pattern(sdr=region_sdrs[region],
-                                                           activation_enc_keys=region_sam_params[region]['activation_enc_keys'])
-
-        # an sdr to learn the patterns of association connections between the bmu neurons in each region
-        #
-        training_association_sdr = SDR()
-
-        # associate winning neurons with each other
-        #
-        for region_1 in pors:
-
-            region_1_neuron_key = pors[region_1]['activations'][0]['neuron_key']
-
-            # create an sdr to associate region_1 with all other regions
-            #
-            region_association_sdr = SDR()
-            for region_2 in pors:
-                if region_1 != region_2:
-                    region_association_sdr.add_encoding(enc_key=(region_2,), encoding={pors[region_2]['activations'][0]['neuron_key']: 1.0})
-
-            # train region_1 bmu neuron's associations
-            #
-            self.sams[region_1].associate(neuron_key=region_1_neuron_key, sdr=region_association_sdr, learn_rate=self.association_params['association_learn_rate'])
-
-            region_1_activations = {pors[region_1]['activations'][n_idx]['neuron_key']: pors[region_1]['activations'][n_idx]['similarity']for n_idx in range(len(pors[region_1]['activations']))}
-            training_association_sdr.add_encoding(enc_key=(region_1,), encoding=region_1_activations)
-
-        pors['association'] = self.sams['association'].learn_pattern(sdr=training_association_sdr)
-
-        return pors
-
-    def query_v1(self, region_sdr: Union[list, dict], similarity_threshold: float = None, decode: bool = True) -> dict:
-        pors = {}
-        if isinstance(region_sdr, list):
-
-            # prepare the lists of sdrs for each region
-            #
-            region_sdrs = {}
-            for item in region_sdr:
-                for region in item:
-                    if region not in region_sdrs:
-                        region_sdrs[region] = [item[region]]
-                    else:
-                        region_sdrs[region].append(item[region])
-
-            for region in region_sdrs:
-                pors[region] = self.sams[region].query(sdr=region_sdrs[region],
-                                                       similarity_threshold=similarity_threshold,
-                                                       decode=decode)
-
-        else:
-            for region in region_sdr:
-                pors[region] = self.sams[region].query(sdr=region_sdr[region],
-                                                       similarity_threshold=similarity_threshold,
-                                                       decode=decode)
-
-        activated_regions = {}
-
-        for region in pors:
-            if region not in activated_regions:
-                activated_regions[region] = {}
-
-            if pors[region]['bmu_key'] not in activated_regions[region]:
-                activated_regions[region][pors[region]['bmu_key']] = pors[region]['activations'][0]['similarity']
+            if region not in self.spatial_params:
+                config = 'default'
             else:
-                activated_regions[region][pors[region]['bmu_key']] += pors[region]['activations'][0]['similarity']
+                config = region
 
-            bmu_neuron = self.sams[region].get_neuron(neuron_key=pors[region]['bmu_key'])
+            # create a spatial pooler for region if required
+            #
+            if region not in self.poolers:
+                self.poolers[region] = SpatialPooler(name=region,
+                                                     similarity_threshold=self.spatial_params[config]['similarity_threshold'],
+                                                     community_factor=self.spatial_params[config]['community_factor'],
+                                                     prune_threshold=self.spatial_params[config]['prune_threshold'])
 
-            for sdr_key in bmu_neuron['association_sdr']['encoding']:
-                if sdr_key[ENC_IDX][0] not in activated_regions:
-                    activated_regions[sdr_key[ENC_IDX][0]] = {}
-                for neuron_key in bmu_neuron['association_sdr']['encoding'][sdr_key]:
-                    if neuron_key not in activated_regions[sdr_key[ENC_IDX][0]]:
-                        activated_regions[sdr_key[ENC_IDX][0]][neuron_key] = bmu_neuron['association_sdr']['encoding'][sdr_key][neuron_key]
-                    else:
-                        activated_regions[sdr_key[ENC_IDX][0]][neuron_key] += bmu_neuron['association_sdr']['encoding'][sdr_key][neuron_key]
+            # train this region
+            #
+            pors[region] = self.poolers[region].learn_pattern(sdr=sdrs[region],
+                                                              activation_enc_keys=self.spatial_params[config]['activation_enc_keys'])
 
-        for region in activated_regions:
-            if region not in pors:
-                associated_region = [{'neuron_key': neuron_key,
-                                      'activation': activated_regions[region][neuron_key],
-                                      'sdr': self.sams[region].get_neuron(neuron_key=neuron_key, decode=decode)['pattern_sdr']}
-                                     for neuron_key in activated_regions[region]]
-                if len(associated_region) > 0:
-                    associated_region.sort(key=lambda x: x['activation'], reverse=True)
-                    pors[region] = {'bmu_key': associated_region[0]['neuron_key'],
-                                    'sdr': associated_region[0]['sdr'],
-                                    'activations': associated_region}
+        # train the association pooler if required
+        #
+        if '_association' in self.poolers:
+
+            # create an sdr that represents the activated neurons in each regional spatial pooler
+            #
+            spatial_neurons_sdr = SDR()
+            for region in pors:
+
+                # get the neurons activated in this regional spatial pooler
+                #
+                neuron_activations = {pors[region]['activations'][n_idx]['neuron_key']: pors[region]['activations'][n_idx]['similarity']
+                                      for n_idx in range(len(pors[region]['activations']))}
+
+                # add this region's encoding
+                #
+                spatial_neurons_sdr.add_encoding(enc_key=(region,), encoding=neuron_activations)
+
+            # learn the association between each region
+            #
+            pors['_association'] = self.poolers['_association'].learn_pattern(sdr=spatial_neurons_sdr)
+
+        # train the temporal pooler if required
+        # note to train temporal pooler also need an association pooler to have been trained
+        #
+        if '_temporal' in self.poolers and '_association' in self.poolers:
+
+            # create an sdr that represents the neurons activated in the association pooler
+            #
+            association_sdr = SDR()
+
+            # get the association's activated neurons
+            #
+            neuron_activations = {pors['_association']['activations'][n_idx]['neuron_key']: pors['_association']['activations'][n_idx]['similarity']
+                                  for n_idx in range(len(pors['_association']['activations']))}
+
+            # add to the encoding - note using temporal key = 0 to represent the current association value
+            #
+            association_sdr.add_encoding(enc_key=('_association',), encoding=neuron_activations, temporal_key=0)
+
+            # add in the context from the long short term memory
+            #
+            association_sdr.copy_from(sdr=self.lstm_sdr, from_temporal_key=0, to_temporal_key=1)
+
+            # learn the active neurons from the association of activated neurons
+            #
+            pors['_temporal'] = self.poolers['_temporal'].learn_pattern(sdr=association_sdr)
+
+            # update the long short term memory that will be the context for the next training session
+            #
+            lstm_sdr = SDR()
+            lstm_sdr.add_encoding(enc_key=('_association',), encoding=neuron_activations)
+            self.lstm_sdr.learn(sdr=lstm_sdr, learn_rate=self.temporal_params['lstm_learn_rate'])
 
         return pors
 
-    def query(self, region_sdr: Union[list, dict], similarity_threshold: float = None, decode: bool = True) -> dict:
+    def query(self, sdrs: Union[list, dict], similarity_threshold: float = None, decode: bool = True) -> dict:
         pors = {}
-        if isinstance(region_sdr, list):
 
-            # prepare the lists of sdrs for each region
-            #
-            region_sdrs = {}
-            for item in region_sdr:
-                for region in item:
-                    if region not in region_sdrs:
-                        region_sdrs[region] = [item[region]]
-                    else:
-                        region_sdrs[region].append(item[region])
-
-            for region in region_sdrs:
-                pors[region] = self.sams[region].query(sdr=region_sdrs[region],
-                                                       similarity_threshold=similarity_threshold,
-                                                       decode=decode)
-
-        else:
-            for region in region_sdr:
-                pors[region] = self.sams[region].query(sdr=region_sdr[region],
-                                                       similarity_threshold=similarity_threshold,
-                                                       decode=decode)
-
-        # build up the association sdr to query
+        # if we are given a list assume we will need to query the regional spatial poolers, then the temporal pooler and then the temporal pooler
         #
-        association_query_sdr = SDR()
-        for region in pors:
+        if isinstance(sdrs, list) and '_association' in self.poolers and '_temporal' in self.poolers:
 
-            region_activations = {pors[region]['activations'][n_idx]['neuron_key']: pors[region]['activations'][n_idx]['similarity'] for n_idx in range(len(pors[region]['activations']))}
-            association_query_sdr.add_encoding(enc_key=(region,), encoding=region_activations)
+            lstm_sdr = SDR()
+            association_sdr = SDR()
+            for item in sdrs:
 
-        pors['association'] = self.sams['association'].query(sdr=association_query_sdr,
-                                                             similarity_threshold=similarity_threshold,
-                                                             decode=decode)
+                # build up the association sdr to query from the activated spatial neurons for each region
+                #
+                spatial_sdr = SDR()
 
-        for enc_type in pors['association']['sdr']:
-            region = enc_type[ENC_IDX][0]
-            if region not in pors:
-                pors[region] = {'activations': [{'neuron_key': neuron_key, 'similarity': pors['association']['sdr'][enc_type][neuron_key]} for neuron_key in pors['association']['sdr'][enc_type]]}
-                pors[region]['activations'].sort(key=lambda x: x['similarity'], reverse=True)
-                pors[region]['bmu_key'] = pors[region]['activations'][0]['neuron_key']
-                pors[region]['sdr'] = self.sams[region].get_neuron(neuron_key=pors[region]['bmu_key'], decode=decode)['pattern_sdr']
+                for region in item:
+                    pors[region] = self.poolers[region].query(sdr=item[region],
+                                                              similarity_threshold=similarity_threshold,
+                                                              decode=decode)
+
+                    spatial_neuron_activations = {pors[region]['activations'][n_idx]['neuron_key']: pors[region]['activations'][n_idx]['similarity']
+                                                  for n_idx in range(len(pors[region]['activations']))}
+                    spatial_sdr.add_encoding(enc_key=(region,), encoding=spatial_neuron_activations)
+
+                # query the association pooler
+                #
+                pors['_association'] = self.poolers['_association'].query(sdr=spatial_sdr,
+                                                                          similarity_threshold=similarity_threshold,
+                                                                          decode=decode)
+
+                # build up the lstm SDR with the association neuron activations
+                #
+                association_neuron_activations = {pors['_association']['activations'][n_idx]['neuron_key']: pors['_association']['activations'][n_idx]['similarity']
+                                                  for n_idx in range(len(pors['_association']['activations']))}
+
+                # note the association temporal key of 1 ensures this is the context
+                #
+                association_sdr.add_encoding(enc_key=('_association',), encoding=association_neuron_activations, temporal_key=1)
+
+                lstm_sdr.learn(sdr=association_sdr, learn_rate=self.temporal_params['lstm_learn_rate'])
+
+            # query the temporal pooler
+            #
+            pors['_temporal'] = self.poolers['_temporal'].query(sdr=lstm_sdr,
+                                                                similarity_threshold=similarity_threshold,
+                                                                decode=decode)
+
+            # now get the association neurons for each region from the bmu temporal pooler neuron
+            # and retrieve any missing region spatial neurons
+            #
+            for sdr_key in pors['_temporal']['sdr']:
+
+                if sdr_key[TEMPORAL_IDX] == 0:
+
+                    # region is the first item in the sdr_ley enc_type tuple
+                    #
+                    region = sdr_key[ENC_IDX][0]
+
+                    # if this region is not already in pors then fill in the gaps
+                    #
+                    if region not in pors:
+                        pors[region] = {'activations': [{'neuron_key': neuron_key, 'similarity': pors['_temporal']['sdr'][sdr_key][neuron_key]}
+                                                        for neuron_key in pors['_temporal']['sdr'][sdr_key]]}
+
+                        pors[region]['activations'].sort(key=lambda x: x['similarity'], reverse=True)
+                        pors[region]['bmu_key'] = pors[region]['activations'][0]['neuron_key']
+                        pors[region]['sdr'] = self.poolers[region].get_neuron(neuron_key=pors[region]['bmu_key'], decode=decode)['pattern_sdr']
+
+        # else not provided a dict with regional sdrs to query
+        #
+        elif isinstance(sdrs, dict):
+
+            # query each regional spatial pooler
+            #
+            for region in sdrs:
+                pors[region] = self.poolers[region].query(sdr=sdrs[region],
+                                                          similarity_threshold=similarity_threshold,
+                                                          decode=decode)
+            # if we trained an association pooler we will also be able to retrieve the other associated regional spatial pooler neurons
+            #
+            if '_association' in self.poolers:
+                # build up the association sdr to query
+                #
+                spatial_sdr = SDR()
+                for region in pors:
+
+                    neuron_activations = {pors[region]['activations'][n_idx]['neuron_key']: pors[region]['activations'][n_idx]['similarity']
+                                          for n_idx in range(len(pors[region]['activations']))}
+                    spatial_sdr.add_encoding(enc_key=(region,), encoding=neuron_activations)
+
+                # query the association pooler
+                #
+                pors['_association'] = self.poolers['_association'].query(sdr=spatial_sdr,
+                                                                          similarity_threshold=similarity_threshold,
+                                                                          decode=decode)
+
+                # now get the spatial neurons for each region from the bmu association pooler neuron
+                # and retrieve any missing region spatial neurons
+                #
+                for sdr_key in pors['_association']['sdr']:
+
+                    # region is the first item in the sdr_ley enc_type tuple
+                    #
+                    region = sdr_key[ENC_IDX][0]
+
+                    # if this region is not already in pors then fill in the gaps
+                    #
+                    if region not in pors:
+                        pors[region] = {'activations': [{'neuron_key': neuron_key, 'similarity': pors['_association']['sdr'][sdr_key][neuron_key]}
+                                                        for neuron_key in pors['_association']['sdr'][sdr_key]]}
+
+                        pors[region]['activations'].sort(key=lambda x: x['similarity'], reverse=True)
+                        pors[region]['bmu_key'] = pors[region]['activations'][0]['neuron_key']
+                        pors[region]['sdr'] = self.poolers[region].get_neuron(neuron_key=pors[region]['bmu_key'], decode=decode)['pattern_sdr']
 
         return pors
 
