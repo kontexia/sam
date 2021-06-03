@@ -1176,10 +1176,6 @@ static CYTHON_INLINE PyObject* __Pyx_dict_iterator(PyObject* dict, int is_dict, 
 static CYTHON_INLINE int __Pyx_dict_iter_next(PyObject* dict_or_iter, Py_ssize_t orig_length, Py_ssize_t* ppos,
                                               PyObject** pkey, PyObject** pvalue, PyObject** pitem, int is_dict);
 
-/* UnaryNegOverflows.proto */
-#define UNARY_NEG_WOULD_OVERFLOW(x)\
-        (((x) < 0) & ((unsigned long)(x) == 0-(unsigned long)(x)))
-
 /* FetchCommonType.proto */
 static PyTypeObject* __Pyx_FetchCommonType(PyTypeObject* type);
 
@@ -1457,6 +1453,7 @@ static const char __pyx_k_test[] = "__test__";
 static const char __pyx_k_Union[] = "Union";
 static const char __pyx_k_enc_1[] = "enc_1";
 static const char __pyx_k_enc_2[] = "enc_2";
+static const char __pyx_k_float[] = "float";
 static const char __pyx_k_print[] = "print";
 static const char __pyx_k_range[] = "range";
 static const char __pyx_k_state[] = "state";
@@ -1506,6 +1503,7 @@ static const char __pyx_k_pyx_result[] = "__pyx_result";
 static const char __pyx_k_semantic_1[] = "semantic_1";
 static const char __pyx_k_semantic_2[] = "semantic_2";
 static const char __pyx_k_setstate_2[] = "__setstate__";
+static const char __pyx_k_weight_adj[] = "weight_adj";
 static const char __pyx_k_PickleError[] = "PickleError";
 static const char __pyx_k_category_idx[] = "category_idx";
 static const char __pyx_k_non_semantic[] = "non_semantic";
@@ -1516,6 +1514,7 @@ static const char __pyx_k_use_setstate[] = "use_setstate";
 static const char __pyx_k_category_list[] = "category_list";
 static const char __pyx_k_reduce_cython[] = "__reduce_cython__";
 static const char __pyx_k_bit_population[] = "bit_population";
+static const char __pyx_k_max_bit_weight[] = "max_bit_weight";
 static const char __pyx_k_CategoryEncoder[] = "CategoryEncoder";
 static const char __pyx_k_pyx_PickleError[] = "__pyx_PickleError";
 static const char __pyx_k_setstate_cython[] = "__setstate_cython__";
@@ -1579,6 +1578,7 @@ static PyObject *__pyx_n_s_encoder_3;
 static PyObject *__pyx_n_s_end;
 static PyObject *__pyx_n_s_file;
 static PyObject *__pyx_n_s_finished;
+static PyObject *__pyx_n_u_float;
 static PyObject *__pyx_n_s_getstate;
 static PyObject *__pyx_n_s_getstate_2;
 static PyObject *__pyx_n_s_import;
@@ -1586,6 +1586,7 @@ static PyObject *__pyx_n_s_k;
 static PyObject *__pyx_n_s_key;
 static PyObject *__pyx_n_u_list;
 static PyObject *__pyx_n_s_main;
+static PyObject *__pyx_n_s_max_bit_weight;
 static PyObject *__pyx_n_s_n_bits;
 static PyObject *__pyx_n_s_name;
 static PyObject *__pyx_n_s_name_2;
@@ -1632,11 +1633,12 @@ static PyObject *__pyx_n_s_total_weight;
 static PyObject *__pyx_n_s_typing;
 static PyObject *__pyx_n_s_update;
 static PyObject *__pyx_n_s_use_setstate;
+static PyObject *__pyx_n_s_weight_adj;
 static int __pyx_pf_3src_16category_encoder_15CategoryEncoder___init__(struct __pyx_obj_3src_16category_encoder_CategoryEncoder *__pyx_v_self, PyObject *__pyx_v_name, PyObject *__pyx_v_semantic_categories, int __pyx_v_n_bits, int __pyx_v_enc_size, int __pyx_v_bit_offset, int __pyx_v_periodic, int __pyx_v_seed); /* proto */
 static PyObject *__pyx_pf_3src_16category_encoder_15CategoryEncoder_2set_semantic_categories(struct __pyx_obj_3src_16category_encoder_CategoryEncoder *__pyx_v_self, PyObject *__pyx_v_categories); /* proto */
 static PyObject *__pyx_pf_3src_16category_encoder_15CategoryEncoder_4encode(struct __pyx_obj_3src_16category_encoder_CategoryEncoder *__pyx_v_self, PyObject *__pyx_v_category); /* proto */
 static PyObject *__pyx_lambda_funcdef_lambda(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_x); /* proto */
-static PyObject *__pyx_pf_3src_16category_encoder_15CategoryEncoder_6decode(struct __pyx_obj_3src_16category_encoder_CategoryEncoder *__pyx_v_self, PyObject *__pyx_v_enc); /* proto */
+static PyObject *__pyx_pf_3src_16category_encoder_15CategoryEncoder_6decode(struct __pyx_obj_3src_16category_encoder_CategoryEncoder *__pyx_v_self, PyObject *__pyx_v_enc, double __pyx_v_max_bit_weight); /* proto */
 static PyObject *__pyx_pf_3src_16category_encoder_15CategoryEncoder_4type___get__(struct __pyx_obj_3src_16category_encoder_CategoryEncoder *__pyx_v_self); /* proto */
 static int __pyx_pf_3src_16category_encoder_15CategoryEncoder_4type_2__set__(struct __pyx_obj_3src_16category_encoder_CategoryEncoder *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
 static int __pyx_pf_3src_16category_encoder_15CategoryEncoder_4type_4__del__(struct __pyx_obj_3src_16category_encoder_CategoryEncoder *__pyx_v_self); /* proto */
@@ -1666,7 +1668,6 @@ static PyObject *__pyx_pf_3src_16category_encoder_15CategoryEncoder_8__reduce_cy
 static PyObject *__pyx_pf_3src_16category_encoder_15CategoryEncoder_10__setstate_cython__(struct __pyx_obj_3src_16category_encoder_CategoryEncoder *__pyx_v_self, PyObject *__pyx_v___pyx_state); /* proto */
 static PyObject *__pyx_pf_3src_16category_encoder___pyx_unpickle_CategoryEncoder(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v___pyx_type, long __pyx_v___pyx_checksum, PyObject *__pyx_v___pyx_state); /* proto */
 static PyObject *__pyx_tp_new_3src_16category_encoder_CategoryEncoder(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
-static PyObject *__pyx_float_1_0;
 static PyObject *__pyx_int_1;
 static PyObject *__pyx_int_40;
 static PyObject *__pyx_int_2048;
@@ -3478,7 +3479,7 @@ static PyObject *__pyx_pf_3src_16category_encoder_15CategoryEncoder_4encode(stru
  * 
  *         return enc             # <<<<<<<<<<<<<<
  * 
- *     def decode(self, enc: Union[set, dict]) -> list:
+ *     def decode(self, enc: Union[set, dict], max_bit_weight: float = 1.0) -> list:
  */
   __Pyx_XDECREF(__pyx_r);
   __Pyx_INCREF(__pyx_v_enc);
@@ -3512,28 +3513,86 @@ static PyObject *__pyx_pf_3src_16category_encoder_15CategoryEncoder_4encode(stru
 /* "src/category_encoder.py":251
  *         return enc
  * 
- *     def decode(self, enc: Union[set, dict]) -> list:             # <<<<<<<<<<<<<<
+ *     def decode(self, enc: Union[set, dict], max_bit_weight: float = 1.0) -> list:             # <<<<<<<<<<<<<<
  *         """
  *         decodes a set of bits into categories
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_3src_16category_encoder_15CategoryEncoder_7decode(PyObject *__pyx_v_self, PyObject *__pyx_v_enc); /*proto*/
-static char __pyx_doc_3src_16category_encoder_15CategoryEncoder_6decode[] = "\n        decodes a set of bits into categories\n        :param enc: can be either a set of bits or a dictionary of bits in which the bits are the keys and the values are the weight of each bit\n        :return: a list of decoded categories with associated weights\n        ";
-static PyMethodDef __pyx_mdef_3src_16category_encoder_15CategoryEncoder_7decode = {"decode", (PyCFunction)__pyx_pw_3src_16category_encoder_15CategoryEncoder_7decode, METH_O, __pyx_doc_3src_16category_encoder_15CategoryEncoder_6decode};
-static PyObject *__pyx_pw_3src_16category_encoder_15CategoryEncoder_7decode(PyObject *__pyx_v_self, PyObject *__pyx_v_enc) {
+static PyObject *__pyx_pw_3src_16category_encoder_15CategoryEncoder_7decode(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static char __pyx_doc_3src_16category_encoder_15CategoryEncoder_6decode[] = "\n        decodes a set of bits into categories\n        :param enc: can be either a set of bits or a dictionary of bits in which the bits are the keys and the values are the weight of each bit\n        :param max_bit_weight: the maximum a bit weight can be\n        :return: a list of decoded categories with associated weights\n        ";
+static PyMethodDef __pyx_mdef_3src_16category_encoder_15CategoryEncoder_7decode = {"decode", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_16category_encoder_15CategoryEncoder_7decode, METH_VARARGS|METH_KEYWORDS, __pyx_doc_3src_16category_encoder_15CategoryEncoder_6decode};
+static PyObject *__pyx_pw_3src_16category_encoder_15CategoryEncoder_7decode(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  PyObject *__pyx_v_enc = 0;
+  double __pyx_v_max_bit_weight;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("decode (wrapper)", 0);
-  __pyx_r = __pyx_pf_3src_16category_encoder_15CategoryEncoder_6decode(((struct __pyx_obj_3src_16category_encoder_CategoryEncoder *)__pyx_v_self), ((PyObject *)__pyx_v_enc));
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_enc,&__pyx_n_s_max_bit_weight,0};
+    PyObject* values[2] = {0,0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_enc)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (kw_args > 0) {
+          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_max_bit_weight);
+          if (value) { values[1] = value; kw_args--; }
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "decode") < 0)) __PYX_ERR(0, 251, __pyx_L3_error)
+      }
+    } else {
+      switch (PyTuple_GET_SIZE(__pyx_args)) {
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+    }
+    __pyx_v_enc = values[0];
+    if (values[1]) {
+      __pyx_v_max_bit_weight = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_max_bit_weight == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 251, __pyx_L3_error)
+    } else {
+      __pyx_v_max_bit_weight = ((double)1.0);
+    }
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("decode", 0, 1, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 251, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("src.category_encoder.CategoryEncoder.decode", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_3src_16category_encoder_15CategoryEncoder_6decode(((struct __pyx_obj_3src_16category_encoder_CategoryEncoder *)__pyx_v_self), __pyx_v_enc, __pyx_v_max_bit_weight);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "src/category_encoder.py":288
- *         category_list = [(category, categories[category] / self.n_bits) for category in categories if self.semantic or (categories[category] / self.n_bits) > (1 / self.n_bits)]
+/* "src/category_encoder.py":294
+ *                          if self.semantic or categories[category] > 2 * max_bit_weight]
  * 
  *         category_list.sort(key=lambda x: x[1], reverse=True)             # <<<<<<<<<<<<<<
  * 
@@ -3563,7 +3622,7 @@ static PyObject *__pyx_lambda_funcdef_lambda(CYTHON_UNUSED PyObject *__pyx_self,
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("lambda", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_x, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 288, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_x, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 294, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -3583,17 +3642,18 @@ static PyObject *__pyx_lambda_funcdef_lambda(CYTHON_UNUSED PyObject *__pyx_self,
 /* "src/category_encoder.py":251
  *         return enc
  * 
- *     def decode(self, enc: Union[set, dict]) -> list:             # <<<<<<<<<<<<<<
+ *     def decode(self, enc: Union[set, dict], max_bit_weight: float = 1.0) -> list:             # <<<<<<<<<<<<<<
  *         """
  *         decodes a set of bits into categories
  */
 
-static PyObject *__pyx_pf_3src_16category_encoder_15CategoryEncoder_6decode(struct __pyx_obj_3src_16category_encoder_CategoryEncoder *__pyx_v_self, PyObject *__pyx_v_enc) {
+static PyObject *__pyx_pf_3src_16category_encoder_15CategoryEncoder_6decode(struct __pyx_obj_3src_16category_encoder_CategoryEncoder *__pyx_v_self, PyObject *__pyx_v_enc, double __pyx_v_max_bit_weight) {
   int __pyx_v_bit;
   double __pyx_v_total_weight;
   PyObject *__pyx_v_category = 0;
   PyObject *__pyx_v_categories = 0;
   PyObject *__pyx_v_category_list = 0;
+  double __pyx_v_weight_adj;
   int __pyx_7genexpr__pyx_v_bit;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
@@ -3605,9 +3665,9 @@ static PyObject *__pyx_pf_3src_16category_encoder_15CategoryEncoder_6decode(stru
   PyObject *(*__pyx_t_6)(PyObject *);
   PyObject *__pyx_t_7 = NULL;
   int __pyx_t_8;
-  Py_ssize_t __pyx_t_9;
-  PyObject *(*__pyx_t_10)(PyObject *);
-  PyObject *__pyx_t_11 = NULL;
+  PyObject *__pyx_t_9 = NULL;
+  Py_ssize_t __pyx_t_10;
+  PyObject *(*__pyx_t_11)(PyObject *);
   PyObject *__pyx_t_12 = NULL;
   PyObject *__pyx_t_13 = NULL;
   double __pyx_t_14;
@@ -3618,63 +3678,63 @@ static PyObject *__pyx_pf_3src_16category_encoder_15CategoryEncoder_6decode(stru
   __Pyx_RefNannySetupContext("decode", 0);
   __Pyx_INCREF(__pyx_v_enc);
 
-  /* "src/category_encoder.py":264
+  /* "src/category_encoder.py":265
  *         total_weight: float
  *         category: str
  *         categories: dict = {}             # <<<<<<<<<<<<<<
  *         category_list: list
- * 
+ *         weight_adj: float
  */
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 264, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 265, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_categories = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/category_encoder.py":269
+  /* "src/category_encoder.py":271
  *         # add default weights of 1.0 if given a set of bits
  *         #
  *         if isinstance(enc, set):             # <<<<<<<<<<<<<<
- *             enc = {bit: 1.0 for bit in enc}
+ *             enc = {bit: max_bit_weight for bit in enc}
  * 
  */
   __pyx_t_2 = PySet_Check(__pyx_v_enc); 
   __pyx_t_3 = (__pyx_t_2 != 0);
   if (__pyx_t_3) {
 
-    /* "src/category_encoder.py":270
+    /* "src/category_encoder.py":272
  *         #
  *         if isinstance(enc, set):
- *             enc = {bit: 1.0 for bit in enc}             # <<<<<<<<<<<<<<
+ *             enc = {bit: max_bit_weight for bit in enc}             # <<<<<<<<<<<<<<
  * 
  *         # sum the weights for the categories associated with the bits in the encoding
  */
     { /* enter inner scope */
-      __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 270, __pyx_L1_error)
+      __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 272, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       if (likely(PyList_CheckExact(__pyx_v_enc)) || PyTuple_CheckExact(__pyx_v_enc)) {
         __pyx_t_4 = __pyx_v_enc; __Pyx_INCREF(__pyx_t_4); __pyx_t_5 = 0;
         __pyx_t_6 = NULL;
       } else {
-        __pyx_t_5 = -1; __pyx_t_4 = PyObject_GetIter(__pyx_v_enc); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 270, __pyx_L1_error)
+        __pyx_t_5 = -1; __pyx_t_4 = PyObject_GetIter(__pyx_v_enc); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 272, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
-        __pyx_t_6 = Py_TYPE(__pyx_t_4)->tp_iternext; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 270, __pyx_L1_error)
+        __pyx_t_6 = Py_TYPE(__pyx_t_4)->tp_iternext; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 272, __pyx_L1_error)
       }
       for (;;) {
         if (likely(!__pyx_t_6)) {
           if (likely(PyList_CheckExact(__pyx_t_4))) {
             if (__pyx_t_5 >= PyList_GET_SIZE(__pyx_t_4)) break;
             #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-            __pyx_t_7 = PyList_GET_ITEM(__pyx_t_4, __pyx_t_5); __Pyx_INCREF(__pyx_t_7); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 270, __pyx_L1_error)
+            __pyx_t_7 = PyList_GET_ITEM(__pyx_t_4, __pyx_t_5); __Pyx_INCREF(__pyx_t_7); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 272, __pyx_L1_error)
             #else
-            __pyx_t_7 = PySequence_ITEM(__pyx_t_4, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 270, __pyx_L1_error)
+            __pyx_t_7 = PySequence_ITEM(__pyx_t_4, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 272, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_7);
             #endif
           } else {
             if (__pyx_t_5 >= PyTuple_GET_SIZE(__pyx_t_4)) break;
             #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-            __pyx_t_7 = PyTuple_GET_ITEM(__pyx_t_4, __pyx_t_5); __Pyx_INCREF(__pyx_t_7); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 270, __pyx_L1_error)
+            __pyx_t_7 = PyTuple_GET_ITEM(__pyx_t_4, __pyx_t_5); __Pyx_INCREF(__pyx_t_7); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 272, __pyx_L1_error)
             #else
-            __pyx_t_7 = PySequence_ITEM(__pyx_t_4, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 270, __pyx_L1_error)
+            __pyx_t_7 = PySequence_ITEM(__pyx_t_4, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 272, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_7);
             #endif
           }
@@ -3684,35 +3744,38 @@ static PyObject *__pyx_pf_3src_16category_encoder_15CategoryEncoder_6decode(stru
             PyObject* exc_type = PyErr_Occurred();
             if (exc_type) {
               if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-              else __PYX_ERR(0, 270, __pyx_L1_error)
+              else __PYX_ERR(0, 272, __pyx_L1_error)
             }
             break;
           }
           __Pyx_GOTREF(__pyx_t_7);
         }
-        __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_7); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 270, __pyx_L1_error)
+        __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_7); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 272, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
         __pyx_7genexpr__pyx_v_bit = __pyx_t_8;
-        __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_7genexpr__pyx_v_bit); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 270, __pyx_L1_error)
+        __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_7genexpr__pyx_v_bit); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 272, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_7);
-        if (unlikely(PyDict_SetItem(__pyx_t_1, (PyObject*)__pyx_t_7, (PyObject*)__pyx_float_1_0))) __PYX_ERR(0, 270, __pyx_L1_error)
+        __pyx_t_9 = PyFloat_FromDouble(__pyx_v_max_bit_weight); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 272, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_9);
+        if (unlikely(PyDict_SetItem(__pyx_t_1, (PyObject*)__pyx_t_7, (PyObject*)__pyx_t_9))) __PYX_ERR(0, 272, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+        __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       }
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     } /* exit inner scope */
     __Pyx_DECREF_SET(__pyx_v_enc, __pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "src/category_encoder.py":269
+    /* "src/category_encoder.py":271
  *         # add default weights of 1.0 if given a set of bits
  *         #
  *         if isinstance(enc, set):             # <<<<<<<<<<<<<<
- *             enc = {bit: 1.0 for bit in enc}
+ *             enc = {bit: max_bit_weight for bit in enc}
  * 
  */
   }
 
-  /* "src/category_encoder.py":274
+  /* "src/category_encoder.py":276
  *         # sum the weights for the categories associated with the bits in the encoding
  *         #
  *         total_weight = 0.0             # <<<<<<<<<<<<<<
@@ -3721,7 +3784,7 @@ static PyObject *__pyx_pf_3src_16category_encoder_15CategoryEncoder_6decode(stru
  */
   __pyx_v_total_weight = 0.0;
 
-  /* "src/category_encoder.py":275
+  /* "src/category_encoder.py":277
  *         #
  *         total_weight = 0.0
  *         for bit in enc:             # <<<<<<<<<<<<<<
@@ -3732,26 +3795,26 @@ static PyObject *__pyx_pf_3src_16category_encoder_15CategoryEncoder_6decode(stru
     __pyx_t_1 = __pyx_v_enc; __Pyx_INCREF(__pyx_t_1); __pyx_t_5 = 0;
     __pyx_t_6 = NULL;
   } else {
-    __pyx_t_5 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_enc); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 275, __pyx_L1_error)
+    __pyx_t_5 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_enc); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 277, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_6 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 275, __pyx_L1_error)
+    __pyx_t_6 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 277, __pyx_L1_error)
   }
   for (;;) {
     if (likely(!__pyx_t_6)) {
       if (likely(PyList_CheckExact(__pyx_t_1))) {
         if (__pyx_t_5 >= PyList_GET_SIZE(__pyx_t_1)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_5); __Pyx_INCREF(__pyx_t_4); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 275, __pyx_L1_error)
+        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_5); __Pyx_INCREF(__pyx_t_4); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 277, __pyx_L1_error)
         #else
-        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 275, __pyx_L1_error)
+        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 277, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         #endif
       } else {
         if (__pyx_t_5 >= PyTuple_GET_SIZE(__pyx_t_1)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_5); __Pyx_INCREF(__pyx_t_4); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 275, __pyx_L1_error)
+        __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_5); __Pyx_INCREF(__pyx_t_4); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 277, __pyx_L1_error)
         #else
-        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 275, __pyx_L1_error)
+        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 277, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         #endif
       }
@@ -3761,35 +3824,35 @@ static PyObject *__pyx_pf_3src_16category_encoder_15CategoryEncoder_6decode(stru
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 275, __pyx_L1_error)
+          else __PYX_ERR(0, 277, __pyx_L1_error)
         }
         break;
       }
       __Pyx_GOTREF(__pyx_t_4);
     }
-    __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_4); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 275, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_4); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 277, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_v_bit = __pyx_t_8;
 
-    /* "src/category_encoder.py":276
+    /* "src/category_encoder.py":278
  *         total_weight = 0.0
  *         for bit in enc:
  *             if bit in self.bits:             # <<<<<<<<<<<<<<
  *                 for category in self.bits[bit]:
  *                     if category not in categories:
  */
-    __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_bit); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 276, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_bit); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 278, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     if (unlikely(__pyx_v_self->bits == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-      __PYX_ERR(0, 276, __pyx_L1_error)
+      __PYX_ERR(0, 278, __pyx_L1_error)
     }
-    __pyx_t_3 = (__Pyx_PyDict_ContainsTF(__pyx_t_4, __pyx_v_self->bits, Py_EQ)); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 276, __pyx_L1_error)
+    __pyx_t_3 = (__Pyx_PyDict_ContainsTF(__pyx_t_4, __pyx_v_self->bits, Py_EQ)); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 278, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_t_2 = (__pyx_t_3 != 0);
     if (__pyx_t_2) {
 
-      /* "src/category_encoder.py":277
+      /* "src/category_encoder.py":279
  *         for bit in enc:
  *             if bit in self.bits:
  *                 for category in self.bits[bit]:             # <<<<<<<<<<<<<<
@@ -3798,81 +3861,81 @@ static PyObject *__pyx_pf_3src_16category_encoder_15CategoryEncoder_6decode(stru
  */
       if (unlikely(__pyx_v_self->bits == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 277, __pyx_L1_error)
+        __PYX_ERR(0, 279, __pyx_L1_error)
       }
-      __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_bit); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 277, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_bit); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 279, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_7 = __Pyx_PyDict_GetItem(__pyx_v_self->bits, __pyx_t_4); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 277, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_7);
+      __pyx_t_9 = __Pyx_PyDict_GetItem(__pyx_v_self->bits, __pyx_t_4); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 279, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      if (likely(PyList_CheckExact(__pyx_t_7)) || PyTuple_CheckExact(__pyx_t_7)) {
-        __pyx_t_4 = __pyx_t_7; __Pyx_INCREF(__pyx_t_4); __pyx_t_9 = 0;
-        __pyx_t_10 = NULL;
+      if (likely(PyList_CheckExact(__pyx_t_9)) || PyTuple_CheckExact(__pyx_t_9)) {
+        __pyx_t_4 = __pyx_t_9; __Pyx_INCREF(__pyx_t_4); __pyx_t_10 = 0;
+        __pyx_t_11 = NULL;
       } else {
-        __pyx_t_9 = -1; __pyx_t_4 = PyObject_GetIter(__pyx_t_7); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 277, __pyx_L1_error)
+        __pyx_t_10 = -1; __pyx_t_4 = PyObject_GetIter(__pyx_t_9); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 279, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
-        __pyx_t_10 = Py_TYPE(__pyx_t_4)->tp_iternext; if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 277, __pyx_L1_error)
+        __pyx_t_11 = Py_TYPE(__pyx_t_4)->tp_iternext; if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 279, __pyx_L1_error)
       }
-      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       for (;;) {
-        if (likely(!__pyx_t_10)) {
+        if (likely(!__pyx_t_11)) {
           if (likely(PyList_CheckExact(__pyx_t_4))) {
-            if (__pyx_t_9 >= PyList_GET_SIZE(__pyx_t_4)) break;
+            if (__pyx_t_10 >= PyList_GET_SIZE(__pyx_t_4)) break;
             #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-            __pyx_t_7 = PyList_GET_ITEM(__pyx_t_4, __pyx_t_9); __Pyx_INCREF(__pyx_t_7); __pyx_t_9++; if (unlikely(0 < 0)) __PYX_ERR(0, 277, __pyx_L1_error)
+            __pyx_t_9 = PyList_GET_ITEM(__pyx_t_4, __pyx_t_10); __Pyx_INCREF(__pyx_t_9); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 279, __pyx_L1_error)
             #else
-            __pyx_t_7 = PySequence_ITEM(__pyx_t_4, __pyx_t_9); __pyx_t_9++; if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 277, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_7);
+            __pyx_t_9 = PySequence_ITEM(__pyx_t_4, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 279, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_9);
             #endif
           } else {
-            if (__pyx_t_9 >= PyTuple_GET_SIZE(__pyx_t_4)) break;
+            if (__pyx_t_10 >= PyTuple_GET_SIZE(__pyx_t_4)) break;
             #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-            __pyx_t_7 = PyTuple_GET_ITEM(__pyx_t_4, __pyx_t_9); __Pyx_INCREF(__pyx_t_7); __pyx_t_9++; if (unlikely(0 < 0)) __PYX_ERR(0, 277, __pyx_L1_error)
+            __pyx_t_9 = PyTuple_GET_ITEM(__pyx_t_4, __pyx_t_10); __Pyx_INCREF(__pyx_t_9); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 279, __pyx_L1_error)
             #else
-            __pyx_t_7 = PySequence_ITEM(__pyx_t_4, __pyx_t_9); __pyx_t_9++; if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 277, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_7);
+            __pyx_t_9 = PySequence_ITEM(__pyx_t_4, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 279, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_9);
             #endif
           }
         } else {
-          __pyx_t_7 = __pyx_t_10(__pyx_t_4);
-          if (unlikely(!__pyx_t_7)) {
+          __pyx_t_9 = __pyx_t_11(__pyx_t_4);
+          if (unlikely(!__pyx_t_9)) {
             PyObject* exc_type = PyErr_Occurred();
             if (exc_type) {
               if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-              else __PYX_ERR(0, 277, __pyx_L1_error)
+              else __PYX_ERR(0, 279, __pyx_L1_error)
             }
             break;
           }
-          __Pyx_GOTREF(__pyx_t_7);
+          __Pyx_GOTREF(__pyx_t_9);
         }
-        if (!(likely(PyString_CheckExact(__pyx_t_7))||((__pyx_t_7) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_7)->tp_name), 0))) __PYX_ERR(0, 277, __pyx_L1_error)
-        __Pyx_XDECREF_SET(__pyx_v_category, ((PyObject*)__pyx_t_7));
-        __pyx_t_7 = 0;
+        if (!(likely(PyString_CheckExact(__pyx_t_9))||((__pyx_t_9) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_9)->tp_name), 0))) __PYX_ERR(0, 279, __pyx_L1_error)
+        __Pyx_XDECREF_SET(__pyx_v_category, ((PyObject*)__pyx_t_9));
+        __pyx_t_9 = 0;
 
-        /* "src/category_encoder.py":278
+        /* "src/category_encoder.py":280
  *             if bit in self.bits:
  *                 for category in self.bits[bit]:
  *                     if category not in categories:             # <<<<<<<<<<<<<<
  *                         categories[category] = enc[bit]
  *                     else:
  */
-        __pyx_t_2 = (__Pyx_PyDict_ContainsTF(__pyx_v_category, __pyx_v_categories, Py_NE)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 278, __pyx_L1_error)
+        __pyx_t_2 = (__Pyx_PyDict_ContainsTF(__pyx_v_category, __pyx_v_categories, Py_NE)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 280, __pyx_L1_error)
         __pyx_t_3 = (__pyx_t_2 != 0);
         if (__pyx_t_3) {
 
-          /* "src/category_encoder.py":279
+          /* "src/category_encoder.py":281
  *                 for category in self.bits[bit]:
  *                     if category not in categories:
  *                         categories[category] = enc[bit]             # <<<<<<<<<<<<<<
  *                     else:
  *                         categories[category] += enc[bit]
  */
-          __pyx_t_7 = __Pyx_GetItemInt(__pyx_v_enc, __pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 279, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_7);
-          if (unlikely(PyDict_SetItem(__pyx_v_categories, __pyx_v_category, __pyx_t_7) < 0)) __PYX_ERR(0, 279, __pyx_L1_error)
-          __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+          __pyx_t_9 = __Pyx_GetItemInt(__pyx_v_enc, __pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 281, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_9);
+          if (unlikely(PyDict_SetItem(__pyx_v_categories, __pyx_v_category, __pyx_t_9) < 0)) __PYX_ERR(0, 281, __pyx_L1_error)
+          __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-          /* "src/category_encoder.py":278
+          /* "src/category_encoder.py":280
  *             if bit in self.bits:
  *                 for category in self.bits[bit]:
  *                     if category not in categories:             # <<<<<<<<<<<<<<
@@ -3882,7 +3945,7 @@ static PyObject *__pyx_pf_3src_16category_encoder_15CategoryEncoder_6decode(stru
           goto __pyx_L11;
         }
 
-        /* "src/category_encoder.py":281
+        /* "src/category_encoder.py":283
  *                         categories[category] = enc[bit]
  *                     else:
  *                         categories[category] += enc[bit]             # <<<<<<<<<<<<<<
@@ -3891,41 +3954,41 @@ static PyObject *__pyx_pf_3src_16category_encoder_15CategoryEncoder_6decode(stru
  */
         /*else*/ {
           __Pyx_INCREF(__pyx_v_category);
-          __pyx_t_11 = __pyx_v_category;
-          __pyx_t_7 = __Pyx_PyDict_GetItem(__pyx_v_categories, __pyx_t_11); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 281, __pyx_L1_error)
+          __pyx_t_12 = __pyx_v_category;
+          __pyx_t_9 = __Pyx_PyDict_GetItem(__pyx_v_categories, __pyx_t_12); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 283, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_9);
+          __pyx_t_7 = __Pyx_GetItemInt(__pyx_v_enc, __pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 283, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_7);
-          __pyx_t_12 = __Pyx_GetItemInt(__pyx_v_enc, __pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 281, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_12);
-          __pyx_t_13 = PyNumber_InPlaceAdd(__pyx_t_7, __pyx_t_12); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 281, __pyx_L1_error)
+          __pyx_t_13 = PyNumber_InPlaceAdd(__pyx_t_9, __pyx_t_7); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 283, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_13);
+          __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
           __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-          __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-          if (unlikely(PyDict_SetItem(__pyx_v_categories, __pyx_t_11, __pyx_t_13) < 0)) __PYX_ERR(0, 281, __pyx_L1_error)
+          if (unlikely(PyDict_SetItem(__pyx_v_categories, __pyx_t_12, __pyx_t_13) < 0)) __PYX_ERR(0, 283, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-          __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+          __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
         }
         __pyx_L11:;
 
-        /* "src/category_encoder.py":282
+        /* "src/category_encoder.py":284
  *                     else:
  *                         categories[category] += enc[bit]
  *                     total_weight += enc[bit]             # <<<<<<<<<<<<<<
  * 
- *         # create a list of categories - if not semantic then filter out those whose weights are less than or equal to (1 / self.n_bits)
+ *         # create a list of categories - if not semantic then filter out those whose weights are less than or equal to 2 * max_bit_weight -
  */
-        __pyx_t_13 = PyFloat_FromDouble(__pyx_v_total_weight); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 282, __pyx_L1_error)
+        __pyx_t_13 = PyFloat_FromDouble(__pyx_v_total_weight); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 284, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_13);
-        __pyx_t_12 = __Pyx_GetItemInt(__pyx_v_enc, __pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 282, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_12);
-        __pyx_t_7 = PyNumber_InPlaceAdd(__pyx_t_13, __pyx_t_12); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 282, __pyx_L1_error)
+        __pyx_t_7 = __Pyx_GetItemInt(__pyx_v_enc, __pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 284, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_7);
+        __pyx_t_9 = PyNumber_InPlaceAdd(__pyx_t_13, __pyx_t_7); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 284, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_9);
         __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-        __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-        __pyx_t_14 = __pyx_PyFloat_AsDouble(__pyx_t_7); if (unlikely((__pyx_t_14 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 282, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+        __pyx_t_14 = __pyx_PyFloat_AsDouble(__pyx_t_9); if (unlikely((__pyx_t_14 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 284, __pyx_L1_error)
+        __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
         __pyx_v_total_weight = __pyx_t_14;
 
-        /* "src/category_encoder.py":277
+        /* "src/category_encoder.py":279
  *         for bit in enc:
  *             if bit in self.bits:
  *                 for category in self.bits[bit]:             # <<<<<<<<<<<<<<
@@ -3935,7 +3998,7 @@ static PyObject *__pyx_pf_3src_16category_encoder_15CategoryEncoder_6decode(stru
       }
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-      /* "src/category_encoder.py":276
+      /* "src/category_encoder.py":278
  *         total_weight = 0.0
  *         for bit in enc:
  *             if bit in self.bits:             # <<<<<<<<<<<<<<
@@ -3944,7 +4007,7 @@ static PyObject *__pyx_pf_3src_16category_encoder_15CategoryEncoder_6decode(stru
  */
     }
 
-    /* "src/category_encoder.py":275
+    /* "src/category_encoder.py":277
  *         #
  *         total_weight = 0.0
  *         for bit in enc:             # <<<<<<<<<<<<<<
@@ -3954,108 +4017,135 @@ static PyObject *__pyx_pf_3src_16category_encoder_15CategoryEncoder_6decode(stru
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/category_encoder.py":286
- *         # create a list of categories - if not semantic then filter out those whose weights are less than or equal to (1 / self.n_bits)
+  /* "src/category_encoder.py":289
+ *         # which amounts to encoding noise
  *         #
- *         category_list = [(category, categories[category] / self.n_bits) for category in categories if self.semantic or (categories[category] / self.n_bits) > (1 / self.n_bits)]             # <<<<<<<<<<<<<<
+ *         weight_adj = self.n_bits * max_bit_weight             # <<<<<<<<<<<<<<
+ *         category_list = [(category, categories[category] / weight_adj)
+ *                          for category in categories
+ */
+  __pyx_v_weight_adj = (__pyx_v_self->n_bits * __pyx_v_max_bit_weight);
+
+  /* "src/category_encoder.py":290
+ *         #
+ *         weight_adj = self.n_bits * max_bit_weight
+ *         category_list = [(category, categories[category] / weight_adj)             # <<<<<<<<<<<<<<
+ *                          for category in categories
+ *                          if self.semantic or categories[category] > 2 * max_bit_weight]
+ */
+  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 290, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+
+  /* "src/category_encoder.py":291
+ *         weight_adj = self.n_bits * max_bit_weight
+ *         category_list = [(category, categories[category] / weight_adj)
+ *                          for category in categories             # <<<<<<<<<<<<<<
+ *                          if self.semantic or categories[category] > 2 * max_bit_weight]
+ * 
+ */
+  __pyx_t_5 = 0;
+  __pyx_t_9 = __Pyx_dict_iterator(__pyx_v_categories, 1, ((PyObject *)NULL), (&__pyx_t_10), (&__pyx_t_8)); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 291, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __Pyx_XDECREF(__pyx_t_4);
+  __pyx_t_4 = __pyx_t_9;
+  __pyx_t_9 = 0;
+  while (1) {
+    __pyx_t_15 = __Pyx_dict_iter_next(__pyx_t_4, __pyx_t_10, &__pyx_t_5, &__pyx_t_9, NULL, NULL, __pyx_t_8);
+    if (unlikely(__pyx_t_15 == 0)) break;
+    if (unlikely(__pyx_t_15 == -1)) __PYX_ERR(0, 291, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    if (!(likely(PyString_CheckExact(__pyx_t_9))||((__pyx_t_9) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_9)->tp_name), 0))) __PYX_ERR(0, 291, __pyx_L1_error)
+    __Pyx_XDECREF_SET(__pyx_v_category, ((PyObject*)__pyx_t_9));
+    __pyx_t_9 = 0;
+
+    /* "src/category_encoder.py":292
+ *         category_list = [(category, categories[category] / weight_adj)
+ *                          for category in categories
+ *                          if self.semantic or categories[category] > 2 * max_bit_weight]             # <<<<<<<<<<<<<<
  * 
  *         category_list.sort(key=lambda x: x[1], reverse=True)
  */
-  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 286, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_5 = 0;
-  __pyx_t_7 = __Pyx_dict_iterator(__pyx_v_categories, 1, ((PyObject *)NULL), (&__pyx_t_9), (&__pyx_t_8)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 286, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __Pyx_XDECREF(__pyx_t_4);
-  __pyx_t_4 = __pyx_t_7;
-  __pyx_t_7 = 0;
-  while (1) {
-    __pyx_t_15 = __Pyx_dict_iter_next(__pyx_t_4, __pyx_t_9, &__pyx_t_5, &__pyx_t_7, NULL, NULL, __pyx_t_8);
-    if (unlikely(__pyx_t_15 == 0)) break;
-    if (unlikely(__pyx_t_15 == -1)) __PYX_ERR(0, 286, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_7);
-    if (!(likely(PyString_CheckExact(__pyx_t_7))||((__pyx_t_7) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_7)->tp_name), 0))) __PYX_ERR(0, 286, __pyx_L1_error)
-    __Pyx_XDECREF_SET(__pyx_v_category, ((PyObject*)__pyx_t_7));
-    __pyx_t_7 = 0;
     __pyx_t_2 = (__pyx_v_self->semantic != 0);
     if (!__pyx_t_2) {
     } else {
       __pyx_t_3 = __pyx_t_2;
       goto __pyx_L15_bool_binop_done;
     }
-    __pyx_t_7 = __Pyx_PyDict_GetItem(__pyx_v_categories, __pyx_v_category); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 286, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyDict_GetItem(__pyx_v_categories, __pyx_v_category); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 292, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    __pyx_t_7 = PyFloat_FromDouble((2.0 * __pyx_v_max_bit_weight)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 292, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
-    __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_v_self->n_bits); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 286, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_12);
-    __pyx_t_13 = __Pyx_PyNumber_Divide(__pyx_t_7, __pyx_t_12); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 286, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_13);
+    __pyx_t_13 = PyObject_RichCompare(__pyx_t_9, __pyx_t_7, Py_GT); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 292, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-    if (unlikely(__pyx_v_self->n_bits == 0)) {
-      PyErr_SetString(PyExc_ZeroDivisionError, "integer division or modulo by zero");
-      __PYX_ERR(0, 286, __pyx_L1_error)
-    }
-    else if (sizeof(long) == sizeof(long) && (!(((int)-1) > 0)) && unlikely(__pyx_v_self->n_bits == (int)-1)  && unlikely(UNARY_NEG_WOULD_OVERFLOW(1))) {
-      PyErr_SetString(PyExc_OverflowError, "value too large to perform division");
-      __PYX_ERR(0, 286, __pyx_L1_error)
-    }
-    __pyx_t_12 = __Pyx_PyInt_From_long(__Pyx_div_long(1, __pyx_v_self->n_bits)); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 286, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_12);
-    __pyx_t_7 = PyObject_RichCompare(__pyx_t_13, __pyx_t_12, Py_GT); __Pyx_XGOTREF(__pyx_t_7); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 286, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 292, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-    __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_7); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 286, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
     __pyx_t_3 = __pyx_t_2;
     __pyx_L15_bool_binop_done:;
     if (__pyx_t_3) {
-      __pyx_t_7 = __Pyx_PyDict_GetItem(__pyx_v_categories, __pyx_v_category); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 286, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_7);
-      __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_v_self->n_bits); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 286, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_12);
-      __pyx_t_13 = __Pyx_PyNumber_Divide(__pyx_t_7, __pyx_t_12); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 286, __pyx_L1_error)
+
+      /* "src/category_encoder.py":290
+ *         #
+ *         weight_adj = self.n_bits * max_bit_weight
+ *         category_list = [(category, categories[category] / weight_adj)             # <<<<<<<<<<<<<<
+ *                          for category in categories
+ *                          if self.semantic or categories[category] > 2 * max_bit_weight]
+ */
+      __pyx_t_13 = __Pyx_PyDict_GetItem(__pyx_v_categories, __pyx_v_category); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 290, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_13);
+      __pyx_t_7 = PyFloat_FromDouble(__pyx_v_weight_adj); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 290, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_7);
+      __pyx_t_9 = __Pyx_PyNumber_Divide(__pyx_t_13, __pyx_t_7); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 290, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
+      __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-      __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-      __pyx_t_12 = PyTuple_New(2); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 286, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_12);
+      __pyx_t_7 = PyTuple_New(2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 290, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_7);
       __Pyx_INCREF(__pyx_v_category);
       __Pyx_GIVEREF(__pyx_v_category);
-      PyTuple_SET_ITEM(__pyx_t_12, 0, __pyx_v_category);
-      __Pyx_GIVEREF(__pyx_t_13);
-      PyTuple_SET_ITEM(__pyx_t_12, 1, __pyx_t_13);
-      __pyx_t_13 = 0;
-      if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_12))) __PYX_ERR(0, 286, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+      PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_v_category);
+      __Pyx_GIVEREF(__pyx_t_9);
+      PyTuple_SET_ITEM(__pyx_t_7, 1, __pyx_t_9);
+      __pyx_t_9 = 0;
+      if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_7))) __PYX_ERR(0, 290, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+
+      /* "src/category_encoder.py":292
+ *         category_list = [(category, categories[category] / weight_adj)
+ *                          for category in categories
+ *                          if self.semantic or categories[category] > 2 * max_bit_weight]             # <<<<<<<<<<<<<<
+ * 
+ *         category_list.sort(key=lambda x: x[1], reverse=True)
+ */
     }
   }
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_category_list = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/category_encoder.py":288
- *         category_list = [(category, categories[category] / self.n_bits) for category in categories if self.semantic or (categories[category] / self.n_bits) > (1 / self.n_bits)]
+  /* "src/category_encoder.py":294
+ *                          if self.semantic or categories[category] > 2 * max_bit_weight]
  * 
  *         category_list.sort(key=lambda x: x[1], reverse=True)             # <<<<<<<<<<<<<<
  * 
  *         return category_list
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_category_list, __pyx_n_s_sort); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 288, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_category_list, __pyx_n_s_sort); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 294, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 288, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 294, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_12 = __Pyx_CyFunction_New(&__pyx_mdef_3src_16category_encoder_15CategoryEncoder_6decode_lambda, 0, __pyx_n_s_decode_locals_lambda, NULL, __pyx_n_s_src_category_encoder, __pyx_d, NULL); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 288, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_12);
-  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_key, __pyx_t_12) < 0) __PYX_ERR(0, 288, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_reverse, Py_True) < 0) __PYX_ERR(0, 288, __pyx_L1_error)
-  __pyx_t_12 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_empty_tuple, __pyx_t_4); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 288, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_12);
+  __pyx_t_7 = __Pyx_CyFunction_New(&__pyx_mdef_3src_16category_encoder_15CategoryEncoder_6decode_lambda, 0, __pyx_n_s_decode_locals_lambda, NULL, __pyx_n_s_src_category_encoder, __pyx_d, NULL); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 294, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
+  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_key, __pyx_t_7) < 0) __PYX_ERR(0, 294, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_reverse, Py_True) < 0) __PYX_ERR(0, 294, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_empty_tuple, __pyx_t_4); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 294, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-  /* "src/category_encoder.py":290
+  /* "src/category_encoder.py":296
  *         category_list.sort(key=lambda x: x[1], reverse=True)
  * 
  *         return category_list             # <<<<<<<<<<<<<<
@@ -4070,7 +4160,7 @@ static PyObject *__pyx_pf_3src_16category_encoder_15CategoryEncoder_6decode(stru
   /* "src/category_encoder.py":251
  *         return enc
  * 
- *     def decode(self, enc: Union[set, dict]) -> list:             # <<<<<<<<<<<<<<
+ *     def decode(self, enc: Union[set, dict], max_bit_weight: float = 1.0) -> list:             # <<<<<<<<<<<<<<
  *         """
  *         decodes a set of bits into categories
  */
@@ -4080,7 +4170,7 @@ static PyObject *__pyx_pf_3src_16category_encoder_15CategoryEncoder_6decode(stru
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_7);
-  __Pyx_XDECREF(__pyx_t_11);
+  __Pyx_XDECREF(__pyx_t_9);
   __Pyx_XDECREF(__pyx_t_12);
   __Pyx_XDECREF(__pyx_t_13);
   __Pyx_AddTraceback("src.category_encoder.CategoryEncoder.decode", __pyx_clineno, __pyx_lineno, __pyx_filename);
@@ -6095,7 +6185,7 @@ static int __pyx_setprop_3src_16category_encoder_15CategoryEncoder_rand_state(Py
 static PyMethodDef __pyx_methods_3src_16category_encoder_CategoryEncoder[] = {
   {"set_semantic_categories", (PyCFunction)__pyx_pw_3src_16category_encoder_15CategoryEncoder_3set_semantic_categories, METH_O, __pyx_doc_3src_16category_encoder_15CategoryEncoder_2set_semantic_categories},
   {"encode", (PyCFunction)__pyx_pw_3src_16category_encoder_15CategoryEncoder_5encode, METH_O, __pyx_doc_3src_16category_encoder_15CategoryEncoder_4encode},
-  {"decode", (PyCFunction)__pyx_pw_3src_16category_encoder_15CategoryEncoder_7decode, METH_O, __pyx_doc_3src_16category_encoder_15CategoryEncoder_6decode},
+  {"decode", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_16category_encoder_15CategoryEncoder_7decode, METH_VARARGS|METH_KEYWORDS, __pyx_doc_3src_16category_encoder_15CategoryEncoder_6decode},
   {"__reduce_cython__", (PyCFunction)__pyx_pw_3src_16category_encoder_15CategoryEncoder_9__reduce_cython__, METH_NOARGS, 0},
   {"__setstate_cython__", (PyCFunction)__pyx_pw_3src_16category_encoder_15CategoryEncoder_11__setstate_cython__, METH_O, 0},
   {0, 0, 0, 0}
@@ -6277,6 +6367,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_end, __pyx_k_end, sizeof(__pyx_k_end), 0, 0, 1, 1},
   {&__pyx_n_s_file, __pyx_k_file, sizeof(__pyx_k_file), 0, 0, 1, 1},
   {&__pyx_n_s_finished, __pyx_k_finished, sizeof(__pyx_k_finished), 0, 0, 1, 1},
+  {&__pyx_n_u_float, __pyx_k_float, sizeof(__pyx_k_float), 0, 1, 0, 1},
   {&__pyx_n_s_getstate, __pyx_k_getstate, sizeof(__pyx_k_getstate), 0, 0, 1, 1},
   {&__pyx_n_s_getstate_2, __pyx_k_getstate_2, sizeof(__pyx_k_getstate_2), 0, 0, 1, 1},
   {&__pyx_n_s_import, __pyx_k_import, sizeof(__pyx_k_import), 0, 0, 1, 1},
@@ -6284,6 +6375,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_key, __pyx_k_key, sizeof(__pyx_k_key), 0, 0, 1, 1},
   {&__pyx_n_u_list, __pyx_k_list, sizeof(__pyx_k_list), 0, 1, 0, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
+  {&__pyx_n_s_max_bit_weight, __pyx_k_max_bit_weight, sizeof(__pyx_k_max_bit_weight), 0, 0, 1, 1},
   {&__pyx_n_s_n_bits, __pyx_k_n_bits, sizeof(__pyx_k_n_bits), 0, 0, 1, 1},
   {&__pyx_n_s_name, __pyx_k_name, sizeof(__pyx_k_name), 0, 0, 1, 1},
   {&__pyx_n_s_name_2, __pyx_k_name_2, sizeof(__pyx_k_name_2), 0, 0, 1, 1},
@@ -6330,10 +6422,11 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_typing, __pyx_k_typing, sizeof(__pyx_k_typing), 0, 0, 1, 1},
   {&__pyx_n_s_update, __pyx_k_update, sizeof(__pyx_k_update), 0, 0, 1, 1},
   {&__pyx_n_s_use_setstate, __pyx_k_use_setstate, sizeof(__pyx_k_use_setstate), 0, 0, 1, 1},
+  {&__pyx_n_s_weight_adj, __pyx_k_weight_adj, sizeof(__pyx_k_weight_adj), 0, 0, 1, 1},
   {0, 0, 0, 0, 0, 0, 0}
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 295, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 301, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -6370,14 +6463,14 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   /* "src/category_encoder.py":251
  *         return enc
  * 
- *     def decode(self, enc: Union[set, dict]) -> list:             # <<<<<<<<<<<<<<
+ *     def decode(self, enc: Union[set, dict], max_bit_weight: float = 1.0) -> list:             # <<<<<<<<<<<<<<
  *         """
  *         decodes a set of bits into categories
  */
-  __pyx_tuple__5 = PyTuple_Pack(8, __pyx_n_s_self, __pyx_n_s_enc, __pyx_n_s_bit, __pyx_n_s_total_weight, __pyx_n_s_category, __pyx_n_s_categories, __pyx_n_s_category_list, __pyx_n_s_bit); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(0, 251, __pyx_L1_error)
+  __pyx_tuple__5 = PyTuple_Pack(10, __pyx_n_s_self, __pyx_n_s_enc, __pyx_n_s_max_bit_weight, __pyx_n_s_bit, __pyx_n_s_total_weight, __pyx_n_s_category, __pyx_n_s_categories, __pyx_n_s_category_list, __pyx_n_s_weight_adj, __pyx_n_s_bit); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(0, 251, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__5);
   __Pyx_GIVEREF(__pyx_tuple__5);
-  __pyx_codeobj__6 = (PyObject*)__Pyx_PyCode_New(2, 0, 8, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__5, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_category_encoder_py, __pyx_n_s_decode, 251, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__6)) __PYX_ERR(0, 251, __pyx_L1_error)
+  __pyx_codeobj__6 = (PyObject*)__Pyx_PyCode_New(3, 0, 10, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__5, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_category_encoder_py, __pyx_n_s_decode, 251, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__6)) __PYX_ERR(0, 251, __pyx_L1_error)
 
   /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
@@ -6418,7 +6511,6 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
 
 static CYTHON_SMALL_CODE int __Pyx_InitGlobals(void) {
   if (__Pyx_InitStrings(__pyx_string_tab) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  __pyx_float_1_0 = PyFloat_FromDouble(1.0); if (unlikely(!__pyx_float_1_0)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_1 = PyInt_FromLong(1); if (unlikely(!__pyx_int_1)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_40 = PyInt_FromLong(40); if (unlikely(!__pyx_int_40)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_2048 = PyInt_FromLong(2048); if (unlikely(!__pyx_int_2048)) __PYX_ERR(0, 1, __pyx_L1_error)
@@ -6811,11 +6903,11 @@ if (!__Pyx_RefNanny) {
   /* "src/category_encoder.py":251
  *         return enc
  * 
- *     def decode(self, enc: Union[set, dict]) -> list:             # <<<<<<<<<<<<<<
+ *     def decode(self, enc: Union[set, dict], max_bit_weight: float = 1.0) -> list:             # <<<<<<<<<<<<<<
  *         """
  *         decodes a set of bits into categories
  */
-  __pyx_t_3 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 251, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyDict_NewPresized(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 251, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_Union); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 251, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -6833,6 +6925,7 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_enc, __pyx_t_4) < 0) __PYX_ERR(0, 251, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_max_bit_weight, __pyx_n_u_float) < 0) __PYX_ERR(0, 251, __pyx_L1_error)
   if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_return, __pyx_n_u_list) < 0) __PYX_ERR(0, 251, __pyx_L1_error)
   __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_3src_16category_encoder_15CategoryEncoder_7decode, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_CategoryEncoder_decode, NULL, __pyx_n_s_src_category_encoder, __pyx_d, ((PyObject *)__pyx_codeobj__6)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 251, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
@@ -6865,425 +6958,425 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   PyType_Modified(__pyx_ptype_3src_16category_encoder_CategoryEncoder);
 
-  /* "src/category_encoder.py":293
+  /* "src/category_encoder.py":299
  * 
  * 
  * if __name__ == '__main__':             # <<<<<<<<<<<<<<
  * 
  *     categories = [str(c) for c in range(20)]
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_name_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 293, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_name_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 299, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = (__Pyx_PyString_Equals(__pyx_t_4, __pyx_n_s_main, Py_EQ)); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 293, __pyx_L1_error)
+  __pyx_t_5 = (__Pyx_PyString_Equals(__pyx_t_4, __pyx_n_s_main, Py_EQ)); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 299, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   if (__pyx_t_5) {
 
-    /* "src/category_encoder.py":295
+    /* "src/category_encoder.py":301
  * if __name__ == '__main__':
  * 
  *     categories = [str(c) for c in range(20)]             # <<<<<<<<<<<<<<
  *     encoder_1 = CategoryEncoder(name='semantic_1',
  *                                 semantic_categories=categories,
  */
-    __pyx_t_4 = PyList_New(0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 295, __pyx_L1_error)
+    __pyx_t_4 = PyList_New(0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 301, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     for (__pyx_t_6 = 0; __pyx_t_6 < 20; __pyx_t_6+=1) {
-      __pyx_t_3 = __Pyx_PyInt_From_long(__pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 295, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyInt_From_long(__pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 301, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      if (PyDict_SetItem(__pyx_d, __pyx_n_s_c, __pyx_t_3) < 0) __PYX_ERR(0, 295, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_d, __pyx_n_s_c, __pyx_t_3) < 0) __PYX_ERR(0, 301, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_c); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 295, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_c); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 301, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_2 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyString_Type)), __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 295, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyString_Type)), __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 301, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (unlikely(__Pyx_ListComp_Append(__pyx_t_4, (PyObject*)__pyx_t_2))) __PYX_ERR(0, 295, __pyx_L1_error)
+      if (unlikely(__Pyx_ListComp_Append(__pyx_t_4, (PyObject*)__pyx_t_2))) __PYX_ERR(0, 301, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     }
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_categories, __pyx_t_4) < 0) __PYX_ERR(0, 295, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_categories, __pyx_t_4) < 0) __PYX_ERR(0, 301, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "src/category_encoder.py":296
+    /* "src/category_encoder.py":302
  * 
  *     categories = [str(c) for c in range(20)]
  *     encoder_1 = CategoryEncoder(name='semantic_1',             # <<<<<<<<<<<<<<
  *                                 semantic_categories=categories,
  *                                 n_bits=40,
  */
-    __pyx_t_4 = __Pyx_PyDict_NewPresized(5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 296, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyDict_NewPresized(5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 302, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_name, __pyx_n_s_semantic_1) < 0) __PYX_ERR(0, 296, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_name, __pyx_n_s_semantic_1) < 0) __PYX_ERR(0, 302, __pyx_L1_error)
 
-    /* "src/category_encoder.py":297
+    /* "src/category_encoder.py":303
  *     categories = [str(c) for c in range(20)]
  *     encoder_1 = CategoryEncoder(name='semantic_1',
  *                                 semantic_categories=categories,             # <<<<<<<<<<<<<<
  *                                 n_bits=40,
  *                                 enc_size=2048,
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_categories); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 297, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_categories); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 303, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_semantic_categories, __pyx_t_2) < 0) __PYX_ERR(0, 296, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_semantic_categories, __pyx_t_2) < 0) __PYX_ERR(0, 302, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_n_bits, __pyx_int_40) < 0) __PYX_ERR(0, 296, __pyx_L1_error)
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_enc_size, __pyx_int_2048) < 0) __PYX_ERR(0, 296, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_n_bits, __pyx_int_40) < 0) __PYX_ERR(0, 302, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_enc_size, __pyx_int_2048) < 0) __PYX_ERR(0, 302, __pyx_L1_error)
 
-    /* "src/category_encoder.py":300
+    /* "src/category_encoder.py":306
  *                                 n_bits=40,
  *                                 enc_size=2048,
  *                                 periodic=False)             # <<<<<<<<<<<<<<
  * 
  *     enc_1 = encoder_1.encode(category='0')
  */
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_periodic, Py_False) < 0) __PYX_ERR(0, 296, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_periodic, Py_False) < 0) __PYX_ERR(0, 302, __pyx_L1_error)
 
-    /* "src/category_encoder.py":296
+    /* "src/category_encoder.py":302
  * 
  *     categories = [str(c) for c in range(20)]
  *     encoder_1 = CategoryEncoder(name='semantic_1',             # <<<<<<<<<<<<<<
  *                                 semantic_categories=categories,
  *                                 n_bits=40,
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_3src_16category_encoder_CategoryEncoder), __pyx_empty_tuple, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 296, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_3src_16category_encoder_CategoryEncoder), __pyx_empty_tuple, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 302, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_encoder_1, __pyx_t_2) < 0) __PYX_ERR(0, 296, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_encoder_1, __pyx_t_2) < 0) __PYX_ERR(0, 302, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "src/category_encoder.py":302
+    /* "src/category_encoder.py":308
  *                                 periodic=False)
  * 
  *     enc_1 = encoder_1.encode(category='0')             # <<<<<<<<<<<<<<
  * 
  *     decode_1 = encoder_1.decode(enc=enc_1)
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_encoder_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 302, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_encoder_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 308, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_encode); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 302, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_encode); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 308, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 302, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 308, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_category, __pyx_kp_s_0) < 0) __PYX_ERR(0, 302, __pyx_L1_error)
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_empty_tuple, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 302, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_category, __pyx_kp_s_0) < 0) __PYX_ERR(0, 308, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_empty_tuple, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 308, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_enc_1, __pyx_t_3) < 0) __PYX_ERR(0, 302, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_enc_1, __pyx_t_3) < 0) __PYX_ERR(0, 308, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "src/category_encoder.py":304
+    /* "src/category_encoder.py":310
  *     enc_1 = encoder_1.encode(category='0')
  * 
  *     decode_1 = encoder_1.decode(enc=enc_1)             # <<<<<<<<<<<<<<
  * 
  *     encoder_2 = CategoryEncoder(name='semantic_2',
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_encoder_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 304, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_encoder_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 310, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_decode); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 304, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_decode); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 310, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 304, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 310, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_enc_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 304, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_enc_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 310, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_enc, __pyx_t_4) < 0) __PYX_ERR(0, 304, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_enc, __pyx_t_4) < 0) __PYX_ERR(0, 310, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_empty_tuple, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 304, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_empty_tuple, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 310, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_decode_1, __pyx_t_4) < 0) __PYX_ERR(0, 304, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_decode_1, __pyx_t_4) < 0) __PYX_ERR(0, 310, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "src/category_encoder.py":306
+    /* "src/category_encoder.py":312
  *     decode_1 = encoder_1.decode(enc=enc_1)
  * 
  *     encoder_2 = CategoryEncoder(name='semantic_2',             # <<<<<<<<<<<<<<
  *                                 semantic_categories=categories,
  *                                 n_bits=40,
  */
-    __pyx_t_4 = __Pyx_PyDict_NewPresized(5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 306, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyDict_NewPresized(5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 312, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_name, __pyx_n_s_semantic_2) < 0) __PYX_ERR(0, 306, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_name, __pyx_n_s_semantic_2) < 0) __PYX_ERR(0, 312, __pyx_L1_error)
 
-    /* "src/category_encoder.py":307
+    /* "src/category_encoder.py":313
  * 
  *     encoder_2 = CategoryEncoder(name='semantic_2',
  *                                 semantic_categories=categories,             # <<<<<<<<<<<<<<
  *                                 n_bits=40,
  *                                 enc_size=2048,
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_categories); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 307, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_categories); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 313, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_semantic_categories, __pyx_t_3) < 0) __PYX_ERR(0, 306, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_semantic_categories, __pyx_t_3) < 0) __PYX_ERR(0, 312, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_n_bits, __pyx_int_40) < 0) __PYX_ERR(0, 306, __pyx_L1_error)
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_enc_size, __pyx_int_2048) < 0) __PYX_ERR(0, 306, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_n_bits, __pyx_int_40) < 0) __PYX_ERR(0, 312, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_enc_size, __pyx_int_2048) < 0) __PYX_ERR(0, 312, __pyx_L1_error)
 
-    /* "src/category_encoder.py":310
+    /* "src/category_encoder.py":316
  *                                 n_bits=40,
  *                                 enc_size=2048,
  *                                 periodic=True)             # <<<<<<<<<<<<<<
  * 
  *     enc_2 = encoder_2.encode(category='0')
  */
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_periodic, Py_True) < 0) __PYX_ERR(0, 306, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_periodic, Py_True) < 0) __PYX_ERR(0, 312, __pyx_L1_error)
 
-    /* "src/category_encoder.py":306
+    /* "src/category_encoder.py":312
  *     decode_1 = encoder_1.decode(enc=enc_1)
  * 
  *     encoder_2 = CategoryEncoder(name='semantic_2',             # <<<<<<<<<<<<<<
  *                                 semantic_categories=categories,
  *                                 n_bits=40,
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_3src_16category_encoder_CategoryEncoder), __pyx_empty_tuple, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 306, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_3src_16category_encoder_CategoryEncoder), __pyx_empty_tuple, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 312, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_encoder_2, __pyx_t_3) < 0) __PYX_ERR(0, 306, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_encoder_2, __pyx_t_3) < 0) __PYX_ERR(0, 312, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "src/category_encoder.py":312
+    /* "src/category_encoder.py":318
  *                                 periodic=True)
  * 
  *     enc_2 = encoder_2.encode(category='0')             # <<<<<<<<<<<<<<
  * 
  *     decode_2 = encoder_2.decode(enc=enc_2)
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_encoder_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 312, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_encoder_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 318, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_encode); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 312, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_encode); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 318, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 312, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 318, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_category, __pyx_kp_s_0) < 0) __PYX_ERR(0, 312, __pyx_L1_error)
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_empty_tuple, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 312, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_category, __pyx_kp_s_0) < 0) __PYX_ERR(0, 318, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_empty_tuple, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 318, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_enc_2, __pyx_t_2) < 0) __PYX_ERR(0, 312, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_enc_2, __pyx_t_2) < 0) __PYX_ERR(0, 318, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "src/category_encoder.py":314
+    /* "src/category_encoder.py":320
  *     enc_2 = encoder_2.encode(category='0')
  * 
  *     decode_2 = encoder_2.decode(enc=enc_2)             # <<<<<<<<<<<<<<
  * 
  *     encoder_3 = CategoryEncoder(name='non_semantic',
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_encoder_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 314, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_encoder_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 320, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_decode); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 314, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_decode); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 320, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 314, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 320, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_enc_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 314, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_enc_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 320, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_enc, __pyx_t_4) < 0) __PYX_ERR(0, 314, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_enc, __pyx_t_4) < 0) __PYX_ERR(0, 320, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_empty_tuple, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 314, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_empty_tuple, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 320, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_decode_2, __pyx_t_4) < 0) __PYX_ERR(0, 314, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_decode_2, __pyx_t_4) < 0) __PYX_ERR(0, 320, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "src/category_encoder.py":316
+    /* "src/category_encoder.py":322
  *     decode_2 = encoder_2.decode(enc=enc_2)
  * 
  *     encoder_3 = CategoryEncoder(name='non_semantic',             # <<<<<<<<<<<<<<
  *                                 semantic_categories=None,
  *                                 n_bits=40,
  */
-    __pyx_t_4 = __Pyx_PyDict_NewPresized(5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 316, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyDict_NewPresized(5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 322, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_name, __pyx_n_s_non_semantic) < 0) __PYX_ERR(0, 316, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_name, __pyx_n_s_non_semantic) < 0) __PYX_ERR(0, 322, __pyx_L1_error)
 
-    /* "src/category_encoder.py":317
+    /* "src/category_encoder.py":323
  * 
  *     encoder_3 = CategoryEncoder(name='non_semantic',
  *                                 semantic_categories=None,             # <<<<<<<<<<<<<<
  *                                 n_bits=40,
  *                                 enc_size=2048,
  */
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_semantic_categories, Py_None) < 0) __PYX_ERR(0, 316, __pyx_L1_error)
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_n_bits, __pyx_int_40) < 0) __PYX_ERR(0, 316, __pyx_L1_error)
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_enc_size, __pyx_int_2048) < 0) __PYX_ERR(0, 316, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_semantic_categories, Py_None) < 0) __PYX_ERR(0, 322, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_n_bits, __pyx_int_40) < 0) __PYX_ERR(0, 322, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_enc_size, __pyx_int_2048) < 0) __PYX_ERR(0, 322, __pyx_L1_error)
 
-    /* "src/category_encoder.py":320
+    /* "src/category_encoder.py":326
  *                                 n_bits=40,
  *                                 enc_size=2048,
  *                                 periodic=False)             # <<<<<<<<<<<<<<
  * 
  *     enc_3_0 = encoder_3.encode(category='0')
  */
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_periodic, Py_False) < 0) __PYX_ERR(0, 316, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_periodic, Py_False) < 0) __PYX_ERR(0, 322, __pyx_L1_error)
 
-    /* "src/category_encoder.py":316
+    /* "src/category_encoder.py":322
  *     decode_2 = encoder_2.decode(enc=enc_2)
  * 
  *     encoder_3 = CategoryEncoder(name='non_semantic',             # <<<<<<<<<<<<<<
  *                                 semantic_categories=None,
  *                                 n_bits=40,
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_3src_16category_encoder_CategoryEncoder), __pyx_empty_tuple, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 316, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_3src_16category_encoder_CategoryEncoder), __pyx_empty_tuple, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 322, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_encoder_3, __pyx_t_2) < 0) __PYX_ERR(0, 316, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_encoder_3, __pyx_t_2) < 0) __PYX_ERR(0, 322, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "src/category_encoder.py":322
+    /* "src/category_encoder.py":328
  *                                 periodic=False)
  * 
  *     enc_3_0 = encoder_3.encode(category='0')             # <<<<<<<<<<<<<<
  *     enc_3_1 = encoder_3.encode(category='1')
  *     enc_3_2 = encoder_3.encode(category='2')
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_encoder_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 322, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_encoder_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 328, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_encode); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 322, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_encode); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 328, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 322, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 328, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_category, __pyx_kp_s_0) < 0) __PYX_ERR(0, 322, __pyx_L1_error)
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_empty_tuple, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 322, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_category, __pyx_kp_s_0) < 0) __PYX_ERR(0, 328, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_empty_tuple, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 328, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_enc_3_0, __pyx_t_3) < 0) __PYX_ERR(0, 322, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_enc_3_0, __pyx_t_3) < 0) __PYX_ERR(0, 328, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "src/category_encoder.py":323
+    /* "src/category_encoder.py":329
  * 
  *     enc_3_0 = encoder_3.encode(category='0')
  *     enc_3_1 = encoder_3.encode(category='1')             # <<<<<<<<<<<<<<
  *     enc_3_2 = encoder_3.encode(category='2')
  * 
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_encoder_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 323, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_encoder_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 329, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_encode); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 323, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_encode); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 329, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 323, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 329, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_category, __pyx_kp_s_1) < 0) __PYX_ERR(0, 323, __pyx_L1_error)
-    __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_empty_tuple, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 323, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_category, __pyx_kp_s_1) < 0) __PYX_ERR(0, 329, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_empty_tuple, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 329, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_enc_3_1, __pyx_t_4) < 0) __PYX_ERR(0, 323, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_enc_3_1, __pyx_t_4) < 0) __PYX_ERR(0, 329, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "src/category_encoder.py":324
+    /* "src/category_encoder.py":330
  *     enc_3_0 = encoder_3.encode(category='0')
  *     enc_3_1 = encoder_3.encode(category='1')
  *     enc_3_2 = encoder_3.encode(category='2')             # <<<<<<<<<<<<<<
  * 
  *     decode_3_0 = encoder_3.decode(enc=enc_3_0)
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_encoder_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 324, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_encoder_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 330, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_encode); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 324, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_encode); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 330, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 324, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 330, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_category, __pyx_kp_s_2) < 0) __PYX_ERR(0, 324, __pyx_L1_error)
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_empty_tuple, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 324, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_category, __pyx_kp_s_2) < 0) __PYX_ERR(0, 330, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_empty_tuple, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 330, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_enc_3_2, __pyx_t_2) < 0) __PYX_ERR(0, 324, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_enc_3_2, __pyx_t_2) < 0) __PYX_ERR(0, 330, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "src/category_encoder.py":326
+    /* "src/category_encoder.py":332
  *     enc_3_2 = encoder_3.encode(category='2')
  * 
  *     decode_3_0 = encoder_3.decode(enc=enc_3_0)             # <<<<<<<<<<<<<<
  *     decode_3_1 = encoder_3.decode(enc=enc_3_1)
  *     decode_3_2 = encoder_3.decode(enc=enc_3_2)
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_encoder_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 326, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_encoder_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 332, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_decode); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 326, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_decode); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 332, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 326, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 332, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_enc_3_0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 326, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_enc_3_0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 332, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_enc, __pyx_t_3) < 0) __PYX_ERR(0, 326, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_enc, __pyx_t_3) < 0) __PYX_ERR(0, 332, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_empty_tuple, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 326, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_empty_tuple, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 332, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_decode_3_0, __pyx_t_3) < 0) __PYX_ERR(0, 326, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_decode_3_0, __pyx_t_3) < 0) __PYX_ERR(0, 332, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "src/category_encoder.py":327
+    /* "src/category_encoder.py":333
  * 
  *     decode_3_0 = encoder_3.decode(enc=enc_3_0)
  *     decode_3_1 = encoder_3.decode(enc=enc_3_1)             # <<<<<<<<<<<<<<
  *     decode_3_2 = encoder_3.decode(enc=enc_3_2)
  * 
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_encoder_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 327, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_encoder_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 333, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_decode); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 327, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_decode); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 333, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 327, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 333, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_enc_3_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 327, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_enc_3_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 333, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_enc, __pyx_t_4) < 0) __PYX_ERR(0, 327, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_enc, __pyx_t_4) < 0) __PYX_ERR(0, 333, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_empty_tuple, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 327, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_empty_tuple, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 333, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_decode_3_1, __pyx_t_4) < 0) __PYX_ERR(0, 327, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_decode_3_1, __pyx_t_4) < 0) __PYX_ERR(0, 333, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "src/category_encoder.py":328
+    /* "src/category_encoder.py":334
  *     decode_3_0 = encoder_3.decode(enc=enc_3_0)
  *     decode_3_1 = encoder_3.decode(enc=enc_3_1)
  *     decode_3_2 = encoder_3.decode(enc=enc_3_2)             # <<<<<<<<<<<<<<
  * 
  *     print('finished')
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_encoder_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 328, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_encoder_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 334, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_decode); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 328, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_decode); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 334, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 328, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 334, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_enc_3_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 328, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_enc_3_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 334, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_enc, __pyx_t_2) < 0) __PYX_ERR(0, 328, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_enc, __pyx_t_2) < 0) __PYX_ERR(0, 334, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_empty_tuple, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 328, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_empty_tuple, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 334, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_decode_3_2, __pyx_t_2) < 0) __PYX_ERR(0, 328, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_decode_3_2, __pyx_t_2) < 0) __PYX_ERR(0, 334, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "src/category_encoder.py":330
+    /* "src/category_encoder.py":336
  *     decode_3_2 = encoder_3.decode(enc=enc_3_2)
  * 
  *     print('finished')             # <<<<<<<<<<<<<<
  */
-    if (__Pyx_PrintOne(0, __pyx_n_s_finished) < 0) __PYX_ERR(0, 330, __pyx_L1_error)
+    if (__Pyx_PrintOne(0, __pyx_n_s_finished) < 0) __PYX_ERR(0, 336, __pyx_L1_error)
 
-    /* "src/category_encoder.py":293
+    /* "src/category_encoder.py":299
  * 
  * 
  * if __name__ == '__main__':             # <<<<<<<<<<<<<<

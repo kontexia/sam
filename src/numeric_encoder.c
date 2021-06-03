@@ -1456,6 +1456,7 @@ static const char __pyx_k_enc_3[] = "enc_3";
 static const char __pyx_k_enc_4[] = "enc_4";
 static const char __pyx_k_enc_5[] = "enc_5";
 static const char __pyx_k_enc_n[] = "enc_n";
+static const char __pyx_k_float[] = "float";
 static const char __pyx_k_log10[] = "log10";
 static const char __pyx_k_print[] = "print";
 static const char __pyx_k_range[] = "range";
@@ -1515,6 +1516,7 @@ static const char __pyx_k_round_numeric[] = "round_numeric";
 static const char __pyx_k_target_bucket[] = "target_bucket";
 static const char __pyx_k_NumericEncoder[] = "NumericEncoder";
 static const char __pyx_k_bit_population[] = "bit_population";
+static const char __pyx_k_max_bit_weight[] = "max_bit_weight";
 static const char __pyx_k_create_encoding[] = "create_encoding";
 static const char __pyx_k_pyx_PickleError[] = "__pyx_PickleError";
 static const char __pyx_k_setstate_cython[] = "__setstate_cython__";
@@ -1566,6 +1568,7 @@ static PyObject *__pyx_n_s_encoder;
 static PyObject *__pyx_n_s_end;
 static PyObject *__pyx_n_s_file;
 static PyObject *__pyx_n_s_finished;
+static PyObject *__pyx_n_u_float;
 static PyObject *__pyx_n_s_getstate;
 static PyObject *__pyx_n_s_getstate_2;
 static PyObject *__pyx_n_s_i;
@@ -1577,6 +1580,7 @@ static PyObject *__pyx_n_s_log;
 static PyObject *__pyx_n_s_log10;
 static PyObject *__pyx_n_s_main;
 static PyObject *__pyx_n_s_math;
+static PyObject *__pyx_n_s_max_bit_weight;
 static PyObject *__pyx_n_s_min_step;
 static PyObject *__pyx_n_s_n;
 static PyObject *__pyx_n_s_n_bits;
@@ -1635,7 +1639,7 @@ static int __pyx_pf_3src_15numeric_encoder_14NumericEncoder___init__(struct __py
 static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_2create_encoding(struct __pyx_obj_3src_15numeric_encoder_NumericEncoder *__pyx_v_self, PyObject *__pyx_v_target_bucket); /* proto */
 static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_4encode(struct __pyx_obj_3src_15numeric_encoder_NumericEncoder *__pyx_v_self, PyObject *__pyx_v_numeric); /* proto */
 static PyObject *__pyx_lambda_funcdef_lambda(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_x); /* proto */
-static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct __pyx_obj_3src_15numeric_encoder_NumericEncoder *__pyx_v_self, PyObject *__pyx_v_enc); /* proto */
+static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct __pyx_obj_3src_15numeric_encoder_NumericEncoder *__pyx_v_self, PyObject *__pyx_v_enc, double __pyx_v_max_bit_weight); /* proto */
 static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_4type___get__(struct __pyx_obj_3src_15numeric_encoder_NumericEncoder *__pyx_v_self); /* proto */
 static int __pyx_pf_3src_15numeric_encoder_14NumericEncoder_4type_2__set__(struct __pyx_obj_3src_15numeric_encoder_NumericEncoder *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
 static int __pyx_pf_3src_15numeric_encoder_14NumericEncoder_4type_4__del__(struct __pyx_obj_3src_15numeric_encoder_NumericEncoder *__pyx_v_self); /* proto */
@@ -4012,7 +4016,7 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_4encode(struct
  * 
  *         return enc             # <<<<<<<<<<<<<<
  * 
- *     def decode(self, enc: Union[set, dict]):
+ *     def decode(self, enc: Union[set, dict], max_bit_weight: float = 1.0):
  */
   __Pyx_XDECREF(__pyx_r);
   __Pyx_INCREF(__pyx_v_enc);
@@ -4045,29 +4049,87 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_4encode(struct
 /* "src/numeric_encoder.py":367
  *         return enc
  * 
- *     def decode(self, enc: Union[set, dict]):             # <<<<<<<<<<<<<<
+ *     def decode(self, enc: Union[set, dict], max_bit_weight: float = 1.0):             # <<<<<<<<<<<<<<
  *         """
  *         decodes a set of bits into a numeric
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_3src_15numeric_encoder_14NumericEncoder_7decode(PyObject *__pyx_v_self, PyObject *__pyx_v_enc); /*proto*/
-static char __pyx_doc_3src_15numeric_encoder_14NumericEncoder_6decode[] = "\n        decodes a set of bits into a numeric\n        :param enc: can be either a set of bits or a dictionary of bits in which the bits are the keys and the values are the weight of each bit\n        :return: a weighted average numeric - where the wights are based on the bit weights\n        ";
-static PyMethodDef __pyx_mdef_3src_15numeric_encoder_14NumericEncoder_7decode = {"decode", (PyCFunction)__pyx_pw_3src_15numeric_encoder_14NumericEncoder_7decode, METH_O, __pyx_doc_3src_15numeric_encoder_14NumericEncoder_6decode};
-static PyObject *__pyx_pw_3src_15numeric_encoder_14NumericEncoder_7decode(PyObject *__pyx_v_self, PyObject *__pyx_v_enc) {
+static PyObject *__pyx_pw_3src_15numeric_encoder_14NumericEncoder_7decode(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static char __pyx_doc_3src_15numeric_encoder_14NumericEncoder_6decode[] = "\n        decodes a set of bits into a numeric\n        :param enc: can be either a set of bits or a dictionary of bits in which the bits are the keys and the values are the weight of each bit\n        :param max_bit_weight: the maximum a bit weight can be\n        :return: a weighted average numeric - where the wights are based on the bit weights\n        ";
+static PyMethodDef __pyx_mdef_3src_15numeric_encoder_14NumericEncoder_7decode = {"decode", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_15numeric_encoder_14NumericEncoder_7decode, METH_VARARGS|METH_KEYWORDS, __pyx_doc_3src_15numeric_encoder_14NumericEncoder_6decode};
+static PyObject *__pyx_pw_3src_15numeric_encoder_14NumericEncoder_7decode(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  PyObject *__pyx_v_enc = 0;
+  double __pyx_v_max_bit_weight;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("decode (wrapper)", 0);
-  __pyx_r = __pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(((struct __pyx_obj_3src_15numeric_encoder_NumericEncoder *)__pyx_v_self), ((PyObject *)__pyx_v_enc));
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_enc,&__pyx_n_s_max_bit_weight,0};
+    PyObject* values[2] = {0,0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_enc)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (kw_args > 0) {
+          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_max_bit_weight);
+          if (value) { values[1] = value; kw_args--; }
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "decode") < 0)) __PYX_ERR(0, 367, __pyx_L3_error)
+      }
+    } else {
+      switch (PyTuple_GET_SIZE(__pyx_args)) {
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+    }
+    __pyx_v_enc = values[0];
+    if (values[1]) {
+      __pyx_v_max_bit_weight = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_max_bit_weight == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 367, __pyx_L3_error)
+    } else {
+      __pyx_v_max_bit_weight = ((double)1.0);
+    }
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("decode", 0, 1, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 367, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("src.numeric_encoder.NumericEncoder.decode", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(((struct __pyx_obj_3src_15numeric_encoder_NumericEncoder *)__pyx_v_self), __pyx_v_enc, __pyx_v_max_bit_weight);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "src/numeric_encoder.py":408
+/* "src/numeric_encoder.py":409
  *             #
- *             bucket_list = [(n, buckets[n]) for n in buckets]
+ *             bucket_list = [(n, buckets[n] / max_bit_weight) for n in buckets]
  *             bucket_list.sort(key=lambda x: x[1], reverse=True)             # <<<<<<<<<<<<<<
  * 
  *             # get weighted average of bucket values if the best weight is less than n_bits
@@ -4096,7 +4158,7 @@ static PyObject *__pyx_lambda_funcdef_lambda(CYTHON_UNUSED PyObject *__pyx_self,
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("lambda", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_x, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 408, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_x, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 409, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -4116,12 +4178,12 @@ static PyObject *__pyx_lambda_funcdef_lambda(CYTHON_UNUSED PyObject *__pyx_self,
 /* "src/numeric_encoder.py":367
  *         return enc
  * 
- *     def decode(self, enc: Union[set, dict]):             # <<<<<<<<<<<<<<
+ *     def decode(self, enc: Union[set, dict], max_bit_weight: float = 1.0):             # <<<<<<<<<<<<<<
  *         """
  *         decodes a set of bits into a numeric
  */
 
-static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct __pyx_obj_3src_15numeric_encoder_NumericEncoder *__pyx_v_self, PyObject *__pyx_v_enc) {
+static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct __pyx_obj_3src_15numeric_encoder_NumericEncoder *__pyx_v_self, PyObject *__pyx_v_enc, double __pyx_v_max_bit_weight) {
   PyObject *__pyx_v_buckets = 0;
   PyObject *__pyx_v_bucket_list = 0;
   int __pyx_v_bit;
@@ -4142,9 +4204,9 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
   PyObject *(*__pyx_t_6)(PyObject *);
   PyObject *__pyx_t_7 = NULL;
   int __pyx_t_8;
-  Py_ssize_t __pyx_t_9;
-  PyObject *(*__pyx_t_10)(PyObject *);
-  PyObject *__pyx_t_11 = NULL;
+  PyObject *__pyx_t_9 = NULL;
+  Py_ssize_t __pyx_t_10;
+  PyObject *(*__pyx_t_11)(PyObject *);
   PyObject *__pyx_t_12 = NULL;
   PyObject *__pyx_t_13 = NULL;
   int __pyx_t_14;
@@ -4156,63 +4218,63 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
   __Pyx_RefNannySetupContext("decode", 0);
   __Pyx_INCREF(__pyx_v_enc);
 
-  /* "src/numeric_encoder.py":377
+  /* "src/numeric_encoder.py":378
  *         # help cython type variables
  *         #
  *         buckets: dict = {}             # <<<<<<<<<<<<<<
  *         bucket_list: list
  *         bit: cython.int
  */
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 377, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 378, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_buckets = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/numeric_encoder.py":388
+  /* "src/numeric_encoder.py":389
  *         # add default weights of 1.0 if given a set of bits
  *         #
  *         if isinstance(enc, set):             # <<<<<<<<<<<<<<
- *             enc = {bit: 1.0 for bit in enc}
+ *             enc = {bit: max_bit_weight for bit in enc}
  * 
  */
   __pyx_t_2 = PySet_Check(__pyx_v_enc); 
   __pyx_t_3 = (__pyx_t_2 != 0);
   if (__pyx_t_3) {
 
-    /* "src/numeric_encoder.py":389
+    /* "src/numeric_encoder.py":390
  *         #
  *         if isinstance(enc, set):
- *             enc = {bit: 1.0 for bit in enc}             # <<<<<<<<<<<<<<
+ *             enc = {bit: max_bit_weight for bit in enc}             # <<<<<<<<<<<<<<
  * 
  *         # sum the weights for the buckets associated with the bits in the encoding
  */
     { /* enter inner scope */
-      __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 389, __pyx_L1_error)
+      __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 390, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       if (likely(PyList_CheckExact(__pyx_v_enc)) || PyTuple_CheckExact(__pyx_v_enc)) {
         __pyx_t_4 = __pyx_v_enc; __Pyx_INCREF(__pyx_t_4); __pyx_t_5 = 0;
         __pyx_t_6 = NULL;
       } else {
-        __pyx_t_5 = -1; __pyx_t_4 = PyObject_GetIter(__pyx_v_enc); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 389, __pyx_L1_error)
+        __pyx_t_5 = -1; __pyx_t_4 = PyObject_GetIter(__pyx_v_enc); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 390, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
-        __pyx_t_6 = Py_TYPE(__pyx_t_4)->tp_iternext; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 389, __pyx_L1_error)
+        __pyx_t_6 = Py_TYPE(__pyx_t_4)->tp_iternext; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 390, __pyx_L1_error)
       }
       for (;;) {
         if (likely(!__pyx_t_6)) {
           if (likely(PyList_CheckExact(__pyx_t_4))) {
             if (__pyx_t_5 >= PyList_GET_SIZE(__pyx_t_4)) break;
             #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-            __pyx_t_7 = PyList_GET_ITEM(__pyx_t_4, __pyx_t_5); __Pyx_INCREF(__pyx_t_7); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 389, __pyx_L1_error)
+            __pyx_t_7 = PyList_GET_ITEM(__pyx_t_4, __pyx_t_5); __Pyx_INCREF(__pyx_t_7); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 390, __pyx_L1_error)
             #else
-            __pyx_t_7 = PySequence_ITEM(__pyx_t_4, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 389, __pyx_L1_error)
+            __pyx_t_7 = PySequence_ITEM(__pyx_t_4, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 390, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_7);
             #endif
           } else {
             if (__pyx_t_5 >= PyTuple_GET_SIZE(__pyx_t_4)) break;
             #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-            __pyx_t_7 = PyTuple_GET_ITEM(__pyx_t_4, __pyx_t_5); __Pyx_INCREF(__pyx_t_7); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 389, __pyx_L1_error)
+            __pyx_t_7 = PyTuple_GET_ITEM(__pyx_t_4, __pyx_t_5); __Pyx_INCREF(__pyx_t_7); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 390, __pyx_L1_error)
             #else
-            __pyx_t_7 = PySequence_ITEM(__pyx_t_4, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 389, __pyx_L1_error)
+            __pyx_t_7 = PySequence_ITEM(__pyx_t_4, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 390, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_7);
             #endif
           }
@@ -4222,35 +4284,38 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
             PyObject* exc_type = PyErr_Occurred();
             if (exc_type) {
               if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-              else __PYX_ERR(0, 389, __pyx_L1_error)
+              else __PYX_ERR(0, 390, __pyx_L1_error)
             }
             break;
           }
           __Pyx_GOTREF(__pyx_t_7);
         }
-        __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_7); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 389, __pyx_L1_error)
+        __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_7); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 390, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
         __pyx_7genexpr__pyx_v_bit = __pyx_t_8;
-        __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_7genexpr__pyx_v_bit); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 389, __pyx_L1_error)
+        __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_7genexpr__pyx_v_bit); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 390, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_7);
-        if (unlikely(PyDict_SetItem(__pyx_t_1, (PyObject*)__pyx_t_7, (PyObject*)__pyx_float_1_0))) __PYX_ERR(0, 389, __pyx_L1_error)
+        __pyx_t_9 = PyFloat_FromDouble(__pyx_v_max_bit_weight); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 390, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_9);
+        if (unlikely(PyDict_SetItem(__pyx_t_1, (PyObject*)__pyx_t_7, (PyObject*)__pyx_t_9))) __PYX_ERR(0, 390, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+        __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       }
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     } /* exit inner scope */
     __Pyx_DECREF_SET(__pyx_v_enc, __pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "src/numeric_encoder.py":388
+    /* "src/numeric_encoder.py":389
  *         # add default weights of 1.0 if given a set of bits
  *         #
  *         if isinstance(enc, set):             # <<<<<<<<<<<<<<
- *             enc = {bit: 1.0 for bit in enc}
+ *             enc = {bit: max_bit_weight for bit in enc}
  * 
  */
   }
 
-  /* "src/numeric_encoder.py":393
+  /* "src/numeric_encoder.py":394
  *         # sum the weights for the buckets associated with the bits in the encoding
  *         #
  *         for bit in enc:             # <<<<<<<<<<<<<<
@@ -4261,26 +4326,26 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
     __pyx_t_1 = __pyx_v_enc; __Pyx_INCREF(__pyx_t_1); __pyx_t_5 = 0;
     __pyx_t_6 = NULL;
   } else {
-    __pyx_t_5 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_enc); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 393, __pyx_L1_error)
+    __pyx_t_5 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_enc); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 394, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_6 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 393, __pyx_L1_error)
+    __pyx_t_6 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 394, __pyx_L1_error)
   }
   for (;;) {
     if (likely(!__pyx_t_6)) {
       if (likely(PyList_CheckExact(__pyx_t_1))) {
         if (__pyx_t_5 >= PyList_GET_SIZE(__pyx_t_1)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_5); __Pyx_INCREF(__pyx_t_4); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 393, __pyx_L1_error)
+        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_5); __Pyx_INCREF(__pyx_t_4); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 394, __pyx_L1_error)
         #else
-        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 393, __pyx_L1_error)
+        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 394, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         #endif
       } else {
         if (__pyx_t_5 >= PyTuple_GET_SIZE(__pyx_t_1)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_5); __Pyx_INCREF(__pyx_t_4); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 393, __pyx_L1_error)
+        __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_5); __Pyx_INCREF(__pyx_t_4); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 394, __pyx_L1_error)
         #else
-        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 393, __pyx_L1_error)
+        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 394, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         #endif
       }
@@ -4290,35 +4355,35 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 393, __pyx_L1_error)
+          else __PYX_ERR(0, 394, __pyx_L1_error)
         }
         break;
       }
       __Pyx_GOTREF(__pyx_t_4);
     }
-    __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_4); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 393, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_4); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 394, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_v_bit = __pyx_t_8;
 
-    /* "src/numeric_encoder.py":396
+    /* "src/numeric_encoder.py":397
  *             # only process bits for this encoder
  *             #
  *             if bit in self.bits:             # <<<<<<<<<<<<<<
  *                 for bucket in self.bits[bit]:
  *                     if bucket not in buckets:
  */
-    __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_bit); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 396, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_bit); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 397, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     if (unlikely(__pyx_v_self->bits == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-      __PYX_ERR(0, 396, __pyx_L1_error)
+      __PYX_ERR(0, 397, __pyx_L1_error)
     }
-    __pyx_t_3 = (__Pyx_PyDict_ContainsTF(__pyx_t_4, __pyx_v_self->bits, Py_EQ)); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 396, __pyx_L1_error)
+    __pyx_t_3 = (__Pyx_PyDict_ContainsTF(__pyx_t_4, __pyx_v_self->bits, Py_EQ)); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 397, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_t_2 = (__pyx_t_3 != 0);
     if (__pyx_t_2) {
 
-      /* "src/numeric_encoder.py":397
+      /* "src/numeric_encoder.py":398
  *             #
  *             if bit in self.bits:
  *                 for bucket in self.bits[bit]:             # <<<<<<<<<<<<<<
@@ -4327,87 +4392,87 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
  */
       if (unlikely(__pyx_v_self->bits == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 397, __pyx_L1_error)
+        __PYX_ERR(0, 398, __pyx_L1_error)
       }
-      __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_bit); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 397, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_bit); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 398, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_7 = __Pyx_PyDict_GetItem(__pyx_v_self->bits, __pyx_t_4); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 397, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_7);
+      __pyx_t_9 = __Pyx_PyDict_GetItem(__pyx_v_self->bits, __pyx_t_4); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 398, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      if (likely(PyList_CheckExact(__pyx_t_7)) || PyTuple_CheckExact(__pyx_t_7)) {
-        __pyx_t_4 = __pyx_t_7; __Pyx_INCREF(__pyx_t_4); __pyx_t_9 = 0;
-        __pyx_t_10 = NULL;
+      if (likely(PyList_CheckExact(__pyx_t_9)) || PyTuple_CheckExact(__pyx_t_9)) {
+        __pyx_t_4 = __pyx_t_9; __Pyx_INCREF(__pyx_t_4); __pyx_t_10 = 0;
+        __pyx_t_11 = NULL;
       } else {
-        __pyx_t_9 = -1; __pyx_t_4 = PyObject_GetIter(__pyx_t_7); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 397, __pyx_L1_error)
+        __pyx_t_10 = -1; __pyx_t_4 = PyObject_GetIter(__pyx_t_9); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 398, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
-        __pyx_t_10 = Py_TYPE(__pyx_t_4)->tp_iternext; if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 397, __pyx_L1_error)
+        __pyx_t_11 = Py_TYPE(__pyx_t_4)->tp_iternext; if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 398, __pyx_L1_error)
       }
-      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       for (;;) {
-        if (likely(!__pyx_t_10)) {
+        if (likely(!__pyx_t_11)) {
           if (likely(PyList_CheckExact(__pyx_t_4))) {
-            if (__pyx_t_9 >= PyList_GET_SIZE(__pyx_t_4)) break;
+            if (__pyx_t_10 >= PyList_GET_SIZE(__pyx_t_4)) break;
             #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-            __pyx_t_7 = PyList_GET_ITEM(__pyx_t_4, __pyx_t_9); __Pyx_INCREF(__pyx_t_7); __pyx_t_9++; if (unlikely(0 < 0)) __PYX_ERR(0, 397, __pyx_L1_error)
+            __pyx_t_9 = PyList_GET_ITEM(__pyx_t_4, __pyx_t_10); __Pyx_INCREF(__pyx_t_9); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 398, __pyx_L1_error)
             #else
-            __pyx_t_7 = PySequence_ITEM(__pyx_t_4, __pyx_t_9); __pyx_t_9++; if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 397, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_7);
+            __pyx_t_9 = PySequence_ITEM(__pyx_t_4, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 398, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_9);
             #endif
           } else {
-            if (__pyx_t_9 >= PyTuple_GET_SIZE(__pyx_t_4)) break;
+            if (__pyx_t_10 >= PyTuple_GET_SIZE(__pyx_t_4)) break;
             #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-            __pyx_t_7 = PyTuple_GET_ITEM(__pyx_t_4, __pyx_t_9); __Pyx_INCREF(__pyx_t_7); __pyx_t_9++; if (unlikely(0 < 0)) __PYX_ERR(0, 397, __pyx_L1_error)
+            __pyx_t_9 = PyTuple_GET_ITEM(__pyx_t_4, __pyx_t_10); __Pyx_INCREF(__pyx_t_9); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 398, __pyx_L1_error)
             #else
-            __pyx_t_7 = PySequence_ITEM(__pyx_t_4, __pyx_t_9); __pyx_t_9++; if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 397, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_7);
+            __pyx_t_9 = PySequence_ITEM(__pyx_t_4, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 398, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_9);
             #endif
           }
         } else {
-          __pyx_t_7 = __pyx_t_10(__pyx_t_4);
-          if (unlikely(!__pyx_t_7)) {
+          __pyx_t_9 = __pyx_t_11(__pyx_t_4);
+          if (unlikely(!__pyx_t_9)) {
             PyObject* exc_type = PyErr_Occurred();
             if (exc_type) {
               if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-              else __PYX_ERR(0, 397, __pyx_L1_error)
+              else __PYX_ERR(0, 398, __pyx_L1_error)
             }
             break;
           }
-          __Pyx_GOTREF(__pyx_t_7);
+          __Pyx_GOTREF(__pyx_t_9);
         }
-        __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_7); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 397, __pyx_L1_error)
-        __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+        __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_9); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 398, __pyx_L1_error)
+        __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
         __pyx_v_bucket = __pyx_t_8;
 
-        /* "src/numeric_encoder.py":398
+        /* "src/numeric_encoder.py":399
  *             if bit in self.bits:
  *                 for bucket in self.bits[bit]:
  *                     if bucket not in buckets:             # <<<<<<<<<<<<<<
  *                         buckets[bucket] = enc[bit]
  *                     else:
  */
-        __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_bucket); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 398, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_7);
-        __pyx_t_2 = (__Pyx_PyDict_ContainsTF(__pyx_t_7, __pyx_v_buckets, Py_NE)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 398, __pyx_L1_error)
-        __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+        __pyx_t_9 = __Pyx_PyInt_From_int(__pyx_v_bucket); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 399, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_9);
+        __pyx_t_2 = (__Pyx_PyDict_ContainsTF(__pyx_t_9, __pyx_v_buckets, Py_NE)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 399, __pyx_L1_error)
+        __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
         __pyx_t_3 = (__pyx_t_2 != 0);
         if (__pyx_t_3) {
 
-          /* "src/numeric_encoder.py":399
+          /* "src/numeric_encoder.py":400
  *                 for bucket in self.bits[bit]:
  *                     if bucket not in buckets:
  *                         buckets[bucket] = enc[bit]             # <<<<<<<<<<<<<<
  *                     else:
  *                         buckets[bucket] += enc[bit]
  */
-          __pyx_t_7 = __Pyx_GetItemInt(__pyx_v_enc, __pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 399, __pyx_L1_error)
+          __pyx_t_9 = __Pyx_GetItemInt(__pyx_v_enc, __pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 400, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_9);
+          __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_bucket); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 400, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_7);
-          __pyx_t_11 = __Pyx_PyInt_From_int(__pyx_v_bucket); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 399, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_11);
-          if (unlikely(PyDict_SetItem(__pyx_v_buckets, __pyx_t_11, __pyx_t_7) < 0)) __PYX_ERR(0, 399, __pyx_L1_error)
-          __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+          if (unlikely(PyDict_SetItem(__pyx_v_buckets, __pyx_t_7, __pyx_t_9) < 0)) __PYX_ERR(0, 400, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+          __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-          /* "src/numeric_encoder.py":398
+          /* "src/numeric_encoder.py":399
  *             if bit in self.bits:
  *                 for bucket in self.bits[bit]:
  *                     if bucket not in buckets:             # <<<<<<<<<<<<<<
@@ -4417,7 +4482,7 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
           goto __pyx_L11;
         }
 
-        /* "src/numeric_encoder.py":401
+        /* "src/numeric_encoder.py":402
  *                         buckets[bucket] = enc[bit]
  *                     else:
  *                         buckets[bucket] += enc[bit]             # <<<<<<<<<<<<<<
@@ -4425,23 +4490,23 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
  *         if len(buckets) > 0:
  */
         /*else*/ {
-          __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_bucket); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 401, __pyx_L1_error)
+          __pyx_t_9 = __Pyx_PyInt_From_int(__pyx_v_bucket); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 402, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_9);
+          __pyx_t_7 = __Pyx_PyDict_GetItem(__pyx_v_buckets, __pyx_t_9); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 402, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_7);
-          __pyx_t_11 = __Pyx_PyDict_GetItem(__pyx_v_buckets, __pyx_t_7); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 401, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_11);
-          __pyx_t_12 = __Pyx_GetItemInt(__pyx_v_enc, __pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 401, __pyx_L1_error)
+          __pyx_t_12 = __Pyx_GetItemInt(__pyx_v_enc, __pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 402, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_12);
-          __pyx_t_13 = PyNumber_InPlaceAdd(__pyx_t_11, __pyx_t_12); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 401, __pyx_L1_error)
+          __pyx_t_13 = PyNumber_InPlaceAdd(__pyx_t_7, __pyx_t_12); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 402, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_13);
-          __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-          __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-          if (unlikely(PyDict_SetItem(__pyx_v_buckets, __pyx_t_7, __pyx_t_13) < 0)) __PYX_ERR(0, 401, __pyx_L1_error)
-          __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
           __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+          __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+          if (unlikely(PyDict_SetItem(__pyx_v_buckets, __pyx_t_9, __pyx_t_13) < 0)) __PYX_ERR(0, 402, __pyx_L1_error)
+          __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+          __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
         }
         __pyx_L11:;
 
-        /* "src/numeric_encoder.py":397
+        /* "src/numeric_encoder.py":398
  *             #
  *             if bit in self.bits:
  *                 for bucket in self.bits[bit]:             # <<<<<<<<<<<<<<
@@ -4451,7 +4516,7 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
       }
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-      /* "src/numeric_encoder.py":396
+      /* "src/numeric_encoder.py":397
  *             # only process bits for this encoder
  *             #
  *             if bit in self.bits:             # <<<<<<<<<<<<<<
@@ -4460,7 +4525,7 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
  */
     }
 
-    /* "src/numeric_encoder.py":393
+    /* "src/numeric_encoder.py":394
  *         # sum the weights for the buckets associated with the bits in the encoding
  *         #
  *         for bit in enc:             # <<<<<<<<<<<<<<
@@ -4470,101 +4535,107 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/numeric_encoder.py":403
+  /* "src/numeric_encoder.py":404
  *                         buckets[bucket] += enc[bit]
  * 
  *         if len(buckets) > 0:             # <<<<<<<<<<<<<<
  * 
  *             # create a list of buckets so we can sort in descending order of bit weight
  */
-  __pyx_t_5 = PyDict_Size(__pyx_v_buckets); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(0, 403, __pyx_L1_error)
+  __pyx_t_5 = PyDict_Size(__pyx_v_buckets); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(0, 404, __pyx_L1_error)
   __pyx_t_3 = ((__pyx_t_5 > 0) != 0);
   if (__pyx_t_3) {
 
-    /* "src/numeric_encoder.py":407
+    /* "src/numeric_encoder.py":408
  *             # create a list of buckets so we can sort in descending order of bit weight
  *             #
- *             bucket_list = [(n, buckets[n]) for n in buckets]             # <<<<<<<<<<<<<<
+ *             bucket_list = [(n, buckets[n] / max_bit_weight) for n in buckets]             # <<<<<<<<<<<<<<
  *             bucket_list.sort(key=lambda x: x[1], reverse=True)
  * 
  */
-    __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 407, __pyx_L1_error)
+    __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 408, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_5 = 0;
-    __pyx_t_7 = __Pyx_dict_iterator(__pyx_v_buckets, 1, ((PyObject *)NULL), (&__pyx_t_9), (&__pyx_t_8)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 407, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_7);
+    __pyx_t_9 = __Pyx_dict_iterator(__pyx_v_buckets, 1, ((PyObject *)NULL), (&__pyx_t_10), (&__pyx_t_8)); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 408, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
     __Pyx_XDECREF(__pyx_t_4);
-    __pyx_t_4 = __pyx_t_7;
-    __pyx_t_7 = 0;
+    __pyx_t_4 = __pyx_t_9;
+    __pyx_t_9 = 0;
     while (1) {
-      __pyx_t_14 = __Pyx_dict_iter_next(__pyx_t_4, __pyx_t_9, &__pyx_t_5, &__pyx_t_7, NULL, NULL, __pyx_t_8);
+      __pyx_t_14 = __Pyx_dict_iter_next(__pyx_t_4, __pyx_t_10, &__pyx_t_5, &__pyx_t_9, NULL, NULL, __pyx_t_8);
       if (unlikely(__pyx_t_14 == 0)) break;
-      if (unlikely(__pyx_t_14 == -1)) __PYX_ERR(0, 407, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_7);
-      __pyx_t_14 = __Pyx_PyInt_As_int(__pyx_t_7); if (unlikely((__pyx_t_14 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 407, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+      if (unlikely(__pyx_t_14 == -1)) __PYX_ERR(0, 408, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
+      __pyx_t_14 = __Pyx_PyInt_As_int(__pyx_t_9); if (unlikely((__pyx_t_14 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 408, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       __pyx_v_n = __pyx_t_14;
-      __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_n); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 407, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_7);
-      __pyx_t_13 = __Pyx_PyInt_From_int(__pyx_v_n); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 407, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyInt_From_int(__pyx_v_n); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 408, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
+      __pyx_t_13 = __Pyx_PyInt_From_int(__pyx_v_n); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 408, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_13);
-      __pyx_t_12 = __Pyx_PyDict_GetItem(__pyx_v_buckets, __pyx_t_13); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 407, __pyx_L1_error)
+      __pyx_t_12 = __Pyx_PyDict_GetItem(__pyx_v_buckets, __pyx_t_13); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 408, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
       __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-      __pyx_t_13 = PyTuple_New(2); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 407, __pyx_L1_error)
+      __pyx_t_13 = PyFloat_FromDouble(__pyx_v_max_bit_weight); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 408, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_13);
+      __pyx_t_7 = __Pyx_PyNumber_Divide(__pyx_t_12, __pyx_t_13); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 408, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_7);
+      __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+      __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+      __pyx_t_13 = PyTuple_New(2); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 408, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_13);
+      __Pyx_GIVEREF(__pyx_t_9);
+      PyTuple_SET_ITEM(__pyx_t_13, 0, __pyx_t_9);
       __Pyx_GIVEREF(__pyx_t_7);
-      PyTuple_SET_ITEM(__pyx_t_13, 0, __pyx_t_7);
-      __Pyx_GIVEREF(__pyx_t_12);
-      PyTuple_SET_ITEM(__pyx_t_13, 1, __pyx_t_12);
+      PyTuple_SET_ITEM(__pyx_t_13, 1, __pyx_t_7);
+      __pyx_t_9 = 0;
       __pyx_t_7 = 0;
-      __pyx_t_12 = 0;
-      if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_13))) __PYX_ERR(0, 407, __pyx_L1_error)
+      if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_13))) __PYX_ERR(0, 408, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
     }
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_v_bucket_list = ((PyObject*)__pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "src/numeric_encoder.py":408
+    /* "src/numeric_encoder.py":409
  *             #
- *             bucket_list = [(n, buckets[n]) for n in buckets]
+ *             bucket_list = [(n, buckets[n] / max_bit_weight) for n in buckets]
  *             bucket_list.sort(key=lambda x: x[1], reverse=True)             # <<<<<<<<<<<<<<
  * 
  *             # get weighted average of bucket values if the best weight is less than n_bits
  */
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_bucket_list, __pyx_n_s_sort); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 408, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_bucket_list, __pyx_n_s_sort); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 409, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_4 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 408, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 409, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_13 = __Pyx_CyFunction_New(&__pyx_mdef_3src_15numeric_encoder_14NumericEncoder_6decode_lambda, 0, __pyx_n_s_decode_locals_lambda, NULL, __pyx_n_s_src_numeric_encoder, __pyx_d, NULL); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 408, __pyx_L1_error)
+    __pyx_t_13 = __Pyx_CyFunction_New(&__pyx_mdef_3src_15numeric_encoder_14NumericEncoder_6decode_lambda, 0, __pyx_n_s_decode_locals_lambda, NULL, __pyx_n_s_src_numeric_encoder, __pyx_d, NULL); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 409, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_13);
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_key, __pyx_t_13) < 0) __PYX_ERR(0, 408, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_key, __pyx_t_13) < 0) __PYX_ERR(0, 409, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_reverse, Py_True) < 0) __PYX_ERR(0, 408, __pyx_L1_error)
-    __pyx_t_13 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_empty_tuple, __pyx_t_4); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 408, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_reverse, Py_True) < 0) __PYX_ERR(0, 409, __pyx_L1_error)
+    __pyx_t_13 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_empty_tuple, __pyx_t_4); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 409, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_13);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
 
-    /* "src/numeric_encoder.py":412
+    /* "src/numeric_encoder.py":413
  *             # get weighted average of bucket values if the best weight is less than n_bits
  *             #
  *             best_weight = bucket_list[0][1]             # <<<<<<<<<<<<<<
  *             if best_weight < self.n_bits:
  * 
  */
-    __pyx_t_13 = __Pyx_GetItemInt_List(__pyx_v_bucket_list, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 412, __pyx_L1_error)
+    __pyx_t_13 = __Pyx_GetItemInt_List(__pyx_v_bucket_list, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 413, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_13);
-    __pyx_t_4 = __Pyx_GetItemInt(__pyx_t_13, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 412, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_GetItemInt(__pyx_t_13, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 413, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-    __pyx_t_15 = __pyx_PyFloat_AsDouble(__pyx_t_4); if (unlikely((__pyx_t_15 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 412, __pyx_L1_error)
+    __pyx_t_15 = __pyx_PyFloat_AsDouble(__pyx_t_4); if (unlikely((__pyx_t_15 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 413, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_v_best_weight = __pyx_t_15;
 
-    /* "src/numeric_encoder.py":413
+    /* "src/numeric_encoder.py":414
  *             #
  *             best_weight = bucket_list[0][1]
  *             if best_weight < self.n_bits:             # <<<<<<<<<<<<<<
@@ -4574,7 +4645,7 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
     __pyx_t_3 = ((__pyx_v_best_weight < __pyx_v_self->n_bits) != 0);
     if (__pyx_t_3) {
 
-      /* "src/numeric_encoder.py":415
+      /* "src/numeric_encoder.py":416
  *             if best_weight < self.n_bits:
  * 
  *                 value = None             # <<<<<<<<<<<<<<
@@ -4584,7 +4655,7 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
       __Pyx_INCREF(Py_None);
       __pyx_v_value = Py_None;
 
-      /* "src/numeric_encoder.py":416
+      /* "src/numeric_encoder.py":417
  * 
  *                 value = None
  *                 total_weight = 0.0             # <<<<<<<<<<<<<<
@@ -4593,35 +4664,35 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
  */
       __pyx_v_total_weight = 0.0;
 
-      /* "src/numeric_encoder.py":421
+      /* "src/numeric_encoder.py":422
  *                 # if any of these are None then return None
  *                 #
  *                 for idx in range(min(3, len(bucket_list))):             # <<<<<<<<<<<<<<
  *                     if bucket_list[idx][0] is not None:
  *                         if value is None:
  */
-      __pyx_t_9 = PyList_GET_SIZE(__pyx_v_bucket_list); if (unlikely(__pyx_t_9 == ((Py_ssize_t)-1))) __PYX_ERR(0, 421, __pyx_L1_error)
+      __pyx_t_10 = PyList_GET_SIZE(__pyx_v_bucket_list); if (unlikely(__pyx_t_10 == ((Py_ssize_t)-1))) __PYX_ERR(0, 422, __pyx_L1_error)
       __pyx_t_16 = 3;
-      if (((__pyx_t_9 < __pyx_t_16) != 0)) {
-        __pyx_t_5 = __pyx_t_9;
+      if (((__pyx_t_10 < __pyx_t_16) != 0)) {
+        __pyx_t_5 = __pyx_t_10;
       } else {
         __pyx_t_5 = __pyx_t_16;
       }
-      __pyx_t_9 = __pyx_t_5;
-      __pyx_t_5 = __pyx_t_9;
+      __pyx_t_10 = __pyx_t_5;
+      __pyx_t_5 = __pyx_t_10;
       for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_5; __pyx_t_8+=1) {
         __pyx_v_idx = __pyx_t_8;
 
-        /* "src/numeric_encoder.py":422
+        /* "src/numeric_encoder.py":423
  *                 #
  *                 for idx in range(min(3, len(bucket_list))):
  *                     if bucket_list[idx][0] is not None:             # <<<<<<<<<<<<<<
  *                         if value is None:
  *                             value = 0
  */
-        __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_bucket_list, __pyx_v_idx, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 422, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_bucket_list, __pyx_v_idx, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 423, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
-        __pyx_t_13 = __Pyx_GetItemInt(__pyx_t_4, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 422, __pyx_L1_error)
+        __pyx_t_13 = __Pyx_GetItemInt(__pyx_t_4, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 423, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_13);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
         __pyx_t_3 = (__pyx_t_13 != Py_None);
@@ -4629,7 +4700,7 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
         __pyx_t_2 = (__pyx_t_3 != 0);
         if (__pyx_t_2) {
 
-          /* "src/numeric_encoder.py":423
+          /* "src/numeric_encoder.py":424
  *                 for idx in range(min(3, len(bucket_list))):
  *                     if bucket_list[idx][0] is not None:
  *                         if value is None:             # <<<<<<<<<<<<<<
@@ -4640,7 +4711,7 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
           __pyx_t_3 = (__pyx_t_2 != 0);
           if (__pyx_t_3) {
 
-            /* "src/numeric_encoder.py":424
+            /* "src/numeric_encoder.py":425
  *                     if bucket_list[idx][0] is not None:
  *                         if value is None:
  *                             value = 0             # <<<<<<<<<<<<<<
@@ -4650,7 +4721,7 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
             __Pyx_INCREF(__pyx_int_0);
             __Pyx_DECREF_SET(__pyx_v_value, __pyx_int_0);
 
-            /* "src/numeric_encoder.py":423
+            /* "src/numeric_encoder.py":424
  *                 for idx in range(min(3, len(bucket_list))):
  *                     if bucket_list[idx][0] is not None:
  *                         if value is None:             # <<<<<<<<<<<<<<
@@ -4659,68 +4730,68 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
  */
           }
 
-          /* "src/numeric_encoder.py":425
+          /* "src/numeric_encoder.py":426
  *                         if value is None:
  *                             value = 0
  *                         value += (bucket_list[idx][0] + self.zero_bucket) * self.min_step * bucket_list[idx][1]             # <<<<<<<<<<<<<<
  *                         total_weight += bucket_list[idx][1]
  * 
  */
-          __pyx_t_13 = __Pyx_GetItemInt_List(__pyx_v_bucket_list, __pyx_v_idx, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 425, __pyx_L1_error)
+          __pyx_t_13 = __Pyx_GetItemInt_List(__pyx_v_bucket_list, __pyx_v_idx, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 426, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_13);
-          __pyx_t_4 = __Pyx_GetItemInt(__pyx_t_13, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 425, __pyx_L1_error)
+          __pyx_t_4 = __Pyx_GetItemInt(__pyx_t_13, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 426, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-          __pyx_t_13 = PyFloat_FromDouble(__pyx_v_self->zero_bucket); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 425, __pyx_L1_error)
+          __pyx_t_13 = PyFloat_FromDouble(__pyx_v_self->zero_bucket); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 426, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_13);
-          __pyx_t_1 = PyNumber_Add(__pyx_t_4, __pyx_t_13); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 425, __pyx_L1_error)
+          __pyx_t_1 = PyNumber_Add(__pyx_t_4, __pyx_t_13); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 426, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_1);
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-          __pyx_t_13 = PyFloat_FromDouble(__pyx_v_self->min_step); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 425, __pyx_L1_error)
+          __pyx_t_13 = PyFloat_FromDouble(__pyx_v_self->min_step); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 426, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_13);
-          __pyx_t_4 = PyNumber_Multiply(__pyx_t_1, __pyx_t_13); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 425, __pyx_L1_error)
+          __pyx_t_4 = PyNumber_Multiply(__pyx_t_1, __pyx_t_13); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 426, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
           __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-          __pyx_t_13 = __Pyx_GetItemInt_List(__pyx_v_bucket_list, __pyx_v_idx, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 425, __pyx_L1_error)
+          __pyx_t_13 = __Pyx_GetItemInt_List(__pyx_v_bucket_list, __pyx_v_idx, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 426, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_13);
-          __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_13, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 425, __pyx_L1_error)
+          __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_13, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 426, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_1);
           __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-          __pyx_t_13 = PyNumber_Multiply(__pyx_t_4, __pyx_t_1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 425, __pyx_L1_error)
+          __pyx_t_13 = PyNumber_Multiply(__pyx_t_4, __pyx_t_1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 426, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_13);
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-          __pyx_t_1 = PyNumber_InPlaceAdd(__pyx_v_value, __pyx_t_13); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 425, __pyx_L1_error)
+          __pyx_t_1 = PyNumber_InPlaceAdd(__pyx_v_value, __pyx_t_13); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 426, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_1);
           __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
           __Pyx_DECREF_SET(__pyx_v_value, __pyx_t_1);
           __pyx_t_1 = 0;
 
-          /* "src/numeric_encoder.py":426
+          /* "src/numeric_encoder.py":427
  *                             value = 0
  *                         value += (bucket_list[idx][0] + self.zero_bucket) * self.min_step * bucket_list[idx][1]
  *                         total_weight += bucket_list[idx][1]             # <<<<<<<<<<<<<<
  * 
  *                 if value is not None:
  */
-          __pyx_t_1 = PyFloat_FromDouble(__pyx_v_total_weight); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 426, __pyx_L1_error)
+          __pyx_t_1 = PyFloat_FromDouble(__pyx_v_total_weight); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 427, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_1);
-          __pyx_t_13 = __Pyx_GetItemInt_List(__pyx_v_bucket_list, __pyx_v_idx, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 426, __pyx_L1_error)
+          __pyx_t_13 = __Pyx_GetItemInt_List(__pyx_v_bucket_list, __pyx_v_idx, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 427, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_13);
-          __pyx_t_4 = __Pyx_GetItemInt(__pyx_t_13, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 426, __pyx_L1_error)
+          __pyx_t_4 = __Pyx_GetItemInt(__pyx_t_13, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 427, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-          __pyx_t_13 = PyNumber_InPlaceAdd(__pyx_t_1, __pyx_t_4); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 426, __pyx_L1_error)
+          __pyx_t_13 = PyNumber_InPlaceAdd(__pyx_t_1, __pyx_t_4); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 427, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_13);
           __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-          __pyx_t_15 = __pyx_PyFloat_AsDouble(__pyx_t_13); if (unlikely((__pyx_t_15 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 426, __pyx_L1_error)
+          __pyx_t_15 = __pyx_PyFloat_AsDouble(__pyx_t_13); if (unlikely((__pyx_t_15 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 427, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
           __pyx_v_total_weight = __pyx_t_15;
 
-          /* "src/numeric_encoder.py":422
+          /* "src/numeric_encoder.py":423
  *                 #
  *                 for idx in range(min(3, len(bucket_list))):
  *                     if bucket_list[idx][0] is not None:             # <<<<<<<<<<<<<<
@@ -4730,7 +4801,7 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
         }
       }
 
-      /* "src/numeric_encoder.py":428
+      /* "src/numeric_encoder.py":429
  *                         total_weight += bucket_list[idx][1]
  * 
  *                 if value is not None:             # <<<<<<<<<<<<<<
@@ -4741,22 +4812,22 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
       __pyx_t_2 = (__pyx_t_3 != 0);
       if (__pyx_t_2) {
 
-        /* "src/numeric_encoder.py":429
+        /* "src/numeric_encoder.py":430
  * 
  *                 if value is not None:
  *                     value = value / total_weight             # <<<<<<<<<<<<<<
  * 
  *                     # return to linear scale if log previously applied
  */
-        __pyx_t_13 = PyFloat_FromDouble(__pyx_v_total_weight); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 429, __pyx_L1_error)
+        __pyx_t_13 = PyFloat_FromDouble(__pyx_v_total_weight); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 430, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_13);
-        __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_v_value, __pyx_t_13); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 429, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_v_value, __pyx_t_13); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 430, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
         __Pyx_DECREF_SET(__pyx_v_value, __pyx_t_4);
         __pyx_t_4 = 0;
 
-        /* "src/numeric_encoder.py":433
+        /* "src/numeric_encoder.py":434
  *                     # return to linear scale if log previously applied
  *                     #
  *                     if self.log:             # <<<<<<<<<<<<<<
@@ -4766,14 +4837,14 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
         __pyx_t_2 = (__pyx_v_self->log != 0);
         if (__pyx_t_2) {
 
-          /* "src/numeric_encoder.py":434
+          /* "src/numeric_encoder.py":435
  *                     #
  *                     if self.log:
  *                         value = pow(10, value)             # <<<<<<<<<<<<<<
  *             # weight of best bucket is a maximum of n_bits so don't need to calculate a weighted average
  *             #
  */
-          __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_pow); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 434, __pyx_L1_error)
+          __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_pow); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 435, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_13);
           __pyx_t_1 = NULL;
           __pyx_t_8 = 0;
@@ -4790,7 +4861,7 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
           #if CYTHON_FAST_PYCALL
           if (PyFunction_Check(__pyx_t_13)) {
             PyObject *__pyx_temp[3] = {__pyx_t_1, __pyx_int_10, __pyx_v_value};
-            __pyx_t_4 = __Pyx_PyFunction_FastCall(__pyx_t_13, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 434, __pyx_L1_error)
+            __pyx_t_4 = __Pyx_PyFunction_FastCall(__pyx_t_13, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 435, __pyx_L1_error)
             __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
             __Pyx_GOTREF(__pyx_t_4);
           } else
@@ -4798,32 +4869,32 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
           #if CYTHON_FAST_PYCCALL
           if (__Pyx_PyFastCFunction_Check(__pyx_t_13)) {
             PyObject *__pyx_temp[3] = {__pyx_t_1, __pyx_int_10, __pyx_v_value};
-            __pyx_t_4 = __Pyx_PyCFunction_FastCall(__pyx_t_13, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 434, __pyx_L1_error)
+            __pyx_t_4 = __Pyx_PyCFunction_FastCall(__pyx_t_13, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 435, __pyx_L1_error)
             __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
             __Pyx_GOTREF(__pyx_t_4);
           } else
           #endif
           {
-            __pyx_t_12 = PyTuple_New(2+__pyx_t_8); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 434, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_12);
+            __pyx_t_7 = PyTuple_New(2+__pyx_t_8); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 435, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_7);
             if (__pyx_t_1) {
-              __Pyx_GIVEREF(__pyx_t_1); PyTuple_SET_ITEM(__pyx_t_12, 0, __pyx_t_1); __pyx_t_1 = NULL;
+              __Pyx_GIVEREF(__pyx_t_1); PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_1); __pyx_t_1 = NULL;
             }
             __Pyx_INCREF(__pyx_int_10);
             __Pyx_GIVEREF(__pyx_int_10);
-            PyTuple_SET_ITEM(__pyx_t_12, 0+__pyx_t_8, __pyx_int_10);
+            PyTuple_SET_ITEM(__pyx_t_7, 0+__pyx_t_8, __pyx_int_10);
             __Pyx_INCREF(__pyx_v_value);
             __Pyx_GIVEREF(__pyx_v_value);
-            PyTuple_SET_ITEM(__pyx_t_12, 1+__pyx_t_8, __pyx_v_value);
-            __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_13, __pyx_t_12, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 434, __pyx_L1_error)
+            PyTuple_SET_ITEM(__pyx_t_7, 1+__pyx_t_8, __pyx_v_value);
+            __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_13, __pyx_t_7, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 435, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_4);
-            __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+            __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
           }
           __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
           __Pyx_DECREF_SET(__pyx_v_value, __pyx_t_4);
           __pyx_t_4 = 0;
 
-          /* "src/numeric_encoder.py":433
+          /* "src/numeric_encoder.py":434
  *                     # return to linear scale if log previously applied
  *                     #
  *                     if self.log:             # <<<<<<<<<<<<<<
@@ -4832,7 +4903,7 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
  */
         }
 
-        /* "src/numeric_encoder.py":428
+        /* "src/numeric_encoder.py":429
  *                         total_weight += bucket_list[idx][1]
  * 
  *                 if value is not None:             # <<<<<<<<<<<<<<
@@ -4841,7 +4912,7 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
  */
       }
 
-      /* "src/numeric_encoder.py":413
+      /* "src/numeric_encoder.py":414
  *             #
  *             best_weight = bucket_list[0][1]
  *             if best_weight < self.n_bits:             # <<<<<<<<<<<<<<
@@ -4851,7 +4922,7 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
       goto __pyx_L15;
     }
 
-    /* "src/numeric_encoder.py":441
+    /* "src/numeric_encoder.py":442
  *                 # it's possible the bucket value is actually None
  *                 #
  *                 if bucket_list[0][0] is not None:             # <<<<<<<<<<<<<<
@@ -4859,9 +4930,9 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
  *                     # calc value of best bucket using min_step and offset from zero bucket value
  */
     /*else*/ {
-      __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_bucket_list, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 441, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_bucket_list, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 442, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_13 = __Pyx_GetItemInt(__pyx_t_4, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 441, __pyx_L1_error)
+      __pyx_t_13 = __Pyx_GetItemInt(__pyx_t_4, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 442, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_13);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __pyx_t_2 = (__pyx_t_13 != Py_None);
@@ -4869,34 +4940,34 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
       __pyx_t_3 = (__pyx_t_2 != 0);
       if (__pyx_t_3) {
 
-        /* "src/numeric_encoder.py":445
+        /* "src/numeric_encoder.py":446
  *                     # calc value of best bucket using min_step and offset from zero bucket value
  *                     #
  *                     value = (bucket_list[0][0] * self.min_step) + (self.zero_bucket * self.min_step)             # <<<<<<<<<<<<<<
  * 
  *                     # return to linear scale if log previously applied
  */
-        __pyx_t_13 = __Pyx_GetItemInt_List(__pyx_v_bucket_list, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 445, __pyx_L1_error)
+        __pyx_t_13 = __Pyx_GetItemInt_List(__pyx_v_bucket_list, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 446, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_13);
-        __pyx_t_4 = __Pyx_GetItemInt(__pyx_t_13, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 445, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_GetItemInt(__pyx_t_13, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 446, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-        __pyx_t_13 = PyFloat_FromDouble(__pyx_v_self->min_step); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 445, __pyx_L1_error)
+        __pyx_t_13 = PyFloat_FromDouble(__pyx_v_self->min_step); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 446, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_13);
-        __pyx_t_12 = PyNumber_Multiply(__pyx_t_4, __pyx_t_13); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 445, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_12);
+        __pyx_t_7 = PyNumber_Multiply(__pyx_t_4, __pyx_t_13); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 446, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_7);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
         __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-        __pyx_t_13 = PyFloat_FromDouble((__pyx_v_self->zero_bucket * __pyx_v_self->min_step)); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 445, __pyx_L1_error)
+        __pyx_t_13 = PyFloat_FromDouble((__pyx_v_self->zero_bucket * __pyx_v_self->min_step)); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 446, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_13);
-        __pyx_t_4 = PyNumber_Add(__pyx_t_12, __pyx_t_13); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 445, __pyx_L1_error)
+        __pyx_t_4 = PyNumber_Add(__pyx_t_7, __pyx_t_13); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 446, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
-        __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+        __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
         __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
         __pyx_v_value = __pyx_t_4;
         __pyx_t_4 = 0;
 
-        /* "src/numeric_encoder.py":449
+        /* "src/numeric_encoder.py":450
  *                     # return to linear scale if log previously applied
  *                     #
  *                     if self.log:             # <<<<<<<<<<<<<<
@@ -4906,22 +4977,22 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
         __pyx_t_3 = (__pyx_v_self->log != 0);
         if (__pyx_t_3) {
 
-          /* "src/numeric_encoder.py":450
+          /* "src/numeric_encoder.py":451
  *                     #
  *                     if self.log:
  *                         value = pow(10, value)             # <<<<<<<<<<<<<<
  *                 else:
  *                     value = None
  */
-          __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_pow); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 450, __pyx_L1_error)
+          __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_pow); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 451, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_13);
-          __pyx_t_12 = NULL;
+          __pyx_t_7 = NULL;
           __pyx_t_8 = 0;
           if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_13))) {
-            __pyx_t_12 = PyMethod_GET_SELF(__pyx_t_13);
-            if (likely(__pyx_t_12)) {
+            __pyx_t_7 = PyMethod_GET_SELF(__pyx_t_13);
+            if (likely(__pyx_t_7)) {
               PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_13);
-              __Pyx_INCREF(__pyx_t_12);
+              __Pyx_INCREF(__pyx_t_7);
               __Pyx_INCREF(function);
               __Pyx_DECREF_SET(__pyx_t_13, function);
               __pyx_t_8 = 1;
@@ -4929,25 +5000,25 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
           }
           #if CYTHON_FAST_PYCALL
           if (PyFunction_Check(__pyx_t_13)) {
-            PyObject *__pyx_temp[3] = {__pyx_t_12, __pyx_int_10, __pyx_v_value};
-            __pyx_t_4 = __Pyx_PyFunction_FastCall(__pyx_t_13, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 450, __pyx_L1_error)
-            __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
+            PyObject *__pyx_temp[3] = {__pyx_t_7, __pyx_int_10, __pyx_v_value};
+            __pyx_t_4 = __Pyx_PyFunction_FastCall(__pyx_t_13, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 451, __pyx_L1_error)
+            __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
             __Pyx_GOTREF(__pyx_t_4);
           } else
           #endif
           #if CYTHON_FAST_PYCCALL
           if (__Pyx_PyFastCFunction_Check(__pyx_t_13)) {
-            PyObject *__pyx_temp[3] = {__pyx_t_12, __pyx_int_10, __pyx_v_value};
-            __pyx_t_4 = __Pyx_PyCFunction_FastCall(__pyx_t_13, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 450, __pyx_L1_error)
-            __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
+            PyObject *__pyx_temp[3] = {__pyx_t_7, __pyx_int_10, __pyx_v_value};
+            __pyx_t_4 = __Pyx_PyCFunction_FastCall(__pyx_t_13, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 451, __pyx_L1_error)
+            __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
             __Pyx_GOTREF(__pyx_t_4);
           } else
           #endif
           {
-            __pyx_t_1 = PyTuple_New(2+__pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 450, __pyx_L1_error)
+            __pyx_t_1 = PyTuple_New(2+__pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 451, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_1);
-            if (__pyx_t_12) {
-              __Pyx_GIVEREF(__pyx_t_12); PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_12); __pyx_t_12 = NULL;
+            if (__pyx_t_7) {
+              __Pyx_GIVEREF(__pyx_t_7); PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_7); __pyx_t_7 = NULL;
             }
             __Pyx_INCREF(__pyx_int_10);
             __Pyx_GIVEREF(__pyx_int_10);
@@ -4955,7 +5026,7 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
             __Pyx_INCREF(__pyx_v_value);
             __Pyx_GIVEREF(__pyx_v_value);
             PyTuple_SET_ITEM(__pyx_t_1, 1+__pyx_t_8, __pyx_v_value);
-            __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_13, __pyx_t_1, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 450, __pyx_L1_error)
+            __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_13, __pyx_t_1, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 451, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_4);
             __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
           }
@@ -4963,7 +5034,7 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
           __Pyx_DECREF_SET(__pyx_v_value, __pyx_t_4);
           __pyx_t_4 = 0;
 
-          /* "src/numeric_encoder.py":449
+          /* "src/numeric_encoder.py":450
  *                     # return to linear scale if log previously applied
  *                     #
  *                     if self.log:             # <<<<<<<<<<<<<<
@@ -4972,7 +5043,7 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
  */
         }
 
-        /* "src/numeric_encoder.py":441
+        /* "src/numeric_encoder.py":442
  *                 # it's possible the bucket value is actually None
  *                 #
  *                 if bucket_list[0][0] is not None:             # <<<<<<<<<<<<<<
@@ -4982,7 +5053,7 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
         goto __pyx_L22;
       }
 
-      /* "src/numeric_encoder.py":452
+      /* "src/numeric_encoder.py":453
  *                         value = pow(10, value)
  *                 else:
  *                     value = None             # <<<<<<<<<<<<<<
@@ -4997,7 +5068,7 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
     }
     __pyx_L15:;
 
-    /* "src/numeric_encoder.py":403
+    /* "src/numeric_encoder.py":404
  *                         buckets[bucket] += enc[bit]
  * 
  *         if len(buckets) > 0:             # <<<<<<<<<<<<<<
@@ -5007,7 +5078,7 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
     goto __pyx_L12;
   }
 
-  /* "src/numeric_encoder.py":454
+  /* "src/numeric_encoder.py":455
  *                     value = None
  *         else:
  *             value = None             # <<<<<<<<<<<<<<
@@ -5020,7 +5091,7 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
   }
   __pyx_L12:;
 
-  /* "src/numeric_encoder.py":455
+  /* "src/numeric_encoder.py":456
  *         else:
  *             value = None
  *         return value             # <<<<<<<<<<<<<<
@@ -5035,7 +5106,7 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
   /* "src/numeric_encoder.py":367
  *         return enc
  * 
- *     def decode(self, enc: Union[set, dict]):             # <<<<<<<<<<<<<<
+ *     def decode(self, enc: Union[set, dict], max_bit_weight: float = 1.0):             # <<<<<<<<<<<<<<
  *         """
  *         decodes a set of bits into a numeric
  */
@@ -5045,7 +5116,7 @@ static PyObject *__pyx_pf_3src_15numeric_encoder_14NumericEncoder_6decode(struct
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_7);
-  __Pyx_XDECREF(__pyx_t_11);
+  __Pyx_XDECREF(__pyx_t_9);
   __Pyx_XDECREF(__pyx_t_12);
   __Pyx_XDECREF(__pyx_t_13);
   __Pyx_AddTraceback("src.numeric_encoder.NumericEncoder.decode", __pyx_clineno, __pyx_lineno, __pyx_filename);
@@ -7621,7 +7692,7 @@ static int __pyx_setprop_3src_15numeric_encoder_14NumericEncoder_zero_bucket(PyO
 static PyMethodDef __pyx_methods_3src_15numeric_encoder_NumericEncoder[] = {
   {"create_encoding", (PyCFunction)__pyx_pw_3src_15numeric_encoder_14NumericEncoder_3create_encoding, METH_O, __pyx_doc_3src_15numeric_encoder_14NumericEncoder_2create_encoding},
   {"encode", (PyCFunction)__pyx_pw_3src_15numeric_encoder_14NumericEncoder_5encode, METH_O, __pyx_doc_3src_15numeric_encoder_14NumericEncoder_4encode},
-  {"decode", (PyCFunction)__pyx_pw_3src_15numeric_encoder_14NumericEncoder_7decode, METH_O, __pyx_doc_3src_15numeric_encoder_14NumericEncoder_6decode},
+  {"decode", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_15numeric_encoder_14NumericEncoder_7decode, METH_VARARGS|METH_KEYWORDS, __pyx_doc_3src_15numeric_encoder_14NumericEncoder_6decode},
   {"__reduce_cython__", (PyCFunction)__pyx_pw_3src_15numeric_encoder_14NumericEncoder_9__reduce_cython__, METH_NOARGS, 0},
   {"__setstate_cython__", (PyCFunction)__pyx_pw_3src_15numeric_encoder_14NumericEncoder_11__setstate_cython__, METH_O, 0},
   {0, 0, 0, 0}
@@ -7798,6 +7869,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_end, __pyx_k_end, sizeof(__pyx_k_end), 0, 0, 1, 1},
   {&__pyx_n_s_file, __pyx_k_file, sizeof(__pyx_k_file), 0, 0, 1, 1},
   {&__pyx_n_s_finished, __pyx_k_finished, sizeof(__pyx_k_finished), 0, 0, 1, 1},
+  {&__pyx_n_u_float, __pyx_k_float, sizeof(__pyx_k_float), 0, 1, 0, 1},
   {&__pyx_n_s_getstate, __pyx_k_getstate, sizeof(__pyx_k_getstate), 0, 0, 1, 1},
   {&__pyx_n_s_getstate_2, __pyx_k_getstate_2, sizeof(__pyx_k_getstate_2), 0, 0, 1, 1},
   {&__pyx_n_s_i, __pyx_k_i, sizeof(__pyx_k_i), 0, 0, 1, 1},
@@ -7809,6 +7881,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_log10, __pyx_k_log10, sizeof(__pyx_k_log10), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
   {&__pyx_n_s_math, __pyx_k_math, sizeof(__pyx_k_math), 0, 0, 1, 1},
+  {&__pyx_n_s_max_bit_weight, __pyx_k_max_bit_weight, sizeof(__pyx_k_max_bit_weight), 0, 0, 1, 1},
   {&__pyx_n_s_min_step, __pyx_k_min_step, sizeof(__pyx_k_min_step), 0, 0, 1, 1},
   {&__pyx_n_s_n, __pyx_k_n, sizeof(__pyx_k_n), 0, 0, 1, 1},
   {&__pyx_n_s_n_bits, __pyx_k_n_bits, sizeof(__pyx_k_n_bits), 0, 0, 1, 1},
@@ -7904,14 +7977,14 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   /* "src/numeric_encoder.py":367
  *         return enc
  * 
- *     def decode(self, enc: Union[set, dict]):             # <<<<<<<<<<<<<<
+ *     def decode(self, enc: Union[set, dict], max_bit_weight: float = 1.0):             # <<<<<<<<<<<<<<
  *         """
  *         decodes a set of bits into a numeric
  */
-  __pyx_tuple__5 = PyTuple_Pack(12, __pyx_n_s_self, __pyx_n_s_enc, __pyx_n_s_buckets, __pyx_n_s_bucket_list, __pyx_n_s_bit, __pyx_n_s_bucket, __pyx_n_s_n, __pyx_n_s_best_weight, __pyx_n_s_total_weight, __pyx_n_s_idx, __pyx_n_s_value, __pyx_n_s_bit); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(0, 367, __pyx_L1_error)
+  __pyx_tuple__5 = PyTuple_Pack(13, __pyx_n_s_self, __pyx_n_s_enc, __pyx_n_s_max_bit_weight, __pyx_n_s_buckets, __pyx_n_s_bucket_list, __pyx_n_s_bit, __pyx_n_s_bucket, __pyx_n_s_n, __pyx_n_s_best_weight, __pyx_n_s_total_weight, __pyx_n_s_idx, __pyx_n_s_value, __pyx_n_s_bit); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(0, 367, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__5);
   __Pyx_GIVEREF(__pyx_tuple__5);
-  __pyx_codeobj__6 = (PyObject*)__Pyx_PyCode_New(2, 0, 12, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__5, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_numeric_encoder_py, __pyx_n_s_decode, 367, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__6)) __PYX_ERR(0, 367, __pyx_L1_error)
+  __pyx_codeobj__6 = (PyObject*)__Pyx_PyCode_New(3, 0, 13, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__5, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_numeric_encoder_py, __pyx_n_s_decode, 367, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__6)) __PYX_ERR(0, 367, __pyx_L1_error)
 
   /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
@@ -7934,69 +8007,69 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GIVEREF(__pyx_tuple__9);
   __pyx_codeobj__10 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__9, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_setstate_cython, 16, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__10)) __PYX_ERR(1, 16, __pyx_L1_error)
 
-  /* "src/numeric_encoder.py":462
+  /* "src/numeric_encoder.py":463
  *     encoder = NumericEncoder(min_step=0.5, n_bits=40, enc_size=2048, bit_offset=1)
  * 
  *     enc_n = encoder.encode(None)             # <<<<<<<<<<<<<<
  *     val_n = encoder.decode(enc_n)
  * 
  */
-  __pyx_tuple__11 = PyTuple_Pack(1, Py_None); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(0, 462, __pyx_L1_error)
+  __pyx_tuple__11 = PyTuple_Pack(1, Py_None); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(0, 463, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__11);
   __Pyx_GIVEREF(__pyx_tuple__11);
 
-  /* "src/numeric_encoder.py":467
+  /* "src/numeric_encoder.py":468
  *     enc_n = encoder.encode(None)
  * 
  *     enc_1 = encoder.encode(100)             # <<<<<<<<<<<<<<
  *     enc_4 = encoder.encode(120.0)
  *     enc_5 = encoder.encode(99)
  */
-  __pyx_tuple__12 = PyTuple_Pack(1, __pyx_int_100); if (unlikely(!__pyx_tuple__12)) __PYX_ERR(0, 467, __pyx_L1_error)
+  __pyx_tuple__12 = PyTuple_Pack(1, __pyx_int_100); if (unlikely(!__pyx_tuple__12)) __PYX_ERR(0, 468, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__12);
   __Pyx_GIVEREF(__pyx_tuple__12);
 
-  /* "src/numeric_encoder.py":468
+  /* "src/numeric_encoder.py":469
  * 
  *     enc_1 = encoder.encode(100)
  *     enc_4 = encoder.encode(120.0)             # <<<<<<<<<<<<<<
  *     enc_5 = encoder.encode(99)
  * 
  */
-  __pyx_tuple__13 = PyTuple_Pack(1, __pyx_float_120_0); if (unlikely(!__pyx_tuple__13)) __PYX_ERR(0, 468, __pyx_L1_error)
+  __pyx_tuple__13 = PyTuple_Pack(1, __pyx_float_120_0); if (unlikely(!__pyx_tuple__13)) __PYX_ERR(0, 469, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__13);
   __Pyx_GIVEREF(__pyx_tuple__13);
 
-  /* "src/numeric_encoder.py":469
+  /* "src/numeric_encoder.py":470
  *     enc_1 = encoder.encode(100)
  *     enc_4 = encoder.encode(120.0)
  *     enc_5 = encoder.encode(99)             # <<<<<<<<<<<<<<
  * 
  *     val_1 = encoder.decode(enc_1)
  */
-  __pyx_tuple__14 = PyTuple_Pack(1, __pyx_int_99); if (unlikely(!__pyx_tuple__14)) __PYX_ERR(0, 469, __pyx_L1_error)
+  __pyx_tuple__14 = PyTuple_Pack(1, __pyx_int_99); if (unlikely(!__pyx_tuple__14)) __PYX_ERR(0, 470, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__14);
   __Pyx_GIVEREF(__pyx_tuple__14);
 
-  /* "src/numeric_encoder.py":473
+  /* "src/numeric_encoder.py":474
  *     val_1 = encoder.decode(enc_1)
  * 
  *     enc_2 = encoder.encode(102)             # <<<<<<<<<<<<<<
  * 
  *     val_2 = encoder.decode(enc_2)
  */
-  __pyx_tuple__15 = PyTuple_Pack(1, __pyx_int_102); if (unlikely(!__pyx_tuple__15)) __PYX_ERR(0, 473, __pyx_L1_error)
+  __pyx_tuple__15 = PyTuple_Pack(1, __pyx_int_102); if (unlikely(!__pyx_tuple__15)) __PYX_ERR(0, 474, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__15);
   __Pyx_GIVEREF(__pyx_tuple__15);
 
-  /* "src/numeric_encoder.py":477
+  /* "src/numeric_encoder.py":478
  *     val_2 = encoder.decode(enc_2)
  * 
  *     enc_3 = encoder.encode(100.5)             # <<<<<<<<<<<<<<
  *     val_3 = encoder.decode(enc_3)
  * 
  */
-  __pyx_tuple__16 = PyTuple_Pack(1, __pyx_float_100_5); if (unlikely(!__pyx_tuple__16)) __PYX_ERR(0, 477, __pyx_L1_error)
+  __pyx_tuple__16 = PyTuple_Pack(1, __pyx_float_100_5); if (unlikely(!__pyx_tuple__16)) __PYX_ERR(0, 478, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__16);
   __Pyx_GIVEREF(__pyx_tuple__16);
 
@@ -8455,11 +8528,11 @@ if (!__Pyx_RefNanny) {
   /* "src/numeric_encoder.py":367
  *         return enc
  * 
- *     def decode(self, enc: Union[set, dict]):             # <<<<<<<<<<<<<<
+ *     def decode(self, enc: Union[set, dict], max_bit_weight: float = 1.0):             # <<<<<<<<<<<<<<
  *         """
  *         decodes a set of bits into a numeric
  */
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 367, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 367, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_Union); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 367, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
@@ -8477,6 +8550,7 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_enc, __pyx_t_4) < 0) __PYX_ERR(0, 367, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_max_bit_weight, __pyx_n_u_float) < 0) __PYX_ERR(0, 367, __pyx_L1_error)
   __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_3src_15numeric_encoder_14NumericEncoder_7decode, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_NumericEncoder_decode, NULL, __pyx_n_s_src_numeric_encoder, __pyx_d, ((PyObject *)__pyx_codeobj__6)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 367, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_4, __pyx_t_2);
@@ -8508,277 +8582,277 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   PyType_Modified(__pyx_ptype_3src_15numeric_encoder_NumericEncoder);
 
-  /* "src/numeric_encoder.py":458
+  /* "src/numeric_encoder.py":459
  * 
  * 
  * if __name__ == '__main__':             # <<<<<<<<<<<<<<
  * 
  *     encoder = NumericEncoder(min_step=0.5, n_bits=40, enc_size=2048, bit_offset=1)
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_name_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 458, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_name_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 459, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = (__Pyx_PyString_Equals(__pyx_t_4, __pyx_n_s_main, Py_EQ)); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 458, __pyx_L1_error)
+  __pyx_t_5 = (__Pyx_PyString_Equals(__pyx_t_4, __pyx_n_s_main, Py_EQ)); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 459, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   if (__pyx_t_5) {
 
-    /* "src/numeric_encoder.py":460
+    /* "src/numeric_encoder.py":461
  * if __name__ == '__main__':
  * 
  *     encoder = NumericEncoder(min_step=0.5, n_bits=40, enc_size=2048, bit_offset=1)             # <<<<<<<<<<<<<<
  * 
  *     enc_n = encoder.encode(None)
  */
-    __pyx_t_4 = __Pyx_PyDict_NewPresized(4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 460, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyDict_NewPresized(4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 461, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_min_step, __pyx_float_0_5) < 0) __PYX_ERR(0, 460, __pyx_L1_error)
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_n_bits, __pyx_int_40) < 0) __PYX_ERR(0, 460, __pyx_L1_error)
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_enc_size, __pyx_int_2048) < 0) __PYX_ERR(0, 460, __pyx_L1_error)
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_bit_offset, __pyx_int_1) < 0) __PYX_ERR(0, 460, __pyx_L1_error)
-    __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_3src_15numeric_encoder_NumericEncoder), __pyx_empty_tuple, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 460, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_min_step, __pyx_float_0_5) < 0) __PYX_ERR(0, 461, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_n_bits, __pyx_int_40) < 0) __PYX_ERR(0, 461, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_enc_size, __pyx_int_2048) < 0) __PYX_ERR(0, 461, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_bit_offset, __pyx_int_1) < 0) __PYX_ERR(0, 461, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_3src_15numeric_encoder_NumericEncoder), __pyx_empty_tuple, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 461, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_encoder, __pyx_t_2) < 0) __PYX_ERR(0, 460, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_encoder, __pyx_t_2) < 0) __PYX_ERR(0, 461, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "src/numeric_encoder.py":462
+    /* "src/numeric_encoder.py":463
  *     encoder = NumericEncoder(min_step=0.5, n_bits=40, enc_size=2048, bit_offset=1)
  * 
  *     enc_n = encoder.encode(None)             # <<<<<<<<<<<<<<
  *     val_n = encoder.decode(enc_n)
  * 
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_encoder); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 462, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_encoder); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 463, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_encode); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 462, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_encode); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 463, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_tuple__11, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 462, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_tuple__11, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 463, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_enc_n, __pyx_t_2) < 0) __PYX_ERR(0, 462, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_enc_n, __pyx_t_2) < 0) __PYX_ERR(0, 463, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "src/numeric_encoder.py":463
+    /* "src/numeric_encoder.py":464
  * 
  *     enc_n = encoder.encode(None)
  *     val_n = encoder.decode(enc_n)             # <<<<<<<<<<<<<<
  * 
  *     enc_n = encoder.encode(None)
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_encoder); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 463, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_encoder); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 464, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_decode); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 463, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_decode); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 464, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_enc_n); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 463, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_enc_n); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 464, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 463, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 464, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_val_n, __pyx_t_1) < 0) __PYX_ERR(0, 463, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_val_n, __pyx_t_1) < 0) __PYX_ERR(0, 464, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "src/numeric_encoder.py":465
+    /* "src/numeric_encoder.py":466
  *     val_n = encoder.decode(enc_n)
  * 
  *     enc_n = encoder.encode(None)             # <<<<<<<<<<<<<<
  * 
  *     enc_1 = encoder.encode(100)
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_encoder); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 465, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_encoder); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 466, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_encode); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 465, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_encode); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 466, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_tuple__11, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 465, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_tuple__11, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 466, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_enc_n, __pyx_t_1) < 0) __PYX_ERR(0, 465, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_enc_n, __pyx_t_1) < 0) __PYX_ERR(0, 466, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "src/numeric_encoder.py":467
+    /* "src/numeric_encoder.py":468
  *     enc_n = encoder.encode(None)
  * 
  *     enc_1 = encoder.encode(100)             # <<<<<<<<<<<<<<
  *     enc_4 = encoder.encode(120.0)
  *     enc_5 = encoder.encode(99)
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_encoder); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 467, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_encoder); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 468, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_encode); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 467, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_encode); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 468, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_tuple__12, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 467, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_tuple__12, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 468, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_enc_1, __pyx_t_1) < 0) __PYX_ERR(0, 467, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_enc_1, __pyx_t_1) < 0) __PYX_ERR(0, 468, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "src/numeric_encoder.py":468
+    /* "src/numeric_encoder.py":469
  * 
  *     enc_1 = encoder.encode(100)
  *     enc_4 = encoder.encode(120.0)             # <<<<<<<<<<<<<<
  *     enc_5 = encoder.encode(99)
  * 
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_encoder); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 468, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_encoder); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 469, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_encode); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 468, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_encode); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 469, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_tuple__13, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 468, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_tuple__13, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 469, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_enc_4, __pyx_t_1) < 0) __PYX_ERR(0, 468, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_enc_4, __pyx_t_1) < 0) __PYX_ERR(0, 469, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "src/numeric_encoder.py":469
+    /* "src/numeric_encoder.py":470
  *     enc_1 = encoder.encode(100)
  *     enc_4 = encoder.encode(120.0)
  *     enc_5 = encoder.encode(99)             # <<<<<<<<<<<<<<
  * 
  *     val_1 = encoder.decode(enc_1)
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_encoder); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 469, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_encoder); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 470, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_encode); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 469, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_encode); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 470, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_tuple__14, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 469, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_tuple__14, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 470, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_enc_5, __pyx_t_1) < 0) __PYX_ERR(0, 469, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_enc_5, __pyx_t_1) < 0) __PYX_ERR(0, 470, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "src/numeric_encoder.py":471
+    /* "src/numeric_encoder.py":472
  *     enc_5 = encoder.encode(99)
  * 
  *     val_1 = encoder.decode(enc_1)             # <<<<<<<<<<<<<<
  * 
  *     enc_2 = encoder.encode(102)
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_encoder); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 471, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_encoder); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 472, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_decode); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 471, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_decode); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 472, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_enc_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 471, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_enc_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 472, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 471, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 472, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_val_1, __pyx_t_4) < 0) __PYX_ERR(0, 471, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_val_1, __pyx_t_4) < 0) __PYX_ERR(0, 472, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "src/numeric_encoder.py":473
+    /* "src/numeric_encoder.py":474
  *     val_1 = encoder.decode(enc_1)
  * 
  *     enc_2 = encoder.encode(102)             # <<<<<<<<<<<<<<
  * 
  *     val_2 = encoder.decode(enc_2)
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_encoder); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 473, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_encoder); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 474, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_encode); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 473, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_encode); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 474, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_tuple__15, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 473, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_tuple__15, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 474, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_enc_2, __pyx_t_4) < 0) __PYX_ERR(0, 473, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_enc_2, __pyx_t_4) < 0) __PYX_ERR(0, 474, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "src/numeric_encoder.py":475
+    /* "src/numeric_encoder.py":476
  *     enc_2 = encoder.encode(102)
  * 
  *     val_2 = encoder.decode(enc_2)             # <<<<<<<<<<<<<<
  * 
  *     enc_3 = encoder.encode(100.5)
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_encoder); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 475, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_encoder); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 476, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_decode); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 475, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_decode); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 476, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_enc_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 475, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_enc_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 476, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 475, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 476, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_val_2, __pyx_t_2) < 0) __PYX_ERR(0, 475, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_val_2, __pyx_t_2) < 0) __PYX_ERR(0, 476, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "src/numeric_encoder.py":477
+    /* "src/numeric_encoder.py":478
  *     val_2 = encoder.decode(enc_2)
  * 
  *     enc_3 = encoder.encode(100.5)             # <<<<<<<<<<<<<<
  *     val_3 = encoder.decode(enc_3)
  * 
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_encoder); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 477, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_encoder); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 478, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_encode); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 477, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_encode); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 478, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_tuple__16, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 477, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_tuple__16, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 478, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_enc_3, __pyx_t_2) < 0) __PYX_ERR(0, 477, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_enc_3, __pyx_t_2) < 0) __PYX_ERR(0, 478, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "src/numeric_encoder.py":478
+    /* "src/numeric_encoder.py":479
  * 
  *     enc_3 = encoder.encode(100.5)
  *     val_3 = encoder.decode(enc_3)             # <<<<<<<<<<<<<<
  * 
  *     val_4 = encoder.decode(enc_4)
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_encoder); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 478, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_encoder); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 479, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_decode); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 478, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_decode); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 479, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_enc_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 478, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_enc_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 479, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 478, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 479, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_val_3, __pyx_t_1) < 0) __PYX_ERR(0, 478, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_val_3, __pyx_t_1) < 0) __PYX_ERR(0, 479, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "src/numeric_encoder.py":480
+    /* "src/numeric_encoder.py":481
  *     val_3 = encoder.decode(enc_3)
  * 
  *     val_4 = encoder.decode(enc_4)             # <<<<<<<<<<<<<<
  * 
  *     print('finished')
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_encoder); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 480, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_encoder); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 481, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_decode); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 480, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_decode); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 481, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_enc_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 480, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_enc_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 481, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 480, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 481, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_val_4, __pyx_t_4) < 0) __PYX_ERR(0, 480, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_val_4, __pyx_t_4) < 0) __PYX_ERR(0, 481, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "src/numeric_encoder.py":482
+    /* "src/numeric_encoder.py":483
  *     val_4 = encoder.decode(enc_4)
  * 
  *     print('finished')             # <<<<<<<<<<<<<<
  */
-    if (__Pyx_PrintOne(0, __pyx_n_s_finished) < 0) __PYX_ERR(0, 482, __pyx_L1_error)
+    if (__Pyx_PrintOne(0, __pyx_n_s_finished) < 0) __PYX_ERR(0, 483, __pyx_L1_error)
 
-    /* "src/numeric_encoder.py":458
+    /* "src/numeric_encoder.py":459
  * 
  * 
  * if __name__ == '__main__':             # <<<<<<<<<<<<<<

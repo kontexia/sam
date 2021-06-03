@@ -74,21 +74,21 @@ class ValueEncoder(object):
             enc.update(self.encoders['string'].encode(value))
         return enc
 
-    def decode(self, enc) -> dict:
+    def decode(self, enc, max_bit_weight: float = 1.0) -> dict:
 
         bit: int
 
         # add default weights if not given any
         #
         if isinstance(enc, set):
-            enc = {bit: 1.0 for bit in enc}
+            enc = {bit: max_bit_weight for bit in enc}
 
         decoding = dict()
-        decoding['strlen'] = self.encoders['strlen'].decode(enc)
+        decoding['strlen'] = self.encoders['strlen'].decode(enc, max_bit_weight)
         if decoding['strlen'] == 0:
-            decoding['value'] = self.encoders['numeric'].decode(enc)
+            decoding['value'] = self.encoders['numeric'].decode(enc, max_bit_weight)
         else:
-            decoding['value'] = self.encoders['string'].decode(enc)
+            decoding['value'] = self.encoders['string'].decode(enc, max_bit_weight)
         return decoding
 
 

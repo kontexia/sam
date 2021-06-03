@@ -53,10 +53,10 @@ def swiss_roll_test():
     sam_params = {'xyz':
         {
             # an incoming training sdr must be at least 85% similar to a neuron to be mapped to it
-            'similarity_threshold': 0.85,
+            'similarity_threshold': 0.8,
 
             # neurons that are at least 76.5% (0.85 * 0.9) similar to the incoming sdr are considered to be in the same community
-            'community_factor': 0.9,
+            'community_factor': 0.95,
 
             # the level below which a weight is considered zero and will be deleted
             'prune_threshold': 0.01,

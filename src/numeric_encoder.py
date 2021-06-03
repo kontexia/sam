@@ -364,10 +364,11 @@ class NumericEncoder(object):
 
         return enc
 
-    def decode(self, enc: Union[set, dict]):
+    def decode(self, enc: Union[set, dict], max_bit_weight: float = 1.0):
         """
         decodes a set of bits into a numeric
         :param enc: can be either a set of bits or a dictionary of bits in which the bits are the keys and the values are the weight of each bit
+        :param max_bit_weight: the maximum a bit weight can be
         :return: a weighted average numeric - where the wights are based on the bit weights
         """
 
@@ -386,7 +387,7 @@ class NumericEncoder(object):
         # add default weights of 1.0 if given a set of bits
         #
         if isinstance(enc, set):
-            enc = {bit: 1.0 for bit in enc}
+            enc = {bit: max_bit_weight for bit in enc}
 
         # sum the weights for the buckets associated with the bits in the encoding
         #
@@ -404,7 +405,7 @@ class NumericEncoder(object):
 
             # create a list of buckets so we can sort in descending order of bit weight
             #
-            bucket_list = [(n, buckets[n]) for n in buckets]
+            bucket_list = [(n, buckets[n] / max_bit_weight) for n in buckets]
             bucket_list.sort(key=lambda x: x[1], reverse=True)
 
             # get weighted average of bucket values if the best weight is less than n_bits

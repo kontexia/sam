@@ -248,10 +248,11 @@ class CategoryEncoder(object):
 
         return enc
 
-    def decode(self, enc: Union[set, dict]) -> list:
+    def decode(self, enc: Union[set, dict], max_bit_weight: float = 1.0) -> list:
         """
         decodes a set of bits into categories
         :param enc: can be either a set of bits or a dictionary of bits in which the bits are the keys and the values are the weight of each bit
+        :param max_bit_weight: the maximum a bit weight can be
         :return: a list of decoded categories with associated weights
         """
 
@@ -263,11 +264,12 @@ class CategoryEncoder(object):
         category: str
         categories: dict = {}
         category_list: list
+        weight_adj: float
 
         # add default weights of 1.0 if given a set of bits
         #
         if isinstance(enc, set):
-            enc = {bit: 1.0 for bit in enc}
+            enc = {bit: max_bit_weight for bit in enc}
 
         # sum the weights for the categories associated with the bits in the encoding
         #
@@ -281,9 +283,13 @@ class CategoryEncoder(object):
                         categories[category] += enc[bit]
                     total_weight += enc[bit]
 
-        # create a list of categories - if not semantic then filter out those whose weights are less than or equal to (1 / self.n_bits)
+        # create a list of categories - if not semantic then filter out those whose weights are less than or equal to 2 * max_bit_weight -
+        # which amounts to encoding noise
         #
-        category_list = [(category, categories[category] / self.n_bits) for category in categories if self.semantic or (categories[category] / self.n_bits) > (1 / self.n_bits)]
+        weight_adj = self.n_bits * max_bit_weight
+        category_list = [(category, categories[category] / weight_adj)
+                         for category in categories
+                         if self.semantic or categories[category] > 2 * max_bit_weight]
 
         category_list.sort(key=lambda x: x[1], reverse=True)
 

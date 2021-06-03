@@ -11,11 +11,11 @@ class SpatialPooler(object):
                  name,
                  similarity_threshold: float = 0.7,
                  community_factor: float = 0.7,
-                 prune_threshold=0.01):
+                 prune_threshold=0.05):
 
         # Note: relate the decay factor of the learning rate to the similarity factor
         #
-        self.neurons = NeuralGraph(learning_rate_decay_factor=(1 - similarity_threshold))
+        self.neurons = NeuralGraph()
 
         self.name = name
         self.similarity_threshold = similarity_threshold
@@ -110,7 +110,7 @@ class SpatialPooler(object):
 
         # get the activated neurons
         #
-        activated_neurons = self.neurons.feed_forward_pattern(sdr=sdr)
+        activated_neurons = self.neurons.feed_forward_pattern(sdr=sdr, decode=decode)
 
         por = {'activations': [activation
                                for activation in activated_neurons
@@ -120,6 +120,6 @@ class SpatialPooler(object):
             por['bmu_key'] = por['activations'][0]['neuron_key']
             por['sdr'] = self.neurons.neurons[por['bmu_key']]['pattern_sdr']
             if decode:
-                por['sdr'] = por['sdr'].decode()
+                por['sdr'] = por['sdr'].decode(self.neurons.neurons[por['bmu_key']]['n_bmu'])
 
         return por

@@ -965,13 +965,6 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_CallMethO(PyObject *func, PyObject
 /* PyObjectCallOneArg.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObject *arg);
 
-/* PyObjectCallNoArg.proto */
-#if CYTHON_COMPILING_IN_CPYTHON
-static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func);
-#else
-#define __Pyx_PyObject_CallNoArg(func) __Pyx_PyObject_Call(func, __pyx_empty_tuple, NULL)
-#endif
-
 /* GetBuiltinName.proto */
 static PyObject *__Pyx_GetBuiltinName(PyObject *name);
 
@@ -1024,6 +1017,13 @@ static CYTHON_INLINE PyObject *__Pyx__GetModuleGlobalName(PyObject *name);
 
 /* IterFinish.proto */
 static CYTHON_INLINE int __Pyx_IterFinish(void);
+
+/* PyObjectCallNoArg.proto */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func);
+#else
+#define __Pyx_PyObject_CallNoArg(func) __Pyx_PyObject_Call(func, __pyx_empty_tuple, NULL)
+#endif
 
 /* PyObjectGetMethod.proto */
 static int __Pyx_PyObject_GetMethod(PyObject *obj, PyObject *name, PyObject **method);
@@ -1115,6 +1115,86 @@ static CYTHON_INLINE int __Pyx_PyDict_ContainsTF(PyObject* item, PyObject* dict,
     ((likely((Py_TYPE(obj) == type) | (none_allowed && (obj == Py_None)))) ? 1 :\
         __Pyx__ArgTypeTest(obj, type, name, exact))
 static int __Pyx__ArgTypeTest(PyObject *obj, PyTypeObject *type, const char *name, int exact);
+
+/* ListCompAppend.proto */
+#if CYTHON_USE_PYLIST_INTERNALS && CYTHON_ASSUME_SAFE_MACROS
+static CYTHON_INLINE int __Pyx_ListComp_Append(PyObject* list, PyObject* x) {
+    PyListObject* L = (PyListObject*) list;
+    Py_ssize_t len = Py_SIZE(list);
+    if (likely(L->allocated > len)) {
+        Py_INCREF(x);
+        PyList_SET_ITEM(list, len, x);
+        __Pyx_SET_SIZE(list, len + 1);
+        return 0;
+    }
+    return PyList_Append(list, x);
+}
+#else
+#define __Pyx_ListComp_Append(L,x) PyList_Append(L,x)
+#endif
+
+/* FetchCommonType.proto */
+static PyTypeObject* __Pyx_FetchCommonType(PyTypeObject* type);
+
+/* CythonFunctionShared.proto */
+#define __Pyx_CyFunction_USED 1
+#define __Pyx_CYFUNCTION_STATICMETHOD  0x01
+#define __Pyx_CYFUNCTION_CLASSMETHOD   0x02
+#define __Pyx_CYFUNCTION_CCLASS        0x04
+#define __Pyx_CyFunction_GetClosure(f)\
+    (((__pyx_CyFunctionObject *) (f))->func_closure)
+#define __Pyx_CyFunction_GetClassObj(f)\
+    (((__pyx_CyFunctionObject *) (f))->func_classobj)
+#define __Pyx_CyFunction_Defaults(type, f)\
+    ((type *)(((__pyx_CyFunctionObject *) (f))->defaults))
+#define __Pyx_CyFunction_SetDefaultsGetter(f, g)\
+    ((__pyx_CyFunctionObject *) (f))->defaults_getter = (g)
+typedef struct {
+    PyCFunctionObject func;
+#if PY_VERSION_HEX < 0x030500A0
+    PyObject *func_weakreflist;
+#endif
+    PyObject *func_dict;
+    PyObject *func_name;
+    PyObject *func_qualname;
+    PyObject *func_doc;
+    PyObject *func_globals;
+    PyObject *func_code;
+    PyObject *func_closure;
+    PyObject *func_classobj;
+    void *defaults;
+    int defaults_pyobjects;
+    size_t defaults_size;  // used by FusedFunction for copying defaults
+    int flags;
+    PyObject *defaults_tuple;
+    PyObject *defaults_kwdict;
+    PyObject *(*defaults_getter)(PyObject *);
+    PyObject *func_annotations;
+} __pyx_CyFunctionObject;
+static PyTypeObject *__pyx_CyFunctionType = 0;
+#define __Pyx_CyFunction_Check(obj)  (__Pyx_TypeCheck(obj, __pyx_CyFunctionType))
+static PyObject *__Pyx_CyFunction_Init(__pyx_CyFunctionObject* op, PyMethodDef *ml,
+                                      int flags, PyObject* qualname,
+                                      PyObject *self,
+                                      PyObject *module, PyObject *globals,
+                                      PyObject* code);
+static CYTHON_INLINE void *__Pyx_CyFunction_InitDefaults(PyObject *m,
+                                                         size_t size,
+                                                         int pyobjects);
+static CYTHON_INLINE void __Pyx_CyFunction_SetDefaultsTuple(PyObject *m,
+                                                            PyObject *tuple);
+static CYTHON_INLINE void __Pyx_CyFunction_SetDefaultsKwDict(PyObject *m,
+                                                             PyObject *dict);
+static CYTHON_INLINE void __Pyx_CyFunction_SetAnnotationsDict(PyObject *m,
+                                                              PyObject *dict);
+static int __pyx_CyFunction_init(void);
+
+/* CythonFunction.proto */
+static PyObject *__Pyx_CyFunction_New(PyMethodDef *ml,
+                                      int flags, PyObject* qualname,
+                                      PyObject *closure,
+                                      PyObject *module, PyObject *globals,
+                                      PyObject* code);
 
 /* py_dict_keys.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyDict_Keys(PyObject* d);
@@ -1270,69 +1350,6 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStrNoError(PyObject* obj, P
 /* SetupReduce.proto */
 static int __Pyx_setup_reduce(PyObject* type_obj);
 
-/* FetchCommonType.proto */
-static PyTypeObject* __Pyx_FetchCommonType(PyTypeObject* type);
-
-/* CythonFunctionShared.proto */
-#define __Pyx_CyFunction_USED 1
-#define __Pyx_CYFUNCTION_STATICMETHOD  0x01
-#define __Pyx_CYFUNCTION_CLASSMETHOD   0x02
-#define __Pyx_CYFUNCTION_CCLASS        0x04
-#define __Pyx_CyFunction_GetClosure(f)\
-    (((__pyx_CyFunctionObject *) (f))->func_closure)
-#define __Pyx_CyFunction_GetClassObj(f)\
-    (((__pyx_CyFunctionObject *) (f))->func_classobj)
-#define __Pyx_CyFunction_Defaults(type, f)\
-    ((type *)(((__pyx_CyFunctionObject *) (f))->defaults))
-#define __Pyx_CyFunction_SetDefaultsGetter(f, g)\
-    ((__pyx_CyFunctionObject *) (f))->defaults_getter = (g)
-typedef struct {
-    PyCFunctionObject func;
-#if PY_VERSION_HEX < 0x030500A0
-    PyObject *func_weakreflist;
-#endif
-    PyObject *func_dict;
-    PyObject *func_name;
-    PyObject *func_qualname;
-    PyObject *func_doc;
-    PyObject *func_globals;
-    PyObject *func_code;
-    PyObject *func_closure;
-    PyObject *func_classobj;
-    void *defaults;
-    int defaults_pyobjects;
-    size_t defaults_size;  // used by FusedFunction for copying defaults
-    int flags;
-    PyObject *defaults_tuple;
-    PyObject *defaults_kwdict;
-    PyObject *(*defaults_getter)(PyObject *);
-    PyObject *func_annotations;
-} __pyx_CyFunctionObject;
-static PyTypeObject *__pyx_CyFunctionType = 0;
-#define __Pyx_CyFunction_Check(obj)  (__Pyx_TypeCheck(obj, __pyx_CyFunctionType))
-static PyObject *__Pyx_CyFunction_Init(__pyx_CyFunctionObject* op, PyMethodDef *ml,
-                                      int flags, PyObject* qualname,
-                                      PyObject *self,
-                                      PyObject *module, PyObject *globals,
-                                      PyObject* code);
-static CYTHON_INLINE void *__Pyx_CyFunction_InitDefaults(PyObject *m,
-                                                         size_t size,
-                                                         int pyobjects);
-static CYTHON_INLINE void __Pyx_CyFunction_SetDefaultsTuple(PyObject *m,
-                                                            PyObject *tuple);
-static CYTHON_INLINE void __Pyx_CyFunction_SetDefaultsKwDict(PyObject *m,
-                                                             PyObject *dict);
-static CYTHON_INLINE void __Pyx_CyFunction_SetAnnotationsDict(PyObject *m,
-                                                              PyObject *dict);
-static int __pyx_CyFunction_init(void);
-
-/* CythonFunction.proto */
-static PyObject *__Pyx_CyFunction_New(PyMethodDef *ml,
-                                      int flags, PyObject* qualname,
-                                      PyObject *closure,
-                                      PyObject *module, PyObject *globals,
-                                      PyObject* code);
-
 /* CLineInTraceback.proto */
 #ifdef CYTHON_CLINE_IN_TRACEBACK
 #define __Pyx_CLineForTraceback(tstate, c_line)  (((CYTHON_CLINE_IN_TRACEBACK)) ? c_line : 0)
@@ -1419,10 +1436,10 @@ static const char __pyx_k_keys[] = "keys";
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_name[] = "__name__";
 static const char __pyx_k_self[] = "self";
+static const char __pyx_k_sort[] = "sort";
 static const char __pyx_k_test[] = "__test__";
 static const char __pyx_k_type[] = "type";
 static const char __pyx_k_float[] = "float";
-static const char __pyx_k_learn[] = "learn";
 static const char __pyx_k_state[] = "state";
 static const char __pyx_k_tuple[] = "tuple";
 static const char __pyx_k_value[] = "value";
@@ -1438,6 +1455,7 @@ static const char __pyx_k_update[] = "update";
 static const char __pyx_k_ENC_IDX[] = "ENC_IDX";
 static const char __pyx_k_enc_key[] = "enc_key";
 static const char __pyx_k_encoder[] = "encoder";
+static const char __pyx_k_reverse[] = "reverse";
 static const char __pyx_k_sdr_key[] = "sdr_key";
 static const char __pyx_k_to_dict[] = "to_dict";
 static const char __pyx_k_SDR_copy[] = "SDR.copy";
@@ -1448,7 +1466,6 @@ static const char __pyx_k_encoding[] = "encoding";
 static const char __pyx_k_getstate[] = "__getstate__";
 static const char __pyx_k_pyx_type[] = "__pyx_type";
 static const char __pyx_k_setstate[] = "__setstate__";
-static const char __pyx_k_SDR_learn[] = "SDR.learn";
 static const char __pyx_k_bit_value[] = "bit_value";
 static const char __pyx_k_copy_from[] = "copy_from";
 static const char __pyx_k_pyx_state[] = "__pyx_state";
@@ -1459,6 +1476,7 @@ static const char __pyx_k_learn_rate[] = "learn_rate";
 static const char __pyx_k_pyx_result[] = "__pyx_result";
 static const char __pyx_k_PickleError[] = "PickleError";
 static const char __pyx_k_SDR_to_dict[] = "SDR.to_dict";
+static const char __pyx_k_learn_delta[] = "learn_delta";
 static const char __pyx_k_TEMPORAL_IDX[] = "TEMPORAL_IDX";
 static const char __pyx_k_add_encoding[] = "add_encoding";
 static const char __pyx_k_pyx_checksum[] = "__pyx_checksum";
@@ -1469,8 +1487,11 @@ static const char __pyx_k_SDR_copy_from[] = "SDR.copy_from";
 static const char __pyx_k_reduce_cython[] = "__reduce_cython__";
 static const char __pyx_k_temporal_keys[] = "temporal_keys";
 static const char __pyx_k_learn_enc_keys[] = "learn_enc_keys";
+static const char __pyx_k_max_bit_weight[] = "max_bit_weight";
+static const char __pyx_k_SDR_learn_delta[] = "SDR.learn_delta";
 static const char __pyx_k_bits_to_process[] = "bits_to_process";
 static const char __pyx_k_keys_to_process[] = "keys_to_process";
+static const char __pyx_k_learn_frequency[] = "learn_frequency";
 static const char __pyx_k_prune_threshold[] = "prune_threshold";
 static const char __pyx_k_pyx_PickleError[] = "__pyx_PickleError";
 static const char __pyx_k_setstate_cython[] = "__setstate_cython__";
@@ -1480,11 +1501,14 @@ static const char __pyx_k_pyx_unpickle_SDR[] = "__pyx_unpickle_SDR";
 static const char __pyx_k_from_temporal_key[] = "from_temporal_key";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
 static const char __pyx_k_SDR___reduce_cython[] = "SDR.__reduce_cython__";
+static const char __pyx_k_SDR_learn_frequency[] = "SDR.learn_frequency";
 static const char __pyx_k_learn_temporal_keys[] = "learn_temporal_keys";
+static const char __pyx_k_min_frequency_prune[] = "min_frequency_prune";
+static const char __pyx_k_decode_locals_lambda[] = "decode.<locals>.<lambda>";
 static const char __pyx_k_SDR___setstate_cython[] = "SDR.__setstate_cython__";
 static const char __pyx_k_Incompatible_checksums_s_vs_0xb3[] = "Incompatible checksums (%s vs 0xb3cd282 = (encoders, encoding))";
-static const char __pyx_k_src_sparse_distributed_represent[] = "src/sparse_distributed_representation.py";
-static const char __pyx_k_src_sparse_distributed_represent_2[] = "src.sparse_distributed_representation";
+static const char __pyx_k_src_sparse_distributed_represent[] = "src.sparse_distributed_representation";
+static const char __pyx_k_src_sparse_distributed_represent_2[] = "src/sparse_distributed_representation.py";
 static PyObject *__pyx_n_s_ENC_IDX;
 static PyObject *__pyx_kp_s_Incompatible_checksums_s_vs_0xb3;
 static PyObject *__pyx_n_s_PickleError;
@@ -1495,7 +1519,8 @@ static PyObject *__pyx_n_s_SDR_add_encoding;
 static PyObject *__pyx_n_s_SDR_copy;
 static PyObject *__pyx_n_s_SDR_copy_from;
 static PyObject *__pyx_n_s_SDR_decode;
-static PyObject *__pyx_n_s_SDR_learn;
+static PyObject *__pyx_n_s_SDR_learn_delta;
+static PyObject *__pyx_n_s_SDR_learn_frequency;
 static PyObject *__pyx_n_s_SDR_to_dict;
 static PyObject *__pyx_n_s_TEMPORAL_IDX;
 static PyObject *__pyx_n_s_add_encoding;
@@ -1506,6 +1531,7 @@ static PyObject *__pyx_n_s_cline_in_traceback;
 static PyObject *__pyx_n_s_copy;
 static PyObject *__pyx_n_s_copy_from;
 static PyObject *__pyx_n_s_decode;
+static PyObject *__pyx_n_s_decode_locals_lambda;
 static PyObject *__pyx_n_s_decode_sdr;
 static PyObject *__pyx_n_s_deepcopy;
 static PyObject *__pyx_n_s_dict;
@@ -1525,11 +1551,14 @@ static PyObject *__pyx_n_u_int;
 static PyObject *__pyx_n_s_key;
 static PyObject *__pyx_n_s_keys;
 static PyObject *__pyx_n_s_keys_to_process;
-static PyObject *__pyx_n_s_learn;
+static PyObject *__pyx_n_s_learn_delta;
 static PyObject *__pyx_n_s_learn_enc_keys;
+static PyObject *__pyx_n_s_learn_frequency;
 static PyObject *__pyx_n_s_learn_rate;
 static PyObject *__pyx_n_s_learn_temporal_keys;
 static PyObject *__pyx_n_s_main;
+static PyObject *__pyx_n_s_max_bit_weight;
+static PyObject *__pyx_n_s_min_frequency_prune;
 static PyObject *__pyx_n_s_name;
 static PyObject *__pyx_n_s_new;
 static PyObject *__pyx_n_s_pickle;
@@ -1544,14 +1573,16 @@ static PyObject *__pyx_n_s_reduce;
 static PyObject *__pyx_n_s_reduce_cython;
 static PyObject *__pyx_n_s_reduce_ex;
 static PyObject *__pyx_n_s_return;
+static PyObject *__pyx_n_s_reverse;
 static PyObject *__pyx_n_s_sdr;
 static PyObject *__pyx_n_s_sdr_key;
 static PyObject *__pyx_n_s_self;
 static PyObject *__pyx_n_u_set;
 static PyObject *__pyx_n_s_setstate;
 static PyObject *__pyx_n_s_setstate_cython;
-static PyObject *__pyx_kp_s_src_sparse_distributed_represent;
-static PyObject *__pyx_n_s_src_sparse_distributed_represent_2;
+static PyObject *__pyx_n_s_sort;
+static PyObject *__pyx_n_s_src_sparse_distributed_represent;
+static PyObject *__pyx_kp_s_src_sparse_distributed_represent_2;
 static PyObject *__pyx_n_s_state;
 static PyObject *__pyx_kp_s_stringsource;
 static PyObject *__pyx_n_s_temporal_key;
@@ -1565,20 +1596,22 @@ static PyObject *__pyx_n_s_update;
 static PyObject *__pyx_n_s_use_setstate;
 static PyObject *__pyx_n_s_value;
 static int __pyx_pf_3src_33sparse_distributed_representation_3SDR___init__(struct __pyx_obj_3src_33sparse_distributed_representation_SDR *__pyx_v_self, PyObject *__pyx_v_sdr); /* proto */
-static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_2to_dict(struct __pyx_obj_3src_33sparse_distributed_representation_SDR *__pyx_v_self, PyObject *__pyx_v_decode); /* proto */
+static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_2to_dict(struct __pyx_obj_3src_33sparse_distributed_representation_SDR *__pyx_v_self, PyObject *__pyx_v_decode, double __pyx_v_max_bit_weight); /* proto */
 static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_4copy(struct __pyx_obj_3src_33sparse_distributed_representation_SDR *__pyx_v_self, PyObject *__pyx_v_sdr); /* proto */
 static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_6copy_from(struct __pyx_obj_3src_33sparse_distributed_representation_SDR *__pyx_v_self, PyObject *__pyx_v_sdr, int __pyx_v_from_temporal_key, int __pyx_v_to_temporal_key); /* proto */
 static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_8add_encoding(struct __pyx_obj_3src_33sparse_distributed_representation_SDR *__pyx_v_self, PyObject *__pyx_v_enc_key, int __pyx_v_temporal_key, PyObject *__pyx_v_value, PyObject *__pyx_v_encoding, PyObject *__pyx_v_encoder); /* proto */
-static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_10decode(struct __pyx_obj_3src_33sparse_distributed_representation_SDR *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(struct __pyx_obj_3src_33sparse_distributed_representation_SDR *__pyx_v_self, PyObject *__pyx_v_sdr, PyObject *__pyx_v_learn_temporal_keys, PyObject *__pyx_v_learn_enc_keys, double __pyx_v_learn_rate, double __pyx_v_prune_threshold); /* proto */
+static PyObject *__pyx_lambda_funcdef_lambda(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_x); /* proto */
+static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_10decode(struct __pyx_obj_3src_33sparse_distributed_representation_SDR *__pyx_v_self, double __pyx_v_max_bit_weight); /* proto */
+static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn_delta(struct __pyx_obj_3src_33sparse_distributed_representation_SDR *__pyx_v_self, PyObject *__pyx_v_sdr, PyObject *__pyx_v_learn_temporal_keys, PyObject *__pyx_v_learn_enc_keys, double __pyx_v_learn_rate, double __pyx_v_prune_threshold); /* proto */
+static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_14learn_frequency(struct __pyx_obj_3src_33sparse_distributed_representation_SDR *__pyx_v_self, PyObject *__pyx_v_sdr, PyObject *__pyx_v_learn_temporal_keys, PyObject *__pyx_v_learn_enc_keys, PyObject *__pyx_v_min_frequency_prune); /* proto */
 static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_8encoding___get__(struct __pyx_obj_3src_33sparse_distributed_representation_SDR *__pyx_v_self); /* proto */
 static int __pyx_pf_3src_33sparse_distributed_representation_3SDR_8encoding_2__set__(struct __pyx_obj_3src_33sparse_distributed_representation_SDR *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
 static int __pyx_pf_3src_33sparse_distributed_representation_3SDR_8encoding_4__del__(struct __pyx_obj_3src_33sparse_distributed_representation_SDR *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_8encoders___get__(struct __pyx_obj_3src_33sparse_distributed_representation_SDR *__pyx_v_self); /* proto */
 static int __pyx_pf_3src_33sparse_distributed_representation_3SDR_8encoders_2__set__(struct __pyx_obj_3src_33sparse_distributed_representation_SDR *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
 static int __pyx_pf_3src_33sparse_distributed_representation_3SDR_8encoders_4__del__(struct __pyx_obj_3src_33sparse_distributed_representation_SDR *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_14__reduce_cython__(struct __pyx_obj_3src_33sparse_distributed_representation_SDR *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_16__setstate_cython__(struct __pyx_obj_3src_33sparse_distributed_representation_SDR *__pyx_v_self, PyObject *__pyx_v___pyx_state); /* proto */
+static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_16__reduce_cython__(struct __pyx_obj_3src_33sparse_distributed_representation_SDR *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_18__setstate_cython__(struct __pyx_obj_3src_33sparse_distributed_representation_SDR *__pyx_v_self, PyObject *__pyx_v___pyx_state); /* proto */
 static PyObject *__pyx_pf_3src_33sparse_distributed_representation___pyx_unpickle_SDR(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v___pyx_type, long __pyx_v___pyx_checksum, PyObject *__pyx_v___pyx_state); /* proto */
 static PyObject *__pyx_tp_new_3src_33sparse_distributed_representation_SDR(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static __Pyx_CachedCFunction __pyx_umethod_PyDict_Type_keys = {0, &__pyx_n_s_keys, 0, 0, 0};
@@ -1595,6 +1628,7 @@ static PyObject *__pyx_tuple__11;
 static PyObject *__pyx_tuple__13;
 static PyObject *__pyx_tuple__15;
 static PyObject *__pyx_tuple__17;
+static PyObject *__pyx_tuple__19;
 static PyObject *__pyx_codeobj__2;
 static PyObject *__pyx_codeobj__4;
 static PyObject *__pyx_codeobj__6;
@@ -1604,6 +1638,7 @@ static PyObject *__pyx_codeobj__12;
 static PyObject *__pyx_codeobj__14;
 static PyObject *__pyx_codeobj__16;
 static PyObject *__pyx_codeobj__18;
+static PyObject *__pyx_codeobj__20;
 /* Late includes */
 
 /* "src/sparse_distributed_representation.py":20
@@ -1732,7 +1767,7 @@ static int __pyx_pf_3src_33sparse_distributed_representation_3SDR___init__(struc
  *         if sdr is not None:
  *             self.copy(sdr)             # <<<<<<<<<<<<<<
  * 
- *     def to_dict(self, decode: bool = True):
+ *     def to_dict(self, decode: bool = True, max_bit_weight: float = 1.0):
  */
     __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_copy); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 31, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
@@ -1787,7 +1822,7 @@ static int __pyx_pf_3src_33sparse_distributed_representation_3SDR___init__(struc
 /* "src/sparse_distributed_representation.py":33
  *             self.copy(sdr)
  * 
- *     def to_dict(self, decode: bool = True):             # <<<<<<<<<<<<<<
+ *     def to_dict(self, decode: bool = True, max_bit_weight: float = 1.0):             # <<<<<<<<<<<<<<
  *         dict_sdr: dict = {}
  *         sdr_key: tuple
  */
@@ -1797,6 +1832,7 @@ static PyObject *__pyx_pw_3src_33sparse_distributed_representation_3SDR_3to_dict
 static PyMethodDef __pyx_mdef_3src_33sparse_distributed_representation_3SDR_3to_dict = {"to_dict", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_33sparse_distributed_representation_3SDR_3to_dict, METH_VARARGS|METH_KEYWORDS, 0};
 static PyObject *__pyx_pw_3src_33sparse_distributed_representation_3SDR_3to_dict(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_decode = 0;
+  double __pyx_v_max_bit_weight;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -1804,13 +1840,15 @@ static PyObject *__pyx_pw_3src_33sparse_distributed_representation_3SDR_3to_dict
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("to_dict (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_decode,0};
-    PyObject* values[1] = {0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_decode,&__pyx_n_s_max_bit_weight,0};
+    PyObject* values[2] = {0,0};
     values[0] = ((PyObject *)Py_True);
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
       const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
       switch (pos_args) {
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
         case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
         CYTHON_FALLTHROUGH;
         case  0: break;
@@ -1823,12 +1861,20 @@ static PyObject *__pyx_pw_3src_33sparse_distributed_representation_3SDR_3to_dict
           PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_decode);
           if (value) { values[0] = value; kw_args--; }
         }
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (kw_args > 0) {
+          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_max_bit_weight);
+          if (value) { values[1] = value; kw_args--; }
+        }
       }
       if (unlikely(kw_args > 0)) {
         if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "to_dict") < 0)) __PYX_ERR(0, 33, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
         case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
         CYTHON_FALLTHROUGH;
         case  0: break;
@@ -1836,23 +1882,28 @@ static PyObject *__pyx_pw_3src_33sparse_distributed_representation_3SDR_3to_dict
       }
     }
     __pyx_v_decode = values[0];
+    if (values[1]) {
+      __pyx_v_max_bit_weight = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_max_bit_weight == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 33, __pyx_L3_error)
+    } else {
+      __pyx_v_max_bit_weight = ((double)1.0);
+    }
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("to_dict", 0, 0, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 33, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("to_dict", 0, 0, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 33, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("src.sparse_distributed_representation.SDR.to_dict", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_3src_33sparse_distributed_representation_3SDR_2to_dict(((struct __pyx_obj_3src_33sparse_distributed_representation_SDR *)__pyx_v_self), __pyx_v_decode);
+  __pyx_r = __pyx_pf_3src_33sparse_distributed_representation_3SDR_2to_dict(((struct __pyx_obj_3src_33sparse_distributed_representation_SDR *)__pyx_v_self), __pyx_v_decode, __pyx_v_max_bit_weight);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_2to_dict(struct __pyx_obj_3src_33sparse_distributed_representation_SDR *__pyx_v_self, PyObject *__pyx_v_decode) {
+static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_2to_dict(struct __pyx_obj_3src_33sparse_distributed_representation_SDR *__pyx_v_self, PyObject *__pyx_v_decode, double __pyx_v_max_bit_weight) {
   PyObject *__pyx_v_dict_sdr = 0;
   PyObject *__pyx_7genexpr__pyx_v_sdr_key = NULL;
   PyObject *__pyx_r = NULL;
@@ -1861,11 +1912,11 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_2to_dict
   int __pyx_t_2;
   PyObject *__pyx_t_3 = NULL;
   PyObject *__pyx_t_4 = NULL;
-  Py_ssize_t __pyx_t_5;
+  PyObject *__pyx_t_5 = NULL;
   Py_ssize_t __pyx_t_6;
-  int __pyx_t_7;
+  Py_ssize_t __pyx_t_7;
   int __pyx_t_8;
-  PyObject *__pyx_t_9 = NULL;
+  int __pyx_t_9;
   PyObject *__pyx_t_10 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
@@ -1874,7 +1925,7 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_2to_dict
 
   /* "src/sparse_distributed_representation.py":34
  * 
- *     def to_dict(self, decode: bool = True):
+ *     def to_dict(self, decode: bool = True, max_bit_weight: float = 1.0):
  *         dict_sdr: dict = {}             # <<<<<<<<<<<<<<
  *         sdr_key: tuple
  * 
@@ -1888,7 +1939,7 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_2to_dict
  *         sdr_key: tuple
  * 
  *         if decode:             # <<<<<<<<<<<<<<
- *             dict_sdr['encoding'] = self.decode()
+ *             dict_sdr['encoding'] = self.decode(max_bit_weight)
  *         else:
  */
   __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_decode); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 37, __pyx_L1_error)
@@ -1897,24 +1948,27 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_2to_dict
     /* "src/sparse_distributed_representation.py":38
  * 
  *         if decode:
- *             dict_sdr['encoding'] = self.decode()             # <<<<<<<<<<<<<<
+ *             dict_sdr['encoding'] = self.decode(max_bit_weight)             # <<<<<<<<<<<<<<
  *         else:
  *             dict_sdr['encoding'] = deepcopy(self.encoding)
  */
     __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_decode); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 38, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_4 = NULL;
+    __pyx_t_4 = PyFloat_FromDouble(__pyx_v_max_bit_weight); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 38, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __pyx_t_5 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
-      __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_3);
-      if (likely(__pyx_t_4)) {
+      __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_3);
+      if (likely(__pyx_t_5)) {
         PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-        __Pyx_INCREF(__pyx_t_4);
+        __Pyx_INCREF(__pyx_t_5);
         __Pyx_INCREF(function);
         __Pyx_DECREF_SET(__pyx_t_3, function);
       }
     }
-    __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
-    __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __pyx_t_1 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_5, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4);
+    __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 38, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -1925,14 +1979,14 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_2to_dict
  *         sdr_key: tuple
  * 
  *         if decode:             # <<<<<<<<<<<<<<
- *             dict_sdr['encoding'] = self.decode()
+ *             dict_sdr['encoding'] = self.decode(max_bit_weight)
  *         else:
  */
     goto __pyx_L3;
   }
 
   /* "src/sparse_distributed_representation.py":40
- *             dict_sdr['encoding'] = self.decode()
+ *             dict_sdr['encoding'] = self.decode(max_bit_weight)
  *         else:
  *             dict_sdr['encoding'] = deepcopy(self.encoding)             # <<<<<<<<<<<<<<
  * 
@@ -1979,20 +2033,20 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_2to_dict
  * 
  *         return dict_sdr
  */
-    __pyx_t_5 = 0;
+    __pyx_t_6 = 0;
     if (unlikely(__pyx_v_self->encoders == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
       __PYX_ERR(0, 43, __pyx_L6_error)
     }
-    __pyx_t_4 = __Pyx_dict_iterator(__pyx_v_self->encoders, 1, ((PyObject *)NULL), (&__pyx_t_6), (&__pyx_t_7)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 43, __pyx_L6_error)
+    __pyx_t_4 = __Pyx_dict_iterator(__pyx_v_self->encoders, 1, ((PyObject *)NULL), (&__pyx_t_7), (&__pyx_t_8)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 43, __pyx_L6_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_XDECREF(__pyx_t_3);
     __pyx_t_3 = __pyx_t_4;
     __pyx_t_4 = 0;
     while (1) {
-      __pyx_t_8 = __Pyx_dict_iter_next(__pyx_t_3, __pyx_t_6, &__pyx_t_5, &__pyx_t_4, NULL, NULL, __pyx_t_7);
-      if (unlikely(__pyx_t_8 == 0)) break;
-      if (unlikely(__pyx_t_8 == -1)) __PYX_ERR(0, 43, __pyx_L6_error)
+      __pyx_t_9 = __Pyx_dict_iter_next(__pyx_t_3, __pyx_t_7, &__pyx_t_6, &__pyx_t_4, NULL, NULL, __pyx_t_8);
+      if (unlikely(__pyx_t_9 == 0)) break;
+      if (unlikely(__pyx_t_9 == -1)) __PYX_ERR(0, 43, __pyx_L6_error)
       __Pyx_GOTREF(__pyx_t_4);
       if (!(likely(PyTuple_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "tuple", Py_TYPE(__pyx_t_4)->tp_name), 0))) __PYX_ERR(0, 43, __pyx_L6_error)
       __Pyx_XDECREF_SET(__pyx_7genexpr__pyx_v_sdr_key, ((PyObject*)__pyx_t_4));
@@ -2009,20 +2063,20 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_2to_dict
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
         __PYX_ERR(0, 42, __pyx_L6_error)
       }
-      __pyx_t_9 = __Pyx_PyDict_GetItem(__pyx_v_self->encoders, __pyx_7genexpr__pyx_v_sdr_key); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 42, __pyx_L6_error)
-      __Pyx_GOTREF(__pyx_t_9);
-      __pyx_t_2 = (__pyx_t_9 != Py_None);
-      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+      __pyx_t_5 = __Pyx_PyDict_GetItem(__pyx_v_self->encoders, __pyx_7genexpr__pyx_v_sdr_key); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 42, __pyx_L6_error)
+      __Pyx_GOTREF(__pyx_t_5);
+      __pyx_t_2 = (__pyx_t_5 != Py_None);
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       if ((__pyx_t_2 != 0)) {
         if (unlikely(__pyx_v_self->encoders == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
           __PYX_ERR(0, 42, __pyx_L6_error)
         }
-        __pyx_t_9 = __Pyx_PyDict_GetItem(__pyx_v_self->encoders, __pyx_7genexpr__pyx_v_sdr_key); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 42, __pyx_L6_error)
-        __Pyx_GOTREF(__pyx_t_9);
-        __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_n_s_type); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 42, __pyx_L6_error)
+        __pyx_t_5 = __Pyx_PyDict_GetItem(__pyx_v_self->encoders, __pyx_7genexpr__pyx_v_sdr_key); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 42, __pyx_L6_error)
+        __Pyx_GOTREF(__pyx_t_5);
+        __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_type); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 42, __pyx_L6_error)
         __Pyx_GOTREF(__pyx_t_10);
-        __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+        __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
         __pyx_t_4 = __pyx_t_10;
         __pyx_t_10 = 0;
       } else {
@@ -2058,7 +2112,7 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_2to_dict
   /* "src/sparse_distributed_representation.py":33
  *             self.copy(sdr)
  * 
- *     def to_dict(self, decode: bool = True):             # <<<<<<<<<<<<<<
+ *     def to_dict(self, decode: bool = True, max_bit_weight: float = 1.0):             # <<<<<<<<<<<<<<
  *         dict_sdr: dict = {}
  *         sdr_key: tuple
  */
@@ -2068,7 +2122,7 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_2to_dict
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_XDECREF(__pyx_t_9);
+  __Pyx_XDECREF(__pyx_t_5);
   __Pyx_XDECREF(__pyx_t_10);
   __Pyx_AddTraceback("src.sparse_distributed_representation.SDR.to_dict", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
@@ -2856,7 +2910,7 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_8add_enc
  *             self.encoding[sdr_key] = encoding
  *             self.encoders[enc_key] = None             # <<<<<<<<<<<<<<
  * 
- *     def decode(self) -> dict:
+ *     def decode(self, max_bit_weight: float = 1.0) -> dict:
  */
     if (unlikely(__pyx_v_self->encoders == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
@@ -2894,28 +2948,134 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_8add_enc
 /* "src/sparse_distributed_representation.py":74
  *             self.encoders[enc_key] = None
  * 
- *     def decode(self) -> dict:             # <<<<<<<<<<<<<<
+ *     def decode(self, max_bit_weight: float = 1.0) -> dict:             # <<<<<<<<<<<<<<
  *         decode_sdr: dict = {}
  *         key: tuple
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_3src_33sparse_distributed_representation_3SDR_11decode(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyMethodDef __pyx_mdef_3src_33sparse_distributed_representation_3SDR_11decode = {"decode", (PyCFunction)__pyx_pw_3src_33sparse_distributed_representation_3SDR_11decode, METH_NOARGS, 0};
-static PyObject *__pyx_pw_3src_33sparse_distributed_representation_3SDR_11decode(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_3src_33sparse_distributed_representation_3SDR_11decode(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_3src_33sparse_distributed_representation_3SDR_11decode = {"decode", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_33sparse_distributed_representation_3SDR_11decode, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_3src_33sparse_distributed_representation_3SDR_11decode(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  double __pyx_v_max_bit_weight;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("decode (wrapper)", 0);
-  __pyx_r = __pyx_pf_3src_33sparse_distributed_representation_3SDR_10decode(((struct __pyx_obj_3src_33sparse_distributed_representation_SDR *)__pyx_v_self));
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_max_bit_weight,0};
+    PyObject* values[1] = {0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (kw_args > 0) {
+          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_max_bit_weight);
+          if (value) { values[0] = value; kw_args--; }
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "decode") < 0)) __PYX_ERR(0, 74, __pyx_L3_error)
+      }
+    } else {
+      switch (PyTuple_GET_SIZE(__pyx_args)) {
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+    }
+    if (values[0]) {
+      __pyx_v_max_bit_weight = __pyx_PyFloat_AsDouble(values[0]); if (unlikely((__pyx_v_max_bit_weight == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 74, __pyx_L3_error)
+    } else {
+      __pyx_v_max_bit_weight = ((double)1.0);
+    }
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("decode", 0, 0, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 74, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("src.sparse_distributed_representation.SDR.decode", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_3src_33sparse_distributed_representation_3SDR_10decode(((struct __pyx_obj_3src_33sparse_distributed_representation_SDR *)__pyx_v_self), __pyx_v_max_bit_weight);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_10decode(struct __pyx_obj_3src_33sparse_distributed_representation_SDR *__pyx_v_self) {
+/* "src/sparse_distributed_representation.py":85
+ *                 #
+ *                 decode_sdr[key] = [(bit, self.encoding[key][bit] / max_bit_weight) for bit in self.encoding[key]]
+ *                 decode_sdr[key].sort(key=lambda x: x[1], reverse=True)             # <<<<<<<<<<<<<<
+ *         return decode_sdr
+ * 
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_3src_33sparse_distributed_representation_3SDR_6decode_lambda(PyObject *__pyx_self, PyObject *__pyx_v_x); /*proto*/
+static PyMethodDef __pyx_mdef_3src_33sparse_distributed_representation_3SDR_6decode_lambda = {"lambda", (PyCFunction)__pyx_pw_3src_33sparse_distributed_representation_3SDR_6decode_lambda, METH_O, 0};
+static PyObject *__pyx_pw_3src_33sparse_distributed_representation_3SDR_6decode_lambda(PyObject *__pyx_self, PyObject *__pyx_v_x) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("lambda (wrapper)", 0);
+  __pyx_r = __pyx_lambda_funcdef_lambda(__pyx_self, ((PyObject *)__pyx_v_x));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_lambda_funcdef_lambda(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_x) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("lambda", 0);
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_x, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 85, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("src.sparse_distributed_representation.SDR.decode.lambda", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "src/sparse_distributed_representation.py":74
+ *             self.encoders[enc_key] = None
+ * 
+ *     def decode(self, max_bit_weight: float = 1.0) -> dict:             # <<<<<<<<<<<<<<
+ *         decode_sdr: dict = {}
+ *         key: tuple
+ */
+
+static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_10decode(struct __pyx_obj_3src_33sparse_distributed_representation_SDR *__pyx_v_self, double __pyx_v_max_bit_weight) {
   PyObject *__pyx_v_decode_sdr = 0;
   PyObject *__pyx_v_key = 0;
+  PyObject *__pyx_v_bit = NULL;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -2929,6 +3089,10 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_10decode
   int __pyx_t_9;
   PyObject *__pyx_t_10 = NULL;
   PyObject *__pyx_t_11 = NULL;
+  PyObject *__pyx_t_12 = NULL;
+  PyObject *__pyx_t_13 = NULL;
+  Py_ssize_t __pyx_t_14;
+  PyObject *(*__pyx_t_15)(PyObject *);
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -2936,7 +3100,7 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_10decode
 
   /* "src/sparse_distributed_representation.py":75
  * 
- *     def decode(self) -> dict:
+ *     def decode(self, max_bit_weight: float = 1.0) -> dict:
  *         decode_sdr: dict = {}             # <<<<<<<<<<<<<<
  *         key: tuple
  * 
@@ -2951,7 +3115,7 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_10decode
  * 
  *         for key in self.encoding:             # <<<<<<<<<<<<<<
  *             if self.encoders[key[ENC_IDX]] is not None:
- *                 decode_sdr[key] = self.encoders[key[ENC_IDX]].decode(self.encoding[key])
+ *                 decode_sdr[key] = self.encoders[key[ENC_IDX]].decode(self.encoding[key], max_bit_weight)
  */
   __pyx_t_2 = 0;
   if (unlikely(__pyx_v_self->encoding == Py_None)) {
@@ -2976,7 +3140,7 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_10decode
  * 
  *         for key in self.encoding:
  *             if self.encoders[key[ENC_IDX]] is not None:             # <<<<<<<<<<<<<<
- *                 decode_sdr[key] = self.encoders[key[ENC_IDX]].decode(self.encoding[key])
+ *                 decode_sdr[key] = self.encoders[key[ENC_IDX]].decode(self.encoding[key], max_bit_weight)
  *             else:
  */
     if (unlikely(__pyx_v_self->encoders == Py_None)) {
@@ -3003,9 +3167,9 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_10decode
       /* "src/sparse_distributed_representation.py":80
  *         for key in self.encoding:
  *             if self.encoders[key[ENC_IDX]] is not None:
- *                 decode_sdr[key] = self.encoders[key[ENC_IDX]].decode(self.encoding[key])             # <<<<<<<<<<<<<<
+ *                 decode_sdr[key] = self.encoders[key[ENC_IDX]].decode(self.encoding[key], max_bit_weight)             # <<<<<<<<<<<<<<
  *             else:
- *                 decode_sdr[key] = self.encoding[key]
+ *                 # convert from frequency to probability
  */
       if (unlikely(__pyx_v_self->encoders == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
@@ -3032,21 +3196,56 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_10decode
       }
       __pyx_t_7 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_key); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 80, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
-      __pyx_t_11 = NULL;
+      __pyx_t_11 = PyFloat_FromDouble(__pyx_v_max_bit_weight); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 80, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_11);
+      __pyx_t_12 = NULL;
+      __pyx_t_6 = 0;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_10))) {
-        __pyx_t_11 = PyMethod_GET_SELF(__pyx_t_10);
-        if (likely(__pyx_t_11)) {
+        __pyx_t_12 = PyMethod_GET_SELF(__pyx_t_10);
+        if (likely(__pyx_t_12)) {
           PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_10);
-          __Pyx_INCREF(__pyx_t_11);
+          __Pyx_INCREF(__pyx_t_12);
           __Pyx_INCREF(function);
           __Pyx_DECREF_SET(__pyx_t_10, function);
+          __pyx_t_6 = 1;
         }
       }
-      __pyx_t_5 = (__pyx_t_11) ? __Pyx_PyObject_Call2Args(__pyx_t_10, __pyx_t_11, __pyx_t_7) : __Pyx_PyObject_CallOneArg(__pyx_t_10, __pyx_t_7);
-      __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
-      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-      if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 80, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
+      #if CYTHON_FAST_PYCALL
+      if (PyFunction_Check(__pyx_t_10)) {
+        PyObject *__pyx_temp[3] = {__pyx_t_12, __pyx_t_7, __pyx_t_11};
+        __pyx_t_5 = __Pyx_PyFunction_FastCall(__pyx_t_10, __pyx_temp+1-__pyx_t_6, 2+__pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 80, __pyx_L1_error)
+        __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
+        __Pyx_GOTREF(__pyx_t_5);
+        __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+        __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+      } else
+      #endif
+      #if CYTHON_FAST_PYCCALL
+      if (__Pyx_PyFastCFunction_Check(__pyx_t_10)) {
+        PyObject *__pyx_temp[3] = {__pyx_t_12, __pyx_t_7, __pyx_t_11};
+        __pyx_t_5 = __Pyx_PyCFunction_FastCall(__pyx_t_10, __pyx_temp+1-__pyx_t_6, 2+__pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 80, __pyx_L1_error)
+        __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
+        __Pyx_GOTREF(__pyx_t_5);
+        __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+        __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+      } else
+      #endif
+      {
+        __pyx_t_13 = PyTuple_New(2+__pyx_t_6); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 80, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_13);
+        if (__pyx_t_12) {
+          __Pyx_GIVEREF(__pyx_t_12); PyTuple_SET_ITEM(__pyx_t_13, 0, __pyx_t_12); __pyx_t_12 = NULL;
+        }
+        __Pyx_GIVEREF(__pyx_t_7);
+        PyTuple_SET_ITEM(__pyx_t_13, 0+__pyx_t_6, __pyx_t_7);
+        __Pyx_GIVEREF(__pyx_t_11);
+        PyTuple_SET_ITEM(__pyx_t_13, 1+__pyx_t_6, __pyx_t_11);
+        __pyx_t_7 = 0;
+        __pyx_t_11 = 0;
+        __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_10, __pyx_t_13, NULL); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 80, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_5);
+        __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+      }
       __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
       if (unlikely(PyDict_SetItem(__pyx_v_decode_sdr, __pyx_v_key, __pyx_t_5) < 0)) __PYX_ERR(0, 80, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
@@ -3055,39 +3254,135 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_10decode
  * 
  *         for key in self.encoding:
  *             if self.encoders[key[ENC_IDX]] is not None:             # <<<<<<<<<<<<<<
- *                 decode_sdr[key] = self.encoders[key[ENC_IDX]].decode(self.encoding[key])
+ *                 decode_sdr[key] = self.encoders[key[ENC_IDX]].decode(self.encoding[key], max_bit_weight)
  *             else:
  */
       goto __pyx_L5;
     }
 
-    /* "src/sparse_distributed_representation.py":82
- *                 decode_sdr[key] = self.encoders[key[ENC_IDX]].decode(self.encoding[key])
- *             else:
- *                 decode_sdr[key] = self.encoding[key]             # <<<<<<<<<<<<<<
+    /* "src/sparse_distributed_representation.py":84
+ *                 # convert from frequency to probability
+ *                 #
+ *                 decode_sdr[key] = [(bit, self.encoding[key][bit] / max_bit_weight) for bit in self.encoding[key]]             # <<<<<<<<<<<<<<
+ *                 decode_sdr[key].sort(key=lambda x: x[1], reverse=True)
+ *         return decode_sdr
+ */
+    /*else*/ {
+      __pyx_t_5 = PyList_New(0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 84, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_5);
+      if (unlikely(__pyx_v_self->encoding == Py_None)) {
+        PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+        __PYX_ERR(0, 84, __pyx_L1_error)
+      }
+      __pyx_t_10 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_key); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 84, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_10);
+      if (likely(PyList_CheckExact(__pyx_t_10)) || PyTuple_CheckExact(__pyx_t_10)) {
+        __pyx_t_13 = __pyx_t_10; __Pyx_INCREF(__pyx_t_13); __pyx_t_14 = 0;
+        __pyx_t_15 = NULL;
+      } else {
+        __pyx_t_14 = -1; __pyx_t_13 = PyObject_GetIter(__pyx_t_10); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 84, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_13);
+        __pyx_t_15 = Py_TYPE(__pyx_t_13)->tp_iternext; if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 84, __pyx_L1_error)
+      }
+      __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+      for (;;) {
+        if (likely(!__pyx_t_15)) {
+          if (likely(PyList_CheckExact(__pyx_t_13))) {
+            if (__pyx_t_14 >= PyList_GET_SIZE(__pyx_t_13)) break;
+            #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+            __pyx_t_10 = PyList_GET_ITEM(__pyx_t_13, __pyx_t_14); __Pyx_INCREF(__pyx_t_10); __pyx_t_14++; if (unlikely(0 < 0)) __PYX_ERR(0, 84, __pyx_L1_error)
+            #else
+            __pyx_t_10 = PySequence_ITEM(__pyx_t_13, __pyx_t_14); __pyx_t_14++; if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 84, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_10);
+            #endif
+          } else {
+            if (__pyx_t_14 >= PyTuple_GET_SIZE(__pyx_t_13)) break;
+            #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+            __pyx_t_10 = PyTuple_GET_ITEM(__pyx_t_13, __pyx_t_14); __Pyx_INCREF(__pyx_t_10); __pyx_t_14++; if (unlikely(0 < 0)) __PYX_ERR(0, 84, __pyx_L1_error)
+            #else
+            __pyx_t_10 = PySequence_ITEM(__pyx_t_13, __pyx_t_14); __pyx_t_14++; if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 84, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_10);
+            #endif
+          }
+        } else {
+          __pyx_t_10 = __pyx_t_15(__pyx_t_13);
+          if (unlikely(!__pyx_t_10)) {
+            PyObject* exc_type = PyErr_Occurred();
+            if (exc_type) {
+              if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
+              else __PYX_ERR(0, 84, __pyx_L1_error)
+            }
+            break;
+          }
+          __Pyx_GOTREF(__pyx_t_10);
+        }
+        __Pyx_XDECREF_SET(__pyx_v_bit, __pyx_t_10);
+        __pyx_t_10 = 0;
+        if (unlikely(__pyx_v_self->encoding == Py_None)) {
+          PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+          __PYX_ERR(0, 84, __pyx_L1_error)
+        }
+        __pyx_t_10 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_key); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 84, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_10);
+        __pyx_t_11 = __Pyx_PyObject_GetItem(__pyx_t_10, __pyx_v_bit); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 84, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_11);
+        __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+        __pyx_t_10 = PyFloat_FromDouble(__pyx_v_max_bit_weight); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 84, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_10);
+        __pyx_t_7 = __Pyx_PyNumber_Divide(__pyx_t_11, __pyx_t_10); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 84, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_7);
+        __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+        __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+        __pyx_t_10 = PyTuple_New(2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 84, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_10);
+        __Pyx_INCREF(__pyx_v_bit);
+        __Pyx_GIVEREF(__pyx_v_bit);
+        PyTuple_SET_ITEM(__pyx_t_10, 0, __pyx_v_bit);
+        __Pyx_GIVEREF(__pyx_t_7);
+        PyTuple_SET_ITEM(__pyx_t_10, 1, __pyx_t_7);
+        __pyx_t_7 = 0;
+        if (unlikely(__Pyx_ListComp_Append(__pyx_t_5, (PyObject*)__pyx_t_10))) __PYX_ERR(0, 84, __pyx_L1_error)
+        __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+      }
+      __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+      if (unlikely(PyDict_SetItem(__pyx_v_decode_sdr, __pyx_v_key, __pyx_t_5) < 0)) __PYX_ERR(0, 84, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+
+      /* "src/sparse_distributed_representation.py":85
+ *                 #
+ *                 decode_sdr[key] = [(bit, self.encoding[key][bit] / max_bit_weight) for bit in self.encoding[key]]
+ *                 decode_sdr[key].sort(key=lambda x: x[1], reverse=True)             # <<<<<<<<<<<<<<
  *         return decode_sdr
  * 
  */
-    /*else*/ {
-      if (unlikely(__pyx_v_self->encoding == Py_None)) {
-        PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 82, __pyx_L1_error)
-      }
-      __pyx_t_5 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_key); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 82, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyDict_GetItem(__pyx_v_decode_sdr, __pyx_v_key); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 85, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
-      if (unlikely(PyDict_SetItem(__pyx_v_decode_sdr, __pyx_v_key, __pyx_t_5) < 0)) __PYX_ERR(0, 82, __pyx_L1_error)
+      __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_sort); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 85, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_13);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __pyx_t_5 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 85, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_5);
+      __pyx_t_10 = __Pyx_CyFunction_New(&__pyx_mdef_3src_33sparse_distributed_representation_3SDR_6decode_lambda, 0, __pyx_n_s_decode_locals_lambda, NULL, __pyx_n_s_src_sparse_distributed_represent, __pyx_d, NULL); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 85, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_10);
+      if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_key, __pyx_t_10) < 0) __PYX_ERR(0, 85, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+      if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_reverse, Py_True) < 0) __PYX_ERR(0, 85, __pyx_L1_error)
+      __pyx_t_10 = __Pyx_PyObject_Call(__pyx_t_13, __pyx_empty_tuple, __pyx_t_5); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 85, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_10);
+      __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
     }
     __pyx_L5:;
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/sparse_distributed_representation.py":83
- *             else:
- *                 decode_sdr[key] = self.encoding[key]
+  /* "src/sparse_distributed_representation.py":86
+ *                 decode_sdr[key] = [(bit, self.encoding[key][bit] / max_bit_weight) for bit in self.encoding[key]]
+ *                 decode_sdr[key].sort(key=lambda x: x[1], reverse=True)
  *         return decode_sdr             # <<<<<<<<<<<<<<
  * 
- *     def learn(self, sdr, learn_temporal_keys: set = None, learn_enc_keys: set = None, learn_rate: float = 1.0, prune_threshold: float = 0.01):
+ *     def learn_delta(self, sdr, learn_temporal_keys: set = None, learn_enc_keys: set = None, learn_rate: float = 1.0, prune_threshold: float = 0.01):
  */
   __Pyx_XDECREF(__pyx_r);
   __Pyx_INCREF(__pyx_v_decode_sdr);
@@ -3097,7 +3392,7 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_10decode
   /* "src/sparse_distributed_representation.py":74
  *             self.encoders[enc_key] = None
  * 
- *     def decode(self) -> dict:             # <<<<<<<<<<<<<<
+ *     def decode(self, max_bit_weight: float = 1.0) -> dict:             # <<<<<<<<<<<<<<
  *         decode_sdr: dict = {}
  *         key: tuple
  */
@@ -3109,28 +3404,31 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_10decode
   __Pyx_XDECREF(__pyx_t_7);
   __Pyx_XDECREF(__pyx_t_10);
   __Pyx_XDECREF(__pyx_t_11);
+  __Pyx_XDECREF(__pyx_t_12);
+  __Pyx_XDECREF(__pyx_t_13);
   __Pyx_AddTraceback("src.sparse_distributed_representation.SDR.decode", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_decode_sdr);
   __Pyx_XDECREF(__pyx_v_key);
+  __Pyx_XDECREF(__pyx_v_bit);
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "src/sparse_distributed_representation.py":85
+/* "src/sparse_distributed_representation.py":88
  *         return decode_sdr
  * 
- *     def learn(self, sdr, learn_temporal_keys: set = None, learn_enc_keys: set = None, learn_rate: float = 1.0, prune_threshold: float = 0.01):             # <<<<<<<<<<<<<<
+ *     def learn_delta(self, sdr, learn_temporal_keys: set = None, learn_enc_keys: set = None, learn_rate: float = 1.0, prune_threshold: float = 0.01):             # <<<<<<<<<<<<<<
  * 
  *         temporal_keys: set
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_3src_33sparse_distributed_representation_3SDR_13learn(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_3src_33sparse_distributed_representation_3SDR_13learn = {"learn", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_33sparse_distributed_representation_3SDR_13learn, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_3src_33sparse_distributed_representation_3SDR_13learn(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_3src_33sparse_distributed_representation_3SDR_13learn_delta(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_3src_33sparse_distributed_representation_3SDR_13learn_delta = {"learn_delta", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_33sparse_distributed_representation_3SDR_13learn_delta, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_3src_33sparse_distributed_representation_3SDR_13learn_delta(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_sdr = 0;
   PyObject *__pyx_v_learn_temporal_keys = 0;
   PyObject *__pyx_v_learn_enc_keys = 0;
@@ -3141,7 +3439,7 @@ static PyObject *__pyx_pw_3src_33sparse_distributed_representation_3SDR_13learn(
   int __pyx_clineno = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("learn (wrapper)", 0);
+  __Pyx_RefNannySetupContext("learn_delta (wrapper)", 0);
   {
     static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_sdr,&__pyx_n_s_learn_temporal_keys,&__pyx_n_s_learn_enc_keys,&__pyx_n_s_learn_rate,&__pyx_n_s_prune_threshold,0};
     PyObject* values[5] = {0,0,0,0,0};
@@ -3195,7 +3493,7 @@ static PyObject *__pyx_pw_3src_33sparse_distributed_representation_3SDR_13learn(
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "learn") < 0)) __PYX_ERR(0, 85, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "learn_delta") < 0)) __PYX_ERR(0, 88, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -3216,27 +3514,27 @@ static PyObject *__pyx_pw_3src_33sparse_distributed_representation_3SDR_13learn(
     __pyx_v_learn_temporal_keys = ((PyObject*)values[1]);
     __pyx_v_learn_enc_keys = ((PyObject*)values[2]);
     if (values[3]) {
-      __pyx_v_learn_rate = __pyx_PyFloat_AsDouble(values[3]); if (unlikely((__pyx_v_learn_rate == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 85, __pyx_L3_error)
+      __pyx_v_learn_rate = __pyx_PyFloat_AsDouble(values[3]); if (unlikely((__pyx_v_learn_rate == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 88, __pyx_L3_error)
     } else {
       __pyx_v_learn_rate = ((double)1.0);
     }
     if (values[4]) {
-      __pyx_v_prune_threshold = __pyx_PyFloat_AsDouble(values[4]); if (unlikely((__pyx_v_prune_threshold == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 85, __pyx_L3_error)
+      __pyx_v_prune_threshold = __pyx_PyFloat_AsDouble(values[4]); if (unlikely((__pyx_v_prune_threshold == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 88, __pyx_L3_error)
     } else {
       __pyx_v_prune_threshold = ((double)0.01);
     }
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("learn", 0, 1, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 85, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("learn_delta", 0, 1, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 88, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("src.sparse_distributed_representation.SDR.learn", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.sparse_distributed_representation.SDR.learn_delta", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_learn_temporal_keys), (&PySet_Type), 1, "learn_temporal_keys", 1))) __PYX_ERR(0, 85, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_learn_enc_keys), (&PySet_Type), 1, "learn_enc_keys", 1))) __PYX_ERR(0, 85, __pyx_L1_error)
-  __pyx_r = __pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(((struct __pyx_obj_3src_33sparse_distributed_representation_SDR *)__pyx_v_self), __pyx_v_sdr, __pyx_v_learn_temporal_keys, __pyx_v_learn_enc_keys, __pyx_v_learn_rate, __pyx_v_prune_threshold);
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_learn_temporal_keys), (&PySet_Type), 1, "learn_temporal_keys", 1))) __PYX_ERR(0, 88, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_learn_enc_keys), (&PySet_Type), 1, "learn_enc_keys", 1))) __PYX_ERR(0, 88, __pyx_L1_error)
+  __pyx_r = __pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn_delta(((struct __pyx_obj_3src_33sparse_distributed_representation_SDR *)__pyx_v_self), __pyx_v_sdr, __pyx_v_learn_temporal_keys, __pyx_v_learn_enc_keys, __pyx_v_learn_rate, __pyx_v_prune_threshold);
 
   /* function exit code */
   goto __pyx_L0;
@@ -3247,7 +3545,7 @@ static PyObject *__pyx_pw_3src_33sparse_distributed_representation_3SDR_13learn(
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(struct __pyx_obj_3src_33sparse_distributed_representation_SDR *__pyx_v_self, PyObject *__pyx_v_sdr, PyObject *__pyx_v_learn_temporal_keys, PyObject *__pyx_v_learn_enc_keys, double __pyx_v_learn_rate, double __pyx_v_prune_threshold) {
+static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn_delta(struct __pyx_obj_3src_33sparse_distributed_representation_SDR *__pyx_v_self, PyObject *__pyx_v_sdr, PyObject *__pyx_v_learn_temporal_keys, PyObject *__pyx_v_learn_enc_keys, double __pyx_v_learn_rate, double __pyx_v_prune_threshold) {
   int __pyx_v_bit;
   PyObject *__pyx_v_sdr_key = 0;
   PyObject *__pyx_v_keys_to_process = NULL;
@@ -3275,9 +3573,9 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("learn", 0);
+  __Pyx_RefNannySetupContext("learn_delta", 0);
 
-  /* "src/sparse_distributed_representation.py":92
+  /* "src/sparse_distributed_representation.py":95
  *         sdr_key: tuple
  * 
  *         keys_to_process = set(self.encoding.keys()) | set(sdr.encoding.keys())             # <<<<<<<<<<<<<<
@@ -3286,16 +3584,16 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
  */
   if (unlikely(__pyx_v_self->encoding == Py_None)) {
     PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "keys");
-    __PYX_ERR(0, 92, __pyx_L1_error)
+    __PYX_ERR(0, 95, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_PyDict_Keys(__pyx_v_self->encoding); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 92, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_Keys(__pyx_v_self->encoding); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 95, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PySet_New(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 92, __pyx_L1_error)
+  __pyx_t_2 = PySet_New(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 95, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encoding); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 92, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encoding); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 95, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_keys); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 92, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_keys); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 95, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_3 = NULL;
@@ -3310,20 +3608,20 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 92, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 95, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PySet_New(__pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 92, __pyx_L1_error)
+  __pyx_t_4 = PySet_New(__pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 95, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyNumber_Or(__pyx_t_2, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 92, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Or(__pyx_t_2, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 95, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_keys_to_process = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "src/sparse_distributed_representation.py":94
+  /* "src/sparse_distributed_representation.py":97
  *         keys_to_process = set(self.encoding.keys()) | set(sdr.encoding.keys())
  * 
  *         if len(self.encoding) == 0:             # <<<<<<<<<<<<<<
@@ -3334,14 +3632,14 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
   __Pyx_INCREF(__pyx_t_1);
   if (unlikely(__pyx_t_1 == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-    __PYX_ERR(0, 94, __pyx_L1_error)
+    __PYX_ERR(0, 97, __pyx_L1_error)
   }
-  __pyx_t_5 = PyDict_Size(__pyx_t_1); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(0, 94, __pyx_L1_error)
+  __pyx_t_5 = PyDict_Size(__pyx_t_1); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(0, 97, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_t_6 = ((__pyx_t_5 == 0) != 0);
   if (__pyx_t_6) {
 
-    /* "src/sparse_distributed_representation.py":95
+    /* "src/sparse_distributed_representation.py":98
  * 
  *         if len(self.encoding) == 0:
  *             learn_rate = 1.0             # <<<<<<<<<<<<<<
@@ -3350,7 +3648,7 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
  */
     __pyx_v_learn_rate = 1.0;
 
-    /* "src/sparse_distributed_representation.py":94
+    /* "src/sparse_distributed_representation.py":97
  *         keys_to_process = set(self.encoding.keys()) | set(sdr.encoding.keys())
  * 
  *         if len(self.encoding) == 0:             # <<<<<<<<<<<<<<
@@ -3359,7 +3657,7 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
  */
   }
 
-  /* "src/sparse_distributed_representation.py":97
+  /* "src/sparse_distributed_representation.py":100
  *             learn_rate = 1.0
  * 
  *         for sdr_key in keys_to_process:             # <<<<<<<<<<<<<<
@@ -3367,7 +3665,7 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
  *                     (learn_enc_keys is None or sdr_key[ENC_IDX] in learn_enc_keys)):
  */
   __pyx_t_5 = 0;
-  __pyx_t_4 = __Pyx_set_iterator(__pyx_v_keys_to_process, 1, (&__pyx_t_7), (&__pyx_t_8)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 97, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_set_iterator(__pyx_v_keys_to_process, 1, (&__pyx_t_7), (&__pyx_t_8)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 100, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_1);
   __pyx_t_1 = __pyx_t_4;
@@ -3375,13 +3673,13 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
   while (1) {
     __pyx_t_9 = __Pyx_set_iter_next(__pyx_t_1, __pyx_t_7, &__pyx_t_5, &__pyx_t_4, __pyx_t_8);
     if (unlikely(__pyx_t_9 == 0)) break;
-    if (unlikely(__pyx_t_9 == -1)) __PYX_ERR(0, 97, __pyx_L1_error)
+    if (unlikely(__pyx_t_9 == -1)) __PYX_ERR(0, 100, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    if (!(likely(PyTuple_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "tuple", Py_TYPE(__pyx_t_4)->tp_name), 0))) __PYX_ERR(0, 97, __pyx_L1_error)
+    if (!(likely(PyTuple_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "tuple", Py_TYPE(__pyx_t_4)->tp_name), 0))) __PYX_ERR(0, 100, __pyx_L1_error)
     __Pyx_XDECREF_SET(__pyx_v_sdr_key, ((PyObject*)__pyx_t_4));
     __pyx_t_4 = 0;
 
-    /* "src/sparse_distributed_representation.py":98
+    /* "src/sparse_distributed_representation.py":101
  * 
  *         for sdr_key in keys_to_process:
  *             if ((learn_temporal_keys is None or sdr_key[TEMPORAL_IDX] in learn_temporal_keys) and             # <<<<<<<<<<<<<<
@@ -3396,18 +3694,18 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
     }
     if (unlikely(__pyx_v_sdr_key == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 98, __pyx_L1_error)
+      __PYX_ERR(0, 101, __pyx_L1_error)
     }
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_TEMPORAL_IDX); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 98, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_TEMPORAL_IDX); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 101, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_v_sdr_key, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 98, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_v_sdr_key, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 101, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     if (unlikely(__pyx_v_learn_temporal_keys == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-      __PYX_ERR(0, 98, __pyx_L1_error)
+      __PYX_ERR(0, 101, __pyx_L1_error)
     }
-    __pyx_t_11 = (__Pyx_PySet_ContainsTF(__pyx_t_2, __pyx_v_learn_temporal_keys, Py_EQ)); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 98, __pyx_L1_error)
+    __pyx_t_11 = (__Pyx_PySet_ContainsTF(__pyx_t_2, __pyx_v_learn_temporal_keys, Py_EQ)); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 101, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_t_10 = (__pyx_t_11 != 0);
     if (__pyx_t_10) {
@@ -3417,7 +3715,7 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
     }
     __pyx_L8_next_and:;
 
-    /* "src/sparse_distributed_representation.py":99
+    /* "src/sparse_distributed_representation.py":102
  *         for sdr_key in keys_to_process:
  *             if ((learn_temporal_keys is None or sdr_key[TEMPORAL_IDX] in learn_temporal_keys) and
  *                     (learn_enc_keys is None or sdr_key[ENC_IDX] in learn_enc_keys)):             # <<<<<<<<<<<<<<
@@ -3433,24 +3731,24 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
     }
     if (unlikely(__pyx_v_sdr_key == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 99, __pyx_L1_error)
+      __PYX_ERR(0, 102, __pyx_L1_error)
     }
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_ENC_IDX); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 99, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_ENC_IDX); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 102, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_4 = __Pyx_PyObject_GetItem(__pyx_v_sdr_key, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 99, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetItem(__pyx_v_sdr_key, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 102, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     if (unlikely(__pyx_v_learn_enc_keys == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-      __PYX_ERR(0, 99, __pyx_L1_error)
+      __PYX_ERR(0, 102, __pyx_L1_error)
     }
-    __pyx_t_11 = (__Pyx_PySet_ContainsTF(__pyx_t_4, __pyx_v_learn_enc_keys, Py_EQ)); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 99, __pyx_L1_error)
+    __pyx_t_11 = (__Pyx_PySet_ContainsTF(__pyx_t_4, __pyx_v_learn_enc_keys, Py_EQ)); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 102, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_t_10 = (__pyx_t_11 != 0);
     __pyx_t_6 = __pyx_t_10;
     __pyx_L7_bool_binop_done:;
 
-    /* "src/sparse_distributed_representation.py":98
+    /* "src/sparse_distributed_representation.py":101
  * 
  *         for sdr_key in keys_to_process:
  *             if ((learn_temporal_keys is None or sdr_key[TEMPORAL_IDX] in learn_temporal_keys) and             # <<<<<<<<<<<<<<
@@ -3459,7 +3757,7 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
  */
     if (__pyx_t_6) {
 
-      /* "src/sparse_distributed_representation.py":103
+      /* "src/sparse_distributed_representation.py":106
  *                 # if sdr_key not in self then learn bits and encoder
  *                 #
  *                 if sdr_key not in self.encoding:             # <<<<<<<<<<<<<<
@@ -3468,13 +3766,13 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
  */
       if (unlikely(__pyx_v_self->encoding == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-        __PYX_ERR(0, 103, __pyx_L1_error)
+        __PYX_ERR(0, 106, __pyx_L1_error)
       }
-      __pyx_t_6 = (__Pyx_PyDict_ContainsTF(__pyx_v_sdr_key, __pyx_v_self->encoding, Py_NE)); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 103, __pyx_L1_error)
+      __pyx_t_6 = (__Pyx_PyDict_ContainsTF(__pyx_v_sdr_key, __pyx_v_self->encoding, Py_NE)); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 106, __pyx_L1_error)
       __pyx_t_10 = (__pyx_t_6 != 0);
       if (__pyx_t_10) {
 
-        /* "src/sparse_distributed_representation.py":104
+        /* "src/sparse_distributed_representation.py":107
  *                 #
  *                 if sdr_key not in self.encoding:
  *                     self.encoding[sdr_key] = {bit: sdr.encoding[sdr_key][bit] * learn_rate             # <<<<<<<<<<<<<<
@@ -3482,28 +3780,28 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
  *                                               if sdr.encoding[sdr_key][bit] * learn_rate > prune_threshold}
  */
         { /* enter inner scope */
-          __pyx_t_4 = PyDict_New(); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 104, __pyx_L1_error)
+          __pyx_t_4 = PyDict_New(); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 107, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
 
-          /* "src/sparse_distributed_representation.py":105
+          /* "src/sparse_distributed_representation.py":108
  *                 if sdr_key not in self.encoding:
  *                     self.encoding[sdr_key] = {bit: sdr.encoding[sdr_key][bit] * learn_rate
  *                                               for bit in sdr.encoding[sdr_key]             # <<<<<<<<<<<<<<
  *                                               if sdr.encoding[sdr_key][bit] * learn_rate > prune_threshold}
  *                     self.encoders[sdr_key[ENC_IDX]] = sdr.encoders[sdr_key[ENC_IDX]]
  */
-          __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encoding); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 105, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encoding); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 108, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
-          __pyx_t_3 = __Pyx_PyObject_GetItem(__pyx_t_2, __pyx_v_sdr_key); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 105, __pyx_L1_error)
+          __pyx_t_3 = __Pyx_PyObject_GetItem(__pyx_t_2, __pyx_v_sdr_key); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 108, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_3);
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
           if (likely(PyList_CheckExact(__pyx_t_3)) || PyTuple_CheckExact(__pyx_t_3)) {
             __pyx_t_2 = __pyx_t_3; __Pyx_INCREF(__pyx_t_2); __pyx_t_12 = 0;
             __pyx_t_13 = NULL;
           } else {
-            __pyx_t_12 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 105, __pyx_L1_error)
+            __pyx_t_12 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 108, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_2);
-            __pyx_t_13 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 105, __pyx_L1_error)
+            __pyx_t_13 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 108, __pyx_L1_error)
           }
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
           for (;;) {
@@ -3511,17 +3809,17 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
               if (likely(PyList_CheckExact(__pyx_t_2))) {
                 if (__pyx_t_12 >= PyList_GET_SIZE(__pyx_t_2)) break;
                 #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-                __pyx_t_3 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_12); __Pyx_INCREF(__pyx_t_3); __pyx_t_12++; if (unlikely(0 < 0)) __PYX_ERR(0, 105, __pyx_L1_error)
+                __pyx_t_3 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_12); __Pyx_INCREF(__pyx_t_3); __pyx_t_12++; if (unlikely(0 < 0)) __PYX_ERR(0, 108, __pyx_L1_error)
                 #else
-                __pyx_t_3 = PySequence_ITEM(__pyx_t_2, __pyx_t_12); __pyx_t_12++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 105, __pyx_L1_error)
+                __pyx_t_3 = PySequence_ITEM(__pyx_t_2, __pyx_t_12); __pyx_t_12++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 108, __pyx_L1_error)
                 __Pyx_GOTREF(__pyx_t_3);
                 #endif
               } else {
                 if (__pyx_t_12 >= PyTuple_GET_SIZE(__pyx_t_2)) break;
                 #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-                __pyx_t_3 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_12); __Pyx_INCREF(__pyx_t_3); __pyx_t_12++; if (unlikely(0 < 0)) __PYX_ERR(0, 105, __pyx_L1_error)
+                __pyx_t_3 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_12); __Pyx_INCREF(__pyx_t_3); __pyx_t_12++; if (unlikely(0 < 0)) __PYX_ERR(0, 108, __pyx_L1_error)
                 #else
-                __pyx_t_3 = PySequence_ITEM(__pyx_t_2, __pyx_t_12); __pyx_t_12++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 105, __pyx_L1_error)
+                __pyx_t_3 = PySequence_ITEM(__pyx_t_2, __pyx_t_12); __pyx_t_12++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 108, __pyx_L1_error)
                 __Pyx_GOTREF(__pyx_t_3);
                 #endif
               }
@@ -3531,74 +3829,74 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
                 PyObject* exc_type = PyErr_Occurred();
                 if (exc_type) {
                   if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-                  else __PYX_ERR(0, 105, __pyx_L1_error)
+                  else __PYX_ERR(0, 108, __pyx_L1_error)
                 }
                 break;
               }
               __Pyx_GOTREF(__pyx_t_3);
             }
-            __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 105, __pyx_L1_error)
+            __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 108, __pyx_L1_error)
             __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
             __pyx_8genexpr2__pyx_v_bit = __pyx_t_9;
 
-            /* "src/sparse_distributed_representation.py":106
+            /* "src/sparse_distributed_representation.py":109
  *                     self.encoding[sdr_key] = {bit: sdr.encoding[sdr_key][bit] * learn_rate
  *                                               for bit in sdr.encoding[sdr_key]
  *                                               if sdr.encoding[sdr_key][bit] * learn_rate > prune_threshold}             # <<<<<<<<<<<<<<
  *                     self.encoders[sdr_key[ENC_IDX]] = sdr.encoders[sdr_key[ENC_IDX]]
  * 
  */
-            __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encoding); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 106, __pyx_L1_error)
+            __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encoding); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 109, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_3);
-            __pyx_t_14 = __Pyx_PyObject_GetItem(__pyx_t_3, __pyx_v_sdr_key); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 106, __pyx_L1_error)
+            __pyx_t_14 = __Pyx_PyObject_GetItem(__pyx_t_3, __pyx_v_sdr_key); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 109, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_14);
             __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-            __pyx_t_3 = __Pyx_GetItemInt(__pyx_t_14, __pyx_8genexpr2__pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 106, __pyx_L1_error)
+            __pyx_t_3 = __Pyx_GetItemInt(__pyx_t_14, __pyx_8genexpr2__pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 109, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_3);
             __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-            __pyx_t_14 = PyFloat_FromDouble(__pyx_v_learn_rate); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 106, __pyx_L1_error)
+            __pyx_t_14 = PyFloat_FromDouble(__pyx_v_learn_rate); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 109, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_14);
-            __pyx_t_15 = PyNumber_Multiply(__pyx_t_3, __pyx_t_14); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 106, __pyx_L1_error)
+            __pyx_t_15 = PyNumber_Multiply(__pyx_t_3, __pyx_t_14); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 109, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_15);
             __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
             __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-            __pyx_t_14 = PyFloat_FromDouble(__pyx_v_prune_threshold); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 106, __pyx_L1_error)
+            __pyx_t_14 = PyFloat_FromDouble(__pyx_v_prune_threshold); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 109, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_14);
-            __pyx_t_3 = PyObject_RichCompare(__pyx_t_15, __pyx_t_14, Py_GT); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 106, __pyx_L1_error)
+            __pyx_t_3 = PyObject_RichCompare(__pyx_t_15, __pyx_t_14, Py_GT); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 109, __pyx_L1_error)
             __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
             __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-            __pyx_t_10 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 106, __pyx_L1_error)
+            __pyx_t_10 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 109, __pyx_L1_error)
             __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
             if (__pyx_t_10) {
 
-              /* "src/sparse_distributed_representation.py":104
+              /* "src/sparse_distributed_representation.py":107
  *                 #
  *                 if sdr_key not in self.encoding:
  *                     self.encoding[sdr_key] = {bit: sdr.encoding[sdr_key][bit] * learn_rate             # <<<<<<<<<<<<<<
  *                                               for bit in sdr.encoding[sdr_key]
  *                                               if sdr.encoding[sdr_key][bit] * learn_rate > prune_threshold}
  */
-              __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_8genexpr2__pyx_v_bit); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 104, __pyx_L1_error)
+              __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_8genexpr2__pyx_v_bit); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 107, __pyx_L1_error)
               __Pyx_GOTREF(__pyx_t_3);
-              __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encoding); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 104, __pyx_L1_error)
+              __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encoding); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 107, __pyx_L1_error)
               __Pyx_GOTREF(__pyx_t_14);
-              __pyx_t_15 = __Pyx_PyObject_GetItem(__pyx_t_14, __pyx_v_sdr_key); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 104, __pyx_L1_error)
+              __pyx_t_15 = __Pyx_PyObject_GetItem(__pyx_t_14, __pyx_v_sdr_key); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 107, __pyx_L1_error)
               __Pyx_GOTREF(__pyx_t_15);
               __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-              __pyx_t_14 = __Pyx_GetItemInt(__pyx_t_15, __pyx_8genexpr2__pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 104, __pyx_L1_error)
+              __pyx_t_14 = __Pyx_GetItemInt(__pyx_t_15, __pyx_8genexpr2__pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 107, __pyx_L1_error)
               __Pyx_GOTREF(__pyx_t_14);
               __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
-              __pyx_t_15 = PyFloat_FromDouble(__pyx_v_learn_rate); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 104, __pyx_L1_error)
+              __pyx_t_15 = PyFloat_FromDouble(__pyx_v_learn_rate); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 107, __pyx_L1_error)
               __Pyx_GOTREF(__pyx_t_15);
-              __pyx_t_16 = PyNumber_Multiply(__pyx_t_14, __pyx_t_15); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 104, __pyx_L1_error)
+              __pyx_t_16 = PyNumber_Multiply(__pyx_t_14, __pyx_t_15); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 107, __pyx_L1_error)
               __Pyx_GOTREF(__pyx_t_16);
               __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
               __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
-              if (unlikely(PyDict_SetItem(__pyx_t_4, (PyObject*)__pyx_t_3, (PyObject*)__pyx_t_16))) __PYX_ERR(0, 104, __pyx_L1_error)
+              if (unlikely(PyDict_SetItem(__pyx_t_4, (PyObject*)__pyx_t_3, (PyObject*)__pyx_t_16))) __PYX_ERR(0, 107, __pyx_L1_error)
               __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
               __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
 
-              /* "src/sparse_distributed_representation.py":106
+              /* "src/sparse_distributed_representation.py":109
  *                     self.encoding[sdr_key] = {bit: sdr.encoding[sdr_key][bit] * learn_rate
  *                                               for bit in sdr.encoding[sdr_key]
  *                                               if sdr.encoding[sdr_key][bit] * learn_rate > prune_threshold}             # <<<<<<<<<<<<<<
@@ -3607,7 +3905,7 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
  */
             }
 
-            /* "src/sparse_distributed_representation.py":105
+            /* "src/sparse_distributed_representation.py":108
  *                 if sdr_key not in self.encoding:
  *                     self.encoding[sdr_key] = {bit: sdr.encoding[sdr_key][bit] * learn_rate
  *                                               for bit in sdr.encoding[sdr_key]             # <<<<<<<<<<<<<<
@@ -3618,7 +3916,7 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         } /* exit inner scope */
 
-        /* "src/sparse_distributed_representation.py":104
+        /* "src/sparse_distributed_representation.py":107
  *                 #
  *                 if sdr_key not in self.encoding:
  *                     self.encoding[sdr_key] = {bit: sdr.encoding[sdr_key][bit] * learn_rate             # <<<<<<<<<<<<<<
@@ -3627,51 +3925,51 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
  */
         if (unlikely(__pyx_v_self->encoding == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-          __PYX_ERR(0, 104, __pyx_L1_error)
+          __PYX_ERR(0, 107, __pyx_L1_error)
         }
-        if (unlikely(PyDict_SetItem(__pyx_v_self->encoding, __pyx_v_sdr_key, __pyx_t_4) < 0)) __PYX_ERR(0, 104, __pyx_L1_error)
+        if (unlikely(PyDict_SetItem(__pyx_v_self->encoding, __pyx_v_sdr_key, __pyx_t_4) < 0)) __PYX_ERR(0, 107, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-        /* "src/sparse_distributed_representation.py":107
+        /* "src/sparse_distributed_representation.py":110
  *                                               for bit in sdr.encoding[sdr_key]
  *                                               if sdr.encoding[sdr_key][bit] * learn_rate > prune_threshold}
  *                     self.encoders[sdr_key[ENC_IDX]] = sdr.encoders[sdr_key[ENC_IDX]]             # <<<<<<<<<<<<<<
  * 
  *                 # if sdr_key in both self and sdr then process each bit
  */
-        __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encoders); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 107, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encoders); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 110, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         if (unlikely(__pyx_v_sdr_key == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-          __PYX_ERR(0, 107, __pyx_L1_error)
+          __PYX_ERR(0, 110, __pyx_L1_error)
         }
-        __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_ENC_IDX); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 107, __pyx_L1_error)
+        __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_ENC_IDX); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 110, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
-        __pyx_t_16 = __Pyx_PyObject_GetItem(__pyx_v_sdr_key, __pyx_t_2); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 107, __pyx_L1_error)
+        __pyx_t_16 = __Pyx_PyObject_GetItem(__pyx_v_sdr_key, __pyx_t_2); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 110, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_16);
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-        __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_t_4, __pyx_t_16); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 107, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_t_4, __pyx_t_16); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 110, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
         __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
         if (unlikely(__pyx_v_self->encoders == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-          __PYX_ERR(0, 107, __pyx_L1_error)
+          __PYX_ERR(0, 110, __pyx_L1_error)
         }
         if (unlikely(__pyx_v_sdr_key == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-          __PYX_ERR(0, 107, __pyx_L1_error)
+          __PYX_ERR(0, 110, __pyx_L1_error)
         }
-        __Pyx_GetModuleGlobalName(__pyx_t_16, __pyx_n_s_ENC_IDX); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 107, __pyx_L1_error)
+        __Pyx_GetModuleGlobalName(__pyx_t_16, __pyx_n_s_ENC_IDX); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 110, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_16);
-        __pyx_t_4 = __Pyx_PyObject_GetItem(__pyx_v_sdr_key, __pyx_t_16); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 107, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_PyObject_GetItem(__pyx_v_sdr_key, __pyx_t_16); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 110, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
-        if (unlikely(PyDict_SetItem(__pyx_v_self->encoders, __pyx_t_4, __pyx_t_2) < 0)) __PYX_ERR(0, 107, __pyx_L1_error)
+        if (unlikely(PyDict_SetItem(__pyx_v_self->encoders, __pyx_t_4, __pyx_t_2) < 0)) __PYX_ERR(0, 110, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-        /* "src/sparse_distributed_representation.py":103
+        /* "src/sparse_distributed_representation.py":106
  *                 # if sdr_key not in self then learn bits and encoder
  *                 #
  *                 if sdr_key not in self.encoding:             # <<<<<<<<<<<<<<
@@ -3681,7 +3979,7 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
         goto __pyx_L11;
       }
 
-      /* "src/sparse_distributed_representation.py":111
+      /* "src/sparse_distributed_representation.py":114
  *                 # if sdr_key in both self and sdr then process each bit
  *                 #
  *                 elif sdr_key in self.encoding and sdr_key in sdr.encoding:             # <<<<<<<<<<<<<<
@@ -3690,25 +3988,25 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
  */
       if (unlikely(__pyx_v_self->encoding == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-        __PYX_ERR(0, 111, __pyx_L1_error)
+        __PYX_ERR(0, 114, __pyx_L1_error)
       }
-      __pyx_t_6 = (__Pyx_PyDict_ContainsTF(__pyx_v_sdr_key, __pyx_v_self->encoding, Py_EQ)); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 111, __pyx_L1_error)
+      __pyx_t_6 = (__Pyx_PyDict_ContainsTF(__pyx_v_sdr_key, __pyx_v_self->encoding, Py_EQ)); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 114, __pyx_L1_error)
       __pyx_t_11 = (__pyx_t_6 != 0);
       if (__pyx_t_11) {
       } else {
         __pyx_t_10 = __pyx_t_11;
         goto __pyx_L15_bool_binop_done;
       }
-      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encoding); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 111, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encoding); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 114, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_11 = (__Pyx_PySequence_ContainsTF(__pyx_v_sdr_key, __pyx_t_2, Py_EQ)); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 111, __pyx_L1_error)
+      __pyx_t_11 = (__Pyx_PySequence_ContainsTF(__pyx_v_sdr_key, __pyx_t_2, Py_EQ)); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 114, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __pyx_t_6 = (__pyx_t_11 != 0);
       __pyx_t_10 = __pyx_t_6;
       __pyx_L15_bool_binop_done:;
       if (__pyx_t_10) {
 
-        /* "src/sparse_distributed_representation.py":115
+        /* "src/sparse_distributed_representation.py":118
  *                     # will need to process all bits
  *                     #
  *                     bits_to_process = set(self.encoding[sdr_key].keys()) | set(sdr.encoding[sdr_key].keys())             # <<<<<<<<<<<<<<
@@ -3717,11 +4015,11 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
  */
         if (unlikely(__pyx_v_self->encoding == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-          __PYX_ERR(0, 115, __pyx_L1_error)
+          __PYX_ERR(0, 118, __pyx_L1_error)
         }
-        __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 115, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 118, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
-        __pyx_t_16 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_keys); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 115, __pyx_L1_error)
+        __pyx_t_16 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_keys); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 118, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_16);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
         __pyx_t_4 = NULL;
@@ -3736,18 +4034,18 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
         }
         __pyx_t_2 = (__pyx_t_4) ? __Pyx_PyObject_CallOneArg(__pyx_t_16, __pyx_t_4) : __Pyx_PyObject_CallNoArg(__pyx_t_16);
         __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 115, __pyx_L1_error)
+        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 118, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
-        __pyx_t_16 = PySet_New(__pyx_t_2); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 115, __pyx_L1_error)
+        __pyx_t_16 = PySet_New(__pyx_t_2); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 118, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_16);
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-        __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encoding); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 115, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encoding); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 118, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
-        __pyx_t_3 = __Pyx_PyObject_GetItem(__pyx_t_4, __pyx_v_sdr_key); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 115, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PyObject_GetItem(__pyx_t_4, __pyx_v_sdr_key); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 118, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-        __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_keys); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 115, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_keys); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 118, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
         __pyx_t_3 = NULL;
@@ -3762,20 +4060,20 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
         }
         __pyx_t_2 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_4);
         __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 115, __pyx_L1_error)
+        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 118, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-        __pyx_t_4 = PySet_New(__pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 115, __pyx_L1_error)
+        __pyx_t_4 = PySet_New(__pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 118, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-        __pyx_t_2 = PyNumber_Or(__pyx_t_16, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 115, __pyx_L1_error)
+        __pyx_t_2 = PyNumber_Or(__pyx_t_16, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 118, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
         __Pyx_XDECREF_SET(__pyx_v_bits_to_process, __pyx_t_2);
         __pyx_t_2 = 0;
 
-        /* "src/sparse_distributed_representation.py":117
+        /* "src/sparse_distributed_representation.py":120
  *                     bits_to_process = set(self.encoding[sdr_key].keys()) | set(sdr.encoding[sdr_key].keys())
  * 
  *                     for bit in bits_to_process:             # <<<<<<<<<<<<<<
@@ -3786,26 +4084,26 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
           __pyx_t_2 = __pyx_v_bits_to_process; __Pyx_INCREF(__pyx_t_2); __pyx_t_12 = 0;
           __pyx_t_13 = NULL;
         } else {
-          __pyx_t_12 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_v_bits_to_process); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 117, __pyx_L1_error)
+          __pyx_t_12 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_v_bits_to_process); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 120, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
-          __pyx_t_13 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 117, __pyx_L1_error)
+          __pyx_t_13 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 120, __pyx_L1_error)
         }
         for (;;) {
           if (likely(!__pyx_t_13)) {
             if (likely(PyList_CheckExact(__pyx_t_2))) {
               if (__pyx_t_12 >= PyList_GET_SIZE(__pyx_t_2)) break;
               #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-              __pyx_t_4 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_12); __Pyx_INCREF(__pyx_t_4); __pyx_t_12++; if (unlikely(0 < 0)) __PYX_ERR(0, 117, __pyx_L1_error)
+              __pyx_t_4 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_12); __Pyx_INCREF(__pyx_t_4); __pyx_t_12++; if (unlikely(0 < 0)) __PYX_ERR(0, 120, __pyx_L1_error)
               #else
-              __pyx_t_4 = PySequence_ITEM(__pyx_t_2, __pyx_t_12); __pyx_t_12++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 117, __pyx_L1_error)
+              __pyx_t_4 = PySequence_ITEM(__pyx_t_2, __pyx_t_12); __pyx_t_12++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 120, __pyx_L1_error)
               __Pyx_GOTREF(__pyx_t_4);
               #endif
             } else {
               if (__pyx_t_12 >= PyTuple_GET_SIZE(__pyx_t_2)) break;
               #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-              __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_12); __Pyx_INCREF(__pyx_t_4); __pyx_t_12++; if (unlikely(0 < 0)) __PYX_ERR(0, 117, __pyx_L1_error)
+              __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_12); __Pyx_INCREF(__pyx_t_4); __pyx_t_12++; if (unlikely(0 < 0)) __PYX_ERR(0, 120, __pyx_L1_error)
               #else
-              __pyx_t_4 = PySequence_ITEM(__pyx_t_2, __pyx_t_12); __pyx_t_12++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 117, __pyx_L1_error)
+              __pyx_t_4 = PySequence_ITEM(__pyx_t_2, __pyx_t_12); __pyx_t_12++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 120, __pyx_L1_error)
               __Pyx_GOTREF(__pyx_t_4);
               #endif
             }
@@ -3815,77 +4113,77 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
               PyObject* exc_type = PyErr_Occurred();
               if (exc_type) {
                 if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-                else __PYX_ERR(0, 117, __pyx_L1_error)
+                else __PYX_ERR(0, 120, __pyx_L1_error)
               }
               break;
             }
             __Pyx_GOTREF(__pyx_t_4);
           }
-          __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_t_4); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 117, __pyx_L1_error)
+          __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_t_4); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 120, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
           __pyx_v_bit = __pyx_t_9;
 
-          /* "src/sparse_distributed_representation.py":121
+          /* "src/sparse_distributed_representation.py":124
  *                         # if we don't have bit learn it if its above the adjusted prune threshold
  *                         #
  *                         if bit not in self.encoding[sdr_key]:             # <<<<<<<<<<<<<<
  *                             bit_value = sdr.encoding[sdr_key][bit] * learn_rate
  *                             if bit_value > prune_threshold:
  */
-          __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_bit); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 121, __pyx_L1_error)
+          __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_bit); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 124, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           if (unlikely(__pyx_v_self->encoding == Py_None)) {
             PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-            __PYX_ERR(0, 121, __pyx_L1_error)
+            __PYX_ERR(0, 124, __pyx_L1_error)
           }
-          __pyx_t_16 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 121, __pyx_L1_error)
+          __pyx_t_16 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 124, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_16);
-          __pyx_t_10 = (__Pyx_PySequence_ContainsTF(__pyx_t_4, __pyx_t_16, Py_NE)); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 121, __pyx_L1_error)
+          __pyx_t_10 = (__Pyx_PySequence_ContainsTF(__pyx_t_4, __pyx_t_16, Py_NE)); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 124, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
           __pyx_t_6 = (__pyx_t_10 != 0);
           if (__pyx_t_6) {
 
-            /* "src/sparse_distributed_representation.py":122
+            /* "src/sparse_distributed_representation.py":125
  *                         #
  *                         if bit not in self.encoding[sdr_key]:
  *                             bit_value = sdr.encoding[sdr_key][bit] * learn_rate             # <<<<<<<<<<<<<<
  *                             if bit_value > prune_threshold:
  *                                 self.encoding[sdr_key][bit] = bit_value
  */
-            __pyx_t_16 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encoding); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 122, __pyx_L1_error)
+            __pyx_t_16 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encoding); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 125, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_16);
-            __pyx_t_4 = __Pyx_PyObject_GetItem(__pyx_t_16, __pyx_v_sdr_key); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 122, __pyx_L1_error)
+            __pyx_t_4 = __Pyx_PyObject_GetItem(__pyx_t_16, __pyx_v_sdr_key); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 125, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_4);
             __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
-            __pyx_t_16 = __Pyx_GetItemInt(__pyx_t_4, __pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 122, __pyx_L1_error)
+            __pyx_t_16 = __Pyx_GetItemInt(__pyx_t_4, __pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 125, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_16);
             __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-            __pyx_t_4 = PyFloat_FromDouble(__pyx_v_learn_rate); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 122, __pyx_L1_error)
+            __pyx_t_4 = PyFloat_FromDouble(__pyx_v_learn_rate); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 125, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_4);
-            __pyx_t_3 = PyNumber_Multiply(__pyx_t_16, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 122, __pyx_L1_error)
+            __pyx_t_3 = PyNumber_Multiply(__pyx_t_16, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 125, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_3);
             __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
             __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
             __Pyx_XDECREF_SET(__pyx_v_bit_value, __pyx_t_3);
             __pyx_t_3 = 0;
 
-            /* "src/sparse_distributed_representation.py":123
+            /* "src/sparse_distributed_representation.py":126
  *                         if bit not in self.encoding[sdr_key]:
  *                             bit_value = sdr.encoding[sdr_key][bit] * learn_rate
  *                             if bit_value > prune_threshold:             # <<<<<<<<<<<<<<
  *                                 self.encoding[sdr_key][bit] = bit_value
  * 
  */
-            __pyx_t_3 = PyFloat_FromDouble(__pyx_v_prune_threshold); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 123, __pyx_L1_error)
+            __pyx_t_3 = PyFloat_FromDouble(__pyx_v_prune_threshold); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 126, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_3);
-            __pyx_t_4 = PyObject_RichCompare(__pyx_v_bit_value, __pyx_t_3, Py_GT); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 123, __pyx_L1_error)
+            __pyx_t_4 = PyObject_RichCompare(__pyx_v_bit_value, __pyx_t_3, Py_GT); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 126, __pyx_L1_error)
             __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-            __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 123, __pyx_L1_error)
+            __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 126, __pyx_L1_error)
             __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
             if (__pyx_t_6) {
 
-              /* "src/sparse_distributed_representation.py":124
+              /* "src/sparse_distributed_representation.py":127
  *                             bit_value = sdr.encoding[sdr_key][bit] * learn_rate
  *                             if bit_value > prune_threshold:
  *                                 self.encoding[sdr_key][bit] = bit_value             # <<<<<<<<<<<<<<
@@ -3894,14 +4192,14 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
  */
               if (unlikely(__pyx_v_self->encoding == Py_None)) {
                 PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-                __PYX_ERR(0, 124, __pyx_L1_error)
+                __PYX_ERR(0, 127, __pyx_L1_error)
               }
-              __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 124, __pyx_L1_error)
+              __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 127, __pyx_L1_error)
               __Pyx_GOTREF(__pyx_t_4);
-              if (unlikely(__Pyx_SetItemInt(__pyx_t_4, __pyx_v_bit, __pyx_v_bit_value, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 124, __pyx_L1_error)
+              if (unlikely(__Pyx_SetItemInt(__pyx_t_4, __pyx_v_bit, __pyx_v_bit_value, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 127, __pyx_L1_error)
               __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-              /* "src/sparse_distributed_representation.py":123
+              /* "src/sparse_distributed_representation.py":126
  *                         if bit not in self.encoding[sdr_key]:
  *                             bit_value = sdr.encoding[sdr_key][bit] * learn_rate
  *                             if bit_value > prune_threshold:             # <<<<<<<<<<<<<<
@@ -3910,7 +4208,7 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
  */
             }
 
-            /* "src/sparse_distributed_representation.py":121
+            /* "src/sparse_distributed_representation.py":124
  *                         # if we don't have bit learn it if its above the adjusted prune threshold
  *                         #
  *                         if bit not in self.encoding[sdr_key]:             # <<<<<<<<<<<<<<
@@ -3920,22 +4218,22 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
             goto __pyx_L19;
           }
 
-          /* "src/sparse_distributed_representation.py":128
+          /* "src/sparse_distributed_representation.py":131
  *                         # if bit is in both the calc bit value and assign it if above prune_threshold else delete it
  *                         #
  *                         elif bit in self.encoding[sdr_key] and bit in sdr.encoding[sdr_key]:             # <<<<<<<<<<<<<<
  *                             bit_value = self.encoding[sdr_key][bit] + ((sdr.encoding[sdr_key][bit] - self.encoding[sdr_key][bit]) * learn_rate)
  *                             if bit_value > prune_threshold:
  */
-          __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_bit); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 128, __pyx_L1_error)
+          __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_bit); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 131, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           if (unlikely(__pyx_v_self->encoding == Py_None)) {
             PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-            __PYX_ERR(0, 128, __pyx_L1_error)
+            __PYX_ERR(0, 131, __pyx_L1_error)
           }
-          __pyx_t_3 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 128, __pyx_L1_error)
+          __pyx_t_3 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 131, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_3);
-          __pyx_t_10 = (__Pyx_PySequence_ContainsTF(__pyx_t_4, __pyx_t_3, Py_EQ)); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 128, __pyx_L1_error)
+          __pyx_t_10 = (__Pyx_PySequence_ContainsTF(__pyx_t_4, __pyx_t_3, Py_EQ)); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 131, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
           __pyx_t_11 = (__pyx_t_10 != 0);
@@ -3944,14 +4242,14 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
             __pyx_t_6 = __pyx_t_11;
             goto __pyx_L21_bool_binop_done;
           }
-          __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_bit); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 128, __pyx_L1_error)
+          __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_bit); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 131, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_3);
-          __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encoding); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 128, __pyx_L1_error)
+          __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encoding); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 131, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
-          __pyx_t_16 = __Pyx_PyObject_GetItem(__pyx_t_4, __pyx_v_sdr_key); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 128, __pyx_L1_error)
+          __pyx_t_16 = __Pyx_PyObject_GetItem(__pyx_t_4, __pyx_v_sdr_key); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 131, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_16);
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-          __pyx_t_11 = (__Pyx_PySequence_ContainsTF(__pyx_t_3, __pyx_t_16, Py_EQ)); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 128, __pyx_L1_error)
+          __pyx_t_11 = (__Pyx_PySequence_ContainsTF(__pyx_t_3, __pyx_t_16, Py_EQ)); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 131, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
           __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
           __pyx_t_10 = (__pyx_t_11 != 0);
@@ -3959,7 +4257,7 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
           __pyx_L21_bool_binop_done:;
           if (__pyx_t_6) {
 
-            /* "src/sparse_distributed_representation.py":129
+            /* "src/sparse_distributed_representation.py":132
  *                         #
  *                         elif bit in self.encoding[sdr_key] and bit in sdr.encoding[sdr_key]:
  *                             bit_value = self.encoding[sdr_key][bit] + ((sdr.encoding[sdr_key][bit] - self.encoding[sdr_key][bit]) * learn_rate)             # <<<<<<<<<<<<<<
@@ -3968,63 +4266,63 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
  */
             if (unlikely(__pyx_v_self->encoding == Py_None)) {
               PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-              __PYX_ERR(0, 129, __pyx_L1_error)
+              __PYX_ERR(0, 132, __pyx_L1_error)
             }
-            __pyx_t_16 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 129, __pyx_L1_error)
+            __pyx_t_16 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 132, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_16);
-            __pyx_t_3 = __Pyx_GetItemInt(__pyx_t_16, __pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 129, __pyx_L1_error)
+            __pyx_t_3 = __Pyx_GetItemInt(__pyx_t_16, __pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 132, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_3);
             __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
-            __pyx_t_16 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encoding); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 129, __pyx_L1_error)
+            __pyx_t_16 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encoding); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 132, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_16);
-            __pyx_t_4 = __Pyx_PyObject_GetItem(__pyx_t_16, __pyx_v_sdr_key); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 129, __pyx_L1_error)
+            __pyx_t_4 = __Pyx_PyObject_GetItem(__pyx_t_16, __pyx_v_sdr_key); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 132, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_4);
             __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
-            __pyx_t_16 = __Pyx_GetItemInt(__pyx_t_4, __pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 129, __pyx_L1_error)
+            __pyx_t_16 = __Pyx_GetItemInt(__pyx_t_4, __pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 132, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_16);
             __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
             if (unlikely(__pyx_v_self->encoding == Py_None)) {
               PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-              __PYX_ERR(0, 129, __pyx_L1_error)
+              __PYX_ERR(0, 132, __pyx_L1_error)
             }
-            __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 129, __pyx_L1_error)
+            __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 132, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_4);
-            __pyx_t_15 = __Pyx_GetItemInt(__pyx_t_4, __pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 129, __pyx_L1_error)
+            __pyx_t_15 = __Pyx_GetItemInt(__pyx_t_4, __pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 132, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_15);
             __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-            __pyx_t_4 = PyNumber_Subtract(__pyx_t_16, __pyx_t_15); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 129, __pyx_L1_error)
+            __pyx_t_4 = PyNumber_Subtract(__pyx_t_16, __pyx_t_15); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 132, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_4);
             __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
             __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
-            __pyx_t_15 = PyFloat_FromDouble(__pyx_v_learn_rate); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 129, __pyx_L1_error)
+            __pyx_t_15 = PyFloat_FromDouble(__pyx_v_learn_rate); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 132, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_15);
-            __pyx_t_16 = PyNumber_Multiply(__pyx_t_4, __pyx_t_15); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 129, __pyx_L1_error)
+            __pyx_t_16 = PyNumber_Multiply(__pyx_t_4, __pyx_t_15); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 132, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_16);
             __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
             __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
-            __pyx_t_15 = PyNumber_Add(__pyx_t_3, __pyx_t_16); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 129, __pyx_L1_error)
+            __pyx_t_15 = PyNumber_Add(__pyx_t_3, __pyx_t_16); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 132, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_15);
             __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
             __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
             __Pyx_XDECREF_SET(__pyx_v_bit_value, __pyx_t_15);
             __pyx_t_15 = 0;
 
-            /* "src/sparse_distributed_representation.py":130
+            /* "src/sparse_distributed_representation.py":133
  *                         elif bit in self.encoding[sdr_key] and bit in sdr.encoding[sdr_key]:
  *                             bit_value = self.encoding[sdr_key][bit] + ((sdr.encoding[sdr_key][bit] - self.encoding[sdr_key][bit]) * learn_rate)
  *                             if bit_value > prune_threshold:             # <<<<<<<<<<<<<<
  *                                 self.encoding[sdr_key][bit] = bit_value
  *                             else:
  */
-            __pyx_t_15 = PyFloat_FromDouble(__pyx_v_prune_threshold); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 130, __pyx_L1_error)
+            __pyx_t_15 = PyFloat_FromDouble(__pyx_v_prune_threshold); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 133, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_15);
-            __pyx_t_16 = PyObject_RichCompare(__pyx_v_bit_value, __pyx_t_15, Py_GT); __Pyx_XGOTREF(__pyx_t_16); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 130, __pyx_L1_error)
+            __pyx_t_16 = PyObject_RichCompare(__pyx_v_bit_value, __pyx_t_15, Py_GT); __Pyx_XGOTREF(__pyx_t_16); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 133, __pyx_L1_error)
             __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
-            __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_16); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 130, __pyx_L1_error)
+            __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_16); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 133, __pyx_L1_error)
             __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
             if (__pyx_t_6) {
 
-              /* "src/sparse_distributed_representation.py":131
+              /* "src/sparse_distributed_representation.py":134
  *                             bit_value = self.encoding[sdr_key][bit] + ((sdr.encoding[sdr_key][bit] - self.encoding[sdr_key][bit]) * learn_rate)
  *                             if bit_value > prune_threshold:
  *                                 self.encoding[sdr_key][bit] = bit_value             # <<<<<<<<<<<<<<
@@ -4033,14 +4331,14 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
  */
               if (unlikely(__pyx_v_self->encoding == Py_None)) {
                 PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-                __PYX_ERR(0, 131, __pyx_L1_error)
+                __PYX_ERR(0, 134, __pyx_L1_error)
               }
-              __pyx_t_16 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 131, __pyx_L1_error)
+              __pyx_t_16 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 134, __pyx_L1_error)
               __Pyx_GOTREF(__pyx_t_16);
-              if (unlikely(__Pyx_SetItemInt(__pyx_t_16, __pyx_v_bit, __pyx_v_bit_value, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 131, __pyx_L1_error)
+              if (unlikely(__Pyx_SetItemInt(__pyx_t_16, __pyx_v_bit, __pyx_v_bit_value, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 134, __pyx_L1_error)
               __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
 
-              /* "src/sparse_distributed_representation.py":130
+              /* "src/sparse_distributed_representation.py":133
  *                         elif bit in self.encoding[sdr_key] and bit in sdr.encoding[sdr_key]:
  *                             bit_value = self.encoding[sdr_key][bit] + ((sdr.encoding[sdr_key][bit] - self.encoding[sdr_key][bit]) * learn_rate)
  *                             if bit_value > prune_threshold:             # <<<<<<<<<<<<<<
@@ -4050,7 +4348,7 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
               goto __pyx_L23;
             }
 
-            /* "src/sparse_distributed_representation.py":133
+            /* "src/sparse_distributed_representation.py":136
  *                                 self.encoding[sdr_key][bit] = bit_value
  *                             else:
  *                                 del self.encoding[sdr_key][bit]             # <<<<<<<<<<<<<<
@@ -4060,16 +4358,16 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
             /*else*/ {
               if (unlikely(__pyx_v_self->encoding == Py_None)) {
                 PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-                __PYX_ERR(0, 133, __pyx_L1_error)
+                __PYX_ERR(0, 136, __pyx_L1_error)
               }
-              __pyx_t_16 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 133, __pyx_L1_error)
+              __pyx_t_16 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 136, __pyx_L1_error)
               __Pyx_GOTREF(__pyx_t_16);
-              if (unlikely(__Pyx_DelItemInt(__pyx_t_16, __pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 133, __pyx_L1_error)
+              if (unlikely(__Pyx_DelItemInt(__pyx_t_16, __pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 136, __pyx_L1_error)
               __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
             }
             __pyx_L23:;
 
-            /* "src/sparse_distributed_representation.py":128
+            /* "src/sparse_distributed_representation.py":131
  *                         # if bit is in both the calc bit value and assign it if above prune_threshold else delete it
  *                         #
  *                         elif bit in self.encoding[sdr_key] and bit in sdr.encoding[sdr_key]:             # <<<<<<<<<<<<<<
@@ -4079,28 +4377,28 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
             goto __pyx_L19;
           }
 
-          /* "src/sparse_distributed_representation.py":137
+          /* "src/sparse_distributed_representation.py":140
  *                         # if bit only in this sdr then decay bit value and delete it of not above prune_threshold
  *                         #
  *                         elif bit in self.encoding[sdr_key]:             # <<<<<<<<<<<<<<
  *                             bit_value = self.encoding[sdr_key][bit] - (self.encoding[sdr_key][bit] * learn_rate)
  *                             if bit_value > prune_threshold:
  */
-          __pyx_t_16 = __Pyx_PyInt_From_int(__pyx_v_bit); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 137, __pyx_L1_error)
+          __pyx_t_16 = __Pyx_PyInt_From_int(__pyx_v_bit); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 140, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_16);
           if (unlikely(__pyx_v_self->encoding == Py_None)) {
             PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-            __PYX_ERR(0, 137, __pyx_L1_error)
+            __PYX_ERR(0, 140, __pyx_L1_error)
           }
-          __pyx_t_15 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 137, __pyx_L1_error)
+          __pyx_t_15 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 140, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_15);
-          __pyx_t_6 = (__Pyx_PySequence_ContainsTF(__pyx_t_16, __pyx_t_15, Py_EQ)); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 137, __pyx_L1_error)
+          __pyx_t_6 = (__Pyx_PySequence_ContainsTF(__pyx_t_16, __pyx_t_15, Py_EQ)); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 140, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
           __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
           __pyx_t_10 = (__pyx_t_6 != 0);
           if (__pyx_t_10) {
 
-            /* "src/sparse_distributed_representation.py":138
+            /* "src/sparse_distributed_representation.py":141
  *                         #
  *                         elif bit in self.encoding[sdr_key]:
  *                             bit_value = self.encoding[sdr_key][bit] - (self.encoding[sdr_key][bit] * learn_rate)             # <<<<<<<<<<<<<<
@@ -4109,51 +4407,51 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
  */
             if (unlikely(__pyx_v_self->encoding == Py_None)) {
               PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-              __PYX_ERR(0, 138, __pyx_L1_error)
+              __PYX_ERR(0, 141, __pyx_L1_error)
             }
-            __pyx_t_15 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 138, __pyx_L1_error)
+            __pyx_t_15 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 141, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_15);
-            __pyx_t_16 = __Pyx_GetItemInt(__pyx_t_15, __pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 138, __pyx_L1_error)
+            __pyx_t_16 = __Pyx_GetItemInt(__pyx_t_15, __pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 141, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_16);
             __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
             if (unlikely(__pyx_v_self->encoding == Py_None)) {
               PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-              __PYX_ERR(0, 138, __pyx_L1_error)
+              __PYX_ERR(0, 141, __pyx_L1_error)
             }
-            __pyx_t_15 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 138, __pyx_L1_error)
+            __pyx_t_15 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 141, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_15);
-            __pyx_t_3 = __Pyx_GetItemInt(__pyx_t_15, __pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 138, __pyx_L1_error)
+            __pyx_t_3 = __Pyx_GetItemInt(__pyx_t_15, __pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 141, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_3);
             __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
-            __pyx_t_15 = PyFloat_FromDouble(__pyx_v_learn_rate); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 138, __pyx_L1_error)
+            __pyx_t_15 = PyFloat_FromDouble(__pyx_v_learn_rate); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 141, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_15);
-            __pyx_t_4 = PyNumber_Multiply(__pyx_t_3, __pyx_t_15); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 138, __pyx_L1_error)
+            __pyx_t_4 = PyNumber_Multiply(__pyx_t_3, __pyx_t_15); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 141, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_4);
             __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
             __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
-            __pyx_t_15 = PyNumber_Subtract(__pyx_t_16, __pyx_t_4); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 138, __pyx_L1_error)
+            __pyx_t_15 = PyNumber_Subtract(__pyx_t_16, __pyx_t_4); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 141, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_15);
             __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
             __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
             __Pyx_XDECREF_SET(__pyx_v_bit_value, __pyx_t_15);
             __pyx_t_15 = 0;
 
-            /* "src/sparse_distributed_representation.py":139
+            /* "src/sparse_distributed_representation.py":142
  *                         elif bit in self.encoding[sdr_key]:
  *                             bit_value = self.encoding[sdr_key][bit] - (self.encoding[sdr_key][bit] * learn_rate)
  *                             if bit_value > prune_threshold:             # <<<<<<<<<<<<<<
  *                                 self.encoding[sdr_key][bit] = bit_value
  *                             else:
  */
-            __pyx_t_15 = PyFloat_FromDouble(__pyx_v_prune_threshold); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 139, __pyx_L1_error)
+            __pyx_t_15 = PyFloat_FromDouble(__pyx_v_prune_threshold); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 142, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_15);
-            __pyx_t_4 = PyObject_RichCompare(__pyx_v_bit_value, __pyx_t_15, Py_GT); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 139, __pyx_L1_error)
+            __pyx_t_4 = PyObject_RichCompare(__pyx_v_bit_value, __pyx_t_15, Py_GT); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 142, __pyx_L1_error)
             __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
-            __pyx_t_10 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 139, __pyx_L1_error)
+            __pyx_t_10 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 142, __pyx_L1_error)
             __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
             if (__pyx_t_10) {
 
-              /* "src/sparse_distributed_representation.py":140
+              /* "src/sparse_distributed_representation.py":143
  *                             bit_value = self.encoding[sdr_key][bit] - (self.encoding[sdr_key][bit] * learn_rate)
  *                             if bit_value > prune_threshold:
  *                                 self.encoding[sdr_key][bit] = bit_value             # <<<<<<<<<<<<<<
@@ -4162,14 +4460,14 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
  */
               if (unlikely(__pyx_v_self->encoding == Py_None)) {
                 PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-                __PYX_ERR(0, 140, __pyx_L1_error)
+                __PYX_ERR(0, 143, __pyx_L1_error)
               }
-              __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 140, __pyx_L1_error)
+              __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 143, __pyx_L1_error)
               __Pyx_GOTREF(__pyx_t_4);
-              if (unlikely(__Pyx_SetItemInt(__pyx_t_4, __pyx_v_bit, __pyx_v_bit_value, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 140, __pyx_L1_error)
+              if (unlikely(__Pyx_SetItemInt(__pyx_t_4, __pyx_v_bit, __pyx_v_bit_value, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 143, __pyx_L1_error)
               __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-              /* "src/sparse_distributed_representation.py":139
+              /* "src/sparse_distributed_representation.py":142
  *                         elif bit in self.encoding[sdr_key]:
  *                             bit_value = self.encoding[sdr_key][bit] - (self.encoding[sdr_key][bit] * learn_rate)
  *                             if bit_value > prune_threshold:             # <<<<<<<<<<<<<<
@@ -4179,7 +4477,7 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
               goto __pyx_L24;
             }
 
-            /* "src/sparse_distributed_representation.py":142
+            /* "src/sparse_distributed_representation.py":145
  *                                 self.encoding[sdr_key][bit] = bit_value
  *                             else:
  *                                 del self.encoding[sdr_key][bit]             # <<<<<<<<<<<<<<
@@ -4189,16 +4487,16 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
             /*else*/ {
               if (unlikely(__pyx_v_self->encoding == Py_None)) {
                 PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-                __PYX_ERR(0, 142, __pyx_L1_error)
+                __PYX_ERR(0, 145, __pyx_L1_error)
               }
-              __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 142, __pyx_L1_error)
+              __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 145, __pyx_L1_error)
               __Pyx_GOTREF(__pyx_t_4);
-              if (unlikely(__Pyx_DelItemInt(__pyx_t_4, __pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 142, __pyx_L1_error)
+              if (unlikely(__Pyx_DelItemInt(__pyx_t_4, __pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 145, __pyx_L1_error)
               __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
             }
             __pyx_L24:;
 
-            /* "src/sparse_distributed_representation.py":137
+            /* "src/sparse_distributed_representation.py":140
  *                         # if bit only in this sdr then decay bit value and delete it of not above prune_threshold
  *                         #
  *                         elif bit in self.encoding[sdr_key]:             # <<<<<<<<<<<<<<
@@ -4208,7 +4506,7 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
           }
           __pyx_L19:;
 
-          /* "src/sparse_distributed_representation.py":117
+          /* "src/sparse_distributed_representation.py":120
  *                     bits_to_process = set(self.encoding[sdr_key].keys()) | set(sdr.encoding[sdr_key].keys())
  * 
  *                     for bit in bits_to_process:             # <<<<<<<<<<<<<<
@@ -4218,7 +4516,7 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
         }
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-        /* "src/sparse_distributed_representation.py":111
+        /* "src/sparse_distributed_representation.py":114
  *                 # if sdr_key in both self and sdr then process each bit
  *                 #
  *                 elif sdr_key in self.encoding and sdr_key in sdr.encoding:             # <<<<<<<<<<<<<<
@@ -4228,7 +4526,7 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
         goto __pyx_L11;
       }
 
-      /* "src/sparse_distributed_representation.py":147
+      /* "src/sparse_distributed_representation.py":150
  *                 #
  *                 else:
  *                     bits_to_process = list(self.encoding[sdr_key].keys())             # <<<<<<<<<<<<<<
@@ -4238,11 +4536,11 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
       /*else*/ {
         if (unlikely(__pyx_v_self->encoding == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-          __PYX_ERR(0, 147, __pyx_L1_error)
+          __PYX_ERR(0, 150, __pyx_L1_error)
         }
-        __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 147, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 150, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
-        __pyx_t_15 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_keys); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 147, __pyx_L1_error)
+        __pyx_t_15 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_keys); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 150, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_15);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
         __pyx_t_4 = NULL;
@@ -4257,16 +4555,16 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
         }
         __pyx_t_2 = (__pyx_t_4) ? __Pyx_PyObject_CallOneArg(__pyx_t_15, __pyx_t_4) : __Pyx_PyObject_CallNoArg(__pyx_t_15);
         __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 147, __pyx_L1_error)
+        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 150, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
-        __pyx_t_15 = PySequence_List(__pyx_t_2); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 147, __pyx_L1_error)
+        __pyx_t_15 = PySequence_List(__pyx_t_2); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 150, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_15);
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __Pyx_XDECREF_SET(__pyx_v_bits_to_process, __pyx_t_15);
         __pyx_t_15 = 0;
 
-        /* "src/sparse_distributed_representation.py":148
+        /* "src/sparse_distributed_representation.py":151
  *                 else:
  *                     bits_to_process = list(self.encoding[sdr_key].keys())
  *                     for bit in bits_to_process:             # <<<<<<<<<<<<<<
@@ -4277,26 +4575,26 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
           __pyx_t_15 = __pyx_v_bits_to_process; __Pyx_INCREF(__pyx_t_15); __pyx_t_12 = 0;
           __pyx_t_13 = NULL;
         } else {
-          __pyx_t_12 = -1; __pyx_t_15 = PyObject_GetIter(__pyx_v_bits_to_process); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 148, __pyx_L1_error)
+          __pyx_t_12 = -1; __pyx_t_15 = PyObject_GetIter(__pyx_v_bits_to_process); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 151, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_15);
-          __pyx_t_13 = Py_TYPE(__pyx_t_15)->tp_iternext; if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 148, __pyx_L1_error)
+          __pyx_t_13 = Py_TYPE(__pyx_t_15)->tp_iternext; if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 151, __pyx_L1_error)
         }
         for (;;) {
           if (likely(!__pyx_t_13)) {
             if (likely(PyList_CheckExact(__pyx_t_15))) {
               if (__pyx_t_12 >= PyList_GET_SIZE(__pyx_t_15)) break;
               #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-              __pyx_t_2 = PyList_GET_ITEM(__pyx_t_15, __pyx_t_12); __Pyx_INCREF(__pyx_t_2); __pyx_t_12++; if (unlikely(0 < 0)) __PYX_ERR(0, 148, __pyx_L1_error)
+              __pyx_t_2 = PyList_GET_ITEM(__pyx_t_15, __pyx_t_12); __Pyx_INCREF(__pyx_t_2); __pyx_t_12++; if (unlikely(0 < 0)) __PYX_ERR(0, 151, __pyx_L1_error)
               #else
-              __pyx_t_2 = PySequence_ITEM(__pyx_t_15, __pyx_t_12); __pyx_t_12++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 148, __pyx_L1_error)
+              __pyx_t_2 = PySequence_ITEM(__pyx_t_15, __pyx_t_12); __pyx_t_12++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 151, __pyx_L1_error)
               __Pyx_GOTREF(__pyx_t_2);
               #endif
             } else {
               if (__pyx_t_12 >= PyTuple_GET_SIZE(__pyx_t_15)) break;
               #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-              __pyx_t_2 = PyTuple_GET_ITEM(__pyx_t_15, __pyx_t_12); __Pyx_INCREF(__pyx_t_2); __pyx_t_12++; if (unlikely(0 < 0)) __PYX_ERR(0, 148, __pyx_L1_error)
+              __pyx_t_2 = PyTuple_GET_ITEM(__pyx_t_15, __pyx_t_12); __Pyx_INCREF(__pyx_t_2); __pyx_t_12++; if (unlikely(0 < 0)) __PYX_ERR(0, 151, __pyx_L1_error)
               #else
-              __pyx_t_2 = PySequence_ITEM(__pyx_t_15, __pyx_t_12); __pyx_t_12++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 148, __pyx_L1_error)
+              __pyx_t_2 = PySequence_ITEM(__pyx_t_15, __pyx_t_12); __pyx_t_12++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 151, __pyx_L1_error)
               __Pyx_GOTREF(__pyx_t_2);
               #endif
             }
@@ -4306,17 +4604,17 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
               PyObject* exc_type = PyErr_Occurred();
               if (exc_type) {
                 if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-                else __PYX_ERR(0, 148, __pyx_L1_error)
+                else __PYX_ERR(0, 151, __pyx_L1_error)
               }
               break;
             }
             __Pyx_GOTREF(__pyx_t_2);
           }
-          __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 148, __pyx_L1_error)
+          __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 151, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
           __pyx_v_bit = __pyx_t_9;
 
-          /* "src/sparse_distributed_representation.py":149
+          /* "src/sparse_distributed_representation.py":152
  *                     bits_to_process = list(self.encoding[sdr_key].keys())
  *                     for bit in bits_to_process:
  *                         bit_value = self.encoding[sdr_key][bit] - (self.encoding[sdr_key][bit] * learn_rate)             # <<<<<<<<<<<<<<
@@ -4325,51 +4623,51 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
  */
           if (unlikely(__pyx_v_self->encoding == Py_None)) {
             PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-            __PYX_ERR(0, 149, __pyx_L1_error)
+            __PYX_ERR(0, 152, __pyx_L1_error)
           }
-          __pyx_t_2 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 149, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 152, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
-          __pyx_t_4 = __Pyx_GetItemInt(__pyx_t_2, __pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 149, __pyx_L1_error)
+          __pyx_t_4 = __Pyx_GetItemInt(__pyx_t_2, __pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 152, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
           if (unlikely(__pyx_v_self->encoding == Py_None)) {
             PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-            __PYX_ERR(0, 149, __pyx_L1_error)
+            __PYX_ERR(0, 152, __pyx_L1_error)
           }
-          __pyx_t_2 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 149, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 152, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
-          __pyx_t_16 = __Pyx_GetItemInt(__pyx_t_2, __pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 149, __pyx_L1_error)
+          __pyx_t_16 = __Pyx_GetItemInt(__pyx_t_2, __pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 152, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_16);
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-          __pyx_t_2 = PyFloat_FromDouble(__pyx_v_learn_rate); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 149, __pyx_L1_error)
+          __pyx_t_2 = PyFloat_FromDouble(__pyx_v_learn_rate); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 152, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
-          __pyx_t_3 = PyNumber_Multiply(__pyx_t_16, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 149, __pyx_L1_error)
+          __pyx_t_3 = PyNumber_Multiply(__pyx_t_16, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 152, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_3);
           __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-          __pyx_t_2 = PyNumber_Subtract(__pyx_t_4, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 149, __pyx_L1_error)
+          __pyx_t_2 = PyNumber_Subtract(__pyx_t_4, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 152, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
           __Pyx_XDECREF_SET(__pyx_v_bit_value, __pyx_t_2);
           __pyx_t_2 = 0;
 
-          /* "src/sparse_distributed_representation.py":150
+          /* "src/sparse_distributed_representation.py":153
  *                     for bit in bits_to_process:
  *                         bit_value = self.encoding[sdr_key][bit] - (self.encoding[sdr_key][bit] * learn_rate)
  *                         if bit_value > prune_threshold:             # <<<<<<<<<<<<<<
  *                             self.encoding[sdr_key][bit] = bit_value
  *                         else:
  */
-          __pyx_t_2 = PyFloat_FromDouble(__pyx_v_prune_threshold); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 150, __pyx_L1_error)
+          __pyx_t_2 = PyFloat_FromDouble(__pyx_v_prune_threshold); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 153, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
-          __pyx_t_3 = PyObject_RichCompare(__pyx_v_bit_value, __pyx_t_2, Py_GT); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 150, __pyx_L1_error)
+          __pyx_t_3 = PyObject_RichCompare(__pyx_v_bit_value, __pyx_t_2, Py_GT); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 153, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-          __pyx_t_10 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 150, __pyx_L1_error)
+          __pyx_t_10 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 153, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
           if (__pyx_t_10) {
 
-            /* "src/sparse_distributed_representation.py":151
+            /* "src/sparse_distributed_representation.py":154
  *                         bit_value = self.encoding[sdr_key][bit] - (self.encoding[sdr_key][bit] * learn_rate)
  *                         if bit_value > prune_threshold:
  *                             self.encoding[sdr_key][bit] = bit_value             # <<<<<<<<<<<<<<
@@ -4378,14 +4676,14 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
  */
             if (unlikely(__pyx_v_self->encoding == Py_None)) {
               PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-              __PYX_ERR(0, 151, __pyx_L1_error)
+              __PYX_ERR(0, 154, __pyx_L1_error)
             }
-            __pyx_t_3 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 151, __pyx_L1_error)
+            __pyx_t_3 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 154, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_3);
-            if (unlikely(__Pyx_SetItemInt(__pyx_t_3, __pyx_v_bit, __pyx_v_bit_value, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 151, __pyx_L1_error)
+            if (unlikely(__Pyx_SetItemInt(__pyx_t_3, __pyx_v_bit, __pyx_v_bit_value, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 154, __pyx_L1_error)
             __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-            /* "src/sparse_distributed_representation.py":150
+            /* "src/sparse_distributed_representation.py":153
  *                     for bit in bits_to_process:
  *                         bit_value = self.encoding[sdr_key][bit] - (self.encoding[sdr_key][bit] * learn_rate)
  *                         if bit_value > prune_threshold:             # <<<<<<<<<<<<<<
@@ -4395,24 +4693,26 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
             goto __pyx_L27;
           }
 
-          /* "src/sparse_distributed_representation.py":153
+          /* "src/sparse_distributed_representation.py":156
  *                             self.encoding[sdr_key][bit] = bit_value
  *                         else:
  *                             del self.encoding[sdr_key][bit]             # <<<<<<<<<<<<<<
+ * 
+ *     def learn_frequency(self, sdr, learn_temporal_keys: set = None, learn_enc_keys: set = None, min_frequency_prune: int = None):
  */
           /*else*/ {
             if (unlikely(__pyx_v_self->encoding == Py_None)) {
               PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-              __PYX_ERR(0, 153, __pyx_L1_error)
+              __PYX_ERR(0, 156, __pyx_L1_error)
             }
-            __pyx_t_3 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 153, __pyx_L1_error)
+            __pyx_t_3 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 156, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_3);
-            if (unlikely(__Pyx_DelItemInt(__pyx_t_3, __pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 153, __pyx_L1_error)
+            if (unlikely(__Pyx_DelItemInt(__pyx_t_3, __pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 156, __pyx_L1_error)
             __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
           }
           __pyx_L27:;
 
-          /* "src/sparse_distributed_representation.py":148
+          /* "src/sparse_distributed_representation.py":151
  *                 else:
  *                     bits_to_process = list(self.encoding[sdr_key].keys())
  *                     for bit in bits_to_process:             # <<<<<<<<<<<<<<
@@ -4424,7 +4724,7 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
       }
       __pyx_L11:;
 
-      /* "src/sparse_distributed_representation.py":98
+      /* "src/sparse_distributed_representation.py":101
  * 
  *         for sdr_key in keys_to_process:
  *             if ((learn_temporal_keys is None or sdr_key[TEMPORAL_IDX] in learn_temporal_keys) and             # <<<<<<<<<<<<<<
@@ -4435,10 +4735,10 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "src/sparse_distributed_representation.py":85
+  /* "src/sparse_distributed_representation.py":88
  *         return decode_sdr
  * 
- *     def learn(self, sdr, learn_temporal_keys: set = None, learn_enc_keys: set = None, learn_rate: float = 1.0, prune_threshold: float = 0.01):             # <<<<<<<<<<<<<<
+ *     def learn_delta(self, sdr, learn_temporal_keys: set = None, learn_enc_keys: set = None, learn_rate: float = 1.0, prune_threshold: float = 0.01):             # <<<<<<<<<<<<<<
  * 
  *         temporal_keys: set
  */
@@ -4454,13 +4754,976 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_12learn(
   __Pyx_XDECREF(__pyx_t_14);
   __Pyx_XDECREF(__pyx_t_15);
   __Pyx_XDECREF(__pyx_t_16);
-  __Pyx_AddTraceback("src.sparse_distributed_representation.SDR.learn", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("src.sparse_distributed_representation.SDR.learn_delta", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_sdr_key);
   __Pyx_XDECREF(__pyx_v_keys_to_process);
   __Pyx_XDECREF(__pyx_v_bits_to_process);
   __Pyx_XDECREF(__pyx_v_bit_value);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "src/sparse_distributed_representation.py":158
+ *                             del self.encoding[sdr_key][bit]
+ * 
+ *     def learn_frequency(self, sdr, learn_temporal_keys: set = None, learn_enc_keys: set = None, min_frequency_prune: int = None):             # <<<<<<<<<<<<<<
+ * 
+ *         temporal_keys: set
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_3src_33sparse_distributed_representation_3SDR_15learn_frequency(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_3src_33sparse_distributed_representation_3SDR_15learn_frequency = {"learn_frequency", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_33sparse_distributed_representation_3SDR_15learn_frequency, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_3src_33sparse_distributed_representation_3SDR_15learn_frequency(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  PyObject *__pyx_v_sdr = 0;
+  PyObject *__pyx_v_learn_temporal_keys = 0;
+  PyObject *__pyx_v_learn_enc_keys = 0;
+  PyObject *__pyx_v_min_frequency_prune = 0;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("learn_frequency (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_sdr,&__pyx_n_s_learn_temporal_keys,&__pyx_n_s_learn_enc_keys,&__pyx_n_s_min_frequency_prune,0};
+    PyObject* values[4] = {0,0,0,0};
+    values[1] = ((PyObject*)Py_None);
+    values[2] = ((PyObject*)Py_None);
+    values[3] = ((PyObject *)Py_None);
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
+        CYTHON_FALLTHROUGH;
+        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+        CYTHON_FALLTHROUGH;
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_sdr)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (kw_args > 0) {
+          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_learn_temporal_keys);
+          if (value) { values[1] = value; kw_args--; }
+        }
+        CYTHON_FALLTHROUGH;
+        case  2:
+        if (kw_args > 0) {
+          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_learn_enc_keys);
+          if (value) { values[2] = value; kw_args--; }
+        }
+        CYTHON_FALLTHROUGH;
+        case  3:
+        if (kw_args > 0) {
+          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_min_frequency_prune);
+          if (value) { values[3] = value; kw_args--; }
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "learn_frequency") < 0)) __PYX_ERR(0, 158, __pyx_L3_error)
+      }
+    } else {
+      switch (PyTuple_GET_SIZE(__pyx_args)) {
+        case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
+        CYTHON_FALLTHROUGH;
+        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+        CYTHON_FALLTHROUGH;
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+    }
+    __pyx_v_sdr = values[0];
+    __pyx_v_learn_temporal_keys = ((PyObject*)values[1]);
+    __pyx_v_learn_enc_keys = ((PyObject*)values[2]);
+    __pyx_v_min_frequency_prune = values[3];
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("learn_frequency", 0, 1, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 158, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("src.sparse_distributed_representation.SDR.learn_frequency", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_learn_temporal_keys), (&PySet_Type), 1, "learn_temporal_keys", 1))) __PYX_ERR(0, 158, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_learn_enc_keys), (&PySet_Type), 1, "learn_enc_keys", 1))) __PYX_ERR(0, 158, __pyx_L1_error)
+  __pyx_r = __pyx_pf_3src_33sparse_distributed_representation_3SDR_14learn_frequency(((struct __pyx_obj_3src_33sparse_distributed_representation_SDR *)__pyx_v_self), __pyx_v_sdr, __pyx_v_learn_temporal_keys, __pyx_v_learn_enc_keys, __pyx_v_min_frequency_prune);
+
+  /* function exit code */
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_14learn_frequency(struct __pyx_obj_3src_33sparse_distributed_representation_SDR *__pyx_v_self, PyObject *__pyx_v_sdr, PyObject *__pyx_v_learn_temporal_keys, PyObject *__pyx_v_learn_enc_keys, PyObject *__pyx_v_min_frequency_prune) {
+  int __pyx_v_bit;
+  PyObject *__pyx_v_sdr_key = 0;
+  int __pyx_8genexpr3__pyx_v_bit;
+  PyObject *__pyx_8genexpr4__pyx_v_sdr_key = NULL;
+  int __pyx_8genexpr5__pyx_v_bit;
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  Py_ssize_t __pyx_t_4;
+  PyObject *(*__pyx_t_5)(PyObject *);
+  int __pyx_t_6;
+  int __pyx_t_7;
+  int __pyx_t_8;
+  PyObject *__pyx_t_9 = NULL;
+  Py_ssize_t __pyx_t_10;
+  PyObject *(*__pyx_t_11)(PyObject *);
+  int __pyx_t_12;
+  PyObject *__pyx_t_13 = NULL;
+  PyObject *__pyx_t_14 = NULL;
+  PyObject *__pyx_t_15 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("learn_frequency", 0);
+
+  /* "src/sparse_distributed_representation.py":165
+ *         sdr_key: tuple
+ * 
+ *         for sdr_key in sdr.encoding.keys():             # <<<<<<<<<<<<<<
+ *             if ((learn_temporal_keys is None or sdr_key[TEMPORAL_IDX] in learn_temporal_keys) and
+ *                     (learn_enc_keys is None or sdr_key[ENC_IDX] in learn_enc_keys)):
+ */
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encoding); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 165, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_keys); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 165, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = NULL;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
+    __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_3);
+    if (likely(__pyx_t_2)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+      __Pyx_INCREF(__pyx_t_2);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_3, function);
+    }
+  }
+  __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 165, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (likely(PyList_CheckExact(__pyx_t_1)) || PyTuple_CheckExact(__pyx_t_1)) {
+    __pyx_t_3 = __pyx_t_1; __Pyx_INCREF(__pyx_t_3); __pyx_t_4 = 0;
+    __pyx_t_5 = NULL;
+  } else {
+    __pyx_t_4 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 165, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_5 = Py_TYPE(__pyx_t_3)->tp_iternext; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 165, __pyx_L1_error)
+  }
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  for (;;) {
+    if (likely(!__pyx_t_5)) {
+      if (likely(PyList_CheckExact(__pyx_t_3))) {
+        if (__pyx_t_4 >= PyList_GET_SIZE(__pyx_t_3)) break;
+        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+        __pyx_t_1 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 165, __pyx_L1_error)
+        #else
+        __pyx_t_1 = PySequence_ITEM(__pyx_t_3, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 165, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_1);
+        #endif
+      } else {
+        if (__pyx_t_4 >= PyTuple_GET_SIZE(__pyx_t_3)) break;
+        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+        __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 165, __pyx_L1_error)
+        #else
+        __pyx_t_1 = PySequence_ITEM(__pyx_t_3, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 165, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_1);
+        #endif
+      }
+    } else {
+      __pyx_t_1 = __pyx_t_5(__pyx_t_3);
+      if (unlikely(!__pyx_t_1)) {
+        PyObject* exc_type = PyErr_Occurred();
+        if (exc_type) {
+          if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
+          else __PYX_ERR(0, 165, __pyx_L1_error)
+        }
+        break;
+      }
+      __Pyx_GOTREF(__pyx_t_1);
+    }
+    if (!(likely(PyTuple_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "tuple", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 165, __pyx_L1_error)
+    __Pyx_XDECREF_SET(__pyx_v_sdr_key, ((PyObject*)__pyx_t_1));
+    __pyx_t_1 = 0;
+
+    /* "src/sparse_distributed_representation.py":166
+ * 
+ *         for sdr_key in sdr.encoding.keys():
+ *             if ((learn_temporal_keys is None or sdr_key[TEMPORAL_IDX] in learn_temporal_keys) and             # <<<<<<<<<<<<<<
+ *                     (learn_enc_keys is None or sdr_key[ENC_IDX] in learn_enc_keys)):
+ * 
+ */
+    __pyx_t_7 = (__pyx_v_learn_temporal_keys == ((PyObject*)Py_None));
+    __pyx_t_8 = (__pyx_t_7 != 0);
+    if (!__pyx_t_8) {
+    } else {
+      goto __pyx_L7_next_and;
+    }
+    if (unlikely(__pyx_v_sdr_key == Py_None)) {
+      PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+      __PYX_ERR(0, 166, __pyx_L1_error)
+    }
+    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_TEMPORAL_IDX); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 166, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_v_sdr_key, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 166, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    if (unlikely(__pyx_v_learn_temporal_keys == Py_None)) {
+      PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
+      __PYX_ERR(0, 166, __pyx_L1_error)
+    }
+    __pyx_t_8 = (__Pyx_PySet_ContainsTF(__pyx_t_2, __pyx_v_learn_temporal_keys, Py_EQ)); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 166, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __pyx_t_7 = (__pyx_t_8 != 0);
+    if (__pyx_t_7) {
+    } else {
+      __pyx_t_6 = __pyx_t_7;
+      goto __pyx_L6_bool_binop_done;
+    }
+    __pyx_L7_next_and:;
+
+    /* "src/sparse_distributed_representation.py":167
+ *         for sdr_key in sdr.encoding.keys():
+ *             if ((learn_temporal_keys is None or sdr_key[TEMPORAL_IDX] in learn_temporal_keys) and
+ *                     (learn_enc_keys is None or sdr_key[ENC_IDX] in learn_enc_keys)):             # <<<<<<<<<<<<<<
+ * 
+ *                 # if sdr_key not in self then learn bits and encoder
+ */
+    __pyx_t_7 = (__pyx_v_learn_enc_keys == ((PyObject*)Py_None));
+    __pyx_t_8 = (__pyx_t_7 != 0);
+    if (!__pyx_t_8) {
+    } else {
+      __pyx_t_6 = __pyx_t_8;
+      goto __pyx_L6_bool_binop_done;
+    }
+    if (unlikely(__pyx_v_sdr_key == Py_None)) {
+      PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+      __PYX_ERR(0, 167, __pyx_L1_error)
+    }
+    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_ENC_IDX); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 167, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __pyx_t_1 = __Pyx_PyObject_GetItem(__pyx_v_sdr_key, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 167, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    if (unlikely(__pyx_v_learn_enc_keys == Py_None)) {
+      PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
+      __PYX_ERR(0, 167, __pyx_L1_error)
+    }
+    __pyx_t_8 = (__Pyx_PySet_ContainsTF(__pyx_t_1, __pyx_v_learn_enc_keys, Py_EQ)); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 167, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __pyx_t_7 = (__pyx_t_8 != 0);
+    __pyx_t_6 = __pyx_t_7;
+    __pyx_L6_bool_binop_done:;
+
+    /* "src/sparse_distributed_representation.py":166
+ * 
+ *         for sdr_key in sdr.encoding.keys():
+ *             if ((learn_temporal_keys is None or sdr_key[TEMPORAL_IDX] in learn_temporal_keys) and             # <<<<<<<<<<<<<<
+ *                     (learn_enc_keys is None or sdr_key[ENC_IDX] in learn_enc_keys)):
+ * 
+ */
+    if (__pyx_t_6) {
+
+      /* "src/sparse_distributed_representation.py":171
+ *                 # if sdr_key not in self then learn bits and encoder
+ *                 #
+ *                 if sdr_key not in self.encoding:             # <<<<<<<<<<<<<<
+ *                     self.encoding[sdr_key] = {bit: sdr.encoding[sdr_key][bit]
+ *                                               for bit in sdr.encoding[sdr_key]
+ */
+      if (unlikely(__pyx_v_self->encoding == Py_None)) {
+        PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
+        __PYX_ERR(0, 171, __pyx_L1_error)
+      }
+      __pyx_t_6 = (__Pyx_PyDict_ContainsTF(__pyx_v_sdr_key, __pyx_v_self->encoding, Py_NE)); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 171, __pyx_L1_error)
+      __pyx_t_7 = (__pyx_t_6 != 0);
+      if (__pyx_t_7) {
+
+        /* "src/sparse_distributed_representation.py":172
+ *                 #
+ *                 if sdr_key not in self.encoding:
+ *                     self.encoding[sdr_key] = {bit: sdr.encoding[sdr_key][bit]             # <<<<<<<<<<<<<<
+ *                                               for bit in sdr.encoding[sdr_key]
+ *                                               if sdr.encoding[sdr_key][bit]}
+ */
+        { /* enter inner scope */
+          __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 172, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_1);
+
+          /* "src/sparse_distributed_representation.py":173
+ *                 if sdr_key not in self.encoding:
+ *                     self.encoding[sdr_key] = {bit: sdr.encoding[sdr_key][bit]
+ *                                               for bit in sdr.encoding[sdr_key]             # <<<<<<<<<<<<<<
+ *                                               if sdr.encoding[sdr_key][bit]}
+ *                     self.encoders[sdr_key[ENC_IDX]] = sdr.encoders[sdr_key[ENC_IDX]]
+ */
+          __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encoding); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 173, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_2);
+          __pyx_t_9 = __Pyx_PyObject_GetItem(__pyx_t_2, __pyx_v_sdr_key); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 173, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_9);
+          __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+          if (likely(PyList_CheckExact(__pyx_t_9)) || PyTuple_CheckExact(__pyx_t_9)) {
+            __pyx_t_2 = __pyx_t_9; __Pyx_INCREF(__pyx_t_2); __pyx_t_10 = 0;
+            __pyx_t_11 = NULL;
+          } else {
+            __pyx_t_10 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_t_9); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 173, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_2);
+            __pyx_t_11 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 173, __pyx_L1_error)
+          }
+          __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+          for (;;) {
+            if (likely(!__pyx_t_11)) {
+              if (likely(PyList_CheckExact(__pyx_t_2))) {
+                if (__pyx_t_10 >= PyList_GET_SIZE(__pyx_t_2)) break;
+                #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+                __pyx_t_9 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_10); __Pyx_INCREF(__pyx_t_9); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 173, __pyx_L1_error)
+                #else
+                __pyx_t_9 = PySequence_ITEM(__pyx_t_2, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 173, __pyx_L1_error)
+                __Pyx_GOTREF(__pyx_t_9);
+                #endif
+              } else {
+                if (__pyx_t_10 >= PyTuple_GET_SIZE(__pyx_t_2)) break;
+                #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+                __pyx_t_9 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_10); __Pyx_INCREF(__pyx_t_9); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 173, __pyx_L1_error)
+                #else
+                __pyx_t_9 = PySequence_ITEM(__pyx_t_2, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 173, __pyx_L1_error)
+                __Pyx_GOTREF(__pyx_t_9);
+                #endif
+              }
+            } else {
+              __pyx_t_9 = __pyx_t_11(__pyx_t_2);
+              if (unlikely(!__pyx_t_9)) {
+                PyObject* exc_type = PyErr_Occurred();
+                if (exc_type) {
+                  if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
+                  else __PYX_ERR(0, 173, __pyx_L1_error)
+                }
+                break;
+              }
+              __Pyx_GOTREF(__pyx_t_9);
+            }
+            __pyx_t_12 = __Pyx_PyInt_As_int(__pyx_t_9); if (unlikely((__pyx_t_12 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 173, __pyx_L1_error)
+            __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+            __pyx_8genexpr3__pyx_v_bit = __pyx_t_12;
+
+            /* "src/sparse_distributed_representation.py":174
+ *                     self.encoding[sdr_key] = {bit: sdr.encoding[sdr_key][bit]
+ *                                               for bit in sdr.encoding[sdr_key]
+ *                                               if sdr.encoding[sdr_key][bit]}             # <<<<<<<<<<<<<<
+ *                     self.encoders[sdr_key[ENC_IDX]] = sdr.encoders[sdr_key[ENC_IDX]]
+ * 
+ */
+            __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encoding); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 174, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_9);
+            __pyx_t_13 = __Pyx_PyObject_GetItem(__pyx_t_9, __pyx_v_sdr_key); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 174, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_13);
+            __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+            __pyx_t_9 = __Pyx_GetItemInt(__pyx_t_13, __pyx_8genexpr3__pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 174, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_9);
+            __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+            __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_9); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 174, __pyx_L1_error)
+            __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+            if (__pyx_t_7) {
+
+              /* "src/sparse_distributed_representation.py":172
+ *                 #
+ *                 if sdr_key not in self.encoding:
+ *                     self.encoding[sdr_key] = {bit: sdr.encoding[sdr_key][bit]             # <<<<<<<<<<<<<<
+ *                                               for bit in sdr.encoding[sdr_key]
+ *                                               if sdr.encoding[sdr_key][bit]}
+ */
+              __pyx_t_9 = __Pyx_PyInt_From_int(__pyx_8genexpr3__pyx_v_bit); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 172, __pyx_L1_error)
+              __Pyx_GOTREF(__pyx_t_9);
+              __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encoding); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 172, __pyx_L1_error)
+              __Pyx_GOTREF(__pyx_t_13);
+              __pyx_t_14 = __Pyx_PyObject_GetItem(__pyx_t_13, __pyx_v_sdr_key); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 172, __pyx_L1_error)
+              __Pyx_GOTREF(__pyx_t_14);
+              __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+              __pyx_t_13 = __Pyx_GetItemInt(__pyx_t_14, __pyx_8genexpr3__pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 172, __pyx_L1_error)
+              __Pyx_GOTREF(__pyx_t_13);
+              __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+              if (unlikely(PyDict_SetItem(__pyx_t_1, (PyObject*)__pyx_t_9, (PyObject*)__pyx_t_13))) __PYX_ERR(0, 172, __pyx_L1_error)
+              __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+              __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+
+              /* "src/sparse_distributed_representation.py":174
+ *                     self.encoding[sdr_key] = {bit: sdr.encoding[sdr_key][bit]
+ *                                               for bit in sdr.encoding[sdr_key]
+ *                                               if sdr.encoding[sdr_key][bit]}             # <<<<<<<<<<<<<<
+ *                     self.encoders[sdr_key[ENC_IDX]] = sdr.encoders[sdr_key[ENC_IDX]]
+ * 
+ */
+            }
+
+            /* "src/sparse_distributed_representation.py":173
+ *                 if sdr_key not in self.encoding:
+ *                     self.encoding[sdr_key] = {bit: sdr.encoding[sdr_key][bit]
+ *                                               for bit in sdr.encoding[sdr_key]             # <<<<<<<<<<<<<<
+ *                                               if sdr.encoding[sdr_key][bit]}
+ *                     self.encoders[sdr_key[ENC_IDX]] = sdr.encoders[sdr_key[ENC_IDX]]
+ */
+          }
+          __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+        } /* exit inner scope */
+
+        /* "src/sparse_distributed_representation.py":172
+ *                 #
+ *                 if sdr_key not in self.encoding:
+ *                     self.encoding[sdr_key] = {bit: sdr.encoding[sdr_key][bit]             # <<<<<<<<<<<<<<
+ *                                               for bit in sdr.encoding[sdr_key]
+ *                                               if sdr.encoding[sdr_key][bit]}
+ */
+        if (unlikely(__pyx_v_self->encoding == Py_None)) {
+          PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+          __PYX_ERR(0, 172, __pyx_L1_error)
+        }
+        if (unlikely(PyDict_SetItem(__pyx_v_self->encoding, __pyx_v_sdr_key, __pyx_t_1) < 0)) __PYX_ERR(0, 172, __pyx_L1_error)
+        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+        /* "src/sparse_distributed_representation.py":175
+ *                                               for bit in sdr.encoding[sdr_key]
+ *                                               if sdr.encoding[sdr_key][bit]}
+ *                     self.encoders[sdr_key[ENC_IDX]] = sdr.encoders[sdr_key[ENC_IDX]]             # <<<<<<<<<<<<<<
+ * 
+ *                 # if sdr_key in both self and sdr then process each bit
+ */
+        __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encoders); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 175, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_1);
+        if (unlikely(__pyx_v_sdr_key == Py_None)) {
+          PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+          __PYX_ERR(0, 175, __pyx_L1_error)
+        }
+        __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_ENC_IDX); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 175, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        __pyx_t_13 = __Pyx_PyObject_GetItem(__pyx_v_sdr_key, __pyx_t_2); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 175, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_13);
+        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+        __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_t_1, __pyx_t_13); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 175, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+        __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+        if (unlikely(__pyx_v_self->encoders == Py_None)) {
+          PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+          __PYX_ERR(0, 175, __pyx_L1_error)
+        }
+        if (unlikely(__pyx_v_sdr_key == Py_None)) {
+          PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+          __PYX_ERR(0, 175, __pyx_L1_error)
+        }
+        __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_ENC_IDX); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 175, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_13);
+        __pyx_t_1 = __Pyx_PyObject_GetItem(__pyx_v_sdr_key, __pyx_t_13); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 175, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_1);
+        __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+        if (unlikely(PyDict_SetItem(__pyx_v_self->encoders, __pyx_t_1, __pyx_t_2) < 0)) __PYX_ERR(0, 175, __pyx_L1_error)
+        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+        /* "src/sparse_distributed_representation.py":171
+ *                 # if sdr_key not in self then learn bits and encoder
+ *                 #
+ *                 if sdr_key not in self.encoding:             # <<<<<<<<<<<<<<
+ *                     self.encoding[sdr_key] = {bit: sdr.encoding[sdr_key][bit]
+ *                                               for bit in sdr.encoding[sdr_key]
+ */
+        goto __pyx_L10;
+      }
+
+      /* "src/sparse_distributed_representation.py":182
+ *                     # will need to process all bits
+ *                     #
+ *                     for bit in sdr.encoding[sdr_key].keys():             # <<<<<<<<<<<<<<
+ * 
+ *                         # if we don't have bit learn it if its above the adjusted prune threshold
+ */
+      /*else*/ {
+        __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encoding); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 182, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_1);
+        __pyx_t_13 = __Pyx_PyObject_GetItem(__pyx_t_1, __pyx_v_sdr_key); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 182, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_13);
+        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+        __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_keys); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 182, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_1);
+        __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+        __pyx_t_13 = NULL;
+        if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_1))) {
+          __pyx_t_13 = PyMethod_GET_SELF(__pyx_t_1);
+          if (likely(__pyx_t_13)) {
+            PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_1);
+            __Pyx_INCREF(__pyx_t_13);
+            __Pyx_INCREF(function);
+            __Pyx_DECREF_SET(__pyx_t_1, function);
+          }
+        }
+        __pyx_t_2 = (__pyx_t_13) ? __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_13) : __Pyx_PyObject_CallNoArg(__pyx_t_1);
+        __Pyx_XDECREF(__pyx_t_13); __pyx_t_13 = 0;
+        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 182, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+        if (likely(PyList_CheckExact(__pyx_t_2)) || PyTuple_CheckExact(__pyx_t_2)) {
+          __pyx_t_1 = __pyx_t_2; __Pyx_INCREF(__pyx_t_1); __pyx_t_10 = 0;
+          __pyx_t_11 = NULL;
+        } else {
+          __pyx_t_10 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 182, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_1);
+          __pyx_t_11 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 182, __pyx_L1_error)
+        }
+        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+        for (;;) {
+          if (likely(!__pyx_t_11)) {
+            if (likely(PyList_CheckExact(__pyx_t_1))) {
+              if (__pyx_t_10 >= PyList_GET_SIZE(__pyx_t_1)) break;
+              #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+              __pyx_t_2 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_10); __Pyx_INCREF(__pyx_t_2); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 182, __pyx_L1_error)
+              #else
+              __pyx_t_2 = PySequence_ITEM(__pyx_t_1, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 182, __pyx_L1_error)
+              __Pyx_GOTREF(__pyx_t_2);
+              #endif
+            } else {
+              if (__pyx_t_10 >= PyTuple_GET_SIZE(__pyx_t_1)) break;
+              #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+              __pyx_t_2 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_10); __Pyx_INCREF(__pyx_t_2); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 182, __pyx_L1_error)
+              #else
+              __pyx_t_2 = PySequence_ITEM(__pyx_t_1, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 182, __pyx_L1_error)
+              __Pyx_GOTREF(__pyx_t_2);
+              #endif
+            }
+          } else {
+            __pyx_t_2 = __pyx_t_11(__pyx_t_1);
+            if (unlikely(!__pyx_t_2)) {
+              PyObject* exc_type = PyErr_Occurred();
+              if (exc_type) {
+                if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
+                else __PYX_ERR(0, 182, __pyx_L1_error)
+              }
+              break;
+            }
+            __Pyx_GOTREF(__pyx_t_2);
+          }
+          __pyx_t_12 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_12 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 182, __pyx_L1_error)
+          __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+          __pyx_v_bit = __pyx_t_12;
+
+          /* "src/sparse_distributed_representation.py":186
+ *                         # if we don't have bit learn it if its above the adjusted prune threshold
+ *                         #
+ *                         if bit not in self.encoding[sdr_key]:             # <<<<<<<<<<<<<<
+ *                             self.encoding[sdr_key][bit] = sdr.encoding[sdr_key][bit]
+ *                         else:
+ */
+          __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_bit); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 186, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_2);
+          if (unlikely(__pyx_v_self->encoding == Py_None)) {
+            PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+            __PYX_ERR(0, 186, __pyx_L1_error)
+          }
+          __pyx_t_13 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 186, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_13);
+          __pyx_t_7 = (__Pyx_PySequence_ContainsTF(__pyx_t_2, __pyx_t_13, Py_NE)); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 186, __pyx_L1_error)
+          __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+          __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+          __pyx_t_6 = (__pyx_t_7 != 0);
+          if (__pyx_t_6) {
+
+            /* "src/sparse_distributed_representation.py":187
+ *                         #
+ *                         if bit not in self.encoding[sdr_key]:
+ *                             self.encoding[sdr_key][bit] = sdr.encoding[sdr_key][bit]             # <<<<<<<<<<<<<<
+ *                         else:
+ *                             self.encoding[sdr_key][bit] += sdr.encoding[sdr_key][bit]
+ */
+            __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encoding); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 187, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_13);
+            __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_t_13, __pyx_v_sdr_key); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 187, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_2);
+            __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+            __pyx_t_13 = __Pyx_GetItemInt(__pyx_t_2, __pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 187, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_13);
+            __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+            if (unlikely(__pyx_v_self->encoding == Py_None)) {
+              PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+              __PYX_ERR(0, 187, __pyx_L1_error)
+            }
+            __pyx_t_2 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 187, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_2);
+            if (unlikely(__Pyx_SetItemInt(__pyx_t_2, __pyx_v_bit, __pyx_t_13, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 187, __pyx_L1_error)
+            __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+            __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+
+            /* "src/sparse_distributed_representation.py":186
+ *                         # if we don't have bit learn it if its above the adjusted prune threshold
+ *                         #
+ *                         if bit not in self.encoding[sdr_key]:             # <<<<<<<<<<<<<<
+ *                             self.encoding[sdr_key][bit] = sdr.encoding[sdr_key][bit]
+ *                         else:
+ */
+            goto __pyx_L16;
+          }
+
+          /* "src/sparse_distributed_representation.py":189
+ *                             self.encoding[sdr_key][bit] = sdr.encoding[sdr_key][bit]
+ *                         else:
+ *                             self.encoding[sdr_key][bit] += sdr.encoding[sdr_key][bit]             # <<<<<<<<<<<<<<
+ * 
+ *         if min_frequency_prune is not None:
+ */
+          /*else*/ {
+            if (unlikely(__pyx_v_self->encoding == Py_None)) {
+              PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+              __PYX_ERR(0, 189, __pyx_L1_error)
+            }
+            __pyx_t_13 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_v_sdr_key); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 189, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_13);
+            __pyx_t_12 = __pyx_v_bit;
+            __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_13, __pyx_t_12, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 189, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_2);
+            __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_sdr, __pyx_n_s_encoding); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 189, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_9);
+            __pyx_t_14 = __Pyx_PyObject_GetItem(__pyx_t_9, __pyx_v_sdr_key); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 189, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_14);
+            __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+            __pyx_t_9 = __Pyx_GetItemInt(__pyx_t_14, __pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 189, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_9);
+            __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+            __pyx_t_14 = PyNumber_InPlaceAdd(__pyx_t_2, __pyx_t_9); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 189, __pyx_L1_error)
+            __Pyx_GOTREF(__pyx_t_14);
+            __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+            __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+            if (unlikely(__Pyx_SetItemInt(__pyx_t_13, __pyx_t_12, __pyx_t_14, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 189, __pyx_L1_error)
+            __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+            __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+          }
+          __pyx_L16:;
+
+          /* "src/sparse_distributed_representation.py":182
+ *                     # will need to process all bits
+ *                     #
+ *                     for bit in sdr.encoding[sdr_key].keys():             # <<<<<<<<<<<<<<
+ * 
+ *                         # if we don't have bit learn it if its above the adjusted prune threshold
+ */
+        }
+        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+      }
+      __pyx_L10:;
+
+      /* "src/sparse_distributed_representation.py":166
+ * 
+ *         for sdr_key in sdr.encoding.keys():
+ *             if ((learn_temporal_keys is None or sdr_key[TEMPORAL_IDX] in learn_temporal_keys) and             # <<<<<<<<<<<<<<
+ *                     (learn_enc_keys is None or sdr_key[ENC_IDX] in learn_enc_keys)):
+ * 
+ */
+    }
+
+    /* "src/sparse_distributed_representation.py":165
+ *         sdr_key: tuple
+ * 
+ *         for sdr_key in sdr.encoding.keys():             # <<<<<<<<<<<<<<
+ *             if ((learn_temporal_keys is None or sdr_key[TEMPORAL_IDX] in learn_temporal_keys) and
+ *                     (learn_enc_keys is None or sdr_key[ENC_IDX] in learn_enc_keys)):
+ */
+  }
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+
+  /* "src/sparse_distributed_representation.py":191
+ *                             self.encoding[sdr_key][bit] += sdr.encoding[sdr_key][bit]
+ * 
+ *         if min_frequency_prune is not None:             # <<<<<<<<<<<<<<
+ *             self.encoding = {sdr_key: {bit: self.encoding[sdr_key][bit]
+ *                                        for bit in self.encoding[sdr_key]
+ */
+  __pyx_t_6 = (__pyx_v_min_frequency_prune != Py_None);
+  __pyx_t_7 = (__pyx_t_6 != 0);
+  if (__pyx_t_7) {
+
+    /* "src/sparse_distributed_representation.py":192
+ * 
+ *         if min_frequency_prune is not None:
+ *             self.encoding = {sdr_key: {bit: self.encoding[sdr_key][bit]             # <<<<<<<<<<<<<<
+ *                                        for bit in self.encoding[sdr_key]
+ *                                        if self.encoding[sdr_key][bit] >= min_frequency_prune}
+ */
+    { /* enter inner scope */
+      __pyx_t_3 = PyDict_New(); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 192, __pyx_L20_error)
+      __Pyx_GOTREF(__pyx_t_3);
+
+      /* "src/sparse_distributed_representation.py":195
+ *                                        for bit in self.encoding[sdr_key]
+ *                                        if self.encoding[sdr_key][bit] >= min_frequency_prune}
+ *                              for sdr_key in self.encoding.keys()}             # <<<<<<<<<<<<<<
+ */
+      if (unlikely(__pyx_v_self->encoding == Py_None)) {
+        PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "keys");
+        __PYX_ERR(0, 195, __pyx_L20_error)
+      }
+      __pyx_t_1 = __Pyx_PyDict_Keys(__pyx_v_self->encoding); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 195, __pyx_L20_error)
+      __Pyx_GOTREF(__pyx_t_1);
+      if (likely(PyList_CheckExact(__pyx_t_1)) || PyTuple_CheckExact(__pyx_t_1)) {
+        __pyx_t_13 = __pyx_t_1; __Pyx_INCREF(__pyx_t_13); __pyx_t_4 = 0;
+        __pyx_t_5 = NULL;
+      } else {
+        __pyx_t_4 = -1; __pyx_t_13 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 195, __pyx_L20_error)
+        __Pyx_GOTREF(__pyx_t_13);
+        __pyx_t_5 = Py_TYPE(__pyx_t_13)->tp_iternext; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 195, __pyx_L20_error)
+      }
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+      for (;;) {
+        if (likely(!__pyx_t_5)) {
+          if (likely(PyList_CheckExact(__pyx_t_13))) {
+            if (__pyx_t_4 >= PyList_GET_SIZE(__pyx_t_13)) break;
+            #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+            __pyx_t_1 = PyList_GET_ITEM(__pyx_t_13, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 195, __pyx_L20_error)
+            #else
+            __pyx_t_1 = PySequence_ITEM(__pyx_t_13, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 195, __pyx_L20_error)
+            __Pyx_GOTREF(__pyx_t_1);
+            #endif
+          } else {
+            if (__pyx_t_4 >= PyTuple_GET_SIZE(__pyx_t_13)) break;
+            #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+            __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_13, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 195, __pyx_L20_error)
+            #else
+            __pyx_t_1 = PySequence_ITEM(__pyx_t_13, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 195, __pyx_L20_error)
+            __Pyx_GOTREF(__pyx_t_1);
+            #endif
+          }
+        } else {
+          __pyx_t_1 = __pyx_t_5(__pyx_t_13);
+          if (unlikely(!__pyx_t_1)) {
+            PyObject* exc_type = PyErr_Occurred();
+            if (exc_type) {
+              if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
+              else __PYX_ERR(0, 195, __pyx_L20_error)
+            }
+            break;
+          }
+          __Pyx_GOTREF(__pyx_t_1);
+        }
+        if (!(likely(PyTuple_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "tuple", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 195, __pyx_L20_error)
+        __Pyx_XDECREF_SET(__pyx_8genexpr4__pyx_v_sdr_key, ((PyObject*)__pyx_t_1));
+        __pyx_t_1 = 0;
+
+        /* "src/sparse_distributed_representation.py":192
+ * 
+ *         if min_frequency_prune is not None:
+ *             self.encoding = {sdr_key: {bit: self.encoding[sdr_key][bit]             # <<<<<<<<<<<<<<
+ *                                        for bit in self.encoding[sdr_key]
+ *                                        if self.encoding[sdr_key][bit] >= min_frequency_prune}
+ */
+        { /* enter inner scope */
+          __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 192, __pyx_L20_error)
+          __Pyx_GOTREF(__pyx_t_1);
+
+          /* "src/sparse_distributed_representation.py":193
+ *         if min_frequency_prune is not None:
+ *             self.encoding = {sdr_key: {bit: self.encoding[sdr_key][bit]
+ *                                        for bit in self.encoding[sdr_key]             # <<<<<<<<<<<<<<
+ *                                        if self.encoding[sdr_key][bit] >= min_frequency_prune}
+ *                              for sdr_key in self.encoding.keys()}
+ */
+          if (unlikely(__pyx_v_self->encoding == Py_None)) {
+            PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+            __PYX_ERR(0, 193, __pyx_L20_error)
+          }
+          __pyx_t_14 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_8genexpr4__pyx_v_sdr_key); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 193, __pyx_L20_error)
+          __Pyx_GOTREF(__pyx_t_14);
+          if (likely(PyList_CheckExact(__pyx_t_14)) || PyTuple_CheckExact(__pyx_t_14)) {
+            __pyx_t_9 = __pyx_t_14; __Pyx_INCREF(__pyx_t_9); __pyx_t_10 = 0;
+            __pyx_t_11 = NULL;
+          } else {
+            __pyx_t_10 = -1; __pyx_t_9 = PyObject_GetIter(__pyx_t_14); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 193, __pyx_L20_error)
+            __Pyx_GOTREF(__pyx_t_9);
+            __pyx_t_11 = Py_TYPE(__pyx_t_9)->tp_iternext; if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 193, __pyx_L20_error)
+          }
+          __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+          for (;;) {
+            if (likely(!__pyx_t_11)) {
+              if (likely(PyList_CheckExact(__pyx_t_9))) {
+                if (__pyx_t_10 >= PyList_GET_SIZE(__pyx_t_9)) break;
+                #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+                __pyx_t_14 = PyList_GET_ITEM(__pyx_t_9, __pyx_t_10); __Pyx_INCREF(__pyx_t_14); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 193, __pyx_L20_error)
+                #else
+                __pyx_t_14 = PySequence_ITEM(__pyx_t_9, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 193, __pyx_L20_error)
+                __Pyx_GOTREF(__pyx_t_14);
+                #endif
+              } else {
+                if (__pyx_t_10 >= PyTuple_GET_SIZE(__pyx_t_9)) break;
+                #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+                __pyx_t_14 = PyTuple_GET_ITEM(__pyx_t_9, __pyx_t_10); __Pyx_INCREF(__pyx_t_14); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 193, __pyx_L20_error)
+                #else
+                __pyx_t_14 = PySequence_ITEM(__pyx_t_9, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 193, __pyx_L20_error)
+                __Pyx_GOTREF(__pyx_t_14);
+                #endif
+              }
+            } else {
+              __pyx_t_14 = __pyx_t_11(__pyx_t_9);
+              if (unlikely(!__pyx_t_14)) {
+                PyObject* exc_type = PyErr_Occurred();
+                if (exc_type) {
+                  if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
+                  else __PYX_ERR(0, 193, __pyx_L20_error)
+                }
+                break;
+              }
+              __Pyx_GOTREF(__pyx_t_14);
+            }
+            __pyx_t_12 = __Pyx_PyInt_As_int(__pyx_t_14); if (unlikely((__pyx_t_12 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 193, __pyx_L20_error)
+            __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+            __pyx_8genexpr5__pyx_v_bit = __pyx_t_12;
+
+            /* "src/sparse_distributed_representation.py":194
+ *             self.encoding = {sdr_key: {bit: self.encoding[sdr_key][bit]
+ *                                        for bit in self.encoding[sdr_key]
+ *                                        if self.encoding[sdr_key][bit] >= min_frequency_prune}             # <<<<<<<<<<<<<<
+ *                              for sdr_key in self.encoding.keys()}
+ */
+            if (unlikely(__pyx_v_self->encoding == Py_None)) {
+              PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+              __PYX_ERR(0, 194, __pyx_L20_error)
+            }
+            __pyx_t_14 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_8genexpr4__pyx_v_sdr_key); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 194, __pyx_L20_error)
+            __Pyx_GOTREF(__pyx_t_14);
+            __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_14, __pyx_8genexpr5__pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 194, __pyx_L20_error)
+            __Pyx_GOTREF(__pyx_t_2);
+            __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+            __pyx_t_14 = PyObject_RichCompare(__pyx_t_2, __pyx_v_min_frequency_prune, Py_GE); __Pyx_XGOTREF(__pyx_t_14); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 194, __pyx_L20_error)
+            __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+            __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_14); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 194, __pyx_L20_error)
+            __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+            if (__pyx_t_7) {
+
+              /* "src/sparse_distributed_representation.py":192
+ * 
+ *         if min_frequency_prune is not None:
+ *             self.encoding = {sdr_key: {bit: self.encoding[sdr_key][bit]             # <<<<<<<<<<<<<<
+ *                                        for bit in self.encoding[sdr_key]
+ *                                        if self.encoding[sdr_key][bit] >= min_frequency_prune}
+ */
+              __pyx_t_14 = __Pyx_PyInt_From_int(__pyx_8genexpr5__pyx_v_bit); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 192, __pyx_L20_error)
+              __Pyx_GOTREF(__pyx_t_14);
+              if (unlikely(__pyx_v_self->encoding == Py_None)) {
+                PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+                __PYX_ERR(0, 192, __pyx_L20_error)
+              }
+              __pyx_t_2 = __Pyx_PyDict_GetItem(__pyx_v_self->encoding, __pyx_8genexpr4__pyx_v_sdr_key); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 192, __pyx_L20_error)
+              __Pyx_GOTREF(__pyx_t_2);
+              __pyx_t_15 = __Pyx_GetItemInt(__pyx_t_2, __pyx_8genexpr5__pyx_v_bit, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 192, __pyx_L20_error)
+              __Pyx_GOTREF(__pyx_t_15);
+              __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+              if (unlikely(PyDict_SetItem(__pyx_t_1, (PyObject*)__pyx_t_14, (PyObject*)__pyx_t_15))) __PYX_ERR(0, 192, __pyx_L20_error)
+              __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+              __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+
+              /* "src/sparse_distributed_representation.py":194
+ *             self.encoding = {sdr_key: {bit: self.encoding[sdr_key][bit]
+ *                                        for bit in self.encoding[sdr_key]
+ *                                        if self.encoding[sdr_key][bit] >= min_frequency_prune}             # <<<<<<<<<<<<<<
+ *                              for sdr_key in self.encoding.keys()}
+ */
+            }
+
+            /* "src/sparse_distributed_representation.py":193
+ *         if min_frequency_prune is not None:
+ *             self.encoding = {sdr_key: {bit: self.encoding[sdr_key][bit]
+ *                                        for bit in self.encoding[sdr_key]             # <<<<<<<<<<<<<<
+ *                                        if self.encoding[sdr_key][bit] >= min_frequency_prune}
+ *                              for sdr_key in self.encoding.keys()}
+ */
+          }
+          __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+        } /* exit inner scope */
+        if (unlikely(PyDict_SetItem(__pyx_t_3, (PyObject*)__pyx_8genexpr4__pyx_v_sdr_key, (PyObject*)__pyx_t_1))) __PYX_ERR(0, 192, __pyx_L20_error)
+        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+        /* "src/sparse_distributed_representation.py":195
+ *                                        for bit in self.encoding[sdr_key]
+ *                                        if self.encoding[sdr_key][bit] >= min_frequency_prune}
+ *                              for sdr_key in self.encoding.keys()}             # <<<<<<<<<<<<<<
+ */
+      }
+      __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+      __Pyx_XDECREF(__pyx_8genexpr4__pyx_v_sdr_key); __pyx_8genexpr4__pyx_v_sdr_key = 0;
+      goto __pyx_L26_exit_scope;
+      __pyx_L20_error:;
+      __Pyx_XDECREF(__pyx_8genexpr4__pyx_v_sdr_key); __pyx_8genexpr4__pyx_v_sdr_key = 0;
+      goto __pyx_L1_error;
+      __pyx_L26_exit_scope:;
+    } /* exit inner scope */
+
+    /* "src/sparse_distributed_representation.py":192
+ * 
+ *         if min_frequency_prune is not None:
+ *             self.encoding = {sdr_key: {bit: self.encoding[sdr_key][bit]             # <<<<<<<<<<<<<<
+ *                                        for bit in self.encoding[sdr_key]
+ *                                        if self.encoding[sdr_key][bit] >= min_frequency_prune}
+ */
+    __Pyx_GIVEREF(__pyx_t_3);
+    __Pyx_GOTREF(__pyx_v_self->encoding);
+    __Pyx_DECREF(__pyx_v_self->encoding);
+    __pyx_v_self->encoding = ((PyObject*)__pyx_t_3);
+    __pyx_t_3 = 0;
+
+    /* "src/sparse_distributed_representation.py":191
+ *                             self.encoding[sdr_key][bit] += sdr.encoding[sdr_key][bit]
+ * 
+ *         if min_frequency_prune is not None:             # <<<<<<<<<<<<<<
+ *             self.encoding = {sdr_key: {bit: self.encoding[sdr_key][bit]
+ *                                        for bit in self.encoding[sdr_key]
+ */
+  }
+
+  /* "src/sparse_distributed_representation.py":158
+ *                             del self.encoding[sdr_key][bit]
+ * 
+ *     def learn_frequency(self, sdr, learn_temporal_keys: set = None, learn_enc_keys: set = None, min_frequency_prune: int = None):             # <<<<<<<<<<<<<<
+ * 
+ *         temporal_keys: set
+ */
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_9);
+  __Pyx_XDECREF(__pyx_t_13);
+  __Pyx_XDECREF(__pyx_t_14);
+  __Pyx_XDECREF(__pyx_t_15);
+  __Pyx_AddTraceback("src.sparse_distributed_representation.SDR.learn_frequency", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XDECREF(__pyx_v_sdr_key);
+  __Pyx_XDECREF(__pyx_8genexpr4__pyx_v_sdr_key);
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
@@ -4689,20 +5952,20 @@ static int __pyx_pf_3src_33sparse_distributed_representation_3SDR_8encoders_4__d
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_3src_33sparse_distributed_representation_3SDR_15__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyMethodDef __pyx_mdef_3src_33sparse_distributed_representation_3SDR_15__reduce_cython__ = {"__reduce_cython__", (PyCFunction)__pyx_pw_3src_33sparse_distributed_representation_3SDR_15__reduce_cython__, METH_NOARGS, 0};
-static PyObject *__pyx_pw_3src_33sparse_distributed_representation_3SDR_15__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_3src_33sparse_distributed_representation_3SDR_17__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyMethodDef __pyx_mdef_3src_33sparse_distributed_representation_3SDR_17__reduce_cython__ = {"__reduce_cython__", (PyCFunction)__pyx_pw_3src_33sparse_distributed_representation_3SDR_17__reduce_cython__, METH_NOARGS, 0};
+static PyObject *__pyx_pw_3src_33sparse_distributed_representation_3SDR_17__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__reduce_cython__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_3src_33sparse_distributed_representation_3SDR_14__reduce_cython__(((struct __pyx_obj_3src_33sparse_distributed_representation_SDR *)__pyx_v_self));
+  __pyx_r = __pyx_pf_3src_33sparse_distributed_representation_3SDR_16__reduce_cython__(((struct __pyx_obj_3src_33sparse_distributed_representation_SDR *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_14__reduce_cython__(struct __pyx_obj_3src_33sparse_distributed_representation_SDR *__pyx_v_self) {
+static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_16__reduce_cython__(struct __pyx_obj_3src_33sparse_distributed_representation_SDR *__pyx_v_self) {
   PyObject *__pyx_v_state = 0;
   PyObject *__pyx_v__dict = 0;
   int __pyx_v_use_setstate;
@@ -4939,20 +6202,20 @@ static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_14__redu
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_3src_33sparse_distributed_representation_3SDR_17__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
-static PyMethodDef __pyx_mdef_3src_33sparse_distributed_representation_3SDR_17__setstate_cython__ = {"__setstate_cython__", (PyCFunction)__pyx_pw_3src_33sparse_distributed_representation_3SDR_17__setstate_cython__, METH_O, 0};
-static PyObject *__pyx_pw_3src_33sparse_distributed_representation_3SDR_17__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pw_3src_33sparse_distributed_representation_3SDR_19__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
+static PyMethodDef __pyx_mdef_3src_33sparse_distributed_representation_3SDR_19__setstate_cython__ = {"__setstate_cython__", (PyCFunction)__pyx_pw_3src_33sparse_distributed_representation_3SDR_19__setstate_cython__, METH_O, 0};
+static PyObject *__pyx_pw_3src_33sparse_distributed_representation_3SDR_19__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__setstate_cython__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_3src_33sparse_distributed_representation_3SDR_16__setstate_cython__(((struct __pyx_obj_3src_33sparse_distributed_representation_SDR *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
+  __pyx_r = __pyx_pf_3src_33sparse_distributed_representation_3SDR_18__setstate_cython__(((struct __pyx_obj_3src_33sparse_distributed_representation_SDR *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_16__setstate_cython__(struct __pyx_obj_3src_33sparse_distributed_representation_SDR *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pf_3src_33sparse_distributed_representation_3SDR_18__setstate_cython__(struct __pyx_obj_3src_33sparse_distributed_representation_SDR *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -5484,10 +6747,11 @@ static PyMethodDef __pyx_methods_3src_33sparse_distributed_representation_SDR[] 
   {"copy", (PyCFunction)__pyx_pw_3src_33sparse_distributed_representation_3SDR_5copy, METH_O, 0},
   {"copy_from", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_33sparse_distributed_representation_3SDR_7copy_from, METH_VARARGS|METH_KEYWORDS, 0},
   {"add_encoding", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_33sparse_distributed_representation_3SDR_9add_encoding, METH_VARARGS|METH_KEYWORDS, 0},
-  {"decode", (PyCFunction)__pyx_pw_3src_33sparse_distributed_representation_3SDR_11decode, METH_NOARGS, 0},
-  {"learn", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_33sparse_distributed_representation_3SDR_13learn, METH_VARARGS|METH_KEYWORDS, 0},
-  {"__reduce_cython__", (PyCFunction)__pyx_pw_3src_33sparse_distributed_representation_3SDR_15__reduce_cython__, METH_NOARGS, 0},
-  {"__setstate_cython__", (PyCFunction)__pyx_pw_3src_33sparse_distributed_representation_3SDR_17__setstate_cython__, METH_O, 0},
+  {"decode", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_33sparse_distributed_representation_3SDR_11decode, METH_VARARGS|METH_KEYWORDS, 0},
+  {"learn_delta", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_33sparse_distributed_representation_3SDR_13learn_delta, METH_VARARGS|METH_KEYWORDS, 0},
+  {"learn_frequency", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_3src_33sparse_distributed_representation_3SDR_15learn_frequency, METH_VARARGS|METH_KEYWORDS, 0},
+  {"__reduce_cython__", (PyCFunction)__pyx_pw_3src_33sparse_distributed_representation_3SDR_17__reduce_cython__, METH_NOARGS, 0},
+  {"__setstate_cython__", (PyCFunction)__pyx_pw_3src_33sparse_distributed_representation_3SDR_19__setstate_cython__, METH_O, 0},
   {0, 0, 0, 0}
 };
 
@@ -5622,7 +6886,8 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_SDR_copy, __pyx_k_SDR_copy, sizeof(__pyx_k_SDR_copy), 0, 0, 1, 1},
   {&__pyx_n_s_SDR_copy_from, __pyx_k_SDR_copy_from, sizeof(__pyx_k_SDR_copy_from), 0, 0, 1, 1},
   {&__pyx_n_s_SDR_decode, __pyx_k_SDR_decode, sizeof(__pyx_k_SDR_decode), 0, 0, 1, 1},
-  {&__pyx_n_s_SDR_learn, __pyx_k_SDR_learn, sizeof(__pyx_k_SDR_learn), 0, 0, 1, 1},
+  {&__pyx_n_s_SDR_learn_delta, __pyx_k_SDR_learn_delta, sizeof(__pyx_k_SDR_learn_delta), 0, 0, 1, 1},
+  {&__pyx_n_s_SDR_learn_frequency, __pyx_k_SDR_learn_frequency, sizeof(__pyx_k_SDR_learn_frequency), 0, 0, 1, 1},
   {&__pyx_n_s_SDR_to_dict, __pyx_k_SDR_to_dict, sizeof(__pyx_k_SDR_to_dict), 0, 0, 1, 1},
   {&__pyx_n_s_TEMPORAL_IDX, __pyx_k_TEMPORAL_IDX, sizeof(__pyx_k_TEMPORAL_IDX), 0, 0, 1, 1},
   {&__pyx_n_s_add_encoding, __pyx_k_add_encoding, sizeof(__pyx_k_add_encoding), 0, 0, 1, 1},
@@ -5633,6 +6898,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_copy, __pyx_k_copy, sizeof(__pyx_k_copy), 0, 0, 1, 1},
   {&__pyx_n_s_copy_from, __pyx_k_copy_from, sizeof(__pyx_k_copy_from), 0, 0, 1, 1},
   {&__pyx_n_s_decode, __pyx_k_decode, sizeof(__pyx_k_decode), 0, 0, 1, 1},
+  {&__pyx_n_s_decode_locals_lambda, __pyx_k_decode_locals_lambda, sizeof(__pyx_k_decode_locals_lambda), 0, 0, 1, 1},
   {&__pyx_n_s_decode_sdr, __pyx_k_decode_sdr, sizeof(__pyx_k_decode_sdr), 0, 0, 1, 1},
   {&__pyx_n_s_deepcopy, __pyx_k_deepcopy, sizeof(__pyx_k_deepcopy), 0, 0, 1, 1},
   {&__pyx_n_s_dict, __pyx_k_dict, sizeof(__pyx_k_dict), 0, 0, 1, 1},
@@ -5652,11 +6918,14 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_key, __pyx_k_key, sizeof(__pyx_k_key), 0, 0, 1, 1},
   {&__pyx_n_s_keys, __pyx_k_keys, sizeof(__pyx_k_keys), 0, 0, 1, 1},
   {&__pyx_n_s_keys_to_process, __pyx_k_keys_to_process, sizeof(__pyx_k_keys_to_process), 0, 0, 1, 1},
-  {&__pyx_n_s_learn, __pyx_k_learn, sizeof(__pyx_k_learn), 0, 0, 1, 1},
+  {&__pyx_n_s_learn_delta, __pyx_k_learn_delta, sizeof(__pyx_k_learn_delta), 0, 0, 1, 1},
   {&__pyx_n_s_learn_enc_keys, __pyx_k_learn_enc_keys, sizeof(__pyx_k_learn_enc_keys), 0, 0, 1, 1},
+  {&__pyx_n_s_learn_frequency, __pyx_k_learn_frequency, sizeof(__pyx_k_learn_frequency), 0, 0, 1, 1},
   {&__pyx_n_s_learn_rate, __pyx_k_learn_rate, sizeof(__pyx_k_learn_rate), 0, 0, 1, 1},
   {&__pyx_n_s_learn_temporal_keys, __pyx_k_learn_temporal_keys, sizeof(__pyx_k_learn_temporal_keys), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
+  {&__pyx_n_s_max_bit_weight, __pyx_k_max_bit_weight, sizeof(__pyx_k_max_bit_weight), 0, 0, 1, 1},
+  {&__pyx_n_s_min_frequency_prune, __pyx_k_min_frequency_prune, sizeof(__pyx_k_min_frequency_prune), 0, 0, 1, 1},
   {&__pyx_n_s_name, __pyx_k_name, sizeof(__pyx_k_name), 0, 0, 1, 1},
   {&__pyx_n_s_new, __pyx_k_new, sizeof(__pyx_k_new), 0, 0, 1, 1},
   {&__pyx_n_s_pickle, __pyx_k_pickle, sizeof(__pyx_k_pickle), 0, 0, 1, 1},
@@ -5671,14 +6940,16 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_reduce_cython, __pyx_k_reduce_cython, sizeof(__pyx_k_reduce_cython), 0, 0, 1, 1},
   {&__pyx_n_s_reduce_ex, __pyx_k_reduce_ex, sizeof(__pyx_k_reduce_ex), 0, 0, 1, 1},
   {&__pyx_n_s_return, __pyx_k_return, sizeof(__pyx_k_return), 0, 0, 1, 1},
+  {&__pyx_n_s_reverse, __pyx_k_reverse, sizeof(__pyx_k_reverse), 0, 0, 1, 1},
   {&__pyx_n_s_sdr, __pyx_k_sdr, sizeof(__pyx_k_sdr), 0, 0, 1, 1},
   {&__pyx_n_s_sdr_key, __pyx_k_sdr_key, sizeof(__pyx_k_sdr_key), 0, 0, 1, 1},
   {&__pyx_n_s_self, __pyx_k_self, sizeof(__pyx_k_self), 0, 0, 1, 1},
   {&__pyx_n_u_set, __pyx_k_set, sizeof(__pyx_k_set), 0, 1, 0, 1},
   {&__pyx_n_s_setstate, __pyx_k_setstate, sizeof(__pyx_k_setstate), 0, 0, 1, 1},
   {&__pyx_n_s_setstate_cython, __pyx_k_setstate_cython, sizeof(__pyx_k_setstate_cython), 0, 0, 1, 1},
-  {&__pyx_kp_s_src_sparse_distributed_represent, __pyx_k_src_sparse_distributed_represent, sizeof(__pyx_k_src_sparse_distributed_represent), 0, 0, 1, 0},
-  {&__pyx_n_s_src_sparse_distributed_represent_2, __pyx_k_src_sparse_distributed_represent_2, sizeof(__pyx_k_src_sparse_distributed_represent_2), 0, 0, 1, 1},
+  {&__pyx_n_s_sort, __pyx_k_sort, sizeof(__pyx_k_sort), 0, 0, 1, 1},
+  {&__pyx_n_s_src_sparse_distributed_represent, __pyx_k_src_sparse_distributed_represent, sizeof(__pyx_k_src_sparse_distributed_represent), 0, 0, 1, 1},
+  {&__pyx_kp_s_src_sparse_distributed_represent_2, __pyx_k_src_sparse_distributed_represent_2, sizeof(__pyx_k_src_sparse_distributed_represent_2), 0, 0, 1, 0},
   {&__pyx_n_s_state, __pyx_k_state, sizeof(__pyx_k_state), 0, 0, 1, 1},
   {&__pyx_kp_s_stringsource, __pyx_k_stringsource, sizeof(__pyx_k_stringsource), 0, 0, 1, 0},
   {&__pyx_n_s_temporal_key, __pyx_k_temporal_key, sizeof(__pyx_k_temporal_key), 0, 0, 1, 1},
@@ -5704,14 +6975,14 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   /* "src/sparse_distributed_representation.py":33
  *             self.copy(sdr)
  * 
- *     def to_dict(self, decode: bool = True):             # <<<<<<<<<<<<<<
+ *     def to_dict(self, decode: bool = True, max_bit_weight: float = 1.0):             # <<<<<<<<<<<<<<
  *         dict_sdr: dict = {}
  *         sdr_key: tuple
  */
-  __pyx_tuple_ = PyTuple_Pack(5, __pyx_n_s_self, __pyx_n_s_decode, __pyx_n_s_dict_sdr, __pyx_n_s_sdr_key, __pyx_n_s_sdr_key); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 33, __pyx_L1_error)
+  __pyx_tuple_ = PyTuple_Pack(6, __pyx_n_s_self, __pyx_n_s_decode, __pyx_n_s_max_bit_weight, __pyx_n_s_dict_sdr, __pyx_n_s_sdr_key, __pyx_n_s_sdr_key); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 33, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple_);
   __Pyx_GIVEREF(__pyx_tuple_);
-  __pyx_codeobj__2 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple_, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sparse_distributed_represent, __pyx_n_s_to_dict, 33, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__2)) __PYX_ERR(0, 33, __pyx_L1_error)
+  __pyx_codeobj__2 = (PyObject*)__Pyx_PyCode_New(3, 0, 6, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple_, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sparse_distributed_represent_2, __pyx_n_s_to_dict, 33, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__2)) __PYX_ERR(0, 33, __pyx_L1_error)
 
   /* "src/sparse_distributed_representation.py":47
  *         return dict_sdr
@@ -5723,7 +6994,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__3 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_sdr); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(0, 47, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__3);
   __Pyx_GIVEREF(__pyx_tuple__3);
-  __pyx_codeobj__4 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__3, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sparse_distributed_represent, __pyx_n_s_copy, 47, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__4)) __PYX_ERR(0, 47, __pyx_L1_error)
+  __pyx_codeobj__4 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__3, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sparse_distributed_represent_2, __pyx_n_s_copy, 47, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__4)) __PYX_ERR(0, 47, __pyx_L1_error)
 
   /* "src/sparse_distributed_representation.py":51
  *         self.encoders = copy(sdr.encoders)
@@ -5735,7 +7006,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__5 = PyTuple_Pack(5, __pyx_n_s_self, __pyx_n_s_sdr, __pyx_n_s_from_temporal_key, __pyx_n_s_to_temporal_key, __pyx_n_s_sdr_key); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(0, 51, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__5);
   __Pyx_GIVEREF(__pyx_tuple__5);
-  __pyx_codeobj__6 = (PyObject*)__Pyx_PyCode_New(4, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__5, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sparse_distributed_represent, __pyx_n_s_copy_from, 51, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__6)) __PYX_ERR(0, 51, __pyx_L1_error)
+  __pyx_codeobj__6 = (PyObject*)__Pyx_PyCode_New(4, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__5, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sparse_distributed_represent_2, __pyx_n_s_copy_from, 51, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__6)) __PYX_ERR(0, 51, __pyx_L1_error)
 
   /* "src/sparse_distributed_representation.py":59
  *                     self.encoders[sdr_key[ENC_IDX]] = sdr.encoders[sdr_key[ENC_IDX]]
@@ -5747,41 +7018,53 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__7 = PyTuple_Pack(9, __pyx_n_s_self, __pyx_n_s_enc_key, __pyx_n_s_temporal_key, __pyx_n_s_value, __pyx_n_s_encoding, __pyx_n_s_encoder, __pyx_n_s_bit, __pyx_n_s_sdr_key, __pyx_n_s_bit); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(0, 59, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__7);
   __Pyx_GIVEREF(__pyx_tuple__7);
-  __pyx_codeobj__8 = (PyObject*)__Pyx_PyCode_New(6, 0, 9, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__7, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sparse_distributed_represent, __pyx_n_s_add_encoding, 59, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__8)) __PYX_ERR(0, 59, __pyx_L1_error)
+  __pyx_codeobj__8 = (PyObject*)__Pyx_PyCode_New(6, 0, 9, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__7, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sparse_distributed_represent_2, __pyx_n_s_add_encoding, 59, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__8)) __PYX_ERR(0, 59, __pyx_L1_error)
 
   /* "src/sparse_distributed_representation.py":74
  *             self.encoders[enc_key] = None
  * 
- *     def decode(self) -> dict:             # <<<<<<<<<<<<<<
+ *     def decode(self, max_bit_weight: float = 1.0) -> dict:             # <<<<<<<<<<<<<<
  *         decode_sdr: dict = {}
  *         key: tuple
  */
-  __pyx_tuple__9 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_decode_sdr, __pyx_n_s_key); if (unlikely(!__pyx_tuple__9)) __PYX_ERR(0, 74, __pyx_L1_error)
+  __pyx_tuple__9 = PyTuple_Pack(5, __pyx_n_s_self, __pyx_n_s_max_bit_weight, __pyx_n_s_decode_sdr, __pyx_n_s_key, __pyx_n_s_bit); if (unlikely(!__pyx_tuple__9)) __PYX_ERR(0, 74, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__9);
   __Pyx_GIVEREF(__pyx_tuple__9);
-  __pyx_codeobj__10 = (PyObject*)__Pyx_PyCode_New(1, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__9, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sparse_distributed_represent, __pyx_n_s_decode, 74, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__10)) __PYX_ERR(0, 74, __pyx_L1_error)
+  __pyx_codeobj__10 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__9, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sparse_distributed_represent_2, __pyx_n_s_decode, 74, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__10)) __PYX_ERR(0, 74, __pyx_L1_error)
 
-  /* "src/sparse_distributed_representation.py":85
+  /* "src/sparse_distributed_representation.py":88
  *         return decode_sdr
  * 
- *     def learn(self, sdr, learn_temporal_keys: set = None, learn_enc_keys: set = None, learn_rate: float = 1.0, prune_threshold: float = 0.01):             # <<<<<<<<<<<<<<
+ *     def learn_delta(self, sdr, learn_temporal_keys: set = None, learn_enc_keys: set = None, learn_rate: float = 1.0, prune_threshold: float = 0.01):             # <<<<<<<<<<<<<<
  * 
  *         temporal_keys: set
  */
-  __pyx_tuple__11 = PyTuple_Pack(14, __pyx_n_s_self, __pyx_n_s_sdr, __pyx_n_s_learn_temporal_keys, __pyx_n_s_learn_enc_keys, __pyx_n_s_learn_rate, __pyx_n_s_prune_threshold, __pyx_n_s_temporal_keys, __pyx_n_s_temporal_key, __pyx_n_s_bit, __pyx_n_s_sdr_key, __pyx_n_s_keys_to_process, __pyx_n_s_bits_to_process, __pyx_n_s_bit_value, __pyx_n_s_bit); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(0, 85, __pyx_L1_error)
+  __pyx_tuple__11 = PyTuple_Pack(14, __pyx_n_s_self, __pyx_n_s_sdr, __pyx_n_s_learn_temporal_keys, __pyx_n_s_learn_enc_keys, __pyx_n_s_learn_rate, __pyx_n_s_prune_threshold, __pyx_n_s_temporal_keys, __pyx_n_s_temporal_key, __pyx_n_s_bit, __pyx_n_s_sdr_key, __pyx_n_s_keys_to_process, __pyx_n_s_bits_to_process, __pyx_n_s_bit_value, __pyx_n_s_bit); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(0, 88, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__11);
   __Pyx_GIVEREF(__pyx_tuple__11);
-  __pyx_codeobj__12 = (PyObject*)__Pyx_PyCode_New(6, 0, 14, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__11, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sparse_distributed_represent, __pyx_n_s_learn, 85, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__12)) __PYX_ERR(0, 85, __pyx_L1_error)
+  __pyx_codeobj__12 = (PyObject*)__Pyx_PyCode_New(6, 0, 14, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__11, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sparse_distributed_represent_2, __pyx_n_s_learn_delta, 88, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__12)) __PYX_ERR(0, 88, __pyx_L1_error)
+
+  /* "src/sparse_distributed_representation.py":158
+ *                             del self.encoding[sdr_key][bit]
+ * 
+ *     def learn_frequency(self, sdr, learn_temporal_keys: set = None, learn_enc_keys: set = None, min_frequency_prune: int = None):             # <<<<<<<<<<<<<<
+ * 
+ *         temporal_keys: set
+ */
+  __pyx_tuple__13 = PyTuple_Pack(12, __pyx_n_s_self, __pyx_n_s_sdr, __pyx_n_s_learn_temporal_keys, __pyx_n_s_learn_enc_keys, __pyx_n_s_min_frequency_prune, __pyx_n_s_temporal_keys, __pyx_n_s_temporal_key, __pyx_n_s_bit, __pyx_n_s_sdr_key, __pyx_n_s_bit, __pyx_n_s_sdr_key, __pyx_n_s_bit); if (unlikely(!__pyx_tuple__13)) __PYX_ERR(0, 158, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__13);
+  __Pyx_GIVEREF(__pyx_tuple__13);
+  __pyx_codeobj__14 = (PyObject*)__Pyx_PyCode_New(5, 0, 12, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__13, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_sparse_distributed_represent_2, __pyx_n_s_learn_frequency, 158, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__14)) __PYX_ERR(0, 158, __pyx_L1_error)
 
   /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
  *     cdef tuple state
  *     cdef object _dict
  */
-  __pyx_tuple__13 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_state, __pyx_n_s_dict_3, __pyx_n_s_use_setstate); if (unlikely(!__pyx_tuple__13)) __PYX_ERR(1, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__13);
-  __Pyx_GIVEREF(__pyx_tuple__13);
-  __pyx_codeobj__14 = (PyObject*)__Pyx_PyCode_New(1, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__13, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_reduce_cython, 1, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__14)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __pyx_tuple__15 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_state, __pyx_n_s_dict_3, __pyx_n_s_use_setstate); if (unlikely(!__pyx_tuple__15)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__15);
+  __Pyx_GIVEREF(__pyx_tuple__15);
+  __pyx_codeobj__16 = (PyObject*)__Pyx_PyCode_New(1, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__15, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_reduce_cython, 1, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__16)) __PYX_ERR(1, 1, __pyx_L1_error)
 
   /* "(tree fragment)":16
  *     else:
@@ -5789,20 +7072,20 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
  *     __pyx_unpickle_SDR__set_state(self, __pyx_state)
  */
-  __pyx_tuple__15 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_pyx_state); if (unlikely(!__pyx_tuple__15)) __PYX_ERR(1, 16, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__15);
-  __Pyx_GIVEREF(__pyx_tuple__15);
-  __pyx_codeobj__16 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__15, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_setstate_cython, 16, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__16)) __PYX_ERR(1, 16, __pyx_L1_error)
+  __pyx_tuple__17 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_pyx_state); if (unlikely(!__pyx_tuple__17)) __PYX_ERR(1, 16, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__17);
+  __Pyx_GIVEREF(__pyx_tuple__17);
+  __pyx_codeobj__18 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__17, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_setstate_cython, 16, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__18)) __PYX_ERR(1, 16, __pyx_L1_error)
 
   /* "(tree fragment)":1
  * def __pyx_unpickle_SDR(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
  *     cdef object __pyx_PickleError
  *     cdef object __pyx_result
  */
-  __pyx_tuple__17 = PyTuple_Pack(5, __pyx_n_s_pyx_type, __pyx_n_s_pyx_checksum, __pyx_n_s_pyx_state, __pyx_n_s_pyx_PickleError, __pyx_n_s_pyx_result); if (unlikely(!__pyx_tuple__17)) __PYX_ERR(1, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__17);
-  __Pyx_GIVEREF(__pyx_tuple__17);
-  __pyx_codeobj__18 = (PyObject*)__Pyx_PyCode_New(3, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__17, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_pyx_unpickle_SDR, 1, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__18)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __pyx_tuple__19 = PyTuple_Pack(5, __pyx_n_s_pyx_type, __pyx_n_s_pyx_checksum, __pyx_n_s_pyx_state, __pyx_n_s_pyx_PickleError, __pyx_n_s_pyx_result); if (unlikely(!__pyx_tuple__19)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__19);
+  __Pyx_GIVEREF(__pyx_tuple__19);
+  __pyx_codeobj__20 = (PyObject*)__Pyx_PyCode_New(3, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__19, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_pyx_unpickle_SDR, 1, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__20)) __PYX_ERR(1, 1, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -6154,14 +7437,15 @@ if (!__Pyx_RefNanny) {
   /* "src/sparse_distributed_representation.py":33
  *             self.copy(sdr)
  * 
- *     def to_dict(self, decode: bool = True):             # <<<<<<<<<<<<<<
+ *     def to_dict(self, decode: bool = True, max_bit_weight: float = 1.0):             # <<<<<<<<<<<<<<
  *         dict_sdr: dict = {}
  *         sdr_key: tuple
  */
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 33, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 33, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_decode, ((PyObject*)&PyBool_Type)) < 0) __PYX_ERR(0, 33, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_3src_33sparse_distributed_representation_3SDR_3to_dict, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SDR_to_dict, NULL, __pyx_n_s_src_sparse_distributed_represent_2, __pyx_d, ((PyObject *)__pyx_codeobj__2)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 33, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_max_bit_weight, __pyx_n_u_float) < 0) __PYX_ERR(0, 33, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_3src_33sparse_distributed_representation_3SDR_3to_dict, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SDR_to_dict, NULL, __pyx_n_s_src_sparse_distributed_represent, __pyx_d, ((PyObject *)__pyx_codeobj__2)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 33, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_1, __pyx_t_2);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -6176,7 +7460,7 @@ if (!__Pyx_RefNanny) {
  *         self.encoding = deepcopy(sdr.encoding)
  *         self.encoders = copy(sdr.encoders)
  */
-  __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_3src_33sparse_distributed_representation_3SDR_5copy, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SDR_copy, NULL, __pyx_n_s_src_sparse_distributed_represent_2, __pyx_d, ((PyObject *)__pyx_codeobj__4)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 47, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_3src_33sparse_distributed_representation_3SDR_5copy, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SDR_copy, NULL, __pyx_n_s_src_sparse_distributed_represent, __pyx_d, ((PyObject *)__pyx_codeobj__4)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 47, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem((PyObject *)__pyx_ptype_3src_33sparse_distributed_representation_SDR->tp_dict, __pyx_n_s_copy, __pyx_t_1) < 0) __PYX_ERR(0, 47, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -6193,7 +7477,7 @@ if (!__Pyx_RefNanny) {
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_from_temporal_key, __pyx_n_u_int) < 0) __PYX_ERR(0, 51, __pyx_L1_error)
   if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_to_temporal_key, __pyx_n_u_int) < 0) __PYX_ERR(0, 51, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_3src_33sparse_distributed_representation_3SDR_7copy_from, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SDR_copy_from, NULL, __pyx_n_s_src_sparse_distributed_represent_2, __pyx_d, ((PyObject *)__pyx_codeobj__6)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 51, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_3src_33sparse_distributed_representation_3SDR_7copy_from, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SDR_copy_from, NULL, __pyx_n_s_src_sparse_distributed_represent, __pyx_d, ((PyObject *)__pyx_codeobj__6)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 51, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_2, __pyx_t_1);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -6213,7 +7497,7 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_enc_key, __pyx_n_u_tuple) < 0) __PYX_ERR(0, 59, __pyx_L1_error)
   if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_temporal_key, __pyx_n_u_int) < 0) __PYX_ERR(0, 59, __pyx_L1_error)
   if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_encoding, __pyx_n_u_dict_2) < 0) __PYX_ERR(0, 59, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_3src_33sparse_distributed_representation_3SDR_9add_encoding, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SDR_add_encoding, NULL, __pyx_n_s_src_sparse_distributed_represent_2, __pyx_d, ((PyObject *)__pyx_codeobj__8)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 59, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_3src_33sparse_distributed_representation_3SDR_9add_encoding, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SDR_add_encoding, NULL, __pyx_n_s_src_sparse_distributed_represent, __pyx_d, ((PyObject *)__pyx_codeobj__8)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 59, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_1, __pyx_t_2);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -6224,14 +7508,15 @@ if (!__Pyx_RefNanny) {
   /* "src/sparse_distributed_representation.py":74
  *             self.encoders[enc_key] = None
  * 
- *     def decode(self) -> dict:             # <<<<<<<<<<<<<<
+ *     def decode(self, max_bit_weight: float = 1.0) -> dict:             # <<<<<<<<<<<<<<
  *         decode_sdr: dict = {}
  *         key: tuple
  */
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 74, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 74, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_max_bit_weight, __pyx_n_u_float) < 0) __PYX_ERR(0, 74, __pyx_L1_error)
   if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_return, __pyx_n_u_dict_2) < 0) __PYX_ERR(0, 74, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_3src_33sparse_distributed_representation_3SDR_11decode, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SDR_decode, NULL, __pyx_n_s_src_sparse_distributed_represent_2, __pyx_d, ((PyObject *)__pyx_codeobj__10)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 74, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_3src_33sparse_distributed_representation_3SDR_11decode, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SDR_decode, NULL, __pyx_n_s_src_sparse_distributed_represent, __pyx_d, ((PyObject *)__pyx_codeobj__10)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 74, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_2, __pyx_t_1);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -6239,25 +7524,45 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_3src_33sparse_distributed_representation_SDR);
 
-  /* "src/sparse_distributed_representation.py":85
+  /* "src/sparse_distributed_representation.py":88
  *         return decode_sdr
  * 
- *     def learn(self, sdr, learn_temporal_keys: set = None, learn_enc_keys: set = None, learn_rate: float = 1.0, prune_threshold: float = 0.01):             # <<<<<<<<<<<<<<
+ *     def learn_delta(self, sdr, learn_temporal_keys: set = None, learn_enc_keys: set = None, learn_rate: float = 1.0, prune_threshold: float = 0.01):             # <<<<<<<<<<<<<<
  * 
  *         temporal_keys: set
  */
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 85, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 88, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_learn_temporal_keys, __pyx_n_u_set) < 0) __PYX_ERR(0, 85, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_learn_enc_keys, __pyx_n_u_set) < 0) __PYX_ERR(0, 85, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_learn_rate, __pyx_n_u_float) < 0) __PYX_ERR(0, 85, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_prune_threshold, __pyx_n_u_float) < 0) __PYX_ERR(0, 85, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_3src_33sparse_distributed_representation_3SDR_13learn, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SDR_learn, NULL, __pyx_n_s_src_sparse_distributed_represent_2, __pyx_d, ((PyObject *)__pyx_codeobj__12)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 85, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_learn_temporal_keys, __pyx_n_u_set) < 0) __PYX_ERR(0, 88, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_learn_enc_keys, __pyx_n_u_set) < 0) __PYX_ERR(0, 88, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_learn_rate, __pyx_n_u_float) < 0) __PYX_ERR(0, 88, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_prune_threshold, __pyx_n_u_float) < 0) __PYX_ERR(0, 88, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_3src_33sparse_distributed_representation_3SDR_13learn_delta, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SDR_learn_delta, NULL, __pyx_n_s_src_sparse_distributed_represent, __pyx_d, ((PyObject *)__pyx_codeobj__12)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 88, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_1, __pyx_t_2);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_3src_33sparse_distributed_representation_SDR->tp_dict, __pyx_n_s_learn, __pyx_t_1) < 0) __PYX_ERR(0, 85, __pyx_L1_error)
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_3src_33sparse_distributed_representation_SDR->tp_dict, __pyx_n_s_learn_delta, __pyx_t_1) < 0) __PYX_ERR(0, 88, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  PyType_Modified(__pyx_ptype_3src_33sparse_distributed_representation_SDR);
+
+  /* "src/sparse_distributed_representation.py":158
+ *                             del self.encoding[sdr_key][bit]
+ * 
+ *     def learn_frequency(self, sdr, learn_temporal_keys: set = None, learn_enc_keys: set = None, min_frequency_prune: int = None):             # <<<<<<<<<<<<<<
+ * 
+ *         temporal_keys: set
+ */
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 158, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_learn_temporal_keys, __pyx_n_u_set) < 0) __PYX_ERR(0, 158, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_learn_enc_keys, __pyx_n_u_set) < 0) __PYX_ERR(0, 158, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_min_frequency_prune, __pyx_n_u_int) < 0) __PYX_ERR(0, 158, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_3src_33sparse_distributed_representation_3SDR_15learn_frequency, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SDR_learn_frequency, NULL, __pyx_n_s_src_sparse_distributed_represent, __pyx_d, ((PyObject *)__pyx_codeobj__14)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 158, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_2, __pyx_t_1);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_3src_33sparse_distributed_representation_SDR->tp_dict, __pyx_n_s_learn_frequency, __pyx_t_2) < 0) __PYX_ERR(0, 158, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_3src_33sparse_distributed_representation_SDR);
 
   /* "(tree fragment)":1
@@ -6265,10 +7570,10 @@ if (!__Pyx_RefNanny) {
  *     cdef tuple state
  *     cdef object _dict
  */
-  __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_3src_33sparse_distributed_representation_3SDR_15__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SDR___reduce_cython, NULL, __pyx_n_s_src_sparse_distributed_represent_2, __pyx_d, ((PyObject *)__pyx_codeobj__14)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_3src_33sparse_distributed_representation_SDR->tp_dict, __pyx_n_s_reduce_cython, __pyx_t_1) < 0) __PYX_ERR(1, 1, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_3src_33sparse_distributed_representation_3SDR_17__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SDR___reduce_cython, NULL, __pyx_n_s_src_sparse_distributed_represent, __pyx_d, ((PyObject *)__pyx_codeobj__16)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_3src_33sparse_distributed_representation_SDR->tp_dict, __pyx_n_s_reduce_cython, __pyx_t_2) < 0) __PYX_ERR(1, 1, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_3src_33sparse_distributed_representation_SDR);
 
   /* "(tree fragment)":16
@@ -6277,10 +7582,10 @@ if (!__Pyx_RefNanny) {
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
  *     __pyx_unpickle_SDR__set_state(self, __pyx_state)
  */
-  __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_3src_33sparse_distributed_representation_3SDR_17__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SDR___setstate_cython, NULL, __pyx_n_s_src_sparse_distributed_represent_2, __pyx_d, ((PyObject *)__pyx_codeobj__16)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 16, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_3src_33sparse_distributed_representation_SDR->tp_dict, __pyx_n_s_setstate_cython, __pyx_t_1) < 0) __PYX_ERR(1, 16, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_3src_33sparse_distributed_representation_3SDR_19__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_SDR___setstate_cython, NULL, __pyx_n_s_src_sparse_distributed_represent, __pyx_d, ((PyObject *)__pyx_codeobj__18)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 16, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_3src_33sparse_distributed_representation_SDR->tp_dict, __pyx_n_s_setstate_cython, __pyx_t_2) < 0) __PYX_ERR(1, 16, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_3src_33sparse_distributed_representation_SDR);
 
   /* "(tree fragment)":1
@@ -6288,20 +7593,20 @@ if (!__Pyx_RefNanny) {
  *     cdef object __pyx_PickleError
  *     cdef object __pyx_result
  */
-  __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_3src_33sparse_distributed_representation_1__pyx_unpickle_SDR, 0, __pyx_n_s_pyx_unpickle_SDR, NULL, __pyx_n_s_src_sparse_distributed_represent_2, __pyx_d, ((PyObject *)__pyx_codeobj__18)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_pyx_unpickle_SDR, __pyx_t_1) < 0) __PYX_ERR(1, 1, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_3src_33sparse_distributed_representation_1__pyx_unpickle_SDR, 0, __pyx_n_s_pyx_unpickle_SDR, NULL, __pyx_n_s_src_sparse_distributed_represent, __pyx_d, ((PyObject *)__pyx_codeobj__20)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_pyx_unpickle_SDR, __pyx_t_2) < 0) __PYX_ERR(1, 1, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "src/sparse_distributed_representation.py":1
  * #!/usr/bin/env python             # <<<<<<<<<<<<<<
  * # -*- encoding: utf-8 -*-
  * 
  */
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_1) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /*--- Wrapped vars code ---*/
 
@@ -6753,28 +8058,6 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObjec
 }
 #endif
 
-/* PyObjectCallNoArg */
-#if CYTHON_COMPILING_IN_CPYTHON
-static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func) {
-#if CYTHON_FAST_PYCALL
-    if (PyFunction_Check(func)) {
-        return __Pyx_PyFunction_FastCall(func, NULL, 0);
-    }
-#endif
-#ifdef __Pyx_CyFunction_USED
-    if (likely(PyCFunction_Check(func) || __Pyx_CyFunction_Check(func)))
-#else
-    if (likely(PyCFunction_Check(func)))
-#endif
-    {
-        if (likely(PyCFunction_GET_FLAGS(func) & METH_NOARGS)) {
-            return __Pyx_PyObject_CallMethO(func, NULL);
-        }
-    }
-    return __Pyx_PyObject_Call(func, __pyx_empty_tuple, NULL);
-}
-#endif
-
 /* GetBuiltinName */
 static PyObject *__Pyx_GetBuiltinName(PyObject *name) {
     PyObject* result = __Pyx_PyObject_GetAttrStr(__pyx_b, name);
@@ -6884,6 +8167,28 @@ static CYTHON_INLINE int __Pyx_IterFinish(void) {
     return 0;
 #endif
 }
+
+/* PyObjectCallNoArg */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func) {
+#if CYTHON_FAST_PYCALL
+    if (PyFunction_Check(func)) {
+        return __Pyx_PyFunction_FastCall(func, NULL, 0);
+    }
+#endif
+#ifdef __Pyx_CyFunction_USED
+    if (likely(PyCFunction_Check(func) || __Pyx_CyFunction_Check(func)))
+#else
+    if (likely(PyCFunction_Check(func)))
+#endif
+    {
+        if (likely(PyCFunction_GET_FLAGS(func) & METH_NOARGS)) {
+            return __Pyx_PyObject_CallMethO(func, NULL);
+        }
+    }
+    return __Pyx_PyObject_Call(func, __pyx_empty_tuple, NULL);
+}
+#endif
 
 /* PyObjectGetMethod */
 static int __Pyx_PyObject_GetMethod(PyObject *obj, PyObject *name, PyObject **method) {
@@ -7362,6 +8667,662 @@ static int __Pyx__ArgTypeTest(PyObject *obj, PyTypeObject *type, const char *nam
         "Argument '%.200s' has incorrect type (expected %.200s, got %.200s)",
         name, type->tp_name, Py_TYPE(obj)->tp_name);
     return 0;
+}
+
+/* FetchCommonType */
+static PyTypeObject* __Pyx_FetchCommonType(PyTypeObject* type) {
+    PyObject* fake_module;
+    PyTypeObject* cached_type = NULL;
+    fake_module = PyImport_AddModule((char*) "_cython_" CYTHON_ABI);
+    if (!fake_module) return NULL;
+    Py_INCREF(fake_module);
+    cached_type = (PyTypeObject*) PyObject_GetAttrString(fake_module, type->tp_name);
+    if (cached_type) {
+        if (!PyType_Check((PyObject*)cached_type)) {
+            PyErr_Format(PyExc_TypeError,
+                "Shared Cython type %.200s is not a type object",
+                type->tp_name);
+            goto bad;
+        }
+        if (cached_type->tp_basicsize != type->tp_basicsize) {
+            PyErr_Format(PyExc_TypeError,
+                "Shared Cython type %.200s has the wrong size, try recompiling",
+                type->tp_name);
+            goto bad;
+        }
+    } else {
+        if (!PyErr_ExceptionMatches(PyExc_AttributeError)) goto bad;
+        PyErr_Clear();
+        if (PyType_Ready(type) < 0) goto bad;
+        if (PyObject_SetAttrString(fake_module, type->tp_name, (PyObject*) type) < 0)
+            goto bad;
+        Py_INCREF(type);
+        cached_type = type;
+    }
+done:
+    Py_DECREF(fake_module);
+    return cached_type;
+bad:
+    Py_XDECREF(cached_type);
+    cached_type = NULL;
+    goto done;
+}
+
+/* CythonFunctionShared */
+#include <structmember.h>
+static PyObject *
+__Pyx_CyFunction_get_doc(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *closure)
+{
+    if (unlikely(op->func_doc == NULL)) {
+        if (op->func.m_ml->ml_doc) {
+#if PY_MAJOR_VERSION >= 3
+            op->func_doc = PyUnicode_FromString(op->func.m_ml->ml_doc);
+#else
+            op->func_doc = PyString_FromString(op->func.m_ml->ml_doc);
+#endif
+            if (unlikely(op->func_doc == NULL))
+                return NULL;
+        } else {
+            Py_INCREF(Py_None);
+            return Py_None;
+        }
+    }
+    Py_INCREF(op->func_doc);
+    return op->func_doc;
+}
+static int
+__Pyx_CyFunction_set_doc(__pyx_CyFunctionObject *op, PyObject *value, CYTHON_UNUSED void *context)
+{
+    PyObject *tmp = op->func_doc;
+    if (value == NULL) {
+        value = Py_None;
+    }
+    Py_INCREF(value);
+    op->func_doc = value;
+    Py_XDECREF(tmp);
+    return 0;
+}
+static PyObject *
+__Pyx_CyFunction_get_name(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *context)
+{
+    if (unlikely(op->func_name == NULL)) {
+#if PY_MAJOR_VERSION >= 3
+        op->func_name = PyUnicode_InternFromString(op->func.m_ml->ml_name);
+#else
+        op->func_name = PyString_InternFromString(op->func.m_ml->ml_name);
+#endif
+        if (unlikely(op->func_name == NULL))
+            return NULL;
+    }
+    Py_INCREF(op->func_name);
+    return op->func_name;
+}
+static int
+__Pyx_CyFunction_set_name(__pyx_CyFunctionObject *op, PyObject *value, CYTHON_UNUSED void *context)
+{
+    PyObject *tmp;
+#if PY_MAJOR_VERSION >= 3
+    if (unlikely(value == NULL || !PyUnicode_Check(value)))
+#else
+    if (unlikely(value == NULL || !PyString_Check(value)))
+#endif
+    {
+        PyErr_SetString(PyExc_TypeError,
+                        "__name__ must be set to a string object");
+        return -1;
+    }
+    tmp = op->func_name;
+    Py_INCREF(value);
+    op->func_name = value;
+    Py_XDECREF(tmp);
+    return 0;
+}
+static PyObject *
+__Pyx_CyFunction_get_qualname(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *context)
+{
+    Py_INCREF(op->func_qualname);
+    return op->func_qualname;
+}
+static int
+__Pyx_CyFunction_set_qualname(__pyx_CyFunctionObject *op, PyObject *value, CYTHON_UNUSED void *context)
+{
+    PyObject *tmp;
+#if PY_MAJOR_VERSION >= 3
+    if (unlikely(value == NULL || !PyUnicode_Check(value)))
+#else
+    if (unlikely(value == NULL || !PyString_Check(value)))
+#endif
+    {
+        PyErr_SetString(PyExc_TypeError,
+                        "__qualname__ must be set to a string object");
+        return -1;
+    }
+    tmp = op->func_qualname;
+    Py_INCREF(value);
+    op->func_qualname = value;
+    Py_XDECREF(tmp);
+    return 0;
+}
+static PyObject *
+__Pyx_CyFunction_get_self(__pyx_CyFunctionObject *m, CYTHON_UNUSED void *closure)
+{
+    PyObject *self;
+    self = m->func_closure;
+    if (self == NULL)
+        self = Py_None;
+    Py_INCREF(self);
+    return self;
+}
+static PyObject *
+__Pyx_CyFunction_get_dict(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *context)
+{
+    if (unlikely(op->func_dict == NULL)) {
+        op->func_dict = PyDict_New();
+        if (unlikely(op->func_dict == NULL))
+            return NULL;
+    }
+    Py_INCREF(op->func_dict);
+    return op->func_dict;
+}
+static int
+__Pyx_CyFunction_set_dict(__pyx_CyFunctionObject *op, PyObject *value, CYTHON_UNUSED void *context)
+{
+    PyObject *tmp;
+    if (unlikely(value == NULL)) {
+        PyErr_SetString(PyExc_TypeError,
+               "function's dictionary may not be deleted");
+        return -1;
+    }
+    if (unlikely(!PyDict_Check(value))) {
+        PyErr_SetString(PyExc_TypeError,
+               "setting function's dictionary to a non-dict");
+        return -1;
+    }
+    tmp = op->func_dict;
+    Py_INCREF(value);
+    op->func_dict = value;
+    Py_XDECREF(tmp);
+    return 0;
+}
+static PyObject *
+__Pyx_CyFunction_get_globals(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *context)
+{
+    Py_INCREF(op->func_globals);
+    return op->func_globals;
+}
+static PyObject *
+__Pyx_CyFunction_get_closure(CYTHON_UNUSED __pyx_CyFunctionObject *op, CYTHON_UNUSED void *context)
+{
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+static PyObject *
+__Pyx_CyFunction_get_code(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *context)
+{
+    PyObject* result = (op->func_code) ? op->func_code : Py_None;
+    Py_INCREF(result);
+    return result;
+}
+static int
+__Pyx_CyFunction_init_defaults(__pyx_CyFunctionObject *op) {
+    int result = 0;
+    PyObject *res = op->defaults_getter((PyObject *) op);
+    if (unlikely(!res))
+        return -1;
+    #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+    op->defaults_tuple = PyTuple_GET_ITEM(res, 0);
+    Py_INCREF(op->defaults_tuple);
+    op->defaults_kwdict = PyTuple_GET_ITEM(res, 1);
+    Py_INCREF(op->defaults_kwdict);
+    #else
+    op->defaults_tuple = PySequence_ITEM(res, 0);
+    if (unlikely(!op->defaults_tuple)) result = -1;
+    else {
+        op->defaults_kwdict = PySequence_ITEM(res, 1);
+        if (unlikely(!op->defaults_kwdict)) result = -1;
+    }
+    #endif
+    Py_DECREF(res);
+    return result;
+}
+static int
+__Pyx_CyFunction_set_defaults(__pyx_CyFunctionObject *op, PyObject* value, CYTHON_UNUSED void *context) {
+    PyObject* tmp;
+    if (!value) {
+        value = Py_None;
+    } else if (value != Py_None && !PyTuple_Check(value)) {
+        PyErr_SetString(PyExc_TypeError,
+                        "__defaults__ must be set to a tuple object");
+        return -1;
+    }
+    Py_INCREF(value);
+    tmp = op->defaults_tuple;
+    op->defaults_tuple = value;
+    Py_XDECREF(tmp);
+    return 0;
+}
+static PyObject *
+__Pyx_CyFunction_get_defaults(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *context) {
+    PyObject* result = op->defaults_tuple;
+    if (unlikely(!result)) {
+        if (op->defaults_getter) {
+            if (__Pyx_CyFunction_init_defaults(op) < 0) return NULL;
+            result = op->defaults_tuple;
+        } else {
+            result = Py_None;
+        }
+    }
+    Py_INCREF(result);
+    return result;
+}
+static int
+__Pyx_CyFunction_set_kwdefaults(__pyx_CyFunctionObject *op, PyObject* value, CYTHON_UNUSED void *context) {
+    PyObject* tmp;
+    if (!value) {
+        value = Py_None;
+    } else if (value != Py_None && !PyDict_Check(value)) {
+        PyErr_SetString(PyExc_TypeError,
+                        "__kwdefaults__ must be set to a dict object");
+        return -1;
+    }
+    Py_INCREF(value);
+    tmp = op->defaults_kwdict;
+    op->defaults_kwdict = value;
+    Py_XDECREF(tmp);
+    return 0;
+}
+static PyObject *
+__Pyx_CyFunction_get_kwdefaults(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *context) {
+    PyObject* result = op->defaults_kwdict;
+    if (unlikely(!result)) {
+        if (op->defaults_getter) {
+            if (__Pyx_CyFunction_init_defaults(op) < 0) return NULL;
+            result = op->defaults_kwdict;
+        } else {
+            result = Py_None;
+        }
+    }
+    Py_INCREF(result);
+    return result;
+}
+static int
+__Pyx_CyFunction_set_annotations(__pyx_CyFunctionObject *op, PyObject* value, CYTHON_UNUSED void *context) {
+    PyObject* tmp;
+    if (!value || value == Py_None) {
+        value = NULL;
+    } else if (!PyDict_Check(value)) {
+        PyErr_SetString(PyExc_TypeError,
+                        "__annotations__ must be set to a dict object");
+        return -1;
+    }
+    Py_XINCREF(value);
+    tmp = op->func_annotations;
+    op->func_annotations = value;
+    Py_XDECREF(tmp);
+    return 0;
+}
+static PyObject *
+__Pyx_CyFunction_get_annotations(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *context) {
+    PyObject* result = op->func_annotations;
+    if (unlikely(!result)) {
+        result = PyDict_New();
+        if (unlikely(!result)) return NULL;
+        op->func_annotations = result;
+    }
+    Py_INCREF(result);
+    return result;
+}
+static PyGetSetDef __pyx_CyFunction_getsets[] = {
+    {(char *) "func_doc", (getter)__Pyx_CyFunction_get_doc, (setter)__Pyx_CyFunction_set_doc, 0, 0},
+    {(char *) "__doc__",  (getter)__Pyx_CyFunction_get_doc, (setter)__Pyx_CyFunction_set_doc, 0, 0},
+    {(char *) "func_name", (getter)__Pyx_CyFunction_get_name, (setter)__Pyx_CyFunction_set_name, 0, 0},
+    {(char *) "__name__", (getter)__Pyx_CyFunction_get_name, (setter)__Pyx_CyFunction_set_name, 0, 0},
+    {(char *) "__qualname__", (getter)__Pyx_CyFunction_get_qualname, (setter)__Pyx_CyFunction_set_qualname, 0, 0},
+    {(char *) "__self__", (getter)__Pyx_CyFunction_get_self, 0, 0, 0},
+    {(char *) "func_dict", (getter)__Pyx_CyFunction_get_dict, (setter)__Pyx_CyFunction_set_dict, 0, 0},
+    {(char *) "__dict__", (getter)__Pyx_CyFunction_get_dict, (setter)__Pyx_CyFunction_set_dict, 0, 0},
+    {(char *) "func_globals", (getter)__Pyx_CyFunction_get_globals, 0, 0, 0},
+    {(char *) "__globals__", (getter)__Pyx_CyFunction_get_globals, 0, 0, 0},
+    {(char *) "func_closure", (getter)__Pyx_CyFunction_get_closure, 0, 0, 0},
+    {(char *) "__closure__", (getter)__Pyx_CyFunction_get_closure, 0, 0, 0},
+    {(char *) "func_code", (getter)__Pyx_CyFunction_get_code, 0, 0, 0},
+    {(char *) "__code__", (getter)__Pyx_CyFunction_get_code, 0, 0, 0},
+    {(char *) "func_defaults", (getter)__Pyx_CyFunction_get_defaults, (setter)__Pyx_CyFunction_set_defaults, 0, 0},
+    {(char *) "__defaults__", (getter)__Pyx_CyFunction_get_defaults, (setter)__Pyx_CyFunction_set_defaults, 0, 0},
+    {(char *) "__kwdefaults__", (getter)__Pyx_CyFunction_get_kwdefaults, (setter)__Pyx_CyFunction_set_kwdefaults, 0, 0},
+    {(char *) "__annotations__", (getter)__Pyx_CyFunction_get_annotations, (setter)__Pyx_CyFunction_set_annotations, 0, 0},
+    {0, 0, 0, 0, 0}
+};
+static PyMemberDef __pyx_CyFunction_members[] = {
+    {(char *) "__module__", T_OBJECT, offsetof(PyCFunctionObject, m_module), PY_WRITE_RESTRICTED, 0},
+    {0, 0, 0,  0, 0}
+};
+static PyObject *
+__Pyx_CyFunction_reduce(__pyx_CyFunctionObject *m, CYTHON_UNUSED PyObject *args)
+{
+#if PY_MAJOR_VERSION >= 3
+    return PyUnicode_FromString(m->func.m_ml->ml_name);
+#else
+    return PyString_FromString(m->func.m_ml->ml_name);
+#endif
+}
+static PyMethodDef __pyx_CyFunction_methods[] = {
+    {"__reduce__", (PyCFunction)__Pyx_CyFunction_reduce, METH_VARARGS, 0},
+    {0, 0, 0, 0}
+};
+#if PY_VERSION_HEX < 0x030500A0
+#define __Pyx_CyFunction_weakreflist(cyfunc) ((cyfunc)->func_weakreflist)
+#else
+#define __Pyx_CyFunction_weakreflist(cyfunc) ((cyfunc)->func.m_weakreflist)
+#endif
+static PyObject *__Pyx_CyFunction_Init(__pyx_CyFunctionObject *op, PyMethodDef *ml, int flags, PyObject* qualname,
+                                       PyObject *closure, PyObject *module, PyObject* globals, PyObject* code) {
+    if (unlikely(op == NULL))
+        return NULL;
+    op->flags = flags;
+    __Pyx_CyFunction_weakreflist(op) = NULL;
+    op->func.m_ml = ml;
+    op->func.m_self = (PyObject *) op;
+    Py_XINCREF(closure);
+    op->func_closure = closure;
+    Py_XINCREF(module);
+    op->func.m_module = module;
+    op->func_dict = NULL;
+    op->func_name = NULL;
+    Py_INCREF(qualname);
+    op->func_qualname = qualname;
+    op->func_doc = NULL;
+    op->func_classobj = NULL;
+    op->func_globals = globals;
+    Py_INCREF(op->func_globals);
+    Py_XINCREF(code);
+    op->func_code = code;
+    op->defaults_pyobjects = 0;
+    op->defaults_size = 0;
+    op->defaults = NULL;
+    op->defaults_tuple = NULL;
+    op->defaults_kwdict = NULL;
+    op->defaults_getter = NULL;
+    op->func_annotations = NULL;
+    return (PyObject *) op;
+}
+static int
+__Pyx_CyFunction_clear(__pyx_CyFunctionObject *m)
+{
+    Py_CLEAR(m->func_closure);
+    Py_CLEAR(m->func.m_module);
+    Py_CLEAR(m->func_dict);
+    Py_CLEAR(m->func_name);
+    Py_CLEAR(m->func_qualname);
+    Py_CLEAR(m->func_doc);
+    Py_CLEAR(m->func_globals);
+    Py_CLEAR(m->func_code);
+    Py_CLEAR(m->func_classobj);
+    Py_CLEAR(m->defaults_tuple);
+    Py_CLEAR(m->defaults_kwdict);
+    Py_CLEAR(m->func_annotations);
+    if (m->defaults) {
+        PyObject **pydefaults = __Pyx_CyFunction_Defaults(PyObject *, m);
+        int i;
+        for (i = 0; i < m->defaults_pyobjects; i++)
+            Py_XDECREF(pydefaults[i]);
+        PyObject_Free(m->defaults);
+        m->defaults = NULL;
+    }
+    return 0;
+}
+static void __Pyx__CyFunction_dealloc(__pyx_CyFunctionObject *m)
+{
+    if (__Pyx_CyFunction_weakreflist(m) != NULL)
+        PyObject_ClearWeakRefs((PyObject *) m);
+    __Pyx_CyFunction_clear(m);
+    PyObject_GC_Del(m);
+}
+static void __Pyx_CyFunction_dealloc(__pyx_CyFunctionObject *m)
+{
+    PyObject_GC_UnTrack(m);
+    __Pyx__CyFunction_dealloc(m);
+}
+static int __Pyx_CyFunction_traverse(__pyx_CyFunctionObject *m, visitproc visit, void *arg)
+{
+    Py_VISIT(m->func_closure);
+    Py_VISIT(m->func.m_module);
+    Py_VISIT(m->func_dict);
+    Py_VISIT(m->func_name);
+    Py_VISIT(m->func_qualname);
+    Py_VISIT(m->func_doc);
+    Py_VISIT(m->func_globals);
+    Py_VISIT(m->func_code);
+    Py_VISIT(m->func_classobj);
+    Py_VISIT(m->defaults_tuple);
+    Py_VISIT(m->defaults_kwdict);
+    if (m->defaults) {
+        PyObject **pydefaults = __Pyx_CyFunction_Defaults(PyObject *, m);
+        int i;
+        for (i = 0; i < m->defaults_pyobjects; i++)
+            Py_VISIT(pydefaults[i]);
+    }
+    return 0;
+}
+static PyObject *__Pyx_CyFunction_descr_get(PyObject *func, PyObject *obj, PyObject *type)
+{
+#if PY_MAJOR_VERSION < 3
+    __pyx_CyFunctionObject *m = (__pyx_CyFunctionObject *) func;
+    if (m->flags & __Pyx_CYFUNCTION_STATICMETHOD) {
+        Py_INCREF(func);
+        return func;
+    }
+    if (m->flags & __Pyx_CYFUNCTION_CLASSMETHOD) {
+        if (type == NULL)
+            type = (PyObject *)(Py_TYPE(obj));
+        return __Pyx_PyMethod_New(func, type, (PyObject *)(Py_TYPE(type)));
+    }
+    if (obj == Py_None)
+        obj = NULL;
+#endif
+    return __Pyx_PyMethod_New(func, obj, type);
+}
+static PyObject*
+__Pyx_CyFunction_repr(__pyx_CyFunctionObject *op)
+{
+#if PY_MAJOR_VERSION >= 3
+    return PyUnicode_FromFormat("<cyfunction %U at %p>",
+                                op->func_qualname, (void *)op);
+#else
+    return PyString_FromFormat("<cyfunction %s at %p>",
+                               PyString_AsString(op->func_qualname), (void *)op);
+#endif
+}
+static PyObject * __Pyx_CyFunction_CallMethod(PyObject *func, PyObject *self, PyObject *arg, PyObject *kw) {
+    PyCFunctionObject* f = (PyCFunctionObject*)func;
+    PyCFunction meth = f->m_ml->ml_meth;
+    Py_ssize_t size;
+    switch (f->m_ml->ml_flags & (METH_VARARGS | METH_KEYWORDS | METH_NOARGS | METH_O)) {
+    case METH_VARARGS:
+        if (likely(kw == NULL || PyDict_Size(kw) == 0))
+            return (*meth)(self, arg);
+        break;
+    case METH_VARARGS | METH_KEYWORDS:
+        return (*(PyCFunctionWithKeywords)(void*)meth)(self, arg, kw);
+    case METH_NOARGS:
+        if (likely(kw == NULL || PyDict_Size(kw) == 0)) {
+            size = PyTuple_GET_SIZE(arg);
+            if (likely(size == 0))
+                return (*meth)(self, NULL);
+            PyErr_Format(PyExc_TypeError,
+                "%.200s() takes no arguments (%" CYTHON_FORMAT_SSIZE_T "d given)",
+                f->m_ml->ml_name, size);
+            return NULL;
+        }
+        break;
+    case METH_O:
+        if (likely(kw == NULL || PyDict_Size(kw) == 0)) {
+            size = PyTuple_GET_SIZE(arg);
+            if (likely(size == 1)) {
+                PyObject *result, *arg0;
+                #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+                arg0 = PyTuple_GET_ITEM(arg, 0);
+                #else
+                arg0 = PySequence_ITEM(arg, 0); if (unlikely(!arg0)) return NULL;
+                #endif
+                result = (*meth)(self, arg0);
+                #if !(CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS)
+                Py_DECREF(arg0);
+                #endif
+                return result;
+            }
+            PyErr_Format(PyExc_TypeError,
+                "%.200s() takes exactly one argument (%" CYTHON_FORMAT_SSIZE_T "d given)",
+                f->m_ml->ml_name, size);
+            return NULL;
+        }
+        break;
+    default:
+        PyErr_SetString(PyExc_SystemError, "Bad call flags in "
+                        "__Pyx_CyFunction_Call. METH_OLDARGS is no "
+                        "longer supported!");
+        return NULL;
+    }
+    PyErr_Format(PyExc_TypeError, "%.200s() takes no keyword arguments",
+                 f->m_ml->ml_name);
+    return NULL;
+}
+static CYTHON_INLINE PyObject *__Pyx_CyFunction_Call(PyObject *func, PyObject *arg, PyObject *kw) {
+    return __Pyx_CyFunction_CallMethod(func, ((PyCFunctionObject*)func)->m_self, arg, kw);
+}
+static PyObject *__Pyx_CyFunction_CallAsMethod(PyObject *func, PyObject *args, PyObject *kw) {
+    PyObject *result;
+    __pyx_CyFunctionObject *cyfunc = (__pyx_CyFunctionObject *) func;
+    if ((cyfunc->flags & __Pyx_CYFUNCTION_CCLASS) && !(cyfunc->flags & __Pyx_CYFUNCTION_STATICMETHOD)) {
+        Py_ssize_t argc;
+        PyObject *new_args;
+        PyObject *self;
+        argc = PyTuple_GET_SIZE(args);
+        new_args = PyTuple_GetSlice(args, 1, argc);
+        if (unlikely(!new_args))
+            return NULL;
+        self = PyTuple_GetItem(args, 0);
+        if (unlikely(!self)) {
+            Py_DECREF(new_args);
+            return NULL;
+        }
+        result = __Pyx_CyFunction_CallMethod(func, self, new_args, kw);
+        Py_DECREF(new_args);
+    } else {
+        result = __Pyx_CyFunction_Call(func, args, kw);
+    }
+    return result;
+}
+static PyTypeObject __pyx_CyFunctionType_type = {
+    PyVarObject_HEAD_INIT(0, 0)
+    "cython_function_or_method",
+    sizeof(__pyx_CyFunctionObject),
+    0,
+    (destructor) __Pyx_CyFunction_dealloc,
+    0,
+    0,
+    0,
+#if PY_MAJOR_VERSION < 3
+    0,
+#else
+    0,
+#endif
+    (reprfunc) __Pyx_CyFunction_repr,
+    0,
+    0,
+    0,
+    0,
+    __Pyx_CyFunction_CallAsMethod,
+    0,
+    0,
+    0,
+    0,
+    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_HAVE_GC,
+    0,
+    (traverseproc) __Pyx_CyFunction_traverse,
+    (inquiry) __Pyx_CyFunction_clear,
+    0,
+#if PY_VERSION_HEX < 0x030500A0
+    offsetof(__pyx_CyFunctionObject, func_weakreflist),
+#else
+    offsetof(PyCFunctionObject, m_weakreflist),
+#endif
+    0,
+    0,
+    __pyx_CyFunction_methods,
+    __pyx_CyFunction_members,
+    __pyx_CyFunction_getsets,
+    0,
+    0,
+    __Pyx_CyFunction_descr_get,
+    0,
+    offsetof(__pyx_CyFunctionObject, func_dict),
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+#if PY_VERSION_HEX >= 0x030400a1
+    0,
+#endif
+#if PY_VERSION_HEX >= 0x030800b1
+    0,
+#endif
+#if PY_VERSION_HEX >= 0x030800b4 && PY_VERSION_HEX < 0x03090000
+    0,
+#endif
+};
+static int __pyx_CyFunction_init(void) {
+    __pyx_CyFunctionType = __Pyx_FetchCommonType(&__pyx_CyFunctionType_type);
+    if (unlikely(__pyx_CyFunctionType == NULL)) {
+        return -1;
+    }
+    return 0;
+}
+static CYTHON_INLINE void *__Pyx_CyFunction_InitDefaults(PyObject *func, size_t size, int pyobjects) {
+    __pyx_CyFunctionObject *m = (__pyx_CyFunctionObject *) func;
+    m->defaults = PyObject_Malloc(size);
+    if (unlikely(!m->defaults))
+        return PyErr_NoMemory();
+    memset(m->defaults, 0, size);
+    m->defaults_pyobjects = pyobjects;
+    m->defaults_size = size;
+    return m->defaults;
+}
+static CYTHON_INLINE void __Pyx_CyFunction_SetDefaultsTuple(PyObject *func, PyObject *tuple) {
+    __pyx_CyFunctionObject *m = (__pyx_CyFunctionObject *) func;
+    m->defaults_tuple = tuple;
+    Py_INCREF(tuple);
+}
+static CYTHON_INLINE void __Pyx_CyFunction_SetDefaultsKwDict(PyObject *func, PyObject *dict) {
+    __pyx_CyFunctionObject *m = (__pyx_CyFunctionObject *) func;
+    m->defaults_kwdict = dict;
+    Py_INCREF(dict);
+}
+static CYTHON_INLINE void __Pyx_CyFunction_SetAnnotationsDict(PyObject *func, PyObject *dict) {
+    __pyx_CyFunctionObject *m = (__pyx_CyFunctionObject *) func;
+    m->func_annotations = dict;
+    Py_INCREF(dict);
+}
+
+/* CythonFunction */
+static PyObject *__Pyx_CyFunction_New(PyMethodDef *ml, int flags, PyObject* qualname,
+                                      PyObject *closure, PyObject *module, PyObject* globals, PyObject* code) {
+    PyObject *op = __Pyx_CyFunction_Init(
+        PyObject_GC_New(__pyx_CyFunctionObject, __pyx_CyFunctionType),
+        ml, flags, qualname, closure, module, globals, code
+    );
+    if (likely(op)) {
+        PyObject_GC_Track(op);
+    }
+    return op;
 }
 
 /* UnpackUnboundCMethod */
@@ -8085,662 +10046,6 @@ __PYX_GOOD:
     Py_XDECREF(setstate);
     Py_XDECREF(setstate_cython);
     return ret;
-}
-
-/* FetchCommonType */
-static PyTypeObject* __Pyx_FetchCommonType(PyTypeObject* type) {
-    PyObject* fake_module;
-    PyTypeObject* cached_type = NULL;
-    fake_module = PyImport_AddModule((char*) "_cython_" CYTHON_ABI);
-    if (!fake_module) return NULL;
-    Py_INCREF(fake_module);
-    cached_type = (PyTypeObject*) PyObject_GetAttrString(fake_module, type->tp_name);
-    if (cached_type) {
-        if (!PyType_Check((PyObject*)cached_type)) {
-            PyErr_Format(PyExc_TypeError,
-                "Shared Cython type %.200s is not a type object",
-                type->tp_name);
-            goto bad;
-        }
-        if (cached_type->tp_basicsize != type->tp_basicsize) {
-            PyErr_Format(PyExc_TypeError,
-                "Shared Cython type %.200s has the wrong size, try recompiling",
-                type->tp_name);
-            goto bad;
-        }
-    } else {
-        if (!PyErr_ExceptionMatches(PyExc_AttributeError)) goto bad;
-        PyErr_Clear();
-        if (PyType_Ready(type) < 0) goto bad;
-        if (PyObject_SetAttrString(fake_module, type->tp_name, (PyObject*) type) < 0)
-            goto bad;
-        Py_INCREF(type);
-        cached_type = type;
-    }
-done:
-    Py_DECREF(fake_module);
-    return cached_type;
-bad:
-    Py_XDECREF(cached_type);
-    cached_type = NULL;
-    goto done;
-}
-
-/* CythonFunctionShared */
-#include <structmember.h>
-static PyObject *
-__Pyx_CyFunction_get_doc(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *closure)
-{
-    if (unlikely(op->func_doc == NULL)) {
-        if (op->func.m_ml->ml_doc) {
-#if PY_MAJOR_VERSION >= 3
-            op->func_doc = PyUnicode_FromString(op->func.m_ml->ml_doc);
-#else
-            op->func_doc = PyString_FromString(op->func.m_ml->ml_doc);
-#endif
-            if (unlikely(op->func_doc == NULL))
-                return NULL;
-        } else {
-            Py_INCREF(Py_None);
-            return Py_None;
-        }
-    }
-    Py_INCREF(op->func_doc);
-    return op->func_doc;
-}
-static int
-__Pyx_CyFunction_set_doc(__pyx_CyFunctionObject *op, PyObject *value, CYTHON_UNUSED void *context)
-{
-    PyObject *tmp = op->func_doc;
-    if (value == NULL) {
-        value = Py_None;
-    }
-    Py_INCREF(value);
-    op->func_doc = value;
-    Py_XDECREF(tmp);
-    return 0;
-}
-static PyObject *
-__Pyx_CyFunction_get_name(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *context)
-{
-    if (unlikely(op->func_name == NULL)) {
-#if PY_MAJOR_VERSION >= 3
-        op->func_name = PyUnicode_InternFromString(op->func.m_ml->ml_name);
-#else
-        op->func_name = PyString_InternFromString(op->func.m_ml->ml_name);
-#endif
-        if (unlikely(op->func_name == NULL))
-            return NULL;
-    }
-    Py_INCREF(op->func_name);
-    return op->func_name;
-}
-static int
-__Pyx_CyFunction_set_name(__pyx_CyFunctionObject *op, PyObject *value, CYTHON_UNUSED void *context)
-{
-    PyObject *tmp;
-#if PY_MAJOR_VERSION >= 3
-    if (unlikely(value == NULL || !PyUnicode_Check(value)))
-#else
-    if (unlikely(value == NULL || !PyString_Check(value)))
-#endif
-    {
-        PyErr_SetString(PyExc_TypeError,
-                        "__name__ must be set to a string object");
-        return -1;
-    }
-    tmp = op->func_name;
-    Py_INCREF(value);
-    op->func_name = value;
-    Py_XDECREF(tmp);
-    return 0;
-}
-static PyObject *
-__Pyx_CyFunction_get_qualname(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *context)
-{
-    Py_INCREF(op->func_qualname);
-    return op->func_qualname;
-}
-static int
-__Pyx_CyFunction_set_qualname(__pyx_CyFunctionObject *op, PyObject *value, CYTHON_UNUSED void *context)
-{
-    PyObject *tmp;
-#if PY_MAJOR_VERSION >= 3
-    if (unlikely(value == NULL || !PyUnicode_Check(value)))
-#else
-    if (unlikely(value == NULL || !PyString_Check(value)))
-#endif
-    {
-        PyErr_SetString(PyExc_TypeError,
-                        "__qualname__ must be set to a string object");
-        return -1;
-    }
-    tmp = op->func_qualname;
-    Py_INCREF(value);
-    op->func_qualname = value;
-    Py_XDECREF(tmp);
-    return 0;
-}
-static PyObject *
-__Pyx_CyFunction_get_self(__pyx_CyFunctionObject *m, CYTHON_UNUSED void *closure)
-{
-    PyObject *self;
-    self = m->func_closure;
-    if (self == NULL)
-        self = Py_None;
-    Py_INCREF(self);
-    return self;
-}
-static PyObject *
-__Pyx_CyFunction_get_dict(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *context)
-{
-    if (unlikely(op->func_dict == NULL)) {
-        op->func_dict = PyDict_New();
-        if (unlikely(op->func_dict == NULL))
-            return NULL;
-    }
-    Py_INCREF(op->func_dict);
-    return op->func_dict;
-}
-static int
-__Pyx_CyFunction_set_dict(__pyx_CyFunctionObject *op, PyObject *value, CYTHON_UNUSED void *context)
-{
-    PyObject *tmp;
-    if (unlikely(value == NULL)) {
-        PyErr_SetString(PyExc_TypeError,
-               "function's dictionary may not be deleted");
-        return -1;
-    }
-    if (unlikely(!PyDict_Check(value))) {
-        PyErr_SetString(PyExc_TypeError,
-               "setting function's dictionary to a non-dict");
-        return -1;
-    }
-    tmp = op->func_dict;
-    Py_INCREF(value);
-    op->func_dict = value;
-    Py_XDECREF(tmp);
-    return 0;
-}
-static PyObject *
-__Pyx_CyFunction_get_globals(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *context)
-{
-    Py_INCREF(op->func_globals);
-    return op->func_globals;
-}
-static PyObject *
-__Pyx_CyFunction_get_closure(CYTHON_UNUSED __pyx_CyFunctionObject *op, CYTHON_UNUSED void *context)
-{
-    Py_INCREF(Py_None);
-    return Py_None;
-}
-static PyObject *
-__Pyx_CyFunction_get_code(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *context)
-{
-    PyObject* result = (op->func_code) ? op->func_code : Py_None;
-    Py_INCREF(result);
-    return result;
-}
-static int
-__Pyx_CyFunction_init_defaults(__pyx_CyFunctionObject *op) {
-    int result = 0;
-    PyObject *res = op->defaults_getter((PyObject *) op);
-    if (unlikely(!res))
-        return -1;
-    #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-    op->defaults_tuple = PyTuple_GET_ITEM(res, 0);
-    Py_INCREF(op->defaults_tuple);
-    op->defaults_kwdict = PyTuple_GET_ITEM(res, 1);
-    Py_INCREF(op->defaults_kwdict);
-    #else
-    op->defaults_tuple = PySequence_ITEM(res, 0);
-    if (unlikely(!op->defaults_tuple)) result = -1;
-    else {
-        op->defaults_kwdict = PySequence_ITEM(res, 1);
-        if (unlikely(!op->defaults_kwdict)) result = -1;
-    }
-    #endif
-    Py_DECREF(res);
-    return result;
-}
-static int
-__Pyx_CyFunction_set_defaults(__pyx_CyFunctionObject *op, PyObject* value, CYTHON_UNUSED void *context) {
-    PyObject* tmp;
-    if (!value) {
-        value = Py_None;
-    } else if (value != Py_None && !PyTuple_Check(value)) {
-        PyErr_SetString(PyExc_TypeError,
-                        "__defaults__ must be set to a tuple object");
-        return -1;
-    }
-    Py_INCREF(value);
-    tmp = op->defaults_tuple;
-    op->defaults_tuple = value;
-    Py_XDECREF(tmp);
-    return 0;
-}
-static PyObject *
-__Pyx_CyFunction_get_defaults(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *context) {
-    PyObject* result = op->defaults_tuple;
-    if (unlikely(!result)) {
-        if (op->defaults_getter) {
-            if (__Pyx_CyFunction_init_defaults(op) < 0) return NULL;
-            result = op->defaults_tuple;
-        } else {
-            result = Py_None;
-        }
-    }
-    Py_INCREF(result);
-    return result;
-}
-static int
-__Pyx_CyFunction_set_kwdefaults(__pyx_CyFunctionObject *op, PyObject* value, CYTHON_UNUSED void *context) {
-    PyObject* tmp;
-    if (!value) {
-        value = Py_None;
-    } else if (value != Py_None && !PyDict_Check(value)) {
-        PyErr_SetString(PyExc_TypeError,
-                        "__kwdefaults__ must be set to a dict object");
-        return -1;
-    }
-    Py_INCREF(value);
-    tmp = op->defaults_kwdict;
-    op->defaults_kwdict = value;
-    Py_XDECREF(tmp);
-    return 0;
-}
-static PyObject *
-__Pyx_CyFunction_get_kwdefaults(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *context) {
-    PyObject* result = op->defaults_kwdict;
-    if (unlikely(!result)) {
-        if (op->defaults_getter) {
-            if (__Pyx_CyFunction_init_defaults(op) < 0) return NULL;
-            result = op->defaults_kwdict;
-        } else {
-            result = Py_None;
-        }
-    }
-    Py_INCREF(result);
-    return result;
-}
-static int
-__Pyx_CyFunction_set_annotations(__pyx_CyFunctionObject *op, PyObject* value, CYTHON_UNUSED void *context) {
-    PyObject* tmp;
-    if (!value || value == Py_None) {
-        value = NULL;
-    } else if (!PyDict_Check(value)) {
-        PyErr_SetString(PyExc_TypeError,
-                        "__annotations__ must be set to a dict object");
-        return -1;
-    }
-    Py_XINCREF(value);
-    tmp = op->func_annotations;
-    op->func_annotations = value;
-    Py_XDECREF(tmp);
-    return 0;
-}
-static PyObject *
-__Pyx_CyFunction_get_annotations(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *context) {
-    PyObject* result = op->func_annotations;
-    if (unlikely(!result)) {
-        result = PyDict_New();
-        if (unlikely(!result)) return NULL;
-        op->func_annotations = result;
-    }
-    Py_INCREF(result);
-    return result;
-}
-static PyGetSetDef __pyx_CyFunction_getsets[] = {
-    {(char *) "func_doc", (getter)__Pyx_CyFunction_get_doc, (setter)__Pyx_CyFunction_set_doc, 0, 0},
-    {(char *) "__doc__",  (getter)__Pyx_CyFunction_get_doc, (setter)__Pyx_CyFunction_set_doc, 0, 0},
-    {(char *) "func_name", (getter)__Pyx_CyFunction_get_name, (setter)__Pyx_CyFunction_set_name, 0, 0},
-    {(char *) "__name__", (getter)__Pyx_CyFunction_get_name, (setter)__Pyx_CyFunction_set_name, 0, 0},
-    {(char *) "__qualname__", (getter)__Pyx_CyFunction_get_qualname, (setter)__Pyx_CyFunction_set_qualname, 0, 0},
-    {(char *) "__self__", (getter)__Pyx_CyFunction_get_self, 0, 0, 0},
-    {(char *) "func_dict", (getter)__Pyx_CyFunction_get_dict, (setter)__Pyx_CyFunction_set_dict, 0, 0},
-    {(char *) "__dict__", (getter)__Pyx_CyFunction_get_dict, (setter)__Pyx_CyFunction_set_dict, 0, 0},
-    {(char *) "func_globals", (getter)__Pyx_CyFunction_get_globals, 0, 0, 0},
-    {(char *) "__globals__", (getter)__Pyx_CyFunction_get_globals, 0, 0, 0},
-    {(char *) "func_closure", (getter)__Pyx_CyFunction_get_closure, 0, 0, 0},
-    {(char *) "__closure__", (getter)__Pyx_CyFunction_get_closure, 0, 0, 0},
-    {(char *) "func_code", (getter)__Pyx_CyFunction_get_code, 0, 0, 0},
-    {(char *) "__code__", (getter)__Pyx_CyFunction_get_code, 0, 0, 0},
-    {(char *) "func_defaults", (getter)__Pyx_CyFunction_get_defaults, (setter)__Pyx_CyFunction_set_defaults, 0, 0},
-    {(char *) "__defaults__", (getter)__Pyx_CyFunction_get_defaults, (setter)__Pyx_CyFunction_set_defaults, 0, 0},
-    {(char *) "__kwdefaults__", (getter)__Pyx_CyFunction_get_kwdefaults, (setter)__Pyx_CyFunction_set_kwdefaults, 0, 0},
-    {(char *) "__annotations__", (getter)__Pyx_CyFunction_get_annotations, (setter)__Pyx_CyFunction_set_annotations, 0, 0},
-    {0, 0, 0, 0, 0}
-};
-static PyMemberDef __pyx_CyFunction_members[] = {
-    {(char *) "__module__", T_OBJECT, offsetof(PyCFunctionObject, m_module), PY_WRITE_RESTRICTED, 0},
-    {0, 0, 0,  0, 0}
-};
-static PyObject *
-__Pyx_CyFunction_reduce(__pyx_CyFunctionObject *m, CYTHON_UNUSED PyObject *args)
-{
-#if PY_MAJOR_VERSION >= 3
-    return PyUnicode_FromString(m->func.m_ml->ml_name);
-#else
-    return PyString_FromString(m->func.m_ml->ml_name);
-#endif
-}
-static PyMethodDef __pyx_CyFunction_methods[] = {
-    {"__reduce__", (PyCFunction)__Pyx_CyFunction_reduce, METH_VARARGS, 0},
-    {0, 0, 0, 0}
-};
-#if PY_VERSION_HEX < 0x030500A0
-#define __Pyx_CyFunction_weakreflist(cyfunc) ((cyfunc)->func_weakreflist)
-#else
-#define __Pyx_CyFunction_weakreflist(cyfunc) ((cyfunc)->func.m_weakreflist)
-#endif
-static PyObject *__Pyx_CyFunction_Init(__pyx_CyFunctionObject *op, PyMethodDef *ml, int flags, PyObject* qualname,
-                                       PyObject *closure, PyObject *module, PyObject* globals, PyObject* code) {
-    if (unlikely(op == NULL))
-        return NULL;
-    op->flags = flags;
-    __Pyx_CyFunction_weakreflist(op) = NULL;
-    op->func.m_ml = ml;
-    op->func.m_self = (PyObject *) op;
-    Py_XINCREF(closure);
-    op->func_closure = closure;
-    Py_XINCREF(module);
-    op->func.m_module = module;
-    op->func_dict = NULL;
-    op->func_name = NULL;
-    Py_INCREF(qualname);
-    op->func_qualname = qualname;
-    op->func_doc = NULL;
-    op->func_classobj = NULL;
-    op->func_globals = globals;
-    Py_INCREF(op->func_globals);
-    Py_XINCREF(code);
-    op->func_code = code;
-    op->defaults_pyobjects = 0;
-    op->defaults_size = 0;
-    op->defaults = NULL;
-    op->defaults_tuple = NULL;
-    op->defaults_kwdict = NULL;
-    op->defaults_getter = NULL;
-    op->func_annotations = NULL;
-    return (PyObject *) op;
-}
-static int
-__Pyx_CyFunction_clear(__pyx_CyFunctionObject *m)
-{
-    Py_CLEAR(m->func_closure);
-    Py_CLEAR(m->func.m_module);
-    Py_CLEAR(m->func_dict);
-    Py_CLEAR(m->func_name);
-    Py_CLEAR(m->func_qualname);
-    Py_CLEAR(m->func_doc);
-    Py_CLEAR(m->func_globals);
-    Py_CLEAR(m->func_code);
-    Py_CLEAR(m->func_classobj);
-    Py_CLEAR(m->defaults_tuple);
-    Py_CLEAR(m->defaults_kwdict);
-    Py_CLEAR(m->func_annotations);
-    if (m->defaults) {
-        PyObject **pydefaults = __Pyx_CyFunction_Defaults(PyObject *, m);
-        int i;
-        for (i = 0; i < m->defaults_pyobjects; i++)
-            Py_XDECREF(pydefaults[i]);
-        PyObject_Free(m->defaults);
-        m->defaults = NULL;
-    }
-    return 0;
-}
-static void __Pyx__CyFunction_dealloc(__pyx_CyFunctionObject *m)
-{
-    if (__Pyx_CyFunction_weakreflist(m) != NULL)
-        PyObject_ClearWeakRefs((PyObject *) m);
-    __Pyx_CyFunction_clear(m);
-    PyObject_GC_Del(m);
-}
-static void __Pyx_CyFunction_dealloc(__pyx_CyFunctionObject *m)
-{
-    PyObject_GC_UnTrack(m);
-    __Pyx__CyFunction_dealloc(m);
-}
-static int __Pyx_CyFunction_traverse(__pyx_CyFunctionObject *m, visitproc visit, void *arg)
-{
-    Py_VISIT(m->func_closure);
-    Py_VISIT(m->func.m_module);
-    Py_VISIT(m->func_dict);
-    Py_VISIT(m->func_name);
-    Py_VISIT(m->func_qualname);
-    Py_VISIT(m->func_doc);
-    Py_VISIT(m->func_globals);
-    Py_VISIT(m->func_code);
-    Py_VISIT(m->func_classobj);
-    Py_VISIT(m->defaults_tuple);
-    Py_VISIT(m->defaults_kwdict);
-    if (m->defaults) {
-        PyObject **pydefaults = __Pyx_CyFunction_Defaults(PyObject *, m);
-        int i;
-        for (i = 0; i < m->defaults_pyobjects; i++)
-            Py_VISIT(pydefaults[i]);
-    }
-    return 0;
-}
-static PyObject *__Pyx_CyFunction_descr_get(PyObject *func, PyObject *obj, PyObject *type)
-{
-#if PY_MAJOR_VERSION < 3
-    __pyx_CyFunctionObject *m = (__pyx_CyFunctionObject *) func;
-    if (m->flags & __Pyx_CYFUNCTION_STATICMETHOD) {
-        Py_INCREF(func);
-        return func;
-    }
-    if (m->flags & __Pyx_CYFUNCTION_CLASSMETHOD) {
-        if (type == NULL)
-            type = (PyObject *)(Py_TYPE(obj));
-        return __Pyx_PyMethod_New(func, type, (PyObject *)(Py_TYPE(type)));
-    }
-    if (obj == Py_None)
-        obj = NULL;
-#endif
-    return __Pyx_PyMethod_New(func, obj, type);
-}
-static PyObject*
-__Pyx_CyFunction_repr(__pyx_CyFunctionObject *op)
-{
-#if PY_MAJOR_VERSION >= 3
-    return PyUnicode_FromFormat("<cyfunction %U at %p>",
-                                op->func_qualname, (void *)op);
-#else
-    return PyString_FromFormat("<cyfunction %s at %p>",
-                               PyString_AsString(op->func_qualname), (void *)op);
-#endif
-}
-static PyObject * __Pyx_CyFunction_CallMethod(PyObject *func, PyObject *self, PyObject *arg, PyObject *kw) {
-    PyCFunctionObject* f = (PyCFunctionObject*)func;
-    PyCFunction meth = f->m_ml->ml_meth;
-    Py_ssize_t size;
-    switch (f->m_ml->ml_flags & (METH_VARARGS | METH_KEYWORDS | METH_NOARGS | METH_O)) {
-    case METH_VARARGS:
-        if (likely(kw == NULL || PyDict_Size(kw) == 0))
-            return (*meth)(self, arg);
-        break;
-    case METH_VARARGS | METH_KEYWORDS:
-        return (*(PyCFunctionWithKeywords)(void*)meth)(self, arg, kw);
-    case METH_NOARGS:
-        if (likely(kw == NULL || PyDict_Size(kw) == 0)) {
-            size = PyTuple_GET_SIZE(arg);
-            if (likely(size == 0))
-                return (*meth)(self, NULL);
-            PyErr_Format(PyExc_TypeError,
-                "%.200s() takes no arguments (%" CYTHON_FORMAT_SSIZE_T "d given)",
-                f->m_ml->ml_name, size);
-            return NULL;
-        }
-        break;
-    case METH_O:
-        if (likely(kw == NULL || PyDict_Size(kw) == 0)) {
-            size = PyTuple_GET_SIZE(arg);
-            if (likely(size == 1)) {
-                PyObject *result, *arg0;
-                #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-                arg0 = PyTuple_GET_ITEM(arg, 0);
-                #else
-                arg0 = PySequence_ITEM(arg, 0); if (unlikely(!arg0)) return NULL;
-                #endif
-                result = (*meth)(self, arg0);
-                #if !(CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS)
-                Py_DECREF(arg0);
-                #endif
-                return result;
-            }
-            PyErr_Format(PyExc_TypeError,
-                "%.200s() takes exactly one argument (%" CYTHON_FORMAT_SSIZE_T "d given)",
-                f->m_ml->ml_name, size);
-            return NULL;
-        }
-        break;
-    default:
-        PyErr_SetString(PyExc_SystemError, "Bad call flags in "
-                        "__Pyx_CyFunction_Call. METH_OLDARGS is no "
-                        "longer supported!");
-        return NULL;
-    }
-    PyErr_Format(PyExc_TypeError, "%.200s() takes no keyword arguments",
-                 f->m_ml->ml_name);
-    return NULL;
-}
-static CYTHON_INLINE PyObject *__Pyx_CyFunction_Call(PyObject *func, PyObject *arg, PyObject *kw) {
-    return __Pyx_CyFunction_CallMethod(func, ((PyCFunctionObject*)func)->m_self, arg, kw);
-}
-static PyObject *__Pyx_CyFunction_CallAsMethod(PyObject *func, PyObject *args, PyObject *kw) {
-    PyObject *result;
-    __pyx_CyFunctionObject *cyfunc = (__pyx_CyFunctionObject *) func;
-    if ((cyfunc->flags & __Pyx_CYFUNCTION_CCLASS) && !(cyfunc->flags & __Pyx_CYFUNCTION_STATICMETHOD)) {
-        Py_ssize_t argc;
-        PyObject *new_args;
-        PyObject *self;
-        argc = PyTuple_GET_SIZE(args);
-        new_args = PyTuple_GetSlice(args, 1, argc);
-        if (unlikely(!new_args))
-            return NULL;
-        self = PyTuple_GetItem(args, 0);
-        if (unlikely(!self)) {
-            Py_DECREF(new_args);
-            return NULL;
-        }
-        result = __Pyx_CyFunction_CallMethod(func, self, new_args, kw);
-        Py_DECREF(new_args);
-    } else {
-        result = __Pyx_CyFunction_Call(func, args, kw);
-    }
-    return result;
-}
-static PyTypeObject __pyx_CyFunctionType_type = {
-    PyVarObject_HEAD_INIT(0, 0)
-    "cython_function_or_method",
-    sizeof(__pyx_CyFunctionObject),
-    0,
-    (destructor) __Pyx_CyFunction_dealloc,
-    0,
-    0,
-    0,
-#if PY_MAJOR_VERSION < 3
-    0,
-#else
-    0,
-#endif
-    (reprfunc) __Pyx_CyFunction_repr,
-    0,
-    0,
-    0,
-    0,
-    __Pyx_CyFunction_CallAsMethod,
-    0,
-    0,
-    0,
-    0,
-    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_HAVE_GC,
-    0,
-    (traverseproc) __Pyx_CyFunction_traverse,
-    (inquiry) __Pyx_CyFunction_clear,
-    0,
-#if PY_VERSION_HEX < 0x030500A0
-    offsetof(__pyx_CyFunctionObject, func_weakreflist),
-#else
-    offsetof(PyCFunctionObject, m_weakreflist),
-#endif
-    0,
-    0,
-    __pyx_CyFunction_methods,
-    __pyx_CyFunction_members,
-    __pyx_CyFunction_getsets,
-    0,
-    0,
-    __Pyx_CyFunction_descr_get,
-    0,
-    offsetof(__pyx_CyFunctionObject, func_dict),
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-#if PY_VERSION_HEX >= 0x030400a1
-    0,
-#endif
-#if PY_VERSION_HEX >= 0x030800b1
-    0,
-#endif
-#if PY_VERSION_HEX >= 0x030800b4 && PY_VERSION_HEX < 0x03090000
-    0,
-#endif
-};
-static int __pyx_CyFunction_init(void) {
-    __pyx_CyFunctionType = __Pyx_FetchCommonType(&__pyx_CyFunctionType_type);
-    if (unlikely(__pyx_CyFunctionType == NULL)) {
-        return -1;
-    }
-    return 0;
-}
-static CYTHON_INLINE void *__Pyx_CyFunction_InitDefaults(PyObject *func, size_t size, int pyobjects) {
-    __pyx_CyFunctionObject *m = (__pyx_CyFunctionObject *) func;
-    m->defaults = PyObject_Malloc(size);
-    if (unlikely(!m->defaults))
-        return PyErr_NoMemory();
-    memset(m->defaults, 0, size);
-    m->defaults_pyobjects = pyobjects;
-    m->defaults_size = size;
-    return m->defaults;
-}
-static CYTHON_INLINE void __Pyx_CyFunction_SetDefaultsTuple(PyObject *func, PyObject *tuple) {
-    __pyx_CyFunctionObject *m = (__pyx_CyFunctionObject *) func;
-    m->defaults_tuple = tuple;
-    Py_INCREF(tuple);
-}
-static CYTHON_INLINE void __Pyx_CyFunction_SetDefaultsKwDict(PyObject *func, PyObject *dict) {
-    __pyx_CyFunctionObject *m = (__pyx_CyFunctionObject *) func;
-    m->defaults_kwdict = dict;
-    Py_INCREF(dict);
-}
-static CYTHON_INLINE void __Pyx_CyFunction_SetAnnotationsDict(PyObject *func, PyObject *dict) {
-    __pyx_CyFunctionObject *m = (__pyx_CyFunctionObject *) func;
-    m->func_annotations = dict;
-    Py_INCREF(dict);
-}
-
-/* CythonFunction */
-static PyObject *__Pyx_CyFunction_New(PyMethodDef *ml, int flags, PyObject* qualname,
-                                      PyObject *closure, PyObject *module, PyObject* globals, PyObject* code) {
-    PyObject *op = __Pyx_CyFunction_Init(
-        PyObject_GC_New(__pyx_CyFunctionObject, __pyx_CyFunctionType),
-        ml, flags, qualname, closure, module, globals, code
-    );
-    if (likely(op)) {
-        PyObject_GC_Track(op);
-    }
-    return op;
 }
 
 /* CLineInTraceback */

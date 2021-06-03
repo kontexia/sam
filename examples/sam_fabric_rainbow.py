@@ -137,9 +137,11 @@ def rainbow():
 
         # query the sam using only the label to find the associated rainbow trades
         #
-        query_pors = sam_fabric.query(sdrs={'label': training_graphs[client][10][1]['label']})
+        query_pors_1 = sam_fabric.query(sdrs={'label': training_graphs[client][10][1]['label']})
 
-        print(query_pors)
+        query_pors_2 = sam_fabric.query(sdrs=[{'label': training_graphs[client][10][1]['label']}, {'label': training_graphs[client][11][1]['label']}])
+
+        print('finished')
 
 
 if __name__ == '__main__':

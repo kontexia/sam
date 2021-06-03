@@ -30,12 +30,12 @@ class SDR(object):
         if sdr is not None:
             self.copy(sdr)
 
-    def to_dict(self, decode: bool = True):
+    def to_dict(self, decode: bool = True, max_bit_weight: float = 1.0):
         dict_sdr: dict = {}
         sdr_key: tuple
 
         if decode:
-            dict_sdr['encoding'] = self.decode()
+            dict_sdr['encoding'] = self.decode(max_bit_weight)
         else:
             dict_sdr['encoding'] = deepcopy(self.encoding)
 
@@ -71,18 +71,21 @@ class SDR(object):
             self.encoding[sdr_key] = encoding
             self.encoders[enc_key] = None
 
-    def decode(self) -> dict:
+    def decode(self, max_bit_weight: float = 1.0) -> dict:
         decode_sdr: dict = {}
         key: tuple
 
         for key in self.encoding:
             if self.encoders[key[ENC_IDX]] is not None:
-                decode_sdr[key] = self.encoders[key[ENC_IDX]].decode(self.encoding[key])
+                decode_sdr[key] = self.encoders[key[ENC_IDX]].decode(self.encoding[key], max_bit_weight)
             else:
-                decode_sdr[key] = self.encoding[key]
+                # convert from frequency to probability
+                #
+                decode_sdr[key] = [(bit, self.encoding[key][bit] / max_bit_weight) for bit in self.encoding[key]]
+                decode_sdr[key].sort(key=lambda x: x[1], reverse=True)
         return decode_sdr
 
-    def learn(self, sdr, learn_temporal_keys: set = None, learn_enc_keys: set = None, learn_rate: float = 1.0, prune_threshold: float = 0.01):
+    def learn_delta(self, sdr, learn_temporal_keys: set = None, learn_enc_keys: set = None, learn_rate: float = 1.0, prune_threshold: float = 0.01):
 
         temporal_keys: set
         temporal_key: cython.int
@@ -151,3 +154,42 @@ class SDR(object):
                             self.encoding[sdr_key][bit] = bit_value
                         else:
                             del self.encoding[sdr_key][bit]
+
+    def learn_frequency(self, sdr, learn_temporal_keys: set = None, learn_enc_keys: set = None, min_frequency_prune: int = None):
+
+        temporal_keys: set
+        temporal_key: cython.int
+        bit: cython.int
+        sdr_key: tuple
+
+        for sdr_key in sdr.encoding.keys():
+            if ((learn_temporal_keys is None or sdr_key[TEMPORAL_IDX] in learn_temporal_keys) and
+                    (learn_enc_keys is None or sdr_key[ENC_IDX] in learn_enc_keys)):
+
+                # if sdr_key not in self then learn bits and encoder
+                #
+                if sdr_key not in self.encoding:
+                    self.encoding[sdr_key] = {bit: sdr.encoding[sdr_key][bit]
+                                              for bit in sdr.encoding[sdr_key]
+                                              if sdr.encoding[sdr_key][bit]}
+                    self.encoders[sdr_key[ENC_IDX]] = sdr.encoders[sdr_key[ENC_IDX]]
+
+                # if sdr_key in both self and sdr then process each bit
+                #
+                else:
+                    # will need to process all bits
+                    #
+                    for bit in sdr.encoding[sdr_key].keys():
+
+                        # if we don't have bit learn it if its above the adjusted prune threshold
+                        #
+                        if bit not in self.encoding[sdr_key]:
+                            self.encoding[sdr_key][bit] = sdr.encoding[sdr_key][bit]
+                        else:
+                            self.encoding[sdr_key][bit] += sdr.encoding[sdr_key][bit]
+
+        if min_frequency_prune is not None:
+            self.encoding = {sdr_key: {bit: self.encoding[sdr_key][bit]
+                                       for bit in self.encoding[sdr_key]
+                                       if self.encoding[sdr_key][bit] >= min_frequency_prune}
+                             for sdr_key in self.encoding.keys()}

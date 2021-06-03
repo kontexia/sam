@@ -10,16 +10,10 @@ from math import exp
 @cython.cclass
 class NeuralGraph(object):
     next_neuron_key = cython.declare(cython.int, visibility='public')
-    learning_rate_decay_factor = cython.declare(cython.float, visibility='public')
     pattern_to_neuron = cython.declare(dict, visibility='public')
     neurons = cython.declare(dict, visibility='public')
 
-    def __init__(self,
-                 learning_rate_decay_factor: float = 0.3):
-
-        # this is the vol decay factor for the learning rate for each neuron
-        #
-        self.learning_rate_decay_factor = pow(learning_rate_decay_factor, 2)
+    def __init__(self):
 
         # models the edges from pattern bits to neurons
         #
@@ -38,10 +32,9 @@ class NeuralGraph(object):
         neuron_key: cython.int
         prop: str
 
-        dict_neural_graph = {'learning_rate_decay_factor': self.learning_rate_decay_factor,
-                             'pattern_to_neuron': deepcopy(self.pattern_to_neuron),
+        dict_neural_graph = {'pattern_to_neuron': deepcopy(self.pattern_to_neuron),
                              'next_neuron_key': self.next_neuron_key,
-                             'neurons': {neuron_key: {prop: self.neurons[neuron_key][prop] if 'sdr' not in prop else self.neurons[neuron_key][prop].to_dict(decode=decode)
+                             'neurons': {neuron_key: {prop: self.neurons[neuron_key][prop] if 'sdr' not in prop else self.neurons[neuron_key][prop].to_dict(decode=decode, max_bit_weight=self.neurons[neuron_key]['n_bmu'])
                                                       for prop in self.neurons[neuron_key]}
                                          for neuron_key in self.neurons}}
 
@@ -50,7 +43,8 @@ class NeuralGraph(object):
     def feed_forward_pattern(self,
                              sdr: SDR,
                              activation_temporal_keys: set = None,
-                             activation_enc_keys: set = None) -> list:
+                             activation_enc_keys: set = None,
+                             decode: bool = False) -> list:
 
         activated_neurons: dict = {}
         activated_neuron_list: list
@@ -79,9 +73,11 @@ class NeuralGraph(object):
                             #
                             if neuron_key not in activated_neurons:
 
-                                activated_neurons[neuron_key] = (sdr.encoding[sdr_key][bit] * self.neurons[neuron_key]['pattern_sdr'].encoding[sdr_key][bit] / normalisation_factor)
+                                activated_neurons[neuron_key] = (sdr.encoding[sdr_key][bit] * self.neurons[neuron_key]['pattern_sdr'].encoding[sdr_key][bit] /
+                                                                 (self.neurons[neuron_key]['n_bmu'] * normalisation_factor))
                             else:
-                                activated_neurons[neuron_key] += (sdr.encoding[sdr_key][bit] * self.neurons[neuron_key]['pattern_sdr'].encoding[sdr_key][bit] / normalisation_factor)
+                                activated_neurons[neuron_key] += (sdr.encoding[sdr_key][bit] * self.neurons[neuron_key]['pattern_sdr'].encoding[sdr_key][bit] /
+                                                                  (self.neurons[neuron_key]['n_bmu'] * normalisation_factor))
 
         # now normalise across the number of enc_types to give a similarity between 0.0 and 1.0
         #
@@ -92,7 +88,7 @@ class NeuralGraph(object):
         activated_neuron_list = [{'neuron_key': neuron_key,
                                   'similarity': max(min(activated_neurons[neuron_key] / normalisation_factor, 1.0), 0.0),
                                   'last_updated': self.neurons[neuron_key]['last_updated'],
-                                  'sdr': self.neurons[neuron_key]['pattern_sdr']}
+                                  'sdr': self.neurons[neuron_key]['pattern_sdr'] if not decode else self.neurons[neuron_key]['pattern_sdr'].decode(self.neurons[neuron_key]['n_bmu'])}
                                  for neuron_key in activated_neurons]
 
         # sort by most similar with tie break bias towards most recently updated
@@ -136,7 +132,6 @@ class NeuralGraph(object):
         #
         self.neurons[neuron_key] = {'pattern_sdr': SDR(sdr),
                                     'n_bmu': 1,
-                                    'learn_rate': 1.0,
                                     'sum_similarity': 1.0,
                                     'avg_similarity': 1.0,
                                     'created': created,
@@ -147,7 +142,7 @@ class NeuralGraph(object):
 
         return neuron_key
 
-    def learn_pattern(self, activated_neuron_list: list, sdr: SDR, updated: cython.int, learn_enc_keys: set = None, prune_threshold: float = 0.01):
+    def learn_pattern(self, activated_neuron_list: list, sdr: SDR, updated: cython.int, learn_enc_keys: set = None, prune_threshold: float = 0.05):
 
         idx: cython.int
         neuron_key: cython.int
@@ -164,10 +159,6 @@ class NeuralGraph(object):
             #
             self.neurons[neuron_key]['last_updated'] = updated
 
-            # the learning rate for the activated neuron depends inversely on the number of times this neuron has been mapped to
-            #
-            self.neurons[neuron_key]['learn_rate'] = exp(-self.neurons[neuron_key]['n_bmu'] * self.learning_rate_decay_factor)
-
             # keep track of the similarity of data mapped to this generalised memory
             #
             self.neurons[neuron_key]['sum_similarity'] += activated_neuron_list[idx]['similarity']
@@ -176,7 +167,7 @@ class NeuralGraph(object):
             # update the neuron's sparse generalised memory with the incoming data
             # note always learn whole of temporal memory but not always all enc_keys
             #
-            self.neurons[neuron_key]['pattern_sdr'].learn(sdr=sdr, learn_rate=self.neurons[neuron_key]['learn_rate'], learn_enc_keys=learn_enc_keys, prune_threshold=prune_threshold)
+            self.neurons[neuron_key]['pattern_sdr'].learn_frequency(sdr=sdr, learn_enc_keys=learn_enc_keys, min_frequency_prune=int(prune_threshold * self.neurons[neuron_key]['n_bmu']))
 
             # finally make sure the pattern bits are connected to this neuron
             #
@@ -195,7 +186,7 @@ class NeuralGraph(object):
     def get_neuron(self, neuron_key: cython.int, decode: bool = False) -> dict:
         neuron = None
         if neuron_key in self.neurons:
-            neuron = {prop: self.neurons[neuron_key][prop] if 'sdr' not in prop else self.neurons[neuron_key][prop].to_dict(decode=decode)
+            neuron = {prop: self.neurons[neuron_key][prop] if 'sdr' not in prop else self.neurons[neuron_key][prop].to_dict(decode=decode, max_bit_weight=self.neurons[neuron_key]['n_bmu'])
                       for prop in self.neurons[neuron_key]}
         return neuron
 
