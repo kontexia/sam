@@ -161,14 +161,23 @@ class SAM(object):
             #
             association_sdr.add_encoding(enc_key=('_association',), encoding=neuron_activations, temporal_key=0)
 
-            # add in the context from the long short term memory
+            # only train once the temporal window is populated
             #
-            for t_idx in range(len(self.lstm_window)):
-                association_sdr.copy_from(sdr=self.lstm_window[t_idx], from_temporal_key=0, to_temporal_key=len(self.lstm_window) - t_idx)
+            if len(self.lstm_window) == self.temporal_params['lstm_len']:
+                context_sdr = SDR(association_sdr)
+                # add in the context from the long short term memory
+                #
+                for t_idx in range(len(self.lstm_window)):
+                    context_sdr.copy_from(sdr=self.lstm_window[t_idx], from_temporal_key=0, to_temporal_key=len(self.lstm_window) - t_idx)
 
-            # learn the active neurons from the association of activated neurons
-            #
-            pors['_temporal'] = self.poolers['_temporal'].learn_pattern(sdr=association_sdr)
+                # learn the active neurons from the association of activated neurons
+                #
+                pors['_temporal'] = self.poolers['_temporal'].learn_pattern(sdr=context_sdr)
+            else:
+                pors['_temporal'] = {'bmu_similarity': 0.0,
+                                     'nos_neurons': 0,
+                                     'avg_bmu_similarity': 0.0,
+                                     'std_bmu_similarity': 0.0}
 
             # update the long short term memory that will be the context for the next training session
             #

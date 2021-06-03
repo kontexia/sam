@@ -80,14 +80,15 @@ def rainbow():
         'activation_enc_keys': None}
 
     association_sam_params = {
-        'similarity_threshold': 0.5,
+        'similarity_threshold': 0.6,
         'community_factor': 0.9,
         'prune_threshold': 0.01}
 
     temporal_sam_params = {
-        'similarity_threshold': 0.25,
+        'similarity_threshold': 0.6,
         'community_factor': 0.9,
-        'prune_threshold': 0.01}
+        'prune_threshold': 0.01,
+        'lstm_len': 4}
 
     # we have the possibility of having different configurations per region
     #
@@ -117,7 +118,7 @@ def rainbow():
 
         plot_pors(assoc_pors)
 
-        temporal_pors = [por['_temporal'] for por in pors]
+        temporal_pors = [por['_temporal'] for por in pors if '_temporal' in por]
 
         plot_pors(temporal_pors)
 
