@@ -4,7 +4,7 @@
 from copy import deepcopy
 import cython
 from src.sparse_distributed_representation import SDR, TEMPORAL_IDX, ENC_IDX
-from math import exp
+
 
 
 @cython.cclass
@@ -15,11 +15,11 @@ class NeuralGraph(object):
 
     def __init__(self):
 
-        # models the edges from pattern bits to neurons
+        # models the edges from sdr bits to neurons
         #
         self.pattern_to_neuron = {}
 
-        # the map of neurons
+        # the map of neurons which generalise sdrs
         #
         self.neurons = {}
 
@@ -58,7 +58,7 @@ class NeuralGraph(object):
             if ((activation_temporal_keys is None or sdr_key[TEMPORAL_IDX] in activation_temporal_keys) and
                     (activation_enc_keys is None or sdr_key[ENC_IDX] in activation_enc_keys)):
 
-                # need to normalise by the total weight of all bits in enc_type
+                # need to normalise by the total weight of all bits associated with the sdr_key
                 #
                 normalisation_factor = sum([sdr.encoding[sdr_key][bit] for bit in sdr.encoding[sdr_key]])
 
@@ -79,7 +79,7 @@ class NeuralGraph(object):
                                 activated_neurons[neuron_key] += (sdr.encoding[sdr_key][bit] * self.neurons[neuron_key]['pattern_sdr'].encoding[sdr_key][bit] /
                                                                   (self.neurons[neuron_key]['n_bmu'] * normalisation_factor))
 
-        # now normalise across the number of enc_types to give a similarity between 0.0 and 1.0
+        # now normalise across the number of sdr_keys to give a similarity between 0.0 and 1.0
         #
         normalisation_factor = float(len(sdr.encoding))
 

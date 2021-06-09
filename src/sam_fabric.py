@@ -2,7 +2,7 @@
 # -*- encoding: utf-8 -*-
 
 
-from src.spatial_pooler import SpatialPooler
+from src.pooler import Pooler
 from src.sparse_distributed_representation import SDR, ENC_IDX, TEMPORAL_IDX
 from src.numeric_encoder import NumericEncoder
 from typing import Union
@@ -52,10 +52,10 @@ class SAM(object):
             if 'prune_threshold' not in self.association_params:
                 self.association_params['prune_threshold'] = 0.01
 
-            self.poolers['_association'] = SpatialPooler(name='_association',
-                                                         similarity_threshold=self.association_params['similarity_threshold'],
-                                                         community_factor=self.association_params['community_factor'],
-                                                         prune_threshold=self.association_params['prune_threshold'])
+            self.poolers['_association'] = Pooler(name='_association',
+                                                  similarity_threshold=self.association_params['similarity_threshold'],
+                                                  community_factor=self.association_params['community_factor'],
+                                                  prune_threshold=self.association_params['prune_threshold'])
 
         # instantiate the temporal pooler if required
         #
@@ -69,10 +69,10 @@ class SAM(object):
             if 'lstm_len' not in self.temporal_params:
                 self.temporal_params['lstm_len'] = 4
 
-            self.poolers['_temporal'] = SpatialPooler(name='_temporal',
-                                                      similarity_threshold=self.temporal_params['similarity_threshold'],
-                                                      community_factor=self.temporal_params['community_factor'],
-                                                      prune_threshold=self.temporal_params['prune_threshold'])
+            self.poolers['_temporal'] = Pooler(name='_temporal',
+                                               similarity_threshold=self.temporal_params['similarity_threshold'],
+                                               community_factor=self.temporal_params['community_factor'],
+                                               prune_threshold=self.temporal_params['prune_threshold'])
             self.lstm_window = []
         else:
             self.lstm_window = None
@@ -109,10 +109,10 @@ class SAM(object):
             # create a spatial pooler for region if required
             #
             if region not in self.poolers:
-                self.poolers[region] = SpatialPooler(name=region,
-                                                     similarity_threshold=self.spatial_params[config]['similarity_threshold'],
-                                                     community_factor=self.spatial_params[config]['community_factor'],
-                                                     prune_threshold=self.spatial_params[config]['prune_threshold'])
+                self.poolers[region] = Pooler(name=region,
+                                              similarity_threshold=self.spatial_params[config]['similarity_threshold'],
+                                              community_factor=self.spatial_params[config]['community_factor'],
+                                              prune_threshold=self.spatial_params[config]['prune_threshold'])
 
             # train this region
             #

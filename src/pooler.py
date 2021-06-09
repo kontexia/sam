@@ -5,7 +5,7 @@ from src.neural_graph import NeuralGraph
 from src.sparse_distributed_representation import SDR
 
 
-class SpatialPooler(object):
+class Pooler(object):
 
     def __init__(self,
                  name,
