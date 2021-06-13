@@ -76,7 +76,7 @@ def rainbow():
         # the level below which a weight is considered zero and will be deleted
         'prune_threshold': 0.01,
 
-        # a set of enc_type tuples to be used in learning - settin to None implies all enc_types will be learned
+        # a set of enc_type tuples to be used in learning - setting to None implies all enc_types will be learned
         'activation_enc_keys': None}
 
     association_sam_params = {

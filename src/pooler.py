@@ -3,7 +3,7 @@
 
 from src.neural_graph import NeuralGraph
 from src.sparse_distributed_representation import SDR
-
+import time
 
 class Pooler(object):
 
@@ -44,22 +44,34 @@ class Pooler(object):
 
     def learn_pattern(self, sdr, activation_enc_keys: set = None):
 
-        self.n_update += 1
-
         por = {'name': self.name,
-               'n_update': self.n_update}
+               'n_update': self.n_update,
+               'learn_sec': 0.0,
+               'activate_neuron_sec': 0.0,
+               'update_neuron_sec': None,
+               'create_neuron_sec': None,
+               'update_community_sec': 0.0,
+               }
+
+        start_time = time.time()
+
+        self.n_update += 1
 
         train_sdr = SDR(sdr)
 
         # get the activated neurons
         #
+        activated_neuron_start_time = time.time()
         activated_neurons = self.neurons.feed_forward_pattern(sdr=train_sdr, activation_enc_keys=activation_enc_keys)
+        por['activate_neuron_sec'] = time.time() - activated_neuron_start_time
 
         bmu_similarity = 0.0
         if len(activated_neurons) == 0 or activated_neurons[0]['similarity'] < self.similarity_threshold:
 
             # add a new neuron
             #
+            create_neuron_start_time = time.time()
+
             neuron_key = self.neurons.add_neuron(train_sdr, created=self.n_update)
             por['new_neuron_key'] = neuron_key
             if len(activated_neurons) > 0:
@@ -71,7 +83,12 @@ class Pooler(object):
                                          'similarity': 1.0,
                                          'last_updated': self.n_update,
                                          'sdr': SDR()})
+
+            por['create_neuron_sec'] = time.time() - create_neuron_start_time
+
         else:
+
+            update_neuron_start_time = time.time()
 
             # only the top neuron to learn the pattern
             #
@@ -81,11 +98,16 @@ class Pooler(object):
                                        prune_threshold=self.prune_threshold)
 
             bmu_similarity = activated_neurons[0]['similarity']
+            por['update_neuron_sec'] = time.time() - update_neuron_start_time
 
         # filter down to the community and update the community edges
         #
+        update_community_start_time = time.time()
+
         community_neurons = [n for n in activated_neurons if n['similarity'] >= self.community_threshold]
         self.neurons.update_communities(community_neurons)
+
+        por['update_community_sec'] = time.time() - update_community_start_time
 
         self.avg_bmu_similarity += (bmu_similarity - self.avg_bmu_similarity) * 0.3
         self.variance_bmu_similarity = ((pow(bmu_similarity - self.avg_bmu_similarity, 2)) - self.variance_bmu_similarity) * 0.3
@@ -100,6 +122,7 @@ class Pooler(object):
 
         por['nos_neurons'] = len(self.neurons.neurons)
         por['activations'] = activated_neurons
+        por['learn_sec'] = time.time() - start_time
         return por
 
     def query(self, sdr, similarity_threshold: float = None, decode=False) -> dict:
